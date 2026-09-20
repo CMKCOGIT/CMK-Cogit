@@ -15,8 +15,8 @@
 }
 
 [hidden] { display: none !important; }
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 7rem; }
-body { min-width: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-padding-top: 7rem; overflow-x: clip; }
+body { min-width: 0; overflow-x: clip; }
 img { height: auto; }
 button, a, input, select, textarea { touch-action: manipulation; }
 button, input, select, textarea { max-width: 100%; }
@@ -363,13 +363,13 @@ body:has(.cookie-banner) :is(.mobile-fixed-cta, .whatsapp-float) { visibility: h
   .cookie-banner { bottom: 12px; left: 12px; right: 12px; padding: 16px 14px; border-radius: 14px; }
   .cookie-banner-inner { gap: 14px; }
   .cookie-banner-actions { gap: 8px; }
-  .cookie-action:not(.cookie-action-settings) { flex: 1 1 100%; width: 100%; }
-  .cookie-dialog { padding: 20px; }
+  .cookie-action:not(.cookie-action-settings) { flex: 1 1 100%; width: 100%; min-width: 0; }
+  .cookie-dialog { padding: 18px; }
 }
-@media (max-width: 340px) {
+@media (max-width: 360px) {
   #hero-interactive-container .hero-svc-grid, .cfg-services-grid { grid-template-columns: 1fr; }
-  .hero-diag-dots { gap: 6px; flex-wrap: wrap; }
-  .hero-diag-dot-line { min-width: 8px; }
+  .hero-diag-dots { gap: 4px; flex-wrap: wrap; }
+  .hero-diag-dot-line { min-width: 6px; }
   .hero-model-choice { font-size: .8125rem; }
   .hero-challenge-context-name { flex-basis: calc(100% - 32px); }
 }

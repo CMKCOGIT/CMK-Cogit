@@ -34,11 +34,31 @@
   }
 
   function initContext() {
-    const slug = new URLSearchParams(window.location.search).get('solucao');
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('solucao');
     const context = document.getElementById('contact-context');
     if (!slug || !context) return '';
     const label = serviceNames[slug] || slug.replace(/-/g, ' ');
-    context.textContent = `Você veio da página: ${label}. Não precisa selecionar o serviço novamente.`;
+
+    let customDetails = '';
+    try {
+      const saved = sessionStorage.getItem('cogit_custom_project');
+      if (saved && slug === 'modelos-sob-medida') {
+        const p = JSON.parse(saved);
+        customDetails = ` — Estrutura personalizada (${p.sectionsCount} seções, estimativa R$ ${Number(p.totalEstimate).toLocaleString('pt-BR')})`;
+        const messageField = document.getElementById('contact-message');
+        if (messageField && !messageField.value) {
+          const blocksNames = p.blocks ? p.blocks.map(b => b.name).join(', ') : '';
+          messageField.value = `Olá! Estruturei meu projeto no diagnóstico sob medida da Cogit (${p.suggestion}).\nEstrutura: ${blocksNames}.\nEstimativa preliminar: R$ ${Number(p.totalEstimate).toLocaleString('pt-BR')}.`;
+          const counter = document.getElementById('contact-message-count');
+          if (counter) counter.textContent = `${messageField.value.length}/500`;
+        }
+      }
+    } catch (e) {
+      /* ignore */
+    }
+
+    context.textContent = `Você veio da página: ${label}${customDetails}. Não precisa selecionar o serviço novamente.`;
     context.hidden = false;
     return label;
   }

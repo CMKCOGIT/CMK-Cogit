@@ -381,12 +381,49 @@
 /* Tablet */
 @media (max-width: 768px) {
   dialog.hero-model-dialog {
-    width: min(960px, calc(100% - 24px));
-    max-height: calc(100dvh - 24px);
-    border-radius: 16px;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  .hero-modal-content {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100dvh !important;
+    overflow: hidden !important;
+  }
+
+  .hero-modal-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 50 !important;
+    flex-shrink: 0 !important;
+    background: var(--cogit-config-surface, #242329) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    padding: 16px 20px;
   }
 
   .hero-modal-body {
+    flex: 1 1 auto !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
     grid-template-columns: 1fr;
     gap: 20px;
     padding: 20px;
@@ -397,12 +434,15 @@
     order: -1;
   }
 
-  .hero-modal-header {
-    padding: 16px 20px;
-  }
-
   .hero-modal-footer {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 50 !important;
+    flex-shrink: 0 !important;
+    background: var(--cogit-config-surface, #242329) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
     padding: 16px 20px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom)) !important;
   }
 
   .hero-modal-tag {
@@ -416,12 +456,6 @@
 
 /* Mobile */
 @media (max-width: 480px) {
-  dialog.hero-model-dialog {
-    width: calc(100% - 16px);
-    max-height: calc(100dvh - 16px);
-    border-radius: 14px;
-  }
-
   .hero-modal-body {
     padding: 16px;
     gap: 18px;
@@ -437,6 +471,7 @@
 
   .hero-modal-footer {
     padding: 14px 16px;
+    padding-bottom: max(14px, env(safe-area-inset-bottom)) !important;
     flex-direction: column;
   }
 
@@ -444,6 +479,7 @@
   .hero-modal-btn-select {
     width: 100%;
     justify-content: center;
+    min-height: 44px;
   }
 
   .hero-modal-btn-select {
@@ -466,6 +502,7 @@
   .hero-modal-live-link {
     font-size: 0.8125rem;
     padding: 10px 14px;
+    min-height: 44px;
   }
 
   .hero-modal-preview-container {
@@ -475,23 +512,18 @@
 
 /* Very small screens */
 @media (max-width: 340px) {
-  dialog.hero-model-dialog {
-    width: calc(100% - 8px);
-    max-height: calc(100dvh - 8px);
-    border-radius: 12px;
-  }
-
   .hero-modal-body {
-    padding: 12px;
+    padding: 12px 10px;
     gap: 14px;
   }
 
   .hero-modal-header {
-    padding: 12px;
+    padding: 12px 10px;
   }
 
   .hero-modal-footer {
-    padding: 12px;
+    padding: 10px 10px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom)) !important;
   }
 
   .hero-modal-audience-title,

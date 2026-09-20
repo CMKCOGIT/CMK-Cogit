@@ -7,6 +7,76 @@ function getIcon(name) {
   return ICONS[name] || '';
 }
 
+// ── Mobile Modal Scroll Isolation & Touch Helpers ──
+let modalScrollLockDepth = 0;
+let modalScrollPrevY = 0;
+
+function lockModalScroll() {
+  if (modalScrollLockDepth === 0) {
+    modalScrollPrevY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
+    document.documentElement.classList.add('modal-open');
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${modalScrollPrevY}px`;
+  }
+  modalScrollLockDepth++;
+}
+
+function unlockModalScroll() {
+  modalScrollLockDepth = Math.max(0, modalScrollLockDepth - 1);
+  if (modalScrollLockDepth === 0) {
+    document.documentElement.classList.remove('modal-open');
+    document.body.classList.remove('modal-open');
+    document.body.style.top = '';
+    window.scrollTo(0, modalScrollPrevY);
+  }
+}
+
+function attachTapHandler(element, onSelect) {
+  if (!element) return;
+  let startX = 0;
+  let startY = 0;
+  let hasMoved = false;
+
+  const onDown = (e) => {
+    const pt = e.touches ? e.touches[0] : e;
+    startX = pt.clientX;
+    startY = pt.clientY;
+    hasMoved = false;
+  };
+
+  const onMove = (e) => {
+    if (!hasMoved) {
+      const pt = e.touches ? e.touches[0] : e;
+      const diffX = Math.abs(pt.clientX - startX);
+      const diffY = Math.abs(pt.clientY - startY);
+      if (diffX > 7 || diffY > 7) {
+        hasMoved = true;
+      }
+    }
+  };
+
+  const onCancel = () => {
+    hasMoved = true;
+  };
+
+  element.addEventListener('pointerdown', onDown, { passive: true });
+  element.addEventListener('pointermove', onMove, { passive: true });
+  element.addEventListener('pointercancel', onCancel, { passive: true });
+  element.addEventListener('touchstart', onDown, { passive: true });
+  element.addEventListener('touchmove', onMove, { passive: true });
+  element.addEventListener('touchcancel', onCancel, { passive: true });
+
+  element.addEventListener('click', (e) => {
+    if (hasMoved) {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    }
+    onSelect(e);
+  });
+}
+
+
 // ── Render Challenge Grid ──
 function renderChallenge() {
   const container = document.getElementById('challenge-grid');
@@ -370,7 +440,7 @@ function renderHeroInteractive() {
     const backBtn = document.getElementById('hero-btn-back-invite');
 
     cards.forEach(card => {
-      card.addEventListener('click', () => {
+      attachTapHandler(card, () => {
         state.selectedService = card.dataset.id;
         state.challenge = card.dataset.challenge;
         state.objective = null;
@@ -455,7 +525,7 @@ function renderHeroInteractive() {
     const editBtn = document.getElementById('hero-btn-edit-challenge');
 
     cards.forEach(card => {
-      card.addEventListener('click', () => {
+      attachTapHandler(card, () => {
         state.objective = card.dataset.id;
 
         cards.forEach(c => {
@@ -563,6 +633,13 @@ function renderHeroInteractive() {
       revealNextAction(continueBtn);
       if (typeof trackEvent === 'function') trackEvent('hero_model_selected', id);
     }
+    cards.forEach(card => {
+      attachTapHandler(card, (e) => {
+        if (e.target && e.target.closest('button')) return;
+        selectModel(card.dataset.id);
+      });
+    });
+
     container.querySelectorAll('[name="hero-solution-model"]').forEach(input => {
       input.addEventListener('change', () => selectModel(input.value));
     });
@@ -942,9 +1019,14 @@ function openModelPreviewModal(modelId, title) {
   const selectBtn = document.getElementById('hero-modal-select');
   const backBtn = document.getElementById('hero-modal-back');
 
+  lockModalScroll();
   modal.showModal();
   const closeModal = () => modal.close();
-  modal.addEventListener('close', () => { modal.remove(); returnFocus?.focus({ preventScroll: true }); });
+  modal.addEventListener('close', () => {
+    unlockModalScroll();
+    modal.remove();
+    returnFocus?.focus({ preventScroll: true });
+  });
 
   closeBtn.addEventListener('click', closeModal);
   if (backBtn) backBtn.addEventListener('click', closeModal);
@@ -968,13 +1050,22 @@ window.openModelPreviewModal = openModelPreviewModal;
 // ═══════════════════════════════════════════════════════════
 // Modal "Modelo Sob Medida" — Diagnóstico Visual Guiado
 // ═══════════════════════════════════════════════════════════
+// Modal "Modelo Sob Medida" — Diagnóstico Visual & Personalização Inteligente
+// Baseado fielmente no design clean e elegante da versão anterior
+// ═══════════════════════════════════════════════════════════
 
 const CUSTOM_ICONS = {
-  vender: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="19" cy="21" r="1.4"/><path d="M2.5 3h2.7l2.6 12.6a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21.7 8H6.2"/></svg>',
-  empresa: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/><path d="M9 21v-4h6v4"/></svg>',
-  portfolio: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-5 5"/></svg>',
-  visual: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
-  outro: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>'
+  vender: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1.4"/><circle cx="19" cy="21" r="1.4"/><path d="M2.5 3h2.7l2.6 12.6a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21.7 8H6.2"/></svg>',
+  empresa: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 8h1M14 8h1M9 12h1M14 12h1M9 16h1M14 16h1"/><path d="M9 21v-4h6v4"/></svg>',
+  portfolio: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="13" rx="2"/><circle cx="8.5" cy="9.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-5 5"/></svg>',
+  visual: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
+  outro: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+  lock: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  up: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
+  down: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  trash: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  check: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  sparkles: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 
 const CUSTOM_ADDON_ICONS = {
@@ -986,67 +1077,225 @@ const CUSTOM_ADDON_ICONS = {
   whatsapp: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.56L3 20l1.06-5.4A8.5 8.5 0 1 1 21 11.5z"/><path d="M9 10.5s.5 2 1.5 3 2 1.5 3 1.5"/></svg>',
   blog: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
   clientes: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  faq: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+  faq: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
   integracoes: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4h4"/><path d="M14 4l6 6"/><path d="M14 10V4h6"/></svg>'
 };
 
 const CUSTOM_OBJECTIVES = [
-  { id: 'vender', title: 'Vender produtos ou serviços', desc: 'Quero uma página focada em apresentar uma oferta e gerar conversões.' },
-  { id: 'empresa', title: 'Apresentar minha empresa', desc: 'Quero um site institucional para apresentar minha marca, serviços e informações.' },
-  { id: 'portfolio', title: 'Mostrar meus trabalhos', desc: 'Quero um portfólio para exibir projetos, fotos, cases ou resultados.' },
-  { id: 'visual', title: 'Trabalhar com imagens e vídeos', desc: 'Quero uma experiência visual com foco em fotos, vídeos e apresentação de conteúdo.' },
-  { id: 'outro', title: 'Outro objetivo', desc: 'Tenho uma ideia específica e quero descrever do meu jeito.' }
+  {
+    id: 'vender',
+    title: 'Vender produtos ou serviços',
+    desc: 'Quero uma solução focada em apresentar uma oferta e gerar conversões.',
+    suggestion: 'Landing Page de Conversão',
+    basePrice: 1950,
+    baseMaxSections: 6
+  },
+  {
+    id: 'empresa',
+    title: 'Apresentar minha empresa',
+    desc: 'Quero uma presença digital profissional para apresentar minha marca, serviços e informações.',
+    suggestion: 'Site Institucional',
+    basePrice: 2850,
+    baseMaxSections: 6
+  },
+  {
+    id: 'portfolio',
+    title: 'Mostrar meus trabalhos',
+    desc: 'Quero apresentar projetos, fotos, cases e resultados.',
+    suggestion: 'Portfólio Profissional',
+    basePrice: 2200,
+    baseMaxSections: 6
+  },
+  {
+    id: 'visual',
+    title: 'Trabalhar com imagens e vídeos',
+    desc: 'Quero uma experiência visual focada em conteúdo multimídia.',
+    suggestion: 'Experiência Visual',
+    basePrice: 2600,
+    baseMaxSections: 5
+  },
+  {
+    id: 'outro',
+    title: 'Outro objetivo',
+    desc: 'Tenho uma ideia específica e quero explicar minha necessidade.',
+    suggestion: 'Estrutura Sob Medida',
+    basePrice: 2400,
+    baseMaxSections: 5
+  }
 ];
 
 const CUSTOM_STRUCTURES = {
-  vender: { name: 'Landing Page de Conversão', sections: ['Hero principal', 'Apresentação da oferta', 'Benefícios', 'Prova social / depoimentos', 'Perguntas frequentes', 'CTA / WhatsApp / formulário'] },
-  empresa: { name: 'Site Institucional', sections: ['Home', 'Sobre', 'Serviços', 'Diferenciais', 'Equipe', 'Contato'] },
-  portfolio: { name: 'Portfólio Profissional', sections: ['Apresentação', 'Projetos', 'Galeria', 'Cases', 'Depoimentos', 'Contato'] },
-  visual: { name: 'Experiência Visual', sections: ['Destaque visual', 'Galeria de imagens', 'Vídeo em destaque', 'Portfólio', 'Contato'] },
-  outro: { name: 'Estrutura Personalizada', sections: ['Hero principal', 'Apresentação', 'Destaques do projeto', 'Contato'] }
+  vender: {
+    name: 'Landing Page de Conversão',
+    sections: [
+      { id: 'blk-hero-vender', name: 'Hero principal', type: 'mandatory' },
+      { id: 'blk-oferta', name: 'Apresentação da oferta', type: 'recommended' },
+      { id: 'blk-beneficios', name: 'Benefícios', type: 'recommended' },
+      { id: 'blk-depoimentos-base', name: 'Prova social / depoimentos', type: 'recommended' },
+      { id: 'blk-faq-base', name: 'Perguntas frequentes', type: 'recommended' },
+      { id: 'blk-cta-vender', name: 'CTA / WhatsApp / formulário', type: 'mandatory' }
+    ]
+  },
+  empresa: {
+    name: 'Site Institucional',
+    sections: [
+      { id: 'blk-header-empresa', name: 'Header & Navegação', type: 'mandatory' },
+      { id: 'blk-hero-empresa', name: 'Hero institucional', type: 'mandatory' },
+      { id: 'blk-sobre', name: 'Sobre a empresa', type: 'recommended' },
+      { id: 'blk-servicos', name: 'Catálogo de serviços', type: 'recommended' },
+      { id: 'blk-diferenciais', name: 'Diferenciais de mercado', type: 'recommended' },
+      { id: 'blk-contato-empresa', name: 'Contato e localização', type: 'mandatory' }
+    ]
+  },
+  portfolio: {
+    name: 'Portfólio Profissional',
+    sections: [
+      { id: 'blk-hero-port', name: 'Hero de apresentação', type: 'mandatory' },
+      { id: 'blk-sobre-port', name: 'Sobre o profissional', type: 'recommended' },
+      { id: 'blk-projetos', name: 'Galeria de projetos e cases', type: 'recommended' },
+      { id: 'blk-metricas', name: 'Resultados e métricas', type: 'recommended' },
+      { id: 'blk-depoimentos-port', name: 'Depoimentos de clientes', type: 'recommended' },
+      { id: 'blk-cta-port', name: 'Contato direto / contratação', type: 'mandatory' }
+    ]
+  },
+  visual: {
+    name: 'Experiência Visual',
+    sections: [
+      { id: 'blk-hero-visual', name: 'Hero cinematográfico', type: 'mandatory' },
+      { id: 'blk-galeria-visual', name: 'Galeria multimídia', type: 'recommended' },
+      { id: 'blk-video-visual', name: 'Destaque em vídeo', type: 'recommended' },
+      { id: 'blk-cases-visual', name: 'Mostruário imersivo', type: 'recommended' },
+      { id: 'blk-cta-visual', name: 'Contato e redes', type: 'mandatory' }
+    ]
+  },
+  outro: {
+    name: 'Estrutura Sob Medida',
+    sections: [
+      { id: 'blk-hero-custom', name: 'Hero principal', type: 'mandatory' },
+      { id: 'blk-apresentacao-custom', name: 'Apresentação da solução', type: 'recommended' },
+      { id: 'blk-destaques-custom', name: 'Destaques e recursos', type: 'recommended' },
+      { id: 'blk-cta-custom', name: 'Contato e conversão', type: 'mandatory' }
+    ]
+  }
 };
 
 const CUSTOM_ADDONS = [
-  { id: 'texto', label: 'Texto adicional', block: 'Texto Extra' },
-  { id: 'galeria', label: 'Imagem / galeria', block: 'Galeria' },
-  { id: 'video', label: 'Vídeo', block: 'Vídeo Destaque' },
-  { id: 'depoimentos', label: 'Depoimentos', block: 'Depoimentos' },
-  { id: 'formulario', label: 'Formulário', block: 'Formulário' },
-  { id: 'whatsapp', label: 'Botão WhatsApp', block: 'WhatsApp' },
-  { id: 'blog', label: 'Blog / conteúdo', block: 'Blog' },
-  { id: 'clientes', label: 'Área de clientes', block: 'Área de Clientes' },
-  { id: 'faq', label: 'FAQ', block: 'FAQ' },
-  { id: 'integracoes', label: 'Integrações', block: 'Integrações' }
+  { id: 'texto', label: 'Texto adicional', price: 150, blockTitle: 'Texto adicional' },
+  { id: 'galeria', label: 'Imagem / galeria', price: 200, blockTitle: 'Imagem / galeria' },
+  { id: 'video', label: 'Vídeo', price: 250, blockTitle: 'Vídeo' },
+  { id: 'depoimentos', label: 'Depoimentos', price: 150, blockTitle: 'Depoimentos' },
+  { id: 'formulario', label: 'Formulário', price: 180, blockTitle: 'Formulário' },
+  { id: 'whatsapp', label: 'Botão WhatsApp', price: 120, blockTitle: 'Botão WhatsApp' },
+  { id: 'blog', label: 'Blog / conteúdo', price: 450, blockTitle: 'Blog / conteúdo' },
+  { id: 'clientes', label: 'Área de clientes', price: 850, blockTitle: 'Área de clientes' },
+  { id: 'faq', label: 'FAQ', price: 160, blockTitle: 'FAQ' },
+  { id: 'integracoes', label: 'Integrações', price: 380, blockTitle: 'Integrações' }
 ];
+
+// Motor de análise léxica interna (sem IA externa)
+function analyzeCustomKeywords(rawText) {
+  if (!rawText || typeof rawText !== 'string') return null;
+  const clean = rawText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+  const rules = [
+    {
+      id: 'vender',
+      suggestion: 'Landing Page de Conversão',
+      words: ['vender', 'venda', 'vendas', 'produto', 'produtos', 'cliente', 'clientes', 'compra', 'compras', 'orcamento', 'orcamentos', 'oferta', 'ofertas', 'conversao', 'conversoes', 'loja', 'lead', 'leads', 'checkout', 'preco', 'comercio', 'trafego', 'anuncio', 'campanha', 'pagamento']
+    },
+    {
+      id: 'empresa',
+      suggestion: 'Site Institucional',
+      words: ['empresa', 'empresas', 'institucional', 'marca', 'marcas', 'clinica', 'consultorio', 'escritorio', 'consultoria', 'negocio', 'corporativo', 'servico', 'servicos', 'equipe', 'instituicao', 'medica', 'odontologia', 'advocacia', 'contabilidade', 'credibilidade']
+    },
+    {
+      id: 'portfolio',
+      suggestion: 'Portfólio Profissional',
+      words: ['foto', 'fotos', 'fotografia', 'fotografo', 'fotografa', 'projeto', 'projetos', 'trabalho', 'trabalhos', 'portfolio', 'cases', 'case', 'design', 'designer', 'arquiteto', 'arquitetura', 'obras', 'artista', 'artes', 'ensaios', 'galeria pessoal', 'curriculo']
+    },
+    {
+      id: 'visual',
+      suggestion: 'Experiência Visual',
+      words: ['video', 'videos', 'imagem', 'imagens', 'galeria', 'filme', 'filmes', 'multimidia', 'visual', 'audiovisual', 'cinema', 'motion', 'animacao', 'teaser', 'conteudo visual', 'gravações', 'videomaker']
+    }
+  ];
+
+  let bestMatch = null;
+  let maxScore = 0;
+
+  rules.forEach(rule => {
+    const matched = rule.words.filter(w => clean.includes(w));
+    if (matched.length > maxScore) {
+      maxScore = matched.length;
+      bestMatch = { id: rule.id, suggestion: rule.suggestion, matched };
+    }
+  });
+
+  if (maxScore > 0) return bestMatch;
+  if (clean.trim().length > 6) {
+    return {
+      id: 'outro',
+      suggestion: 'Estrutura Sob Medida',
+      isUnclear: true,
+      message: 'Vamos analisar sua necessidade — Com base na sua descrição, nossa equipe poderá validar a melhor estrutura para o seu projeto.'
+    };
+  }
+  return null;
+}
 
 function openCustomModelModal(selectedSvc, onFinish) {
   const existing = document.getElementById('custom-model-dialog');
   if (existing) existing.remove();
 
   const returnFocus = document.activeElement;
-  const checkSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-  const arrowRightSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-  const arrowLeftSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>';
+  const checkSvg = CUSTOM_ICONS.check;
+  const arrowRightSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  const arrowLeftSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>';
 
-  const modalState = { step: 1, objective: null, customText: '', addons: new Set() };
+  // Mapeia objetivo inicial
+  let initialObjective = 'vender';
+  if (selectedSvc) {
+    const svcId = (typeof selectedSvc === 'object') ? selectedSvc.id : String(selectedSvc);
+    if (svcId === 'site-institucional') initialObjective = 'empresa';
+    else if (svcId === 'portfolio') initialObjective = 'portfolio';
+    else if (svcId === 'landing-page') initialObjective = 'vender';
+  }
+
+  const modalState = {
+    step: 2, // Inicia diretamente no Estúdio Visual Unificado (conforme solicitado e visto no screenshot)
+    objective: initialObjective,
+    customText: '',
+    detectedMatch: null,
+    blocks: [],
+    addons: new Set()
+  };
+
+  // Inicializa lista de blocos da estrutura recomendada
+  function initBlocksForObjective(objId) {
+    const base = CUSTOM_STRUCTURES[objId] || CUSTOM_STRUCTURES.outro;
+    modalState.blocks = base.sections.map(s => ({ ...s }));
+    modalState.addons.clear();
+  }
+  initBlocksForObjective(modalState.objective);
 
   const modalHTML = `
     <dialog class="hero-model-dialog custom-model-dialog" id="custom-model-dialog" aria-labelledby="custom-model-title">
       <div class="hero-modal-content custom-model-content">
-        <div class="hero-modal-header">
+        <div class="hero-modal-header custom-model-header">
           <div class="hero-modal-header-left">
-            <span class="hero-modal-tag">
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span class="custom-header-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
               SOB MEDIDA
             </span>
-            <h3 class="hero-modal-title" id="custom-model-title">Vamos estruturar seu projeto</h3>
+            <h3 class="custom-header-title" id="custom-model-title">Estrutura recomendada para seu projeto</h3>
           </div>
-          <button type="button" class="hero-modal-close" id="custom-modal-close" aria-label="Fechar" autofocus>
+          <button type="button" class="hero-modal-close" id="custom-modal-close" aria-label="Fechar modal" autofocus>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
-        <div class="hero-modal-body custom-model-body" id="custom-model-body"></div>
-        <div class="hero-modal-footer" id="custom-model-footer"></div>
+
+        <div class="custom-model-body" id="custom-model-body"></div>
+        <div class="hero-modal-footer custom-model-footer" id="custom-model-footer"></div>
       </div>
     </dialog>
   `;
@@ -1059,171 +1308,540 @@ function openCustomModelModal(selectedSvc, onFinish) {
   const bodyEl = document.getElementById('custom-model-body');
   const footerEl = document.getElementById('custom-model-footer');
 
+  lockModalScroll();
   modal.showModal();
   const closeModal = () => modal.close();
-  modal.addEventListener('close', () => { modal.remove(); returnFocus?.focus?.({ preventScroll: true }); });
+  modal.addEventListener('close', () => {
+    unlockModalScroll();
+    modal.remove();
+    returnFocus?.focus?.({ preventScroll: true });
+  });
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-  function finalize() {
+  // ── Cálculo de Estimativa em Tempo Real ──
+  function calculateEstimate() {
+    const currentObj = CUSTOM_OBJECTIVES.find(o => o.id === modalState.objective) || CUSTOM_OBJECTIVES[4];
+    let basePrice = currentObj.basePrice;
+    let addonsTotal = 0;
+
+    CUSTOM_ADDONS.forEach(addon => {
+      if (modalState.addons.has(addon.id)) {
+        addonsTotal += addon.price;
+      }
+    });
+
+    const totalSections = modalState.blocks.length;
+    const extraSectionsCount = Math.max(0, totalSections - currentObj.baseMaxSections);
+    const extraSectionsCost = extraSectionsCount * 120;
+
+    const totalEstimate = basePrice + addonsTotal + extraSectionsCost;
+    const installmentVal = Math.round((totalEstimate * 1.12) / 12);
+
+    const objName = modalState.detectedMatch && !modalState.detectedMatch.isUnclear
+      ? modalState.detectedMatch.suggestion
+      : currentObj.suggestion;
+
+    return {
+      basePrice,
+      addonsTotal,
+      extraSectionsCount,
+      total: totalEstimate,
+      installmentVal,
+      totalSections,
+      addedCount: modalState.addons.size,
+      objName
+    };
+  }
+
+  // ── Finalização / Passagem de dados ──
+  function finalizeProject() {
+    const estimate = calculateEstimate();
+    const projectSummary = {
+      objective: modalState.objective,
+      suggestion: estimate.objName,
+      customText: modalState.customText,
+      blocks: modalState.blocks.map((b, idx) => ({ order: idx + 1, name: b.name, type: b.type })),
+      addons: Array.from(modalState.addons),
+      totalEstimate: estimate.total,
+      installments: estimate.installmentVal,
+      sectionsCount: estimate.totalSections,
+      savedAt: new Date().toISOString()
+    };
+
+    try {
+      window.__cogitCustomProject = projectSummary;
+      localStorage.setItem('cogit_custom_project', JSON.stringify(projectSummary));
+    } catch (err) {
+      /* ignore storage errors */
+    }
+
     closeModal();
     if (typeof trackEvent === 'function') trackEvent('custom_model_finished', modalState.objective);
-    if (typeof onFinish === 'function') onFinish(modalState);
+
+    if (typeof onFinish === 'function') {
+      onFinish(projectSummary);
+    } else {
+      const targetUrl = `contato.html?solucao=modelos-sob-medida&origem=custom-studio`;
+      window.location.href = targetUrl;
+    }
   }
 
-  function renderPreviewBlocks() {
-    const blocksEl = document.getElementById('custom-preview-blocks');
-    if (!blocksEl) return;
-    const structure = CUSTOM_STRUCTURES[modalState.objective] || CUSTOM_STRUCTURES.outro;
-    const extra = CUSTOM_ADDONS.filter(a => modalState.addons.has(a.id)).map(a => a.block);
-    const allBlocks = [...structure.sections, ...extra];
-    blocksEl.innerHTML = allBlocks.map((b, i) => `<div class="custom-preview-block" style="animation-delay:${i * 30}ms">${b}</div>`).join('');
-  }
+  // ── Wireframe Mockup Renderer (Fiel ao screenshot: blocos escuros limpos com texto centralizado) ──
+  function renderWireframePreviewHtml() {
+    const blocks = modalState.blocks;
+    const blocksHtml = blocks.map(b => `
+      <div class="custom-wf-block" data-block-id="${b.id}">
+        <span>${b.name}</span>
+      </div>
+    `).join('');
 
-  function renderStep1Footer() {
-    footerEl.innerHTML = `
-      <button type="button" class="hero-modal-btn-back" id="custom-btn-cancel">${arrowLeftSvg} Voltar</button>
-      <button type="button" class="hero-modal-btn-select" id="custom-btn-next" ${modalState.objective ? '' : 'disabled'}>Continuar ${arrowRightSvg}</button>
+    return `
+      <div class="custom-preview-mockup">
+        <div class="custom-browser-bar">
+          <div class="custom-browser-dots">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="custom-preview-wireframe-scroll" id="custom-wf-scroll">
+          ${blocksHtml}
+        </div>
+      </div>
     `;
-    document.getElementById('custom-btn-cancel').addEventListener('click', closeModal);
-    const nextBtn = document.getElementById('custom-btn-next');
-    if (nextBtn) nextBtn.addEventListener('click', () => {
-      if (!modalState.objective) return;
-      modalState.step = 2;
-      renderModalStep();
+  }
+
+  function updateDynamicPreview() {
+    const previewContainer = document.getElementById('custom-preview-mount');
+    if (previewContainer) {
+      previewContainer.innerHTML = renderWireframePreviewHtml();
+    }
+    updateEstimateDisplay();
+  }
+
+  // ── Painel de Estimativa Compacto e Elegante ──
+  function updateEstimateDisplay() {
+    const estimateEl = document.getElementById('custom-estimate-summary-mount');
+    if (!estimateEl) return;
+    const est = calculateEstimate();
+
+    estimateEl.innerHTML = `
+      <div class="custom-est-card">
+        <div class="custom-est-row">
+          <span class="custom-est-key">Estrutura base:</span>
+          <strong class="custom-est-val">${est.objName}</strong>
+        </div>
+        <div class="custom-est-row">
+          <span class="custom-est-key">Seções ativas:</span>
+          <strong class="custom-est-val">${est.totalSections}</strong>
+        </div>
+        <div class="custom-est-row">
+          <span class="custom-est-key">Adicionais selecionados:</span>
+          <strong class="custom-est-val">${est.addedCount}</strong>
+        </div>
+        <div class="custom-est-divider"></div>
+        <div class="custom-est-row custom-est-row--total">
+          <span class="custom-est-key">Investimento estimado:</span>
+          <div class="custom-est-price-wrap">
+            <span class="custom-est-price-number">R$ ${est.total.toLocaleString('pt-BR')}</span>
+            <small class="custom-est-price-sub">ou 12x de R$ ${est.installmentVal.toLocaleString('pt-BR')}</small>
+          </div>
+        </div>
+        <p class="custom-est-disclaimer">*Estimativa preliminar sujeita à validação de arquitetura no discovery.</p>
+      </div>
+    `;
+  }
+
+  // ── Regras de Bloqueio de Movimento (Header/Hero no topo, CTA/Footer no final) ──
+  function getMovementBounds() {
+    const blocks = modalState.blocks;
+    let topLocked = 0;
+    while (topLocked < blocks.length && blocks[topLocked].type === 'mandatory') {
+      topLocked++;
+    }
+    let bottomLocked = 0;
+    while (bottomLocked < blocks.length && blocks[blocks.length - 1 - bottomLocked].type === 'mandatory') {
+      bottomLocked++;
+    }
+    return { topLocked, bottomLocked };
+  }
+
+  function moveBlock(index, direction) {
+    const target = index + direction;
+    const { topLocked, bottomLocked } = getMovementBounds();
+    const lastAllowed = modalState.blocks.length - 1 - bottomLocked;
+
+    if (target < topLocked || target > lastAllowed) return;
+
+    const temp = modalState.blocks[index];
+    modalState.blocks[index] = modalState.blocks[target];
+    modalState.blocks[target] = temp;
+    renderStructurePillsList();
+    updateDynamicPreview();
+  }
+
+  function removeBlock(index) {
+    const block = modalState.blocks[index];
+    if (!block || block.type === 'mandatory') return;
+
+    if (block.addonId) {
+      modalState.addons.delete(block.addonId);
+      updateAddonCardsState();
+    }
+    modalState.blocks.splice(index, 1);
+    renderStructurePillsList();
+    updateDynamicPreview();
+    if (typeof trackEvent === 'function') trackEvent('custom_model_block_removed', block.id);
+  }
+
+  function updateAddonCardsState() {
+    const cards = bodyEl.querySelectorAll('.custom-addon-card');
+    cards.forEach(card => {
+      const id = card.dataset.id;
+      const isAdded = modalState.addons.has(id);
+      card.classList.toggle('is-added', isAdded);
+      const actionEl = card.querySelector('.custom-addon-btn');
+      if (actionEl) {
+        actionEl.innerHTML = isAdded ? `${checkSvg} Adicionado` : '+ Adicionar';
+      }
     });
   }
 
-  function renderStep2Footer() {
-    footerEl.innerHTML = `
-      <button type="button" class="hero-modal-btn-back" id="custom-btn-back2">${arrowLeftSvg} Voltar</button>
-      <button type="button" class="hero-modal-btn-select" id="custom-btn-finish">Finalizar personalização ${checkSvg}</button>
-    `;
-    document.getElementById('custom-btn-back2').addEventListener('click', () => { modalState.step = 1; renderModalStep(); });
-    document.getElementById('custom-btn-finish').addEventListener('click', finalize);
+  function toggleAddon(addonId) {
+    const addon = CUSTOM_ADDONS.find(a => a.id === addonId);
+    if (!addon) return;
+
+    if (modalState.addons.has(addonId)) {
+      modalState.addons.delete(addonId);
+      modalState.blocks = modalState.blocks.filter(b => b.addonId !== addonId);
+    } else {
+      modalState.addons.add(addonId);
+      const newBlock = {
+        id: `addon-${addon.id}-${Date.now()}`,
+        name: addon.blockTitle,
+        type: 'addon',
+        addonId: addon.id
+      };
+      // Insere imediatamente antes das seções obrigatórias finais (ex: CTA final)
+      const lastMandatoryIndex = modalState.blocks.length - 1;
+      if (lastMandatoryIndex > 0 && modalState.blocks[lastMandatoryIndex].type === 'mandatory') {
+        modalState.blocks.splice(lastMandatoryIndex, 0, newBlock);
+      } else {
+        modalState.blocks.push(newBlock);
+      }
+    }
+    updateAddonCardsState();
+    renderStructurePillsList();
+    updateDynamicPreview();
+    if (typeof trackEvent === 'function') trackEvent('custom_model_addon_toggled', addonId);
   }
 
-  function renderCustomStep1() {
-    bodyEl.className = 'hero-modal-body custom-model-body custom-model-body--single';
+  // ── Renderização da Lista de Seções em Pills de 2 Colunas (Idêntico ao Screenshot) ──
+  function renderStructurePillsList() {
+    const listEl = document.getElementById('custom-structure-pills');
+    if (!listEl) return;
+
+    const { topLocked, bottomLocked } = getMovementBounds();
+    const lastAllowed = modalState.blocks.length - 1 - bottomLocked;
+
+    listEl.innerHTML = modalState.blocks.map((b, idx) => {
+      const isMandatory = b.type === 'mandatory';
+      const canUp = !isMandatory && idx > topLocked;
+      const canDown = !isMandatory && idx < lastAllowed;
+
+      return `
+        <div class="custom-structure-pill ${isMandatory ? 'is-mandatory' : ''}" data-index="${idx}">
+          <div class="custom-pill-left">
+            <span class="custom-pill-check">${checkSvg}</span>
+            <span class="custom-pill-title">${b.name}</span>
+          </div>
+          <div class="custom-pill-controls">
+            ${canUp ? `
+              <button type="button" class="custom-pill-btn" data-action="up" data-index="${idx}" title="Mover para cima" aria-label="Mover para cima">
+                ${CUSTOM_ICONS.up}
+              </button>
+            ` : ''}
+            ${canDown ? `
+              <button type="button" class="custom-pill-btn" data-action="down" data-index="${idx}" title="Mover para baixo" aria-label="Mover para baixo">
+                ${CUSTOM_ICONS.down}
+              </button>
+            ` : ''}
+            ${!isMandatory ? `
+              <button type="button" class="custom-pill-btn custom-pill-btn--trash" data-action="remove" data-index="${idx}" title="Remover seção" aria-label="Remover seção">
+                ${CUSTOM_ICONS.trash}
+              </button>
+            ` : `
+              <span class="custom-pill-lock-hint" title="Item obrigatório">${CUSTOM_ICONS.lock}</span>
+            `}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Eventos de botões up/down/remove
+    listEl.querySelectorAll('[data-action]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const action = btn.dataset.action;
+        const index = parseInt(btn.dataset.index, 10);
+        if (action === 'up') moveBlock(index, -1);
+        else if (action === 'down') moveBlock(index, 1);
+        else if (action === 'remove') removeBlock(index);
+      });
+    });
+  }
+
+  // ── Renderização da ETAPA 1: Seleção de Objetivo (Acessível via "Voltar ao objetivo") ──
+  function renderStep1View() {
+    titleEl.textContent = 'Qual o objetivo principal do seu projeto?';
+    bodyEl.className = 'hero-modal-body custom-model-body custom-model-body--step1';
+
     const cardsHTML = CUSTOM_OBJECTIVES.map(o => `
       <button type="button" class="custom-objective-card ${modalState.objective === o.id ? 'is-selected' : ''}" data-id="${o.id}">
-        <span class="custom-objective-icon">${CUSTOM_ICONS[o.id]}</span>
-        <span class="custom-objective-title">${o.title}</span>
-        <span class="custom-objective-desc">${o.desc}</span>
+        <div class="custom-objective-top">
+          <span class="custom-objective-icon">${CUSTOM_ICONS[o.id]}</span>
+          <span class="custom-objective-tag">${o.suggestion}</span>
+        </div>
+        <strong class="custom-objective-title">${o.title}</strong>
+        <p class="custom-objective-desc">${o.desc}</p>
+        <span class="custom-objective-action-hint">${modalState.objective === o.id ? checkSvg + ' Selecionado' : 'Selecionar'}</span>
       </button>
     `).join('');
 
     bodyEl.innerHTML = `
-      <p class="custom-model-subtitle">Conte o objetivo da sua solução e montaremos uma estrutura personalizada para sua necessidade.</p>
-      <h4 class="custom-model-question">Qual o objetivo principal do seu projeto?</h4>
-      <div class="custom-objective-grid">${cardsHTML}</div>
-      ${modalState.objective === 'outro' ? `
-        <div class="custom-context-field">
-          <label class="custom-context-label" for="custom-context-input">Conte sua ideia</label>
-          <textarea id="custom-context-input" rows="3" placeholder="Descreva como você imagina sua solução, o que deseja mostrar e qual resultado espera.">${CogitUI.escapeHtml(modalState.customText)}</textarea>
-        </div>` : ''}
+      <div class="custom-step1-container">
+        <p class="custom-model-subtitle">Selecione o objetivo da sua solução para adaptarmos a estrutura ideal para você.</p>
+        <div class="custom-objective-grid">${cardsHTML}</div>
+        
+        ${modalState.objective === 'outro' ? `
+          <div class="custom-context-field">
+            <label class="custom-context-label" for="custom-context-input">
+              <span>Conte sua ideia ou necessidade</span>
+              <small class="custom-context-hint">Identificaremos o direcionamento ideal para sua solução.</small>
+            </label>
+            <textarea id="custom-context-input" rows="3" placeholder="Exemplo: Quero um site para minha clínica mostrando serviços, fotos e contato pelo WhatsApp.">${CogitUI.escapeHtml(modalState.customText)}</textarea>
+            <div class="custom-keyword-feedback" id="custom-keyword-feedback"></div>
+          </div>
+        ` : ''}
+      </div>
     `;
 
     bodyEl.querySelectorAll('.custom-objective-card').forEach(card => {
-      card.addEventListener('click', () => {
-        modalState.objective = card.dataset.id;
-        renderCustomStep1();
-        renderStep1Footer();
-        if (modalState.objective === 'outro') {
-          const ta = document.getElementById('custom-context-input');
-          if (ta) ta.focus();
+      attachTapHandler(card, () => {
+        const prevObj = modalState.objective;
+        const newObj = card.dataset.id;
+        if (prevObj === newObj) return;
+
+        modalState.objective = newObj;
+        initBlocksForObjective(modalState.objective);
+
+        if (prevObj === 'outro' || newObj === 'outro') {
+          const scrollPos = bodyEl.scrollTop;
+          renderStep1View();
+          renderFooter();
+          requestAnimationFrame(() => { bodyEl.scrollTop = scrollPos; });
+          if (newObj === 'outro') {
+            const ta = document.getElementById('custom-context-input');
+            if (ta) ta.focus();
+          }
+        } else {
+          bodyEl.querySelectorAll('.custom-objective-card').forEach(c => {
+            const isSel = c.dataset.id === newObj;
+            c.classList.toggle('is-selected', isSel);
+            const hint = c.querySelector('.custom-objective-action-hint');
+            if (hint) hint.innerHTML = isSel ? checkSvg + ' Selecionado' : 'Selecionar';
+          });
+          renderFooter();
         }
+        if (typeof trackEvent === 'function') trackEvent('custom_model_objective_selected', modalState.objective);
       });
     });
-    const textarea = document.getElementById('custom-context-input');
-    if (textarea) textarea.addEventListener('input', e => { modalState.customText = e.target.value; });
 
-    renderStep1Footer();
+    const textarea = document.getElementById('custom-context-input');
+    const feedbackEl = document.getElementById('custom-keyword-feedback');
+
+    function updateKeywordFeedback() {
+      if (!feedbackEl) return;
+      const detected = analyzeCustomKeywords(modalState.customText);
+      modalState.detectedMatch = detected;
+
+      if (detected) {
+        if (!detected.isUnclear) {
+          feedbackEl.innerHTML = `
+            <div class="custom-keyword-pill">
+              ${CUSTOM_ICONS.sparkles}
+              <span>Direcionamento sugerido: <strong>${detected.suggestion}</strong></span>
+            </div>
+          `;
+          // Sincroniza blocos sugeridos caso usuário opte pela estrutura detectada
+          const matchingObj = CUSTOM_STRUCTURES[detected.id];
+          if (matchingObj) {
+            modalState.blocks = matchingObj.sections.map(s => ({ ...s }));
+          }
+        } else {
+          feedbackEl.innerHTML = `
+            <div class="custom-keyword-pill custom-keyword-pill--neutral">
+              <span><strong>Vamos analisar sua necessidade</strong> — Com base na sua descrição, nossa equipe poderá validar a melhor estrutura para o seu projeto.</span>
+            </div>
+          `;
+        }
+      } else {
+        feedbackEl.innerHTML = '';
+      }
+    }
+
+    if (textarea) {
+      textarea.addEventListener('input', e => {
+        modalState.customText = e.target.value;
+        updateKeywordFeedback();
+      });
+      updateKeywordFeedback();
+    }
+
+    renderFooter();
   }
 
-  function renderCustomStep2() {
-    bodyEl.className = 'hero-modal-body custom-model-body custom-model-body--split';
-    const structure = CUSTOM_STRUCTURES[modalState.objective] || CUSTOM_STRUCTURES.outro;
+  // ── Renderização da ETAPA 2 (Estúdio Visual Unificado — Base Visual Idêntica ao Screenshot) ──
+  function renderStep2DesktopStudio() {
+    titleEl.textContent = 'Estrutura recomendada para seu projeto';
+    bodyEl.className = 'hero-modal-body custom-model-body custom-model-body--studio';
+
+    const currentObj = CUSTOM_OBJECTIVES.find(o => o.id === modalState.objective) || CUSTOM_OBJECTIVES[4];
+    const structureName = modalState.detectedMatch && !modalState.detectedMatch.isUnclear
+      ? modalState.detectedMatch.suggestion
+      : currentObj.suggestion;
 
     bodyEl.innerHTML = `
-      <div class="custom-config-panel">
-        <div class="custom-structure-block">
-          <span class="custom-eyebrow">Estrutura recomendada</span>
-          <h4 class="custom-structure-name">${structure.name}</h4>
-          <p class="custom-model-subtitle">Com base no objetivo escolhido, montamos uma estrutura inicial para sua solução.</p>
-          <ul class="custom-structure-list">${structure.sections.map(s => `<li>${checkSvg}<span>${s}</span></li>`).join('')}</ul>
+      <!-- Coluna Esquerda: Decisão e Personalização -->
+      <div class="custom-studio-left">
+        
+        <!-- 1. Título e Seções Recomendadas -->
+        <div class="custom-structure-intro">
+          <span class="custom-eyebrow">ESTRUTURA RECOMENDADA</span>
+          <h4 class="custom-structure-title">${structureName}</h4>
+          <p class="custom-structure-desc">Com base no objetivo escolhido, montamos uma estrutura inicial para sua solução.</p>
         </div>
 
+        <div class="custom-pills-grid" id="custom-structure-pills"></div>
+
+        <!-- 2. Personalização com Adicionais (Cards compactos de 2 colunas, sem textos longos) -->
         <div class="custom-addons-block">
-          <h4 class="custom-block-title">Personalize sua estrutura</h4>
-          <p class="custom-model-subtitle">Adicione elementos extras para deixar seu projeto ainda mais alinhado com a sua necessidade.</p>
+          <h4 class="custom-addons-title">Personalize sua estrutura</h4>
+          <p class="custom-addons-desc">Adicione elementos extras para deixar seu projeto ainda mais alinhado com a sua necessidade.</p>
+          
           <div class="custom-addon-grid">
             ${CUSTOM_ADDONS.map(a => `
               <button type="button" class="custom-addon-card ${modalState.addons.has(a.id) ? 'is-added' : ''}" data-id="${a.id}">
                 <span class="custom-addon-icon">${CUSTOM_ADDON_ICONS[a.id]}</span>
-                <span class="custom-addon-label">${a.label}</span>
-                <span class="custom-addon-action">${modalState.addons.has(a.id) ? checkSvg + ' Adicionado' : '+ Adicionar'}</span>
+                <div class="custom-addon-info">
+                  <strong class="custom-addon-name">${a.label}</strong>
+                  <span class="custom-addon-price">+R$ ${a.price}</span>
+                </div>
+                <span class="custom-addon-btn">${modalState.addons.has(a.id) ? checkSvg + ' Adicionado' : '+ Adicionar'}</span>
               </button>
             `).join('')}
           </div>
         </div>
 
+        <!-- 3. IA Secundária e Discreta (conforme diretriz) -->
         <div class="custom-ia-card">
           <div class="custom-ia-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3.2"/></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3.2"/></svg>
           </div>
           <div class="custom-ia-text">
-            <h5>Personalize sua estrutura com IA
-              <span class="custom-ia-info" tabindex="0" data-tooltip="A personalização com IA estará disponível dentro da plataforma Cogit para acompanhar projetos, sugestões e pedidos de forma centralizada.">i</span>
-            </h5>
-            <p>Nossa IA poderá ajudar na criação de sugestões visuais, estruturas e personalizações avançadas para o seu projeto.</p>
+            <h5>Personalize sua estrutura com IA <span class="custom-ia-info" tabindex="0" data-tooltip="Os recursos de IA ficam disponíveis dentro da plataforma Cogit para acompanhamento e personalizações futuras.">i</span></h5>
+            <p>Nossa IA poderá ajudar na criação de sugestões visuais, estruturas e personalizações dentro da plataforma.</p>
           </div>
           <button type="button" class="custom-ia-btn" id="custom-ia-access">Acessar pela plataforma</button>
         </div>
+
       </div>
 
-      <div class="custom-preview-panel">
-        <span class="custom-preview-label">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Pré-visualização da estrutura
-        </span>
-        <div class="custom-preview-mockup">
-          <div class="custom-preview-browser-bar"><span></span><span></span><span></span></div>
-          <div class="custom-preview-blocks" id="custom-preview-blocks"></div>
+      <!-- Coluna Direita: Mockup Minimalista + Estimativa Compacta -->
+      <div class="custom-studio-right">
+        <div class="custom-preview-sticky-wrap">
+          <div class="custom-preview-header">
+            <span class="custom-preview-label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              PRÉ-VISUALIZAÇÃO DA ESTRUTURA
+            </span>
+          </div>
+
+          <div class="custom-preview-mount" id="custom-preview-mount">
+            ${renderWireframePreviewHtml()}
+          </div>
+
+          <div class="custom-estimate-summary-mount" id="custom-estimate-summary-mount"></div>
         </div>
       </div>
     `;
 
-    renderPreviewBlocks();
+    renderStructurePillsList();
+    updateEstimateDisplay();
 
+    // Eventos dos cards de adicionais
     bodyEl.querySelectorAll('.custom-addon-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const id = card.dataset.id;
-        if (modalState.addons.has(id)) modalState.addons.delete(id); else modalState.addons.add(id);
-        card.classList.toggle('is-added');
-        card.querySelector('.custom-addon-action').innerHTML = modalState.addons.has(id) ? checkSvg + ' Adicionado' : '+ Adicionar';
-        renderPreviewBlocks();
-        if (typeof trackEvent === 'function') trackEvent('custom_model_addon_toggled', id);
+      attachTapHandler(card, () => {
+        toggleAddon(card.dataset.id);
       });
     });
 
-    document.getElementById('custom-ia-access').addEventListener('click', finalize);
-    renderStep2Footer();
+    const iaBtn = document.getElementById('custom-ia-access');
+    if (iaBtn) {
+      iaBtn.addEventListener('click', finalizeProject);
+    }
+
+    renderFooter();
   }
 
-  function renderModalStep() {
+  // ── Renderização do Rodapé ──
+  function renderFooter() {
     if (modalState.step === 1) {
-      titleEl.textContent = 'Vamos estruturar seu projeto';
-      renderCustomStep1();
+      footerEl.innerHTML = `
+        <button type="button" class="hero-modal-btn-back" id="custom-btn-back-to-studio">${arrowLeftSvg} Voltar à estrutura</button>
+        <button type="button" class="hero-modal-btn-select" id="custom-btn-confirm-objective">Continuar com esta estrutura ${arrowRightSvg}</button>
+      `;
+      document.getElementById('custom-btn-back-to-studio').addEventListener('click', () => {
+        modalState.step = 2;
+        renderStep2DesktopStudio();
+      });
+      document.getElementById('custom-btn-confirm-objective').addEventListener('click', () => {
+        initBlocksForObjective(modalState.objective);
+        modalState.step = 2;
+        renderStep2DesktopStudio();
+      });
     } else {
-      titleEl.textContent = 'Estrutura recomendada para seu projeto';
-      renderCustomStep2();
+      footerEl.innerHTML = `
+        <button type="button" class="hero-modal-btn-back" id="custom-btn-change-objective">${arrowLeftSvg} Voltar ao objetivo</button>
+        <div class="custom-footer-actions-right">
+          <button type="button" class="custom-btn-secondary-link" id="custom-btn-reset-blocks">Restaurar padrão</button>
+          <button type="button" class="hero-modal-btn-select" id="custom-btn-finish-studio">Finalizar personalização ${checkSvg}</button>
+        </div>
+      `;
+      document.getElementById('custom-btn-change-objective').addEventListener('click', () => {
+        modalState.step = 1;
+        renderStep1View();
+      });
+      document.getElementById('custom-btn-reset-blocks').addEventListener('click', () => {
+        initBlocksForObjective(modalState.objective);
+        renderStructurePillsList();
+        updateAddonCardsState();
+        updateDynamicPreview();
+      });
+      document.getElementById('custom-btn-finish-studio').addEventListener('click', finalizeProject);
+    }
+  }
+
+  function renderModalView() {
+    if (modalState.step === 1) {
+      renderStep1View();
+    } else {
+      renderStep2DesktopStudio();
     }
     bodyEl.classList.add('is-step-entering');
     requestAnimationFrame(() => requestAnimationFrame(() => bodyEl.classList.remove('is-step-entering')));
   }
 
-  renderModalStep();
+  renderModalView();
   if (typeof trackEvent === 'function') trackEvent('custom_model_modal_opened', selectedSvc && selectedSvc.id);
 }
 window.openCustomModelModal = openCustomModelModal;

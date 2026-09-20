@@ -1081,7 +1081,335 @@
   .breadcrumbs {
     margin-bottom: var(--space-4);
   }
+
+  .process-visual-container {
+    display: none;
+  }
 }
+
+/* ── Tablet Transition (769px to 1024px) ── */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .solutions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .challenge-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-width: 100%;
+  }
+
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    max-width: 720px;
+    margin-inline: auto;
+  }
+
+  .cases-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .impact-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .process-wrapper {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .process-visual-container {
+    height: 320px;
+  }
+}
+
+/* ── Ultra-Small Mobile (≤360px: 320px, 360px) ── */
+
+@media (max-width: 360px) {
+  :root {
+    --gutter: 12px;
+  }
+
+  .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  /* Header & Logo */
+  .header {
+    height: 64px;
+  }
+
+  .logo-img {
+    height: 36px;
+    max-width: 180px;
+  }
+
+  .menu-toggle {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Typography */
+  .hero h1,
+  .hero-content h1,
+  .solution-hero h1 {
+    font-size: clamp(1.4rem, 6.8vw, 1.7rem);
+    line-height: 1.22;
+  }
+
+  .hero-subtitle,
+  .solution-hero-lead {
+    font-size: 13px;
+    line-height: 1.48;
+    max-width: 100%;
+  }
+
+  .section-header h2,
+  .section-title {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .section-header p,
+  .section-lead {
+    font-size: 12.5px;
+    line-height: 1.5;
+  }
+
+  /* Hero Diagnostic Container & Steps */
+  .hero-interactive-container {
+    padding: 14px 10px;
+    border-radius: var(--radius-md);
+  }
+
+  .hero-invite-title {
+    font-size: 1.15rem;
+    max-width: 100%;
+  }
+
+  .hero-invite-desc {
+    font-size: 12px;
+    max-width: 100%;
+  }
+
+  .btn-hero-start {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 11px 16px;
+    font-size: 13px;
+    height: 46px;
+  }
+
+  .hero-discovery-topbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hero-diag-dots {
+    gap: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-diag-dot-label {
+    display: none;
+  }
+
+  .hero-diag-dot-line {
+    width: 8px;
+    min-width: 8px;
+  }
+
+  /* Service Grid: 1 column on ultra-small mobile prevents text squishing */
+  .hero-svc-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .hero-svc-card {
+    min-height: 54px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 10px;
+  }
+
+  .hero-svc-name {
+    font-size: 13px;
+    margin: 0;
+  }
+
+  .hero-svc-check {
+    margin-left: auto;
+  }
+
+  /* Challenges & Objectives */
+  .hero-challenge-card {
+    padding: 10px 10px;
+    gap: 8px;
+  }
+
+  .hero-challenge-title {
+    font-size: 12px;
+  }
+
+  .hero-challenge-phrase {
+    font-size: 10.5px;
+  }
+
+  .hero-objective-card {
+    padding: 10px 10px;
+    min-height: 52px;
+  }
+
+  .hero-objective-text {
+    font-size: 12.5px;
+  }
+
+  /* Results */
+  .hero-result-card {
+    padding: 12px 10px;
+  }
+
+  .hero-result-value {
+    font-size: 12.5px;
+  }
+
+  .hero-result-desc {
+    font-size: 11px;
+  }
+
+  /* Cards & Spacings */
+  .service-card {
+    padding: 16px 12px;
+  }
+
+  .service-card-title,
+  .service-card h3 {
+    font-size: 1.05rem;
+  }
+
+  .service-card-desc,
+  .service-card p {
+    font-size: 12.5px;
+  }
+
+  .challenge-card {
+    padding: 14px 12px;
+  }
+
+  .challenge-card-title {
+    font-size: 1.02rem;
+  }
+
+  .challenge-card-desc {
+    font-size: 12.5px;
+  }
+
+  .pricing-card {
+    padding: 18px 12px;
+  }
+
+  .pricing-card-header h3 {
+    font-size: 1.05rem;
+  }
+
+  .pricing-card-price .amount {
+    font-size: 1.55rem;
+  }
+
+  .impact-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .impact-stat {
+    padding: 12px 10px;
+  }
+
+  .impact-stat-number {
+    font-size: 1.5rem;
+  }
+
+  /* Buttons */
+  .btn,
+  .btn-lg,
+  .hero-ctas .btn,
+  .cta-final-buttons .btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  /* Brand Intro */
+  .brand-intro-center {
+    padding: 0 12px;
+  }
+
+  .brand-intro-logo-wrap {
+    padding: 8px 12px;
+  }
+
+  .brand-intro-logo {
+    width: clamp(170px, 70vw, 220px);
+    max-width: 100%;
+  }
+
+  .brand-intro-slogan {
+    font-size: 0.8125rem;
+  }
+
+  .brand-intro-triad {
+    font-size: 0.6875rem;
+    gap: 4px;
+  }
+
+  /* WhatsApp Popup */
+  .whatsapp-popup {
+    width: calc(100vw - 16px);
+    max-width: 304px;
+    right: 0;
+  }
+}
+
+/* ── Ultrawide Screens (≥1920px) ── */
+
+@media (min-width: 1920px) {
+  .container {
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .container-wide {
+    max-width: var(--container-wide);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-inner {
+    max-width: var(--container-wide);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .header-inner {
+    max-width: var(--container-wide);
+  }
+}
+
 
 
 

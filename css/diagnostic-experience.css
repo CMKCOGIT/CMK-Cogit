@@ -68,38 +68,129 @@
   font-size: 1rem;
 }
 
+/* ── hero-invite-path: Grid de 3 colunas iguais ── */
 .hero-invite-path {
-  position: relative;
   display: grid;
-  grid-template-columns: auto minmax(28px, 56px) auto minmax(28px, 56px) auto;
-  align-items: center;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto;
+  row-gap: 6px;
   width: min(100%, 420px);
-  color: #d8d3ff;
+  max-width: 100%;
+}
+
+/* Linha de rótulos */
+.hip-labels {
+  display: contents; /* os filhos entram direto no grid pai */
+}
+
+.hip-label {
   font-family: var(--font-heading);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: var(--fw-bold);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  color: rgba(167, 155, 255, 0.4);
+  transition: color 0.35s ease;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.hero-invite-path i {
+.hip-label[data-step="0"],
+.hip-label[data-step="1"],
+.hip-label[data-step="2"] {
+  min-width: 0;
+  text-align: center;
+}
+
+.hip-label--active {
+  color: #d8d3ff;
+  text-shadow: 0 0 12px rgba(167, 155, 255, 0.5);
+}
+
+.hip-label--done {
+  color: rgba(167, 155, 255, 0.65);
+}
+
+.hip-label--idle {
+  color: rgba(167, 155, 255, 0.25);
+}
+
+/* Trilho da bolinha — ocupa as 3 colunas */
+.hip-track {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 14px;
+  width: 100%;
+}
+
+
+.hip-line {
+  position: absolute;
+  inset: 0;
+  top: 50%;
+  transform: translateY(-50%);
   height: 1px;
-  margin-inline: 8px;
-  background: linear-gradient(90deg, rgba(167, 155, 255, 0.2), rgba(167, 155, 255, 0.75), rgba(167, 155, 255, 0.2));
+  background: linear-gradient(90deg,
+    rgba(167,155,255,0.15),
+    rgba(167,155,255,0.6) 50%,
+    rgba(167,155,255,0.15));
 }
 
-.hero-invite-path-pulse {
+.hip-ball {
   position: absolute;
   top: 50%;
-  left: 18%;
-  width: 7px;
-  height: 7px;
+  left: 0;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: #a79bff;
-  box-shadow: 0 0 0 5px rgba(167, 155, 255, 0.1), 0 0 16px rgba(167, 155, 255, 0.9);
+  box-shadow: 0 0 0 4px rgba(167,155,255,0.15), 0 0 20px rgba(167,155,255,0.95);
   transform: translate(-50%, -50%);
-  animation: cogitThoughtPath 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  display: block;
+  opacity: 0;
+  z-index: 2;
 }
+
+
+/* Container das partículas */
+.hip-burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.hip-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.hip-ring {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(167, 155, 255, 0.85);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: hipRing 550ms ease-out forwards;
+}
+
+/* ── Keyframes ── */
+@keyframes hipParticle {
+  0%   { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.2); opacity: 0; }
+}
+
+@keyframes hipRing {
+  0%   { transform: translate(-50%, -50%) scale(1);  opacity: 0.9; }
+  100% { transform: translate(-50%, -50%) scale(5.5); opacity: 0; }
+}
+
+
 
 .hero-invite-meta {
   display: flex;
@@ -115,14 +206,8 @@
   color: #8f7fff;
 }
 
-@keyframes cogitThoughtPath {
-  0%, 12% { left: 18%; opacity: 0.45; }
-  35% { left: 50%; opacity: 1; }
-  62%, 78% { left: 82%; opacity: 1; }
-  100% { left: 18%; opacity: 0.45; }
-}
-
 .hero-diag-dot-line {
+
   position: relative;
   overflow: hidden;
 }
@@ -268,9 +353,12 @@
   }
 
   .hero-invite-path {
-    grid-template-columns: auto minmax(18px, 38px) auto minmax(18px, 38px) auto;
-    font-size: 0.65rem;
-    letter-spacing: 0.055em;
+    width: 100%;
+  }
+
+  .hip-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
   }
 
   .hero-svc-grid {
@@ -322,13 +410,21 @@
   }
 }
 
+@media (max-width: 400px) {
+  .hip-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.04em;
+  }
+}
+
 @media (max-width: 300px) {
   .hero-svc-grid {
     grid-template-columns: 1fr;
   }
 
-  .hero-invite-path {
-    font-size: 0.6rem;
+  .hip-label {
+    font-size: 0.5rem;
+    letter-spacing: 0.02em;
   }
 }
 
@@ -353,7 +449,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-invite-path-pulse,
+  .hip-ball,
+  .hip-particle,
+  .hip-ring,
   .hero-diag-dot-item.is-active + .hero-diag-dot-line::after {
     animation: none;
   }

@@ -15,6 +15,17 @@
     display: none;
   }
 
+  /* Portal: mantém ícone, esconde texto */
+  .header-portal-btn {
+    margin-left: auto;
+    padding: 8px 10px;
+    gap: 0;
+  }
+
+  .header-portal-label {
+    display: none;
+  }
+
   .menu-toggle {
     display: flex;
   }

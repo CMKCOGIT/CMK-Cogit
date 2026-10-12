@@ -52,13 +52,13 @@ function initForm() {
 
   // ── Service Catalog (with icons from ICONS object + pricing) ──
   const SERVICES_CATALOG = [
-    {id: 'portfolio', name: 'Portfólio', desc: 'Apresente seu trabalho com uma presença digital profissional.', price: 790, priceLabel: 'A partir de R$ 790', icon: 'websites', challenge: 'Presença digital'},
+    {id: 'portfolio', name: 'Portfólio', desc: 'Apresente seu trabalho com uma presença digital profissional.', price: 600, priceLabel: 'A partir de R$ 600', icon: 'websites', challenge: 'Presença digital'},
     {
       id: 'site-institucional',
       name: 'Site Institucional',
       desc: 'Presença digital completa para apresentar sua empresa.',
-      price: 1990,
-      priceLabel: 'A partir de R$ 1.990',
+      price: 700,
+      priceLabel: 'A partir de R$ 700',
       icon: 'websites',
       challenge: 'Presença digital'
     },
@@ -66,8 +66,8 @@ function initForm() {
       id: 'landing-page',
       name: 'Landing Page',
       desc: 'Página estratégica para campanhas e geração de leads.',
-      price: 990,
-      priceLabel: 'A partir de R$ 990',
+      price: 500,
+      priceLabel: 'R$ 500 (modelo pronto)',
       icon: 'landing',
       challenge: 'Presença digital'
     },
@@ -84,26 +84,17 @@ function initForm() {
       id: 'sistema',
       name: 'Sistema Personalizado',
       desc: 'Software web exclusivo para sua operação.',
-      price: 7900,
-      priceLabel: 'A partir de R$ 7.900',
+      price: 2990,
+      priceLabel: 'A partir de R$ 2.990',
       icon: 'systems',
       challenge: 'Sistema próprio'
     },
     {
-      id: 'saas',
-      name: 'SaaS',
-      desc: 'Plataforma com assinatura e multiusuários.',
-      price: 14900,
-      priceLabel: 'A partir de R$ 14.900',
-      icon: 'saas',
-      challenge: 'Produto digital'
-    },
-    {
       id: 'mvp',
-      name: 'MVP',
+      name: 'MVP e Produto Digital',
       desc: 'Versão mínima para validar sua ideia no mercado.',
-      price: 9900,
-      priceLabel: 'A partir de R$ 9.900',
+      price: 3990,
+      priceLabel: 'A partir de R$ 3.990',
       icon: 'mvp',
       challenge: 'Produto digital'
     },
@@ -111,17 +102,25 @@ function initForm() {
       id: 'plataforma',
       name: 'Plataforma',
       desc: 'Infraestrutura digital escalável e robusta.',
-      price: 11900,
-      priceLabel: 'A partir de R$ 11.900',
+      price: 4990,
+      priceLabel: 'A partir de R$ 4.990',
       icon: 'platforms',
       challenge: 'Produto digital'
     },
+    {id:'diagnostico',name:'Diagnóstico Inicial',desc:'Conversa para entender seu negócio e objetivo.',price:0,priceLabel:'Gratuito',icon:'consulting',challenge:'Estratégia'},
+    {id:'consultoria',name:'Consultoria e Planejamento Digital',desc:'Mapeamento de processos e planejamento da solução.',price:350,priceLabel:'R$ 350',icon:'consulting',challenge:'Estratégia'},
+    {id:'identidade-essencial',name:'Identidade Visual Essencial',desc:'Logo, paleta, tipografia e elementos básicos.',price:500,priceLabel:'R$ 500',icon:'websites',challenge:'Marca'},
+    {id:'identidade-completa',name:'Identidade Visual Completa',desc:'Marca aprofundada, variações e aplicações.',price:990,priceLabel:'R$ 990',icon:'websites',challenge:'Marca'},
+    {id:'loja-virtual',name:'E-commerce / Loja Virtual',desc:'Produtos, carrinho, checkout e gestão básica de pedidos.',price:2990,priceLabel:'A partir de R$ 2.990',icon:'websites',challenge:'Comércio digital'},
+    {id:'manutencao',name:'Manutenção Essencial',desc:'Após 3 meses de suporte grátis.',price:null,priceLabel:'R$ 149/mês após 3 meses grátis',icon:'systems',challenge:'Recorrência'},
+    {id:'suporte',name:'Suporte Técnico Contínuo',desc:'Após 3 meses de suporte grátis.',price:null,priceLabel:'R$ 299/mês após 3 meses grátis',icon:'systems',challenge:'Recorrência'},
+    {id:'evolucao',name:'Evolução Contínua',desc:'Após 3 meses de suporte grátis.',price:null,priceLabel:'A partir de R$ 690/mês após 3 meses grátis',icon:'systems',challenge:'Recorrência'},
     {
-      id: 'outras-solucoes',
-      name: 'Outras Soluções',
-      desc: 'IA, integrações, consultoria e projetos específicos.',
-      price: null,
-      priceLabel: 'Sob consulta',
+      id: 'integracao',
+      name: 'Integrações de Sistemas e Pagamentos',
+      desc: 'Conexão de APIs, pagamentos, WhatsApp e CRM.',
+      price: 990,
+      priceLabel: 'A partir de R$ 990',
       icon: 'otherSolutions',
       challenge: 'Ainda avaliando'
     }
@@ -750,3 +749,4 @@ ${CogitPrivacy.consentReceipt()}`;
   updatePanel();
   autoDetectContext();
 }
+

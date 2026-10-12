@@ -96,7 +96,7 @@ const problemFlowsData = [
     recommendationTitle: 'Presença Digital Estratégica',
     recommendationSubtitle: 'Site Institucional ou Landing Page',
     recommendationText: 'Estruturar canais profissionais com clareza de posicionamento, design premium e arquitetura orientada à conversão.',
-    estimateText: 'A partir de R$ 990',
+    estimateText: 'A partir de R$ 500',
     preselect: ['site-institucional']
   },
   {
@@ -106,7 +106,7 @@ const problemFlowsData = [
     icon: 'zap',
     subQuestions: [
       { id: 'planilhas', title: 'Trabalho repetitivo em planilhas', description: 'Consolidação e digitação manual diária.', preselect: ['automacao'] },
-      { id: 'ferramentas', title: 'Quero conectar ferramentas ou APIs', description: 'Integrar sistemas que hoje operam isolados.', preselect: ['automacao', 'integracao-externa'] },
+      { id: 'ferramentas', title: 'Quero conectar ferramentas ou APIs', description: 'Integrar sistemas que hoje operam isolados.', preselect: ['automacao', 'integracao'] },
       { id: 'atendimento', title: 'Preciso automatizar atendimento / WhatsApp', description: 'Triagem rápida e notificações automáticas.', preselect: ['automacao'] },
       { id: 'organizar', title: 'Organizar dados e rotinas operacionais', description: 'Fluxos de trabalho padronizados e automáticos.', preselect: ['automacao'] },
       { id: 'outro-automacao', title: 'Outro fluxo que toma muito tempo', description: 'Processo repetitivo da equipe.', preselect: ['automacao'] }
@@ -127,14 +127,14 @@ const problemFlowsData = [
       { id: 'gestao-interna', title: 'Controle de processos internos e tarefas', description: 'Esteiras de trabalho e permissões da equipe.', preselect: ['sistema'] },
       { id: 'portal-clientes', title: 'Área restrita para clientes ou parceiros', description: 'Login seguro, documentos e chamados.', preselect: ['sistema', 'painel-cliente'] },
       { id: 'substituir-planilhas', title: 'Planilhas que já não suportam mais o volume', description: 'Muitos erros manuais e lentidão na rotina.', preselect: ['sistema'] },
-      { id: 'painel-indicadores', title: 'Dashboard de indicadores e relatórios', description: 'Visibilidade gerencial consolidada em tempo real.', preselect: ['sistema', 'dashboard'] },
+      { id: 'painel-indicadores', title: 'Dashboard de indicadores e relatórios', description: 'Visibilidade gerencial consolidada em tempo real.', preselect: ['sistema'] },
       { id: 'outro-sistema', title: 'Outro software sob medida para a operação', description: 'Regras de negócio específicas da empresa.', preselect: ['sistema'] }
     ],
     recommendations: ['sistemas-personalizados', 'outras-solucoes'],
     recommendationTitle: 'Sistema Personalizado',
     recommendationSubtitle: 'Software Sob Medida para sua Operação',
     recommendationText: 'Construir um software adaptado com precisão às regras do seu negócio, sem limitações de plataformas genéricas.',
-    estimateText: 'A partir de R$ 7.900',
+    estimateText: 'A partir de R$ 2.990',
     preselect: ['sistema']
   },
   {
@@ -144,7 +144,7 @@ const problemFlowsData = [
     icon: 'rocket',
     subQuestions: [
       { id: 'mvp-validacao', title: 'Construir um MVP para validar com o mercado', description: 'Versão prática para testar hipóteses com usuários reais.', preselect: ['mvp'] },
-      { id: 'saas-assinatura', title: 'Criar um SaaS com cobrança recorrente', description: 'Plataforma multi-inquilino com assinaturas.', preselect: ['saas'] },
+      { id: 'saas-assinatura', title: 'Criar um SaaS com cobrança recorrente', description: 'Plataforma multi-inquilino com assinaturas.', preselect: ['mvp'] },
       { id: 'plataforma-marketplace', title: 'Plataforma conectando dois públicos', description: 'Marketplace ou ecossistema intermediário.', preselect: ['plataforma'] },
       { id: 'digitalizar-servico', title: 'Transformar um serviço presencial em digital', description: 'Automatizar a entrega e escala do serviço.', preselect: ['mvp'] },
       { id: 'outro-produto', title: 'Outra ideia de produto inovador', description: 'Projeto em fase de concepção técnica.', preselect: ['mvp'] }
@@ -153,7 +153,7 @@ const problemFlowsData = [
     recommendationTitle: 'Desenvolvimento de Produto Digital',
     recommendationSubtitle: 'MVP ou Plataforma SaaS',
     recommendationText: 'Construir a primeira versão funcional com arquitetura moderna e foco em validação rápida com baixo risco.',
-    estimateText: 'A partir de R$ 9.900',
+    estimateText: 'A partir de R$ 3.990',
     preselect: ['mvp']
   },
   {
@@ -208,135 +208,25 @@ const solutionsGroupsData = [
 
 // ── Services Data (Nova ordem) ──
 const servicesData = [
-  {
-    id: 'sistemas-personalizados',
-    title: 'Sistemas Personalizados',
-    description: 'Digitalize operações, centralize processos e construa soluções adaptadas à realidade do seu negócio.',
-    icon: 'systems',
-    slug: 'sistemas-personalizados',
-    tag: 'SOB MEDIDA',
-    highlight: true,
-    basePrice: 7900,
-    priceType: 'startingAt',
-    priceNote: 'Projetos de maior complexidade são avaliados individualmente.',
-    customAnalysis: true
-  },
-  {
-    id: 'saas',
-    title: 'SaaS',
-    description: 'Transforme uma ideia ou processo em um produto digital recorrente e preparado para crescer.',
-    icon: 'saas',
-    slug: 'saas',
-    tag: 'ESCALÁVEL',
-    basePrice: 14900,
-    priceType: 'startingAt',
-    priceNote: 'O investimento varia conforme funcionalidades, arquitetura e integrações.',
-    customAnalysis: true
-  },
-  {
-    id: 'automacao',
-    title: 'Automação',
-    description: 'Reduza tarefas manuais, conecte ferramentas e torne seus processos mais eficientes.',
-    icon: 'automation',
-    slug: 'automacao',
-    tag: 'EFICIÊNCIA',
-    basePrice: 990,
-    priceType: 'startingAt',
-    priceNote: 'Valor referente a automações de escopo básico.',
-    customAnalysis: true
-  },
-  {
-    id: 'plataformas',
-    title: 'Plataformas',
-    description: 'Ambientes digitais e ecossistemas capazes de conectar usuários, serviços e operações.',
-    icon: 'platforms',
-    slug: 'plataformas',
-    tag: 'ECOSSISTEMAS',
-    basePrice: 11900,
-    priceType: 'startingAt',
-    priceNote: 'Projetos avançados são avaliados conforme estrutura e complexidade.',
-    customAnalysis: true
-  },
-  {
-    id: 'mvp',
-    title: 'MVP',
-    description: 'Tire sua ideia do papel, valide hipóteses e construa sua primeira versão funcional.',
-    icon: 'mvp',
-    slug: 'mvp',
-    tag: 'VALIDAÇÃO',
-    basePrice: 9900,
-    priceType: 'startingAt',
-    priceNote: 'O investimento depende do escopo da primeira versão do produto.',
-    customAnalysis: true
-  },
-  {
-    id: 'modelos-prontos',
-    title: 'Modelos Prontos',
-    description: 'Estruturas desenvolvidas pela Cogit para quem quer colocar o projeto no ar de forma mais rápida e prática. Personalização completa para sua marca.',
-    icon: 'zap',
-    slug: 'modelos-prontos',
-    tag: 'ESTRUTURAS PRONTAS',
-    basePrice: 790,
-    priceType: 'startingAt',
-    priceNote: 'Portfólios (R$ 790), Landing Pages (R$ 990) e Sites (R$ 1.990).',
-    customAnalysis: false
-  },
-  {
-    id: 'modelos-sob-medida',
-    title: 'Modelos Sob Medida',
-    description: 'Presença digital com estrutura, design e experiência desenvolvidos do zero, exclusivamente para o seu negócio.',
-    icon: 'websites',
-    slug: 'modelos-sob-medida',
-    tag: 'EXCLUSIVO',
-    basePrice: 0,
-    priceType: 'custom',
-    priceNote: 'Investimento definido conforme o projeto e suas especificidades.',
-    customAnalysis: true
-  },
-  {
-    id: 'sites-institucionais',
-    title: 'Sites Institucionais',
-    description: 'Construa uma presença digital profissional capaz de comunicar valor, posicionamento e confiança.',
-    icon: 'websites',
-    slug: 'sites-institucionais',
-    tag: 'PRESENÇA',
-    basePrice: 1990,
-    priceType: 'startingAt',
-    priceNote: 'Valor referente à estrutura institucional essencial.',
-    customAnalysis: true
-  },
-  {
-    id: 'landing-pages',
-    title: 'Landing Pages',
-    description: 'Páginas estratégicas para campanhas, lançamentos, geração de leads e conversão.',
-    icon: 'landing',
-    slug: 'landing-pages',
-    tag: 'CONVERSÃO',
-    basePrice: 990,
-    priceType: 'startingAt',
-    priceNote: 'Valor referente à estrutura essencial de Landing Page.',
-    customAnalysis: true
-  },
-  {
-    id: 'outras-solucoes',
-    title: 'Outras Soluções',
-    description: 'Dashboards, integrações, APIs, painéis, automações específicas e outras soluções digitais desenvolvidas de acordo com a necessidade do seu projeto.',
-    icon: 'otherSolutions',
-    slug: 'outras-solucoes',
-    tag: 'MAIS POSSIBILIDADES',
-    basePrice: 0,
-    priceType: 'custom',
-    priceNote: 'O investimento é definido conforme a demanda.',
-    customAnalysis: true
-  }
+  { id:'consultoria', title:'Consultoria e Planejamento Digital', description:'Mapeamento do negócio, processos, gargalos e planejamento da solução.', icon:'consulting', slug:'index', tag:'ESTRATÉGIA', basePrice:350, priceType:'fixed' },
+  { id:'identidade-visual', title:'Identidade Visual', description:'Versão essencial ou completa para comunicar sua marca.', icon:'websites', slug:'index', tag:'MARCA', basePrice:500, priceType:'startingAt' },
+  { id:'modelos-prontos', title:'Modelos Prontos', description:'Três formatos: Landing Page, Portfólio e Site. Você envia identidade visual, textos, imagens e informações; a estrutura do modelo permanece a mesma.', icon:'websites', slug:'modelos-prontos', tag:'ESTRUTURA PRONTA', basePrice:500, priceType:'startingAt' },
+  { id:'modelos-sob-medida', title:'Modelos Sob Medida', description:'Landing Page, Portfólio ou Site com estrutura, seções, visual e experiência personalizados.', icon:'websites', slug:'modelos-sob-medida', tag:'PERSONALIZADO', basePrice:700, priceType:'startingAt' },
+  { id:'sites-institucionais', title:'Sites Institucionais', description:'Modelo pronto com até 4 páginas ou projeto sob medida.', icon:'websites', slug:'sites-institucionais', tag:'PRESENÇA', basePrice:700, priceType:'startingAt' },
+  { id:'landing-pages', title:'Landing Pages', description:'Modelo pronto por R$ 500 ou projeto sob medida a partir de R$ 700.', icon:'landing', slug:'landing-pages', tag:'CONVERSÃO', basePrice:500, priceType:'startingAt' },
+  { id:'loja-virtual', title:'E-commerce / Loja Virtual', description:'Produtos, categorias, carrinho, checkout, pagamentos e gestão básica de pedidos.', icon:'websites', slug:'index', tag:'COMÉRCIO DIGITAL', basePrice:2990, priceType:'startingAt' },
+  { id:'plataformas', title:'Plataforma Web Personalizada', description:'Solução digital completa conforme o modelo de negócio.', icon:'platforms', slug:'plataformas-e-outras-solucoes', tag:'PLATAFORMAS', basePrice:4990, priceType:'startingAt' },
+  { id:'sistemas-personalizados', title:'Sistemas de Gestão e CRM', description:'Gestão de clientes, leads, vendas, pedidos, propostas, contratos, processos e indicadores.', icon:'systems', slug:'sistemas-personalizados', tag:'SISTEMAS', basePrice:2990, priceType:'startingAt' },
+  { id:'mvp', title:'MVP e Produto Digital', description:'Primeira versão funcional para validar uma ideia no mercado.', icon:'mvp', slug:'saas-e-produtos-digitais', tag:'PRODUTO DIGITAL', basePrice:3990, priceType:'startingAt' },
+  { id:'automacao', title:'Automação de Processos Administrativos', description:'Automação de tarefas, atendimentos, leads, vendas, notificações e processos internos. Não inclui um site.', icon:'automation', slug:'automacoes-e-integracoes', tag:'AUTOMAÇÃO', basePrice:990, priceType:'startingAt' },
+  { id:'integracoes', title:'Integrações de Sistemas e Pagamentos', description:'Conexão entre APIs, meios de pagamento, WhatsApp, CRM e outros sistemas.', icon:'automation', slug:'automacoes-e-integracoes', tag:'INTEGRAÇÕES', basePrice:990, priceType:'startingAt' }
 ];
-
 
 // ── Starting Options Data (Valores Base) ──
 const startingOptionsData = {
-  presenca: { basePrice: 1990, priceType: 'startingAt' },
-  operacao: { basePrice: 2490, priceType: 'startingAt' },
-  produto:  { basePrice: 9900, priceType: 'startingAt' }
+  presenca: { basePrice: 700, priceType: 'startingAt' },
+  operacao: { basePrice: 990, priceType: 'startingAt' },
+  produto:  { basePrice: 3990, priceType: 'startingAt' }
 };
 
 // ── Starting Points Data (Formas de Começar) ──
@@ -408,14 +298,14 @@ const plansData = [
       'Discovery',
       'UX/UI',
       'MVP',
-      'SaaS',
+      'Produto digital',
       'Plataforma',
       'Validação'
     ],
     priceLabel: 'Projetos a partir de',
     priceId: 'produto',
     priceExplanation: 'O investimento final é definido após entendimento do produto, funcionalidades, arquitetura e estratégia de validação.',
-    secondaryExplanation: 'Projetos SaaS podem partir de R$ 14.900.',
+    secondaryExplanation: 'O valor depende do escopo definido em proposta.',
     primaryCta: 'Quero apresentar minha ideia <i class="bi bi-arrow-right"></i>',
     primaryCtaPreselect: ['mvp'],
     secondaryCta: 'Entender como criamos produtos',
@@ -429,123 +319,28 @@ const plansData = [
 // ── Configurator Data ──
 const configuratorData = {
   services: [
-    {
-      id: 'site-institucional',
-      name: 'Site Institucional',
-      icon: 'websites',
-      isPresencaDigital: true,
-      hasLevels: true,
-      allowedAddons: ['pagina-adicional', 'blog', 'seo-avancado', 'copywriting', 'automacao-extra', 'integracao-crm', 'integracao-externa', 'area-restrita'],
-      levels: [
-        { id: 'essencial', name: 'Essencial', description: 'Até 5 páginas, responsivo, formulário, WhatsApp, SEO técnico inicial e Analytics.', priceType: 'from', price: 1990 },
-        { id: 'profissional', name: 'Profissional', description: 'Mais páginas, maior personalização visual, blog ou estrutura de conteúdo, integrações simples e recursos adicionais.', priceType: 'from', price: 2990 },
-        { id: 'avancado', name: 'Avançado', description: 'Área restrita, integrações, funcionalidades personalizadas, sistemas associados ou necessidades específicas.', priceType: 'custom', price: null }
-      ]
-    },
-    {
-      id: 'landing-page',
-      name: 'Landing Page',
-      icon: 'landing',
-      isPresencaDigital: true,
-      hasLevels: true,
-      allowedAddons: ['copywriting', 'seo-avancado', 'automacao-extra', 'integracao-crm', 'integracao-externa', 'analytics-avancado'],
-      levels: [
-        { id: 'essencial', name: 'Essencial', description: 'Landing Page objetiva, responsiva, formulário ou WhatsApp e estrutura básica de conversão.', priceType: 'fixed', price: 990 },
-        { id: 'profissional', name: 'Profissional', description: 'Maior personalização, estrutura estratégica de conversão, Analytics, eventos, integrações simples e maior complexidade visual.', priceType: 'fixed', price: 1490 },
-        { id: 'avancada', name: 'Avançada', description: 'Automações, CRM, integrações externas, lógica personalizada ou necessidades específicas.', priceType: 'from', price: 2490 }
-      ]
-    },
-    {
-      id: 'portfolio',
-      name: 'Portfólio',
-      icon: 'landing',
-      isPresencaDigital: true,
-      hasLevels: false,
-      priceType: 'from',
-      price: 790,
-      description: 'Portfólios desenvolvidos para apresentar trabalhos, projetos e serviços de forma profissional.',
-      allowedAddons: ['pagina-adicional', 'seo-avancado', 'copywriting']
-    },
-    {
-      id: 'automacao',
-      name: 'Automação',
-      icon: 'automation',
-      hasLevels: true,
-      allowedAddons: ['dashboard', 'integracao-crm', 'integracao-api', 'integracao-externa'],
-      levels: [
-        { id: 'basica', name: 'Básica', description: 'Uma rotina principal, regras simples e baixo nível de integração.', priceType: 'fixed', price: 990 },
-        { id: 'intermediaria', name: 'Intermediária', description: 'Múltiplos fluxos, planilhas, regras adicionais ou integrações simples.', priceType: 'fixed', price: 2490 },
-        { id: 'avancada', name: 'Avançada', description: 'APIs, sistemas externos, múltiplas integrações, regras complexas ou alto volume de dados.', priceType: 'custom', price: null }
-      ]
-    },
-    {
-      id: 'sistema',
-      name: 'Sistema Personalizado',
-      icon: 'systems',
-      hasLevels: false,
-      priceType: 'from',
-      price: 7900,
-      description: 'Sistemas personalizados exigem avaliação técnica para definir escopo, prazo e investimento.',
-      allowedAddons: ['dashboard', 'integracao-api', 'integracao-crm', 'area-restrita', 'automacao-extra']
-    },
-    {
-      id: 'saas',
-      name: 'SaaS',
-      icon: 'saas',
-      hasLevels: false,
-      priceType: 'from',
-      price: 14900,
-      description: 'Produtos SaaS possuem escopos variados e são analisados individualmente.',
-      allowedAddons: ['dashboard', 'integracao-api', 'integracao-crm', 'area-restrita']
-    },
-    {
-      id: 'mvp',
-      name: 'MVP',
-      icon: 'mvp',
-      hasLevels: false,
-      priceType: 'from',
-      price: 9900,
-      description: 'MVPs são estruturados sob medida. Discovery, escopo e investimento são definidos em conjunto.',
-      allowedAddons: ['dashboard', 'integracao-api', 'integracao-crm']
-    },
-    {
-      id: 'plataforma',
-      name: 'Plataforma',
-      icon: 'platforms',
-      hasLevels: false,
-      priceType: 'from',
-      price: 11900,
-      description: 'Plataformas e ecossistemas digitais exigem diagnóstico detalhado.',
-      allowedAddons: ['dashboard', 'integracao-api', 'integracao-crm', 'area-restrita']
-    },
-    {
-      id: 'outras-solucoes',
-      name: 'Outras Soluções',
-      icon: 'otherSolutions',
-      hasLevels: false,
-      priceType: 'custom',
-      price: null,
-      description: 'Dashboards, integrações, APIs, áreas restritas e demandas específicas são definidas após entendimento do projeto.',
-      allowedAddons: []
-    }
+    {id:'diagnostico',name:'Diagnóstico Inicial',icon:'consulting',description:'Reunião para entender negócio, problema e objetivo.',priceType:'fixed',price:0},
+    {id:'consultoria',name:'Consultoria e Planejamento Digital',icon:'consulting',description:'Mapeamento do negócio, processos, gargalos e planejamento da solução.',priceType:'fixed',price:350},
+    {id:'identidade-essencial',name:'Identidade Visual Essencial',icon:'websites',description:'Logo, paleta, tipografia, versões principais e elementos básicos.',priceType:'fixed',price:500},
+    {id:'identidade-completa',name:'Identidade Visual Completa',icon:'websites',description:'Marca aprofundada, variações, aplicações e elementos gráficos.',priceType:'fixed',price:990},
+    {id:'landing-page',name:'Landing Page',icon:'landing',isPresencaDigital:true,price:500,priceType:'fixed',customPrice:700,description:'Página para apresentar uma oferta e receber contatos.',allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'portfolio',name:'Portfólio Digital',icon:'landing',isPresencaDigital:true,price:600,priceType:'fixed',customPrice:800,description:'Apresente trabalhos, projetos, serviços e casos.',allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'site-institucional',name:'Site Institucional',icon:'websites',isPresencaDigital:true,price:700,priceType:'fixed',customPrice:900,description:'Até 4 páginas no projeto inicial.',allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'loja-virtual',name:'E-commerce / Loja Virtual',icon:'websites',description:'Produtos, categorias, carrinho, checkout, pagamentos e pedidos.',priceType:'from',price:2990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'plataforma',name:'Plataforma Web Personalizada',icon:'platforms',description:'Solução completa para o modelo de negócio.',priceType:'from',price:4990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'sistema',name:'Sistemas de Gestão e CRM',icon:'systems',description:'Gestão de clientes, vendas, pedidos, propostas, contratos e indicadores.',priceType:'from',price:2990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'mvp',name:'MVP e Produto Digital',icon:'mvp',description:'Primeira versão funcional para validação.',priceType:'from',price:3990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'automacao',name:'Automação de Processos Administrativos',icon:'automation',description:'Tarefas, atendimento, leads, vendas, notificações e rotinas internas. Sem site incluído.',priceType:'from',price:990,allowedAddons:['integracao-externa']},
+    {id:'integracao',name:'Integrações de Sistemas e Pagamentos',icon:'automation',description:'APIs, meios de pagamento, WhatsApp, CRM e conexão entre sistemas.',priceType:'from',price:990},
+    {id:'manutencao',name:'Manutenção Essencial',icon:'systems',description:'Atualizações, manutenção preventiva e pequenas correções após 3 meses gratuitos.',priceType:'fixed',price:149,billing:'monthly'},
+    {id:'suporte',name:'Suporte Técnico Contínuo',icon:'systems',description:'Suporte, pequenas alterações, correções e acompanhamento após 3 meses gratuitos.',priceType:'fixed',price:299,billing:'monthly'},
+    {id:'evolucao',name:'Evolução Contínua',icon:'systems',description:'Manutenção, suporte e desenvolvimento periódico após 3 meses gratuitos.',priceType:'from',price:690,billing:'monthly'}
   ],
   addons: [
-    { id: 'pagina-adicional', name: 'Página adicional', priceType: 'fixed', price: 250, allowQuantity: true, unit: 'página' },
-    { id: 'blog', name: 'Blog', priceType: 'fixed', price: 690 },
-    { id: 'seo-avancado', name: 'SEO avançado', priceType: 'from', price: 990 },
-    { id: 'copywriting', name: 'Copywriting', priceType: 'from', price: 690 },
-    { id: 'automacao-extra', name: 'Automação', priceType: 'from', price: 990 },
-    { id: 'integracao-externa', name: 'Integração externa', priceType: 'from', price: 1490 },
-    { id: 'dashboard', name: 'Dashboard', priceType: 'from', price: 2490 },
-    { id: 'area-restrita', name: 'Área restrita', priceType: 'custom', price: null },
-    { id: 'integracao-crm', name: 'Integração com CRM', priceType: 'from', price: 1490 },
-    { id: 'integracao-api', name: 'Integração com API', priceType: 'from', price: 1490 },
-    { id: 'analytics-avancado', name: 'Analytics avançado', priceType: 'from', price: 690 }
+    {id:'automacao-extra',name:'Automação de Processos Administrativos',priceType:'from',price:990},
+    {id:'integracao-externa',name:'Integrações de Sistemas e Pagamentos',priceType:'from',price:990}
   ],
-  complexCombinations: [
-    ['sistema', 'saas'],
-    ['plataforma', 'saas']
-  ]
+  complexCombinations: []
 };
 
 
@@ -699,7 +494,7 @@ const faqData = [
   },
   {
     question: 'Existe suporte após a entrega?',
-    answer: 'Sim. Manutenção, suporte e evolução podem ser estruturados conforme o tipo de projeto e necessidade do cliente.'
+    answer: 'Sim. Todos os projetos têm 3 meses de suporte grátis. Depois, você pode escolher manutenção a R$ 149/mês, suporte contínuo a R$ 299/mês ou evolução contínua a partir de R$ 690/mês.'
   },
   {
     question: 'Quanto tempo demora um projeto?',
@@ -744,7 +539,7 @@ const projectTypes = [
   'Site',
   'Landing Page',
   'Sistema',
-  'SaaS',
+  'Produto digital',
   'Automação',
   'MVP',
   'Outras Soluções'
@@ -772,3 +567,4 @@ const whatsappOptions = [
   { label: 'Produto Digital / SaaS / MVP', message: 'Olá, tenho uma ideia de produto digital / SaaS e quero estruturar com a COGIT.' },
   { label: 'Outro assunto', message: 'Olá, gostaria de conversar sobre meu projeto com a COGIT.' }
 ];
+

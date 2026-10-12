@@ -127,15 +127,15 @@ function renderHeroInteractive() {
   // ── Grid de Serviços com ícone + descrição + preço (Etapa 1) ──
   const SERVICES_GRID = [
     {
-      id: 'site-institucional', name: 'Site Institucional', desc: 'Apresente sua empresa e gere confiança.', priceLabel: 'A partir de R$ 1.990', challenge: 'presenca',
+      id: 'site-institucional', name: 'Site Institucional', desc: 'Apresente sua empresa e gere confiança.', priceLabel: 'A partir de R$ 700', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>'
     },
     {
-      id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'A partir de R$ 990', challenge: 'presenca',
+      id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'R$ 500 (modelo pronto)', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
     {
-      id: 'portfolio', name: 'Portfólio', desc: 'Mostre trabalhos, serviços e resultados.', priceLabel: 'A partir de R$ 790', challenge: 'presenca',
+      id: 'portfolio', name: 'Portfólio', desc: 'Mostre trabalhos, serviços e resultados.', priceLabel: 'A partir de R$ 600', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
     {
@@ -143,19 +143,19 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><path d="M7 12h3M14 12h3M12 7v3M12 14v3"/></svg>'
     },
     {
-      id: 'sistema-svc', name: 'Sistema Web', desc: 'Organize sua operação em um software próprio.', priceLabel: 'A partir de R$ 7.900', challenge: 'sistema',
+      id: 'sistema-svc', name: 'Sistema Web', desc: 'Organize sua operação em um software próprio.', priceLabel: 'A partir de R$ 2.990', challenge: 'sistema',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M10 6h4M10 17h4M6 10v4M17 10v4"/></svg>'
     },
     {
-      id: 'saas-svc', name: 'SaaS', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 14.900', challenge: 'produto',
+      id: 'saas-svc', name: 'Produto Digital', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 3.990', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
     },
     {
-      id: 'mvp-svc', name: 'MVP', desc: 'Valide sua ideia com uma primeira versão funcional.', priceLabel: 'A partir de R$ 9.900', challenge: 'produto',
+      id: 'mvp-svc', name: 'MVP', desc: 'Valide sua ideia com uma primeira versão funcional.', priceLabel: 'A partir de R$ 3.990', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>'
     },
     {
-      id: 'plataforma-svc', name: 'Plataforma', desc: 'Conecte usuários, serviços e oportunidades.', priceLabel: 'A partir de R$ 11.900', challenge: 'produto',
+      id: 'plataforma-svc', name: 'Plataforma', desc: 'Conecte usuários, serviços e oportunidades.', priceLabel: 'A partir de R$ 4.990', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>'
     },
     {
@@ -1087,7 +1087,7 @@ const MODEL_PREVIEW_DATA = {
     tagLabel: 'SITE',
     description: 'Uma estrutura profissional para apresentar sua empresa, serviços e gerar credibilidade no mercado digital.',
     audience: ['Pequenas e médias empresas', 'Prestadores de serviço', 'Consultorias e escritórios', 'Negócios locais'],
-    features: ['Design estratégico e profissional', 'Estrutura 100% responsiva', 'Otimização de carregamento', 'SEO técnico inicial', 'CTA para contato e WhatsApp', 'Personalização da identidade visual'],
+    features: ['Design estratégico e profissional', 'Estrutura 100% responsiva', 'Otimização de carregamento', 'SEO técnico inicial', 'CTA para contato e WhatsApp', 'Identidade visual aplicada à estrutura pronta'],
     previewImg: 'assets/previews/preview-site.jpg',
     liveUrl: null
   },
@@ -1096,7 +1096,7 @@ const MODEL_PREVIEW_DATA = {
     tagLabel: 'LANDING PAGE',
     description: 'Uma estrutura criada para apresentar serviços, fortalecer sua presença digital e gerar mais conversões.',
     audience: ['Pequenas empresas', 'Profissionais liberais', 'Prestadores de serviço', 'Negócios digitais'],
-    features: ['Design focado em conversão', 'Estrutura 100% responsiva', 'Otimização de carregamento', 'SEO básico aplicado', 'CTA para contato e WhatsApp', 'Personalização da identidade visual'],
+    features: ['Design focado em conversão', 'Estrutura 100% responsiva', 'Otimização de carregamento', 'SEO básico aplicado', 'CTA para contato e WhatsApp', 'Identidade visual aplicada à estrutura pronta'],
     previewImg: 'assets/previews/preview-landing.jpg',
     liveUrl: null
   },
@@ -1105,7 +1105,7 @@ const MODEL_PREVIEW_DATA = {
     tagLabel: 'PORTFÓLIO',
     description: 'Mostre seus melhores trabalhos e projetos com uma apresentação visual que transmite profissionalismo.',
     audience: ['Fotógrafos e designers', 'Arquitetos e engenheiros', 'Freelancers criativos', 'Agências e estúdios'],
-    features: ['Galeria de projetos otimizada', 'Design visual premium', 'Estrutura 100% responsiva', 'SEO técnico inicial', 'CTA para contato e WhatsApp', 'Layout personalizável'],
+    features: ['Galeria de projetos otimizada', 'Estrutura visual pronta', 'Estrutura 100% responsiva', 'SEO técnico inicial', 'CTA para contato e WhatsApp', 'Estrutura fixa com identidade visual aplicada'],
     previewImg: 'assets/previews/preview-portfolio.jpg',
     liveUrl: null
   }
@@ -1188,15 +1188,15 @@ function openModelPreviewModal(modelId, title) {
 
           <div class="hero-modal-preview">
             <div class="hero-modal-preview-container">
-              <img src="${data.previewImg}" alt="Preview do modelo ${data.name}" class="hero-modal-preview-img" loading="lazy" />
+              <img src="${location.pathname.includes('/solucoes/') ? '../' : ''}${data.previewImg}" alt="Prévia do modelo ${data.name}" class="hero-modal-preview-img" loading="lazy" />
               <div class="hero-modal-preview-overlay">
-                <div class="hero-modal-play-btn">
+                <div class="hero-modal-play-btn" aria-hidden="true" style="opacity:.35">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                 </div>
               </div>
               <span class="hero-modal-preview-badge">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                Desktop + Mobile
+                Prévia visual · vídeo em produção
               </span>
             </div>
             ${liveUrlBtn}
@@ -1292,7 +1292,7 @@ const CUSTOM_OBJECTIVES = [
     title: 'Vender produtos ou serviços',
     desc: 'Quero uma solução focada em apresentar uma oferta e gerar conversões.',
     suggestion: 'Landing Page de Conversão',
-    basePrice: 1950,
+    basePrice: 700,
     baseMaxSections: 6
   },
   {
@@ -1300,7 +1300,7 @@ const CUSTOM_OBJECTIVES = [
     title: 'Apresentar minha empresa',
     desc: 'Quero uma presença digital profissional para apresentar minha marca, serviços e informações.',
     suggestion: 'Site Institucional',
-    basePrice: 2850,
+    basePrice: 900,
     baseMaxSections: 6
   },
   {
@@ -1308,7 +1308,7 @@ const CUSTOM_OBJECTIVES = [
     title: 'Mostrar meus trabalhos',
     desc: 'Quero apresentar projetos, fotos, cases e resultados.',
     suggestion: 'Portfólio Profissional',
-    basePrice: 2200,
+    basePrice: 800,
     baseMaxSections: 6
   },
   {
@@ -1316,7 +1316,7 @@ const CUSTOM_OBJECTIVES = [
     title: 'Trabalhar com imagens e vídeos',
     desc: 'Quero uma experiência visual focada em conteúdo multimídia.',
     suggestion: 'Experiência Visual',
-    basePrice: 2600,
+    basePrice: 700,
     baseMaxSections: 5
   },
   {
@@ -1324,7 +1324,7 @@ const CUSTOM_OBJECTIVES = [
     title: 'Outro objetivo',
     desc: 'Tenho uma ideia específica e quero explicar minha necessidade.',
     suggestion: 'Estrutura Sob Medida',
-    basePrice: 2400,
+    basePrice: 700,
     baseMaxSections: 5
   }
 ];
@@ -1384,18 +1384,7 @@ const CUSTOM_STRUCTURES = {
   }
 };
 
-const CUSTOM_ADDONS = [
-  { id: 'texto', label: 'Texto adicional', price: 150, blockTitle: 'Texto adicional' },
-  { id: 'galeria', label: 'Imagem / galeria', price: 200, blockTitle: 'Imagem / galeria' },
-  { id: 'video', label: 'Vídeo', price: 250, blockTitle: 'Vídeo' },
-  { id: 'depoimentos', label: 'Depoimentos', price: 150, blockTitle: 'Depoimentos' },
-  { id: 'formulario', label: 'Formulário', price: 180, blockTitle: 'Formulário' },
-  { id: 'whatsapp', label: 'Botão WhatsApp', price: 120, blockTitle: 'Botão WhatsApp' },
-  { id: 'blog', label: 'Blog / conteúdo', price: 450, blockTitle: 'Blog / conteúdo' },
-  { id: 'clientes', label: 'Área de clientes', price: 850, blockTitle: 'Área de clientes' },
-  { id: 'faq', label: 'FAQ', price: 160, blockTitle: 'FAQ' },
-  { id: 'integracoes', label: 'Integrações', price: 380, blockTitle: 'Integrações' }
-];
+const CUSTOM_ADDONS = [];
 
 // Motor de análise léxica interna (sem IA externa)
 function analyzeCustomKeywords(rawText) {
@@ -1538,10 +1527,10 @@ function openCustomModelModal(selectedSvc, onFinish) {
 
     const totalSections = modalState.blocks.length;
     const extraSectionsCount = Math.max(0, totalSections - currentObj.baseMaxSections);
-    const extraSectionsCost = extraSectionsCount * 120;
+    const extraSectionsCost = 0;
 
     const totalEstimate = basePrice + addonsTotal + extraSectionsCost;
-    const installmentVal = Math.round((totalEstimate * 1.12) / 12);
+    const installmentVal = Math.round(totalEstimate / 12);
 
     const objName = modalState.detectedMatch && !modalState.detectedMatch.isUnclear
       ? modalState.detectedMatch.suggestion
@@ -1648,7 +1637,7 @@ function openCustomModelModal(selectedSvc, onFinish) {
           <span class="custom-est-key">Investimento estimado:</span>
           <div class="custom-est-price-wrap">
             <span class="custom-est-price-number">R$ ${est.total.toLocaleString('pt-BR')}</span>
-            <small class="custom-est-price-sub">ou 12x de R$ ${est.installmentVal.toLocaleString('pt-BR')}</small>
+            <small class="custom-est-price-sub">Valor inicial; proposta final conforme o escopo.</small>
           </div>
         </div>
         <p class="custom-est-disclaimer">*Estimativa preliminar sujeita à validação de arquitetura no discovery.</p>

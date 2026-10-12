@@ -4,18 +4,18 @@ const ConfiguratorApp = (() => {
     { id: 'atrair-vender', name: 'Atrair e vender', description: 'Gerar oportunidades e transformar visitas em contatos.', icon: 'landing', services: ['landing-page', 'site-institucional', 'automacao'] },
     { id: 'apresentar-empresa', name: 'Apresentar minha empresa', description: 'Construir presença, confiança e autoridade digital.', icon: 'websites', services: ['site-institucional', 'landing-page'] },
     { id: 'mostrar-trabalho', name: 'Mostrar meu trabalho', description: 'Organizar projetos, serviços e resultados em um portfólio.', icon: 'landing', services: ['portfolio', 'site-institucional'] },
-    { id: 'automatizar-processo', name: 'Automatizar um processo', description: 'Reduzir tarefas manuais e conectar ferramentas.', icon: 'automation', services: ['automacao', 'sistema'] },
+    { id: 'automatizar-processo', name: 'Automatizar um processo', description: 'Reduzir tarefas manuais e conectar ferramentas.', icon: 'automation', services: ['automacao', 'sistema', 'integracao'] },
     { id: 'organizar-operacao', name: 'Organizar minha operação', description: 'Centralizar dados, rotinas e acompanhamento.', icon: 'systems', services: ['sistema', 'automacao', 'plataforma'] },
-    { id: 'produto-digital', name: 'Criar um produto digital', description: 'Validar uma ideia e preparar o caminho para escalar.', icon: 'mvp', services: ['mvp', 'saas', 'plataforma'] },
+    { id: 'produto-digital', name: 'Criar um produto digital', description: 'Validar uma ideia e preparar o caminho para escalar.', icon: 'mvp', services: ['mvp', 'plataforma'] },
     { id: 'nao-sei', name: 'Ainda não tenho certeza', description: 'Receber orientação para encontrar o melhor ponto de partida.', icon: 'otherSolutions', services: [] }
   ];
   const PRESENCE_IDS = ['site-institucional', 'landing-page', 'portfolio'];
   const STEP_LABELS = ['Objetivo', 'Soluções', 'Formato', 'Complementos', 'Resumo'];
   const ADDON_GROUPS = [
-    { name: 'Conversão', description: 'Para transformar interesse em oportunidade.', items: ['copywriting', 'integracao-crm', 'analytics-avancado'] },
-    { name: 'Conteúdo', description: 'Para apresentar melhor sua marca e seus projetos.', items: ['pagina-adicional', 'blog', 'seo-avancado'] },
-    { name: 'Operação', description: 'Para conectar ferramentas e reduzir trabalho manual.', items: ['automacao-extra', 'integracao-externa', 'integracao-api', 'dashboard'] },
-    { name: 'Acesso e gestão', description: 'Para experiências com usuários e áreas privadas.', items: ['area-restrita'] }
+    { name: 'Automação', description: 'Para reduzir tarefas repetitivas.', items: ['automacao-extra'] },
+    
+    { name: 'Integrações', description: 'Para conectar ferramentas e pagamentos.', items: ['integracao-externa'] },
+    
   ];
   const state = { currentStep: 1, totalSteps: 5, selectedObjectives: [], selectedServices: [], selectedAddons: [], showAllServices: false, isComplex: false, formData: {} };
   let containerEl = null;
@@ -47,7 +47,7 @@ const ConfiguratorApp = (() => {
   }
   function serviceHint(service) {
     const price = minimum(service);
-    return price == null ? 'Diagnóstico inicial' : (service.priceType === 'fixed' ? '' : 'A partir de ') + money(price);
+    return price == null ? 'Diagnóstico inicial' : price === 0 ? 'Gratuito' : (service.priceType === 'fixed' ? '' : 'A partir de ') + money(price) + (service.billing === 'monthly' ? '/mês após 3 meses grátis' : '');
   }
   function recommendedIds() {
     const ids = [];
@@ -69,7 +69,7 @@ const ConfiguratorApp = (() => {
   function checkComplexity() {
     const ids = state.selectedServices.map(entry => entry.serviceId);
     const combination = (configuratorData.complexCombinations || []).some(combo => combo.every(id => ids.includes(id)));
-    const customModel = state.selectedServices.some(entry => entry.modelId === 'sob-medida');
+    const customModel = false;
     const customItems = state.selectedServices.filter(entry => entry.priceType === 'analysis' || entry.priceType === 'custom').length;
     return combination || customModel || customItems >= 2;
   }
@@ -79,7 +79,8 @@ const ConfiguratorApp = (() => {
     let hasFrom = false;
     let hasCustom = false;
     state.selectedServices.forEach(entry => {
-      if (entry.modelId === 'sob-medida' || ['analysis', 'custom'].includes(entry.priceType)) { hasCustom = true; return; }
+      if (['analysis', 'custom'].includes(entry.priceType)) { hasCustom = true; return; }
+      if (entry.billing === 'monthly') return;
       if (entry.price != null) { value += Number(entry.price); if (entry.priceType === 'from') hasFrom = true; }
     });
     state.selectedAddons.forEach(entry => {
@@ -89,10 +90,12 @@ const ConfiguratorApp = (() => {
     if (hasCustom && value) return { type: 'partial', value, hasFrom };
     if (hasCustom) return { type: 'custom', value: null };
     if (value) return { type: hasFrom ? 'from' : 'fixed', value };
+    if (state.selectedServices.some(entry => entry.serviceId === 'diagnostico')) return {type:'free',value:0};
     return { type: 'pending', value: null };
   }
   function estimate(short) {
     const total = calculateTotal();
+    if (total.type === 'free') return 'Gratuito';
     if (total.type === 'custom') return short ? 'Sob análise' : 'Investimento sob análise';
     if (total.type === 'partial') return (total.hasFrom ? 'A partir de ' : '') + money(total.value) + (short ? ' +' : ' + itens sob análise');
     if (total.type === 'from') return 'A partir de ' + money(total.value);
@@ -159,7 +162,7 @@ const ConfiguratorApp = (() => {
       'landing-page': 'Página direta para campanhas, ofertas e captação de contatos.',
       'automacao': 'Fluxos que conectam ferramentas e reduzem tarefas manuais.',
       'sistema': 'Software pensado para as regras e rotinas da sua operação.',
-      'saas': 'Produto digital recorrente, preparado para usuários e escala.',
+      
       'mvp': 'Primeira versão funcional para validar uma ideia com agilidade.',
       'plataforma': 'Ambiente digital que reúne usuários, recursos e processos.'
     })[id] || 'Solução definida depois de entendermos sua necessidade.';
@@ -186,7 +189,7 @@ const ConfiguratorApp = (() => {
     if (!service) return '';
     let controls = '';
     if (isPresence(service.id)) {
-      controls += '<div class="cfg-control-group"><span class="cfg-control-label">Modelo</span><div class="cfg-model-toggle">' + renderModel(entry, 'modelos-prontos', 'Modelo pronto', 'Mais rápido, com estrutura validada e sua identidade.') + renderModel(entry, 'sob-medida', 'Sob medida', 'Estrutura e experiência desenhadas para o seu contexto.') + '</div></div>';
+      controls += '<div class="cfg-control-group"><span class="cfg-control-label">Modelo</span><div class="cfg-model-toggle">' + renderModel(entry, 'modelos-prontos', 'Modelo pronto', 'Você envia identidade visual, textos e imagens. A estrutura não muda.') + renderModel(entry, 'sob-medida', 'Sob medida', 'Estrutura, seções e visual personalizados para o seu negócio.') + '</div>' + (entry.modelId ? '<button class="cfg-text-action" type="button" data-preview-service="' + service.id + '">' + (entry.modelId === 'modelos-prontos' ? 'Ver prévia (vídeo e site ao vivo em breve)' : 'Ver prévia do projeto sob medida') + '</button>' : '') + '</div>';
     }
     const showLevels = service.hasLevels && (!isPresence(service.id) || entry.modelId === 'modelos-prontos');
     if (showLevels) {
@@ -197,7 +200,7 @@ const ConfiguratorApp = (() => {
     } else if (!service.hasLevels && !isPresence(service.id)) {
       controls += '<div class="cfg-diagnosis-box"><span>Diagnóstico orientado</span><p>A COGIT valida regras, integrações e prioridades antes de confirmar escopo e investimento.</p></div>';
     } else if (isPresence(service.id) && entry.modelId === 'sob-medida') {
-      controls += '<div class="cfg-diagnosis-box"><span>Projeto personalizado</span><p>O investimento será validado depois de entendermos estrutura, conteúdo e diferenciais.</p></div>';
+      controls += '<div class="cfg-diagnosis-box"><span>A partir de ' + money(service.customPrice) + '</span><p>Estrutura, seções e visual podem ser definidos para o negócio. O escopo final será confirmado em proposta.</p></div>';
     } else if (isPresence(service.id) && entry.modelId === 'modelos-prontos' && !service.hasLevels) {
       controls += '<div class="cfg-diagnosis-box is-ready"><span>Estrutura pronta para personalizar</span><p>Identidade visual, conteúdo e informações do seu negócio serão aplicados ao modelo.</p></div>';
     }
@@ -224,11 +227,11 @@ const ConfiguratorApp = (() => {
   }
   function renderFinal() {
     const needsValidation = calculateTotal().type !== 'fixed';
-    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'A equipe confirma os detalhes e orienta os próximos passos para a contratação.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Integrações e necessidades específicas podem alterar a estimativa.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica da configuração com a COGIT.' : 'Confirmação da configuração e orientação para contratação.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Enviar minha configuração</h3><p>Preencha seus dados para preparar a mensagem. Nada é enviado sem sua confirmação.</p></div><div class="cfg-form-grid">' + field('cfg-name', 'name', 'Nome', 'text', 'Seu nome', true, 'name', 120) + field('cfg-company', 'company', 'Empresa', 'text', 'Nome da empresa', false, 'organization', 160) + field('cfg-email', 'email', 'E-mail', 'email', 'seu@email.com', true, 'email', 254) + field('cfg-whatsapp', 'whatsapp', 'WhatsApp', 'tel', '(00) 00000-0000', true, 'tel', 16) + '<div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto?</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div>' + (typeof CogitPrivacy !== 'undefined' ? CogitPrivacy.formMarkup('cfg-contact-consent') : '') + '<p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">' + (needsValidation ? 'Enviar para validação técnica' : 'Avançar com esta solução') + ' <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><a class="cfg-whatsapp-link" href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" id="cfg-whatsapp-direct">Conversar apenas sobre a configuração</a></form></section>';
+    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'A equipe confirma os detalhes e orienta os próximos passos para a contratação.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 3 meses de suporte grátis; planos mensais escolhidos começam depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica da configuração com a COGIT.' : 'Confirmação da configuração e orientação para contratação.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Enviar minha configuração</h3><p>Preencha seus dados para preparar a mensagem. Nada é enviado sem sua confirmação.</p></div><div class="cfg-form-grid">' + field('cfg-name', 'name', 'Nome', 'text', 'Seu nome', true, 'name', 120) + field('cfg-company', 'company', 'Empresa', 'text', 'Nome da empresa', false, 'organization', 160) + field('cfg-email', 'email', 'E-mail', 'email', 'seu@email.com', true, 'email', 254) + field('cfg-whatsapp', 'whatsapp', 'WhatsApp', 'tel', '(00) 00000-0000', true, 'tel', 16) + '<div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto?</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div>' + (typeof CogitPrivacy !== 'undefined' ? CogitPrivacy.formMarkup('cfg-contact-consent') : '') + '<p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">' + (needsValidation ? 'Enviar para validação técnica' : 'Avançar com esta solução') + ' <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><a class="cfg-whatsapp-link" href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" id="cfg-whatsapp-direct">Conversar apenas sobre a configuração</a></form></section>';
   }
   function entryPrice(entry) {
-    if (entry.modelId === 'sob-medida' || ['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
-    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price);
+    if (['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
+    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + (entry.billing === 'monthly' ? '/mês após 3 meses grátis' : '');
   }
   function summaryService(entry) {
     const service = getService(entry.serviceId);
@@ -245,7 +248,7 @@ const ConfiguratorApp = (() => {
   }
   function renderSummary() {
     const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
-    return '<aside class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Estimativa sem compromisso</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></aside>';
+    return '<aside class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Todo projeto inclui 3 meses de suporte grátis. Planos mensais selecionados começam depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></aside>';
   }
   function configurationComplete() {
     return state.selectedServices.every(entry => {
@@ -280,6 +283,7 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('[data-service-id]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.serviceId)));
     containerEl.querySelectorAll('[data-remove-service]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.removeService)));
     containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click', () => selectSolutionModel(button.dataset.modelId, button.dataset.modelService)));
+    containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => { const entry = getEntry(button.dataset.previewService); if (!entry) return; if (entry.modelId === 'sob-medida' && window.openCustomModelModal) window.openCustomModelModal(entry.serviceId); else if (window.openModelPreviewModal) window.openModelPreviewModal(entry.serviceId); }));
     containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click', () => selectLevel(button.dataset.levelService, button.dataset.levelId)));
     containerEl.querySelectorAll('.cfg-addon-select').forEach(button => button.addEventListener('click', () => toggleAddon(button.dataset.addonId)));
     containerEl.querySelectorAll('[data-addon-action]').forEach(button => button.addEventListener('click', () => updateAddonQuantity(button.dataset.addonId, button.dataset.addonAction)));
@@ -307,7 +311,8 @@ const ConfiguratorApp = (() => {
     } else {
       const service = getService(id);
       if (!service) return;
-      state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType });
+      if (service.billing === 'monthly') state.selectedServices = state.selectedServices.filter(entry => entry.billing !== 'monthly');
+      state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
       track('configurator_select', id);
     }
     const allowed = allowedAddons();
@@ -321,8 +326,8 @@ const ConfiguratorApp = (() => {
       entry.modelId = modelId;
       entry.levelId = null;
       entry.levelName = null;
-      if (modelId === 'sob-medida') { entry.price = null; entry.priceType = 'custom'; }
-      else if (!service.hasLevels) { entry.price = service.price; entry.priceType = service.priceType; }
+      if (modelId === 'sob-medida') { entry.price = service.customPrice; entry.priceType = 'from'; }
+      else if (!service.hasLevels) { entry.price = service.price; entry.priceType = service.priceType; entry.billing = service.billing || null; }
       else { entry.price = null; entry.priceType = null; }
     });
     track('configurator_model', (serviceId || 'presence') + ':' + modelId);
@@ -430,7 +435,7 @@ const ConfiguratorApp = (() => {
     state.selectedServices = [];
     Array.from(new Set(servicesArray)).forEach(id => {
       const service = getService(id);
-      if (service) state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType });
+      if (service) state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
     });
     state.currentStep = state.selectedServices.length ? 3 : 1;
     render();

@@ -71,14 +71,14 @@ function configuratorTest() {
  vm.runInContext(source,e.context);
  return {e,app:vm.runInContext('ConfiguratorApp',e.context)};
 }
-check('Estimator totals include selected extras and remove incompatible extras',()=>{
- const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.selectLevel('landing-page','essencial');app.toggleAddon('seo-avancado');assert.equal(app.calculateTotal().value,1980);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,790);
+check('Current prices, custom models and compatible extras total correctly',()=>{
+ const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');assert.equal(app.calculateTotal().value,500);app.selectSolutionModel('sob-medida','landing-page');assert.equal(app.calculateTotal().value,700);app.toggleAddon('automacao-extra');assert.equal(app.calculateTotal().value,1690);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,600);
 });
-check('Quantity controls add, reduce and remove an extra',()=>{
- const {app}=configuratorTest();app.toggleService('site-institucional');app.selectSolutionModel('modelos-prontos','site-institucional');app.selectLevel('site-institucional','essencial');app.toggleAddon('pagina-adicional');app.updateAddonQuantity('pagina-adicional','plus');assert.equal(app.calculateTotal().value,2490);app.updateAddonQuantity('pagina-adicional','minus');assert.equal(app.calculateTotal().value,2240);app.updateAddonQuantity('pagina-adicional','minus');assert.equal(app.calculateTotal().value,1990);
+check('Monthly support is separate from the initial investment',()=>{
+ const {app}=configuratorTest();app.toggleService('site-institucional');app.selectSolutionModel('modelos-prontos','site-institucional');app.toggleService('manutencao');assert.equal(app.calculateTotal().value,700);app.toggleService('suporte');assert.equal(app.state.selectedServices.filter(x=>x.billing==='monthly').length,1);assert.equal(app.calculateTotal().value,700);
 });
-check('Complexity does not leave a stale estimate after removing a service',()=>{
- const {app}=configuratorTest();app.toggleService('sistema');app.toggleService('saas');assert.equal(app.calculateTotal().type,'from');assert.equal(app.state.isComplex,true);app.toggleService('saas');assert.equal(app.state.selectedServices.length,1);assert.equal(app.calculateTotal().type,'from');assert.equal(app.state.isComplex,false);
+check('The listed combined plan uses the sum of its services',()=>{
+ const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,1990);assert.equal(app.calculateTotal().type,'from');
 });
 check('WhatsApp message is encoded; only the explicit contact handoff includes personal fields',()=>{
  const {app,e}=configuratorTest();let opened;e.context.open=(url,target,features)=>opened={url,target,features};app.toggleService('portfolio');app.openWhatsAppDirect();let text=new URL(opened.url).searchParams.get('text');assert.match(text,/Portfólio/);assert.doesNotMatch(text,/private@example/);app.openWhatsAppDirect({name:'Teste & revisão',email:'private@example.test',company:'',whatsapp:'(11) 98765-4321',notes:'<b>literal<\/b>'});text=new URL(opened.url).searchParams.get('text');assert.match(text,/Teste & revisão/);assert.match(text,/Autorização de contato: confirmada/);assert.equal(opened.features,'noopener,noreferrer');

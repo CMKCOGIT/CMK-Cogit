@@ -303,6 +303,7 @@ body:not(:has(.hero)):not(:has(.solution-hero)) .header,
 /* Scrollable Body */
 .mobile-menu-body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 12px 16px 20px 16px;

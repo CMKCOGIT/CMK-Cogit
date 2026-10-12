@@ -20,6 +20,19 @@ check('Local HTML references exist; IDs are unique',()=>{
   }
  }
 });
+check('Mobile menus expose the solutions hub and main pages',()=>{
+ for(const file of html){const source=fs.readFileSync(file,'utf8');if(!source.includes('class="mobile-nav-list"'))continue;
+  const prefix=path.dirname(file)===path.join(root,'solucoes')?'../':'';
+  for(const target of ['solucoes/index.html','monte-sua-solucao.html','como-trabalhamos.html','sobre.html','contato.html'])assert.ok(source.includes(`href="${prefix}${target}" class="mobile-nav-link"`),`${file}: ${target}`);
+  assert.match(source,/class="[^"]*mobile-accordion-trigger[^"]*"[^>]*aria-expanded="false"/);
+ }
+});
+check('Sharing uses the current logo card and stray pricing banners are gone',()=>{
+ const png=fs.readFileSync(path.join(root,'assets/images/og-cmkcogit-2026.png'));assert.equal(png.readUInt32BE(16),1200);assert.equal(png.readUInt32BE(20),630);
+ for(const file of html){const source=fs.readFileSync(file,'utf8');if(source.includes('property="og:image"'))assert.match(source,/og-cmkcogit-2026\.png/);
+  assert.doesNotMatch(source,/Consulte a <a href="index\.html#tabela-de-valores">tabela atual de serviços e valores/);
+ }
+});
 check('Every content page supports zoom, landmarks, labels and local privacy controls',()=>{
  for(const file of html){const source=fs.readFileSync(file,'utf8');if(!source.includes('<main'))continue;
  assert.equal((source.match(/<h1\b/g)||[]).length,1,file);assert.match(source,/<html[^>]*lang="pt-BR"/);assert.match(source,/name="viewport"/);assert.doesNotMatch(source,/user-scalable=no|maximum-scale=1/);

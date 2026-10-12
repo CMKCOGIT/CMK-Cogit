@@ -175,6 +175,15 @@ function initMobileFixedCTA() {
   const mobileCta = document.getElementById('mobile-fixed-cta');
   if (!mobileCta) return;
 
+  function updateViewportBottom() {
+    const viewport = window.visualViewport;
+    const bottomGap = viewport ? Math.max(0, window.innerHeight - viewport.offsetTop - viewport.height) : 0;
+    mobileCta.style.setProperty('--mobile-viewport-bottom', Math.round(bottomGap) + 'px');
+  }
+  window.visualViewport?.addEventListener('resize', updateViewportBottom, {passive: true});
+  window.visualViewport?.addEventListener('scroll', updateViewportBottom, {passive: true});
+  updateViewportBottom();
+
   function updateVisibility() {
     const protectedAreas = ['hero', 'contact', 'configurator', 'diagnostic-experience', 'footer'];
     const nearContent = protectedAreas.some(id => {

@@ -17,7 +17,7 @@ const ConfiguratorApp = (() => {
     { name: 'Integrações', description: 'Para conectar ferramentas e pagamentos.', items: ['integracao-externa'] },
     
   ];
-  const state = { currentStep: 1, totalSteps: 5, selectedObjectives: [], selectedServices: [], selectedAddons: [], showAllServices: false, isComplex: false, formData: {} };
+  const state = { currentStep: 1, totalSteps: 5, selectedObjectives: [], selectedServices: [], selectedAddons: [], showAllServices: false, isComplex: false, formData: {}, restored: false };
   let containerEl = null;
   let lastRenderedStep = null;
   let transitionDirection = 1;
@@ -111,10 +111,11 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('.cfg-form input:not([type="checkbox"]),.cfg-form textarea').forEach(field => { field.value = state.formData[field.id] || ''; });
   }
   function render() {
+    saveSession();
     if (!containerEl) return;
     rememberForm();
     const previous = lastRenderedStep;
-    containerEl.innerHTML = '<div class="cfg-shell"><div class="cfg-main">' + renderProgress() + '<div class="cfg-stage" aria-live="polite">' + renderStep() + '</div>' + renderNavigation() + '</div>' + renderSummary() + '</div>' + renderMobileDock();
+    containerEl.innerHTML = '<div class="cfg-shell"><div class="cfg-main">' + renderProgress() + renderRestoredNote() + '<div class="cfg-stage" aria-live="polite">' + renderStep() + '</div>' + renderNavigation() + '</div>' + renderSummary() + '</div>' + renderMobileDock();
     restoreForm();
     bindEvents();
     if (previous !== null && previous !== state.currentStep) {
@@ -123,6 +124,39 @@ const ConfiguratorApp = (() => {
       if (heading) { heading.setAttribute('tabindex', '-1'); heading.focus({ preventScroll: true }); }
     }
     lastRenderedStep = state.currentStep;
+  }
+  function renderRestoredNote() {
+    return state.restored ? '<p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-arrow-counterclockwise"></i></span> Retomamos a solução que você começou neste navegador. <button class="cfg-text-action" type="button" id="cfg-restart">Começar do zero</button></p>' : '';
+  }
+  // Guarda só a seleção (sem textos livres) por 7 dias neste navegador.
+  function saveSession() {
+    if (typeof CogitHandoff === 'undefined') return;
+    if (!state.selectedObjectives.length && !state.selectedServices.length) { CogitHandoff.limparSessao(); return; }
+    CogitHandoff.salvarSessao({ step: state.currentStep, objectives: state.selectedObjectives, services: state.selectedServices, addons: state.selectedAddons });
+  }
+  function restoreSession() {
+    if (typeof CogitHandoff === 'undefined') return false;
+    const saved = CogitHandoff.lerSessao();
+    if (!saved || !Array.isArray(saved.services)) return false;
+    state.selectedObjectives = (saved.objectives || []).filter(id => getObjective(id));
+    state.selectedServices = saved.services.filter(entry => entry && getService(entry.serviceId)).map(entry => {
+      const service = getService(entry.serviceId);
+      const modelId = isPresence(service.id) && ['modelos-prontos', 'sob-medida'].includes(entry.modelId) ? entry.modelId : null;
+      const custom = modelId === 'sob-medida';
+      return { serviceId: service.id, modelId, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
+    });
+    const allowed = allowedAddons();
+    state.selectedAddons = (saved.addons || []).filter(entry => entry && getAddon(entry.addonId) && allowed.has(entry.addonId)).map(entry => {
+      const addon = getAddon(entry.addonId);
+      return { addonId: addon.id, name: addon.name, price: addon.price, priceType: addon.priceType, quantity: addon.allowQuantity ? Math.min(99, Math.max(1, Number(entry.quantity) || 1)) : null };
+    });
+    if (!state.selectedObjectives.length && !state.selectedServices.length) return false;
+    const target = Math.min(Math.max(Number(saved.step) || 1, 1), state.totalSteps);
+    let step = 1;
+    while (step < target) { state.currentStep = step; if (!canAdvance()) break; step += 1; }
+    state.currentStep = step;
+    state.restored = true;
+    return true;
   }
   function animateStage() {
     if (!window.matchMedia || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -227,7 +261,10 @@ const ConfiguratorApp = (() => {
   }
   function renderFinal() {
     const needsValidation = calculateTotal().type !== 'fixed';
-    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'A equipe confirma os detalhes e orienta os próximos passos para a contratação.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 3 meses de suporte grátis; planos mensais escolhidos começam depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica da configuração com a COGIT.' : 'Confirmação da configuração e orientação para contratação.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Enviar minha configuração</h3><p>Preencha seus dados para preparar a mensagem. Nada é enviado sem sua confirmação.</p></div><div class="cfg-form-grid">' + field('cfg-name', 'name', 'Nome', 'text', 'Seu nome', true, 'name', 120) + field('cfg-company', 'company', 'Empresa', 'text', 'Nome da empresa', false, 'organization', 160) + field('cfg-email', 'email', 'E-mail', 'email', 'seu@email.com', true, 'email', 254) + field('cfg-whatsapp', 'whatsapp', 'WhatsApp', 'tel', '(00) 00000-0000', true, 'tel', 16) + '<div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto?</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div>' + (typeof CogitPrivacy !== 'undefined' ? CogitPrivacy.formMarkup('cfg-contact-consent') : '') + '<p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">' + (needsValidation ? 'Enviar para validação técnica' : 'Avançar com esta solução') + ' <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><a class="cfg-whatsapp-link" href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" id="cfg-whatsapp-direct">Conversar apenas sobre a configuração</a></form></section>';
+    const howItWorks = needsValidation
+      ? 'Na plataforma você entra ou cria sua conta e a solicitação vai para a validação técnica. Quando a equipe confirmar escopo e valor, o pagamento é liberado lá mesmo.'
+      : 'O preço já está fechado. Na plataforma você entra ou cria sua conta, confere o resumo e paga com Pix, cartão ou boleto pelo Mercado Pago.';
+    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 3 meses de suporte grátis; planos mensais escolhidos começam depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
   }
   function entryPrice(entry) {
     if (['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
@@ -292,9 +329,7 @@ const ConfiguratorApp = (() => {
     document.getElementById('cfg-next')?.addEventListener('click', goNext);
     containerEl.querySelector('[data-mobile-next]')?.addEventListener('click', goNext);
     document.getElementById('cfg-contact-form')?.addEventListener('submit', submitConfiguration);
-    document.getElementById('cfg-whatsapp-direct')?.addEventListener('click', event => { event.preventDefault(); openWhatsAppDirect(); });
-    const whatsapp = document.getElementById('cfg-whatsapp');
-    if (whatsapp) whatsapp.addEventListener('input', event => { event.target.value = CogitUI.formatPhone(event.target.value); event.target.setCustomValidity(''); });
+    document.getElementById('cfg-restart')?.addEventListener('click', () => { if (typeof CogitHandoff !== 'undefined') CogitHandoff.limparSessao(); reset(); });
   }
   function toggleObjective(id) {
     const index = state.selectedObjectives.indexOf(id);
@@ -386,48 +421,39 @@ const ConfiguratorApp = (() => {
     const behavior = typeof CogitUI !== 'undefined' && CogitUI.motion ? CogitUI.motion() : 'smooth';
     window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior });
   }
-  function openWhatsAppDirect(contact) {
-    const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
-    let message = 'Olá! Montei uma solução no site da COGIT e gostaria de avançar.\\n\\n';
-    if (objectives.length) message += '*Objetivos:*\\n' + objectives.map(item => '- ' + item.name).join('\\n') + '\\n\\n';
-    message += '*Soluções:*\\n';
-    state.selectedServices.forEach(entry => {
-      const service = getService(entry.serviceId);
-      const detail = [];
-      if (entry.modelId) detail.push(entry.modelId === 'modelos-prontos' ? 'Modelo pronto' : 'Sob medida');
-      if (entry.levelName) detail.push(entry.levelName);
-      message += '- ' + (service ? service.name : entry.serviceId) + (detail.length ? ' — ' + detail.join(' / ') : '') + '\\n';
-    });
-    if (state.selectedAddons.length) {
-      message += '\\n*Complementos:*\\n';
-      state.selectedAddons.forEach(entry => { message += '- ' + entry.name + (entry.quantity > 1 ? ' (' + entry.quantity + 'x)' : '') + '\\n'; });
-    }
-    message += '\\n*Estimativa apresentada:* ' + estimate(false) + '\\n';
-    if (contact) {
-      message += '\\n*Nome:* ' + contact.name + '\\n*Empresa:* ' + (contact.company || 'Não informada') + '\\n*E-mail:* ' + contact.email + '\\n*WhatsApp:* ' + contact.whatsapp + '\\n*Contexto:* ' + (contact.notes || 'Não informado');
-      if (typeof CogitPrivacy !== 'undefined') message += '\\n\\n' + CogitPrivacy.consentReceipt();
-    }
-    window.open('https://wa.me/5517981568889?text=' + encodeURIComponent(message), '_blank', 'noopener,noreferrer');
+  function buildHandoff() {
+    const notes = document.getElementById('cfg-notes');
+    return {
+      origem: 'configurador',
+      objetivos: state.selectedObjectives.slice(),
+      servicos: state.selectedServices.map(entry => {
+        const service = getService(entry.serviceId);
+        return { id: entry.serviceId, modelo: entry.modelId || null, nome: service ? service.name : entry.serviceId };
+      }),
+      complementos: state.selectedAddons.map(entry => ({ id: entry.addonId, qtd: entry.quantity || 1, nome: entry.name })),
+      notas: notes ? notes.value.trim() : (state.formData['cfg-notes'] || ''),
+      estimativa: estimate(false)
+    };
   }
   function submitConfiguration(event) {
     event.preventDefault();
-    const form = document.getElementById('cfg-contact-form');
-    const name = document.getElementById('cfg-name');
-    const phone = document.getElementById('cfg-whatsapp');
-    name.setCustomValidity(name.value.trim() ? '' : 'Informe seu nome.');
-    phone.setCustomValidity(/^\d{10,11}$/.test(phone.value.replace(/\D/g, '')) ? '' : 'Informe um telefone com DDD e 10 ou 11 dígitos.');
-    for (const field of form.querySelectorAll('input:not([type="checkbox"]),textarea')) {
-      field.setAttribute('aria-invalid', String(!field.checkValidity()));
-      if (!field.reportValidity()) return;
+    const status = document.getElementById('cfg-contact-status');
+    if (!state.selectedServices.length || !configurationComplete()) {
+      if (status) status.textContent = 'Revise as etapas anteriores: falta escolher o formato de alguma solução.';
+      return;
     }
-    if (typeof CogitPrivacy !== 'undefined' && !CogitPrivacy.authorize(form)) return;
-    const contact = { name: name.value.trim(), company: document.getElementById('cfg-company').value.trim(), email: document.getElementById('cfg-email').value.trim(), whatsapp: phone.value.trim(), notes: document.getElementById('cfg-notes').value.trim() };
-    openWhatsAppDirect(contact);
-    document.getElementById('cfg-contact-status').textContent = 'Mensagem preparada. Revise e envie no WhatsApp para concluir.';
+    if (typeof CogitHandoff === 'undefined') {
+      if (status) status.textContent = 'Não foi possível abrir a plataforma agora. Recarregue a página e tente novamente.';
+      return;
+    }
+    const button = document.getElementById('cfg-submit');
+    if (button) button.disabled = true;
+    if (status) status.textContent = 'Abrindo a plataforma COGIT...';
     track('configurator_completed', 'services:' + state.selectedServices.length + ',addons:' + state.selectedAddons.length);
+    CogitHandoff.irParaPlataforma(buildHandoff());
   }
   function reset() {
-    Object.assign(state, { currentStep: 1, selectedObjectives: [], selectedServices: [], selectedAddons: [], showAllServices: false, isComplex: false, formData: {} });
+    Object.assign(state, { currentStep: 1, selectedObjectives: [], selectedServices: [], selectedAddons: [], showAllServices: false, isComplex: false, formData: {}, restored: false });
     render();
   }
   function preselectAndScroll(servicesArray) {
@@ -452,7 +478,13 @@ const ConfiguratorApp = (() => {
       const flow = problemFlowsData.find(item => item.id === problem);
       if (flow && flow.preselect) services = flow.preselect.join(',');
     }
-    if (services) { preselectAndScroll(services.split(',').map(item => item.trim()).filter(Boolean)); return; }
+    if (services) {
+      preselectAndScroll(services.split(',').map(item => item.trim()).filter(Boolean));
+      const model = params.get('model');
+      if (['modelos-prontos', 'sob-medida'].includes(model) && state.selectedServices.some(entry => isPresence(entry.serviceId))) selectSolutionModel(model);
+      return;
+    }
+    restoreSession();
     render();
   }
   return { init, reset, preselectAndScroll };

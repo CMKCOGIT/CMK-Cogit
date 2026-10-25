@@ -968,22 +968,25 @@ function renderHeroInteractive() {
     const objData = objectives.find(o => o.id === state.objective);
     const solution = getSolution(state.selectedService, state.objective);
 
-    const phone = '5517981568889';
     const svcName = selectedSvc ? selectedSvc.name : 'Solução Digital';
-    let waMsg = `Olá! Fiz um diagnóstico no site da COGIT:\n\n*Solução de interesse:* ${svcName}\n*Objetivo:* ${objData ? objData.label : (state.objective || 'Definir objetivo')}\n*Direcionamento:* ${solution.solution}`;
-    if (state.context && state.context.trim()) waMsg += `\n*Contexto:* ${state.context.trim()}`;
-    waMsg += `\n\nGostaria de receber uma orientação técnica da equipe COGIT!`;
-    const waLink = `https://wa.me/${phone}?text=${encodeURIComponent(waMsg)}`;
-    const configuratorIds = {
+    // id do diagnóstico -> id do catálogo (o mesmo usado no configurador e na plataforma)
+    const catalogIds = {
       'automacao-svc': 'automacao',
       'sistema-svc': 'sistema',
-      'saas-svc': 'saas',
+      'saas-svc': 'mvp',
       'mvp-svc': 'mvp',
       'plataforma-svc': 'plataforma',
-      'outro-svc': 'outras-solucoes'
+      'outro-svc': 'diagnostico'
     };
-    const configuratorService = configuratorIds[state.selectedService] || state.selectedService || '';
-    const configuratorLink = `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}`;
+    const catalogService = catalogIds[state.selectedService] || state.selectedService || 'diagnostico';
+    const presenceModel = PRESENCA_DIGITAL_IDS.includes(state.selectedService) && ['modelos-prontos', 'sob-medida'].includes(state.objective) ? state.objective : '';
+    const configuratorService = state.selectedService === 'outro-svc' ? '' : catalogService;
+    const configuratorLink = configuratorService
+      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (presenceModel ? `&model=${presenceModel}` : '')
+      : 'monte-sua-solucao.html';
+    const platformHint = presenceModel === 'modelos-prontos'
+      ? 'Na plataforma você entra ou cria sua conta e paga o modelo pronto com Pix, cartão ou boleto. Seu diagnóstico vai junto.'
+      : 'Na plataforma você entra ou cria sua conta e a equipe valida o escopo. O pagamento é liberado lá mesmo, sem precisar repetir nada.';
 
     container.innerHTML = `
       <div class="hero-step-wrapper hero-result-view">
@@ -1033,13 +1036,11 @@ function renderHeroInteractive() {
           </div>` : ''}
         </div>
 
-        ${CogitPrivacy.formMarkup('hero-contact-consent', true)}
-        <p class="hero-interactive-desc">O diagnóstico fica neste navegador. Ao continuar, revise e envie a mensagem no WhatsApp para falar com a equipe.</p>
+        <p class="hero-interactive-desc">${platformHint}</p>
         <div class="hero-summary-actions">
-          <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer" class="btn-hero-montar btn-hero-whatsapp" id="hero-btn-whatsapp">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-            Conversar com especialista
-          </a>
+          <button type="button" class="btn-hero-montar" id="hero-btn-plataforma">
+            Continuar na plataforma <span><i class="bi bi-arrow-right"></i></span>
+          </button>
           <div class="hero-summary-sub-actions">
             <a href="${configuratorLink}" class="hero-sub-link" id="hero-link-form">Detalhar escopo e estimativa <i class="bi bi-arrow-right"></i></a>
             <button type="button" class="hero-btn-restart-flow" id="hero-btn-restart"><i class="bi bi-arrow-counterclockwise"></i> Refazer diagnóstico</button>
@@ -1048,12 +1049,21 @@ function renderHeroInteractive() {
       </div>
     `;
 
-    const waBtn = document.getElementById('hero-btn-whatsapp');
+    const platformBtn = document.getElementById('hero-btn-plataforma');
     const restartBtn = document.getElementById('hero-btn-restart');
 
-    if (waBtn) waBtn.addEventListener('click', (event) => {
-      if (!CogitPrivacy.authorize(container)) { event.preventDefault(); return; }
-      trackEvent('hero_diagnostic_whatsapp', { service: state.selectedService, challenge: state.challenge, objective: state.objective });
+    if (platformBtn) platformBtn.addEventListener('click', () => {
+      if (typeof CogitHandoff === 'undefined') return;
+      platformBtn.disabled = true;
+      if (typeof trackEvent === 'function') trackEvent('hero_diagnostic_platform', { service: state.selectedService, challenge: state.challenge, objective: state.objective });
+      CogitHandoff.irParaPlataforma({
+        origem: 'diagnostico',
+        servicos: [{ id: catalogService, modelo: presenceModel || null, nome: svcName }],
+        complementos: [],
+        notas: (state.context || '').trim(),
+        diagnostico: { objetivo: objData ? objData.label : '', direcao: solution.solution },
+        estimativa: selectedSvc ? selectedSvc.priceLabel : ''
+      });
     });
 
     if (restartBtn) restartBtn.addEventListener('click', () => {
@@ -1062,7 +1072,7 @@ function renderHeroInteractive() {
       state.challenge = null;
       state.objective = null;
       state.context = '';
-      transitionTo(renderInvite, 'prev');
+      transitionTo(renderStep0, 'back');
     });
   }
 

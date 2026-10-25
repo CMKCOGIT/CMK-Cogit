@@ -79,10 +79,12 @@ function contrast(a,b){const luminance=hex=>{const c=hex.match(/[0-9a-f]{2}/gi).
 check('Card text and primary CTA meet WCAG AA contrast',()=>{for(const [fg,bg]of[['fafafc','242329'],['c6c3cf','242329'],['c6c3cf','302b3a'],['ffffff','4a3ddb'],['a79bff','0f1b33']]){const ratio=contrast(fg,bg);assert.ok(ratio>=4.5,`${fg}/${bg}: ${ratio}`);console.log(`  #${fg} / #${bg}: ${ratio.toFixed(2)}:1`);}});
 function configuratorTest() {
  const e=environment();
+ Object.assign(e.context,{TextEncoder,TextDecoder,btoa,atob,crypto:globalThis.crypto,Uint8Array});
  vm.runInContext(read('js/data.js'),e.context);
- const source=read('js/configurator.js').replace('return { init, reset, preselectAndScroll };','return { init, reset, preselectAndScroll, state, toggleService, toggleAddon, updateAddonQuantity, selectLevel, selectSolutionModel, calculateTotal, openWhatsAppDirect };');
+ vm.runInContext(read('js/handoff.js'),e.context);
+ const source=read('js/configurator.js').replace('return { init, reset, preselectAndScroll };','return { init, reset, preselectAndScroll, state, toggleService, toggleAddon, updateAddonQuantity, selectLevel, selectSolutionModel, calculateTotal, buildHandoff };');
  vm.runInContext(source,e.context);
- return {e,app:vm.runInContext('ConfiguratorApp',e.context)};
+ return {e,app:vm.runInContext('ConfiguratorApp',e.context),handoff:vm.runInContext('CogitHandoff',e.context)};
 }
 check('Current prices, custom models and compatible extras total correctly',()=>{
  const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');assert.equal(app.calculateTotal().value,500);app.selectSolutionModel('sob-medida','landing-page');assert.equal(app.calculateTotal().value,700);app.toggleAddon('automacao-extra');assert.equal(app.calculateTotal().value,1690);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,600);
@@ -93,7 +95,23 @@ check('Monthly support is separate from the initial investment',()=>{
 check('The listed combined plan uses the sum of its services',()=>{
  const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,1990);assert.equal(app.calculateTotal().type,'from');
 });
-check('WhatsApp message is encoded; only the explicit contact handoff includes personal fields',()=>{
- const {app,e}=configuratorTest();let opened;e.context.open=(url,target,features)=>opened={url,target,features};app.toggleService('portfolio');app.openWhatsAppDirect();let text=new URL(opened.url).searchParams.get('text');assert.match(text,/Portfólio/);assert.doesNotMatch(text,/private@example/);app.openWhatsAppDirect({name:'Teste & revisão',email:'private@example.test',company:'',whatsapp:'(11) 98765-4321',notes:'<b>literal<\/b>'});text=new URL(opened.url).searchParams.get('text');assert.match(text,/Teste & revisão/);assert.match(text,/Autorização de contato: confirmada/);assert.equal(opened.features,'noopener,noreferrer');
+check('Platform handoff carries only IDs/choices, keeps the same ref for the same selection and opens the app',()=>{
+ const {app,handoff}=configuratorTest();app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');app.toggleAddon('automacao-extra');
+ const cfg=app.buildHandoff();assert.equal(cfg.origem,'configurador');assert.equal(cfg.servicos[0].id,'portfolio');assert.equal(cfg.servicos[0].modelo,'modelos-prontos');assert.equal(cfg.complementos[0].id,'automacao-extra');
+ const url=new URL(handoff.link(cfg));assert.equal(url.origin+url.pathname,'https://app.cmkcogit.com.br/continuar.html');assert.equal(url.search,'');
+ const decode=link=>JSON.parse(Buffer.from(new URL(link).hash.replace('#cfg=',''),'base64url').toString('utf8'));
+ const payload=decode(url.href);assert.equal(payload.v,1);assert.match(payload.ref,/^[A-Za-z0-9_-]{16,64}$/);assert.ok(!('email'in payload)&&!('whatsapp'in payload));
+ assert.equal(decode(handoff.link(cfg)).ref,payload.ref,'same selection, same ref');
+ app.selectSolutionModel('sob-medida','portfolio');assert.notEqual(decode(handoff.link(app.buildHandoff())).ref,payload.ref,'new selection, new ref');
+ assert.doesNotMatch(read('js/configurator.js'),/wa\.me/);
+});
+check('Home diagnostic sends to the platform instead of WhatsApp',()=>{
+ const source=read('js/components.js');const result=source.slice(source.indexOf('function renderResult()'),source.indexOf('window.heroStartDiagnosis'));
+ assert.match(result,/CogitHandoff\.irParaPlataforma/);assert.doesNotMatch(result,/wa\.me|hero-btn-whatsapp/);assert.doesNotMatch(source,/renderInvite/);
+ for(const page of ['index.html','monte-sua-solucao.html'])assert.ok(read(page).indexOf('src="js/handoff.js"')>0&&read(page).indexOf('src="js/handoff.js"')<read(page).indexOf('src="js/components.js"'),page);
+});
+check('Configurator selection is restored from this browser without free text',()=>{
+ const first=configuratorTest();first.app.toggleService('landing-page');first.app.selectSolutionModel('modelos-prontos','landing-page');
+ const saved=JSON.parse(first.e.storage.get('cogit_cfg_sessao_v1'));assert.equal(saved.services[0].serviceId,'landing-page');assert.ok(!JSON.stringify(saved).includes('notes'));
 });
 console.log(`\n${checks} checks passed. ${html.length} HTML files inspected. Browser layout and interaction review are separate.`);

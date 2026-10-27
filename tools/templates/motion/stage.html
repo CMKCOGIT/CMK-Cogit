@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Palco de motion — templates CMKCOGIT</title>
+<!--
+  Palco 1920×1080 dos vídeos. Abra /tools/templates/motion/stage.html?t=portfolio&preview=1
+  para assistir em tempo real; o gravador chama window.renderAt(t) quadro a quadro.
+-->
+<link rel="stylesheet" href="../art/_base.css">
+<style>
+  @font-face { font-family: "Bricolage Grotesque"; font-weight: 200 800; src: url("../../../templates/landing/fonts/bricolage-grotesque-latin-opsz-normal.woff2"); }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--stage); }
+  #stage { position: absolute; inset: 0; overflow: hidden; background: var(--stage); }
+  #cam { position: absolute; inset: 0; transform-origin: 0 0; }
+
+  .browser { position: absolute; left: 50%; top: 50%; width: calc(1440px * var(--s) + 2px); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: 0 60px 120px -50px rgb(0 0 0 / .45), 0 0 0 1px rgb(0 0 0 / .08); }
+  .chrome { height: 46px; display: flex; align-items: center; gap: 18px; padding: 0 18px; background: #f6f6f4; border-bottom: 1px solid #e3e3df; font: 500 14px/1 "Instrument Sans", sans-serif; color: #6b6b66; }
+  .chrome i { width: 12px; height: 12px; border-radius: 50%; background: #dcdcd7; display: inline-block; margin-right: 6px; }
+  .chrome .url { flex: 1; max-width: 520px; margin: 0 auto; padding: 8px 14px; border-radius: 8px; background: #fff; border: 1px solid #e6e6e1; text-align: center; }
+  .viewport { position: relative; width: calc(1440px * var(--s)); height: calc(900px * var(--s)); overflow: hidden; }
+  .viewport iframe { position: absolute; left: 0; top: 0; width: 1440px; height: 900px; border: 0; transform: scale(var(--s)); transform-origin: 0 0; }
+
+  .phone { position: absolute; left: 50%; top: 50%; width: calc(390px * var(--ps) + 28px); padding: 14px; border-radius: 52px; background: #111; box-shadow: 0 60px 120px -50px rgb(0 0 0 / .55), inset 0 0 0 2px #333; }
+  .phone::before { content: ""; position: absolute; top: 24px; left: 50%; width: 96px; height: 26px; margin-left: -48px; border-radius: 14px; background: #000; z-index: 2; }
+  .phone .viewport { width: calc(390px * var(--ps)); height: calc(844px * var(--ps)); border-radius: 40px; }
+  .phone iframe { width: 390px; height: 844px; transform: scale(var(--ps)); }
+
+  #caption { position: absolute; left: 96px; bottom: 48px; display: flex; align-items: center; gap: 16px; padding: 8px 26px 8px 8px; border-radius: 999px; background: rgb(255 255 255 / .94); box-shadow: 0 16px 40px -20px rgb(0 0 0 / .45); font-family: var(--font-text); font-size: 24px; font-weight: 500; color: #1b1b1b; }
+  #caption b { display: inline-grid; place-items: center; min-width: 46px; height: 46px; padding: 0 12px; border-radius: 23px; background: var(--accent-c); color: #fff; font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .card { position: absolute; inset: 0; background: var(--bg); color: var(--ink); display: flex; flex-direction: column; justify-content: center; padding: 0 160px; }
+  .card .label { font-family: var(--font-text); font-size: 26px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: 40px; }
+  .card .lines { font-family: var(--font); font-size: 118px; line-height: 1.02; letter-spacing: -.02em; font-weight: var(--fw); }
+  .card .line { display: block; overflow: hidden; padding-bottom: .08em; }
+  .card .line > span { display: inline-block; }
+  .card .line.em > span { font-style: italic; color: var(--accent); }
+  .card .foot { margin-top: 56px; font-family: var(--font-text); font-size: 28px; opacity: .8; }
+  #end .lines { font-size: 132px; }
+  #end .cta { display: inline-flex; align-items: center; gap: 16px; margin-top: 56px; padding: 22px 34px; border-radius: 999px; background: var(--accent); color: var(--bg); font-family: var(--font-text); font-size: 30px; font-weight: 700; align-self: flex-start; }
+  #end .site { margin-top: 28px; font-family: var(--font-text); font-size: 26px; opacity: .75; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="cam">
+    <div class="browser" id="desk">
+      <div class="chrome"><span><i></i><i></i><i></i></span><span class="url" id="url"></span><span style="width:60px"></span></div>
+      <div class="viewport"><iframe id="f-desk" title="Template em tamanho desktop"></iframe></div>
+    </div>
+    <div class="phone" id="phone"><div class="viewport"><iframe id="f-mob" title="Template em tamanho celular"></iframe></div></div>
+  </div>
+  <div id="caption"><b id="cap-n"></b><span id="cap-t"></span></div>
+  <div class="card" id="intro"><div class="label" id="intro-label"></div><div class="lines" id="intro-lines"></div></div>
+  <div class="card" id="end"><div class="label" id="end-label">CMKCOGIT · Modelos prontos</div><div class="lines" id="end-lines"></div><div class="cta">Veja a demonstração completa →</div><div class="site">cmkcogit.com.br</div></div>
+</div>
+
+<script src="scenes.js"></script>
+<script>
+(() => {
+  const params = new URLSearchParams(location.search);
+  const key = params.get('t') || 'portfolio';
+  const S = window.MOTION[key];
+  const DURATION = 33;
+  const root = document.documentElement.style;
+  root.setProperty('--stage', S.palette.stage);
+  root.setProperty('--bg', S.palette.bg);
+  root.setProperty('--ink', S.palette.ink);
+  root.setProperty('--accent', S.palette.accent);
+  root.setProperty('--accent-c', key === 'landing' ? '#2447d6' : S.palette.accent === '#b88a3e' ? '#123f33' : S.palette.accent);
+  root.setProperty('--font', S.font);
+  root.setProperty('--fw', S.fontWeight || 600);
+  root.setProperty('--font-text', S.fontText);
+  document.getElementById('url').textContent = 'Demonstração · ' + S.label;
+  document.getElementById('intro-label').textContent = S.label;
+  document.getElementById('intro-lines').innerHTML = S.concept.map((l, i) => `<span class="line${i === S.italicLine ? ' em' : ''}"><span>${l}</span></span>`).join('');
+  document.getElementById('end-lines').innerHTML = `<span class="line"><span>${S.label.replace('Modelo ', '')}</span></span>`;
+
+  /* ---------- utilidades ---------- */
+  const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+  const p = (t, a, b) => clamp((t - a) / (b - a));
+  const io3 = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+  const out4 = (x) => 1 - Math.pow(1 - x, 4);
+  const lerp = (a, b, x) => a + (b - a) * x;
+  const frames = (win) => new Promise((r) => win.requestAnimationFrame(() => win.requestAnimationFrame(r)));
+  const $ = (id) => document.getElementById(id);
+
+  /* ---------- layout ---------- */
+  const DS = 0.84, PS = 0.8;
+  $('desk').style.setProperty('--s', DS);
+  $('phone').style.setProperty('--ps', PS);
+  const deskW = 1440 * DS + 2, deskH = 900 * DS + 46;
+  const phoneW = 390 * PS + 28, phoneH = 844 * PS + 28;
+
+  const fDesk = $('f-desk'), fMob = $('f-mob');
+  const load = (frame, src) => new Promise((resolve) => { frame.onload = () => resolve(); frame.src = src; });
+  const docOf = (f) => f.contentDocument;
+  const winOf = (f) => f.contentWindow;
+
+  // Posição absoluta de um alvo dentro do iframe.
+  const yOf = (frame, sel, offset = 0) => {
+    const doc = docOf(frame);
+    const el = doc.querySelector(sel);
+    if (!el) return 0;
+    const max = doc.documentElement.scrollHeight - winOf(frame).innerHeight;
+    return clamp(el.getBoundingClientRect().top + winOf(frame).scrollY + offset, 0, max);
+  };
+
+  let deskStops = [], mobStops = [];
+  const resolveStops = () => {
+    const tour = [...S.tour, S.interaction];
+    deskStops = tour.map((s) => ({ at: s.at, y: s.y ?? yOf(fDesk, s.to, s.offset || 0) }));
+    mobStops = S.mobileTour.map((s) => ({ at: s.at, y: s.y ?? yOf(fMob, s.to, -70) }));
+  };
+  const scrollFor = (stops, t, dur = 1.35) => {
+    let y = 0;
+    for (const s of stops) { if (t < s.at) break; y = lerp(y, s.y, io3(p(t, s.at, s.at + dur))); }
+    return y;
+  };
+
+  /* ---------- relógio controlado das animações dos iframes ---------- */
+  const births = new WeakMap();
+  const syncAnimations = (doc, t) => {
+    for (const a of doc.getAnimations()) {
+      if (!births.has(a)) births.set(a, t);
+      a.pause();
+      a.currentTime = Math.max(0, (t - births.get(a)) * 1000);
+    }
+  };
+
+  /* ---------- interações roteirizadas ---------- */
+  const fired = new Set();
+  const once = (id, t, at, fn) => { if (t >= at && !fired.has(id)) { fired.add(id); fn(); } };
+  const actions = {
+    archive(t, a) {
+      const doc = docOf(fDesk), win = winOf(fDesk);
+      const list = doc.querySelector('[data-archive]');
+      const rows = [...doc.querySelectorAll('[data-preview]')];
+      const hover = (i) => () => {
+        const r = rows[i].getBoundingClientRect();
+        const ev = { clientX: r.left + r.width * 0.32, clientY: r.top + r.height / 2, bubbles: true, pointerType: 'mouse' };
+        rows[i].dispatchEvent(new win.PointerEvent('pointerenter', ev));
+        list.dispatchEvent(new win.PointerEvent('pointermove', ev));
+        rows.forEach((row, j) => row.querySelector('.archive-name').style.transform = j === i ? 'translateX(16px)' : '');
+        list.querySelectorAll('.archive-row').forEach((row, j) => row.style.color = j === i ? '' : 'var(--ink-2)');
+      };
+      once('a1', t, a + 0.9, hover(0));
+      once('a2', t, a + 1.9, hover(1));
+      once('a3', t, a + 2.9, hover(2));
+      once('a4', t, a + 3.9, () => { list.dispatchEvent(new win.PointerEvent('pointerleave')); rows.forEach((r) => r.querySelector('.archive-name').style.transform = ''); list.querySelectorAll('.archive-row').forEach((row) => row.style.color = ''); });
+    },
+    tabs(t, a) {
+      const tabs = [...docOf(fDesk).querySelectorAll('[role="tab"]')];
+      once('t1', t, a + 1.0, () => tabs[1].click());
+      once('t2', t, a + 2.1, () => tabs[2].click());
+      once('t3', t, a + 3.2, () => tabs[3].click());
+    },
+    form(t, a) {
+      const doc = docOf(fDesk);
+      const form = doc.querySelector('[data-form]');
+      const set = (sel, v) => () => { const el = form.querySelector(sel); el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('blur')); };
+      once('f1', t, a + 0.9, () => form.querySelector('[type="submit"]').click());
+      once('f2', t, a + 1.9, set('#f-nome', 'Helena Prado'));
+      once('f3', t, a + 2.4, set('#f-email', 'helena@consultorio.com.br'));
+      once('f4', t, a + 2.9, set('#f-whats', '(11) 98765-4321'));
+      once('f5', t, a + 3.3, () => { form.querySelector('#f-lgpd').checked = true; form.querySelector('#f-lgpd').dispatchEvent(new Event('change')); });
+      once('f6', t, a + 3.8, () => form.querySelector('[type="submit"]').click());
+    },
+  };
+
+  /* ---------- preparação ---------- */
+  let deskReloaded = false;
+  async function init() {
+    await document.fonts.ready;
+    await Promise.all([load(fDesk, S.path), load(fMob, S.path)]);
+    await Promise.all([docOf(fDesk).fonts.ready, docOf(fMob).fonts.ready]);
+    resolveStops();
+    document.body.dataset.ready = '1';
+  }
+
+  /* ---------- quadro em t ---------- */
+  window.renderAt = async (t) => {
+    // Abertura
+    const introOut = io3(p(t, 2.7, 3.4));
+    $('intro').style.transform = `translateY(${-introOut * 100}%)`;
+    $('intro').querySelectorAll('.line > span').forEach((s, i) => {
+      const k = out4(p(t, 0.25 + i * 0.16, 1.25 + i * 0.16));
+      s.style.transform = `translateY(${(1 - k) * 110}%)`;
+    });
+    $('intro-label').style.opacity = out4(p(t, 0.1, 0.8));
+
+    // Navegador
+    if (t >= 3.2 && !deskReloaded) {
+      deskReloaded = true;
+      winOf(fDesk).scrollTo(0, 0);
+      await new Promise((r) => { fDesk.onload = r; winOf(fDesk).location.reload(); });
+      await docOf(fDesk).fonts.ready;
+    }
+    const enter = out4(p(t, 3.1, 4.3));
+    const split = io3(p(t, 23.4, 24.6));
+    const deskScale = lerp(1, 0.78, split);
+    const deskX = 960 - deskW / 2 + lerp(0, -250, split);
+    const deskY = 540 - deskH / 2 - 20 + (1 - enter) * 80;
+    $('desk').style.cssText += `;left:${deskX}px;top:${deskY}px;opacity:${enter};transform:scale(${deskScale * lerp(0.94, 1, enter)});transform-origin:50% 50%;`;
+    const phoneIn = out4(p(t, 23.8, 25.0));
+    $('phone').style.cssText += `;left:${960 + 470 - phoneW / 2 + (1 - phoneIn) * 160}px;top:${540 - phoneH / 2 - 10}px;opacity:${phoneIn};`;
+
+    // Câmera: aproximação na interação
+    const I = S.interaction;
+    const zIn = io3(p(t, I.at + 0.2, I.at + 1.2)), zOut = io3(p(t, I.at + 4.0, I.at + 4.6));
+    const z = 1 + (I.zoom - 1) * zIn * (1 - zOut);
+    const fx = deskX + deskW * I.focus[0], fy = deskY + deskH * I.focus[1];
+    $('cam').style.transform = `translate(${fx}px, ${fy}px) scale(${z}) translate(${-fx}px, ${-fy}px)`;
+
+    // Legendas
+    const stops = [...S.tour, I, { at: 23.5, caption: 'Experiência pensada para o celular' }, { at: 29, caption: '' }];
+    let cur = -1;
+    stops.forEach((s, i) => { if (t >= s.at + 0.3) cur = i; });
+    const capFade = cur >= 0 ? Math.min(out4(p(t, stops[cur].at + 0.3, stops[cur].at + 0.9)), 1 - p(t, (stops[cur + 1]?.at ?? 99) - 0.1, (stops[cur + 1]?.at ?? 99) + 0.3)) : 0;
+    const text = cur >= 0 ? stops[cur].caption : '';
+    $('cap-t').textContent = text;
+    $('cap-n').textContent = String(cur + 1).padStart(2, '0');
+    $('caption').style.opacity = text ? capFade : 0;
+    $('caption').style.transform = `translateY(${(1 - capFade) * 12}px)`;
+
+    // Encerramento
+    const endIn = io3(p(t, 29.0, 29.9));
+    $('end').style.transform = `translateY(${(1 - endIn) * 100}%)`;
+    $('end').querySelectorAll('.line > span').forEach((s) => { s.style.transform = `translateY(${(1 - out4(p(t, 29.5, 30.6))) * 110}%)`; });
+    $('end').querySelector('.cta').style.opacity = out4(p(t, 30.4, 31.2));
+    $('end').querySelector('.site').style.opacity = 0.75 * out4(p(t, 30.8, 31.6));
+
+    // Rolagem e interações dentro dos templates
+    winOf(fDesk).scrollTo({ top: scrollFor(deskStops, t), behavior: 'instant' });
+    winOf(fMob).scrollTo({ top: scrollFor(mobStops, t, 1.1), behavior: 'instant' });
+    if (actions[I.action]) actions[I.action](t, I.at);
+
+    await Promise.all([frames(winOf(fDesk)), frames(winOf(fMob)), frames(window)]);
+    syncAnimations(docOf(fDesk), t);
+    syncAnimations(docOf(fMob), t);
+  };
+
+  window.MOTION_DURATION = DURATION;
+  init().then(() => {
+    if (!params.has('preview')) return;
+    // Prévia em tempo real para revisão manual.
+    const start = performance.now();
+    const loop = async () => { const t = (performance.now() - start) / 1000 % DURATION; await window.renderAt(t); requestAnimationFrame(loop); };
+    loop();
+  });
+})();
+</script>
+</body>
+</html>

@@ -1617,3 +1617,8 @@ html:not(.animations-ready) #brand-intro { display: none; }
     transition: none;
   }
 }
+
+/* Vídeo de apresentação dos modelos prontos (modal de prévia) */
+.hero-model-dialog .hero-modal-preview-container:has(video) { aspect-ratio: 16 / 9; }
+.hero-model-dialog .hero-modal-preview-video { display: block; width: 100%; height: 100%; object-fit: cover; background: #111; }
+.hero-model-dialog .hero-modal-preview-container:hover .hero-modal-preview-video { transform: none; }

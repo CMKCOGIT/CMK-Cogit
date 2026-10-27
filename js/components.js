@@ -131,7 +131,7 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>'
     },
     {
-      id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'R$ 500 (modelo pronto)', challenge: 'presenca',
+      id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'A partir de R$ 500', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
     {
@@ -290,7 +290,9 @@ function renderHeroInteractive() {
     challenge: null,
     selectedService: null,
     objective: null,
-    context: ''
+    context: '',
+    contextTags: [],
+    customProject: null
   };
 
   const heroSection = container.closest('.hero');
@@ -347,20 +349,61 @@ function renderHeroInteractive() {
 
   const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
 
-  function renderProgressDots(currentStep, total) {
+  // Nome comercial e prazo dos modelos prontos. Preços vêm do catálogo (configuratorData em data.js).
+  const PRESENCE_MODELS = {
+    'landing-page': { pronto: 'Landing Page Essencial', prazo: '5 a 8 dias úteis' },
+    'portfolio': { pronto: 'Portfólio Profissional', prazo: '5 a 7 dias úteis' },
+    'site-institucional': { pronto: 'Site Institucional Essencial', prazo: '7 a 12 dias úteis' }
+  };
+  const SERVICE_GROUPS = [
+    { label: 'Presença digital', ids: ['site-institucional', 'landing-page', 'portfolio'] },
+    { label: 'Operação e produto', ids: ['automacao-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] }
+  ];
+  const CONTEXT_TAGS = {
+    presenca: ['Já tenho logotipo e identidade visual', 'Preciso de ajuda com os textos', 'Tenho fotos e imagens próprias', 'Já tenho domínio', 'Tenho um prazo definido'],
+    outros: ['Hoje usamos planilhas', 'Preciso integrar com sistemas que já uso', 'Ainda estou validando a ideia', 'Tenho um prazo definido', 'Já tenho uma equipe técnica']
+  };
+  const DX_ICON = {
+    check: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
+    right: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
+    left: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
+    external: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>',
+    restart: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 3 3 9 9 9"/></svg>'
+  };
+  const brl = (value) => 'R$ ' + Number(value).toLocaleString('pt-BR');
+  const esc = (value) => CogitUI.escapeHtml(value);
+
+  function presencePrice(serviceId, model) {
+    const services = typeof configuratorData !== 'undefined' ? configuratorData.services : [];
+    const svc = services.find(s => s.id === serviceId);
+    if (!svc) return null;
+    return model === 'sob-medida' ? (svc.customPrice || svc.price) : svc.price;
+  }
+
+  // Cabeçalho comum: etapas nomeadas (não só números), título e apoio.
+  function renderDxHead(current, title, desc) {
     const isModelo = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
-    const labels = ['Solução', isModelo ? 'Modelo' : 'Objetivo', 'Contexto'];
-    return `<div class="hero-diag-dots">
-      ${labels.map((label, i) => {
-      const n = i + 1;
-      const isDone = currentStep > n;
-      const isActive = currentStep === n;
-      return `<div class="hero-diag-dot-item ${isDone ? 'is-done' : ''} ${isActive ? 'is-active' : ''}">
-          <div class="hero-diag-dot">${isDone ? '<svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>' : n}</div>
-          <span class="hero-diag-dot-label">${label}</span>
-        </div>${i < labels.length - 1 ? `<div class="hero-diag-dot-line${isDone ? ' is-done' : ''}"></div>` : ''}`;
-    }).join('')}
-    </div>`;
+    const labels = ['Solução', isModelo ? 'Formato' : 'Objetivo', 'Contexto', 'Resumo'];
+    return `
+      <header class="dx-head">
+        <ol class="dx-steps" aria-label="Etapas do diagnóstico">
+          ${labels.map((label, i) => {
+            const n = i + 1;
+            const status = n < current ? 'is-done' : n === current ? 'is-current' : '';
+            return `<li class="${status}"${n === current ? ' aria-current="step"' : ''}><span class="dx-step-n" aria-hidden="true">${n < current ? DX_ICON.check : n}</span><span class="dx-step-l">${label}</span>${n < current ? '<span class="sr-only"> (concluída)</span>' : ''}</li>`;
+          }).join('')}
+        </ol>
+        <h2 class="dx-title">${title}</h2>
+        ${desc ? `<p class="dx-desc">${desc}</p>` : ''}
+      </header>`;
+  }
+
+  function renderDxFooter(backLabel, nextLabel, nextDisabled) {
+    return `
+      <footer class="dx-foot">
+        <button type="button" class="dx-btn dx-btn--ghost" data-dx="back">${DX_ICON.left}<span>${backLabel}</span></button>
+        <button type="button" class="dx-btn dx-btn--primary" data-dx="next" ${nextDisabled ? 'disabled' : ''}><span data-dx-next-label>${nextLabel}</span>${DX_ICON.right}</button>
+      </footer>`;
   }
 
   // ── ETAPA 0: Convite ──
@@ -594,484 +637,354 @@ function renderHeroInteractive() {
     }, { passive: true });
   }
 
-  // ── ETAPA 1: Grid de Serviços (seleção única → define challenge) ──
+  // ── ETAPA 1: solução ──
   function renderStep1() {
     state.step = 1;
-
-    const cardsHtml = SERVICES_GRID.map(svc => `
-      <button type="button"
-        class="hero-svc-card ${state.selectedService === svc.id ? 'is-selected' : ''}"
-        data-id="${svc.id}" data-challenge="${svc.challenge}"
-        aria-pressed="${state.selectedService === svc.id}"
-      >
-        <div class="hero-svc-check">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="hero-svc-icon">${svc.iconSvg}</div>
-        <span class="hero-svc-name">${svc.name}</span>
-        <span class="hero-svc-desc">${svc.desc}</span>
-      </button>
-    `).join('');
+    const card = (svc) => `
+      <label class="dx-option dx-option--svc">
+        <input type="radio" name="dx-service" value="${svc.id}" ${state.selectedService === svc.id ? 'checked' : ''}>
+        <span class="dx-option-icon" aria-hidden="true">${svc.iconSvg}</span>
+        <span class="dx-option-body">
+          <span class="dx-option-name">${svc.name}</span>
+          <span class="dx-option-desc">${svc.desc}</span>
+          <span class="dx-option-meta">${svc.priceLabel}</span>
+        </span>
+        <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
+      </label>`;
+    const unknown = SERVICES_GRID.find(s => s.id === 'outro-svc');
 
     container.innerHTML = `
-      <div class="hero-step-wrapper hero-step-1-view">
-        <div class="hero-interactive-header">
-          <div class="hero-discovery-topbar">
-            <span class="hero-discovery-tag">
-              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              COGIT DIAGNOSTIC
-            </span>
-            ${renderProgressDots(1, 3)}
-          </div>
-          <h2 class="hero-interactive-title">O que você precisa construir?</h2>
-          <p class="hero-interactive-desc">Escolha uma opção. Se ainda não souber, nós orientamos você.</p>
+      <div class="hero-step-wrapper dx-view">
+        ${renderDxHead(1, 'O que você precisa construir?', 'Escolha o mais próximo. Se não souber, a última opção leva você a uma orientação.')}
+        <div class="dx-body">
+          ${SERVICE_GROUPS.map(group => `
+            <fieldset class="dx-group">
+              <legend class="dx-group-label">${group.label}</legend>
+              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}</div>
+            </fieldset>`).join('')}
+          <fieldset class="dx-group">
+            <legend class="sr-only">Outra opção</legend>
+            <div class="dx-grid dx-grid--single">${card(unknown)}</div>
+          </fieldset>
         </div>
+        ${renderDxFooter('Voltar', 'Continuar', !state.selectedService)}
+      </div>`;
 
-        <div class="hero-svc-grid" role="group" aria-label="Selecione um serviço">
-          ${cardsHtml}
-        </div>
-
-        <div class="hero-discovery-footer">
-          <button type="button" class="btn-hero-back hero-btn-back-invite" id="hero-btn-back-invite"><i class="bi bi-arrow-left"></i> Voltar</button>
-          <button type="button" class="btn-hero-montar" id="hero-btn-continue-1" ${state.selectedService ? '' : 'disabled'}>
-            Definir objetivo <span><i class="bi bi-arrow-right"></i></span>
-          </button>
-        </div>
-      </div>
-    `;
-
-    const cards = container.querySelectorAll('.hero-svc-card');
-    const continueBtn = document.getElementById('hero-btn-continue-1');
-    const backBtn = document.getElementById('hero-btn-back-invite');
-
-    cards.forEach(card => {
-      attachTapHandler(card, () => {
-        state.selectedService = card.dataset.id;
-        state.challenge = card.dataset.challenge;
-        state.objective = null;
-
-        cards.forEach(c => { c.classList.remove('is-selected'); c.setAttribute('aria-pressed', 'false'); });
-        card.classList.add('is-selected');
-        card.setAttribute('aria-pressed', 'true');
-        if (continueBtn) continueBtn.removeAttribute('disabled');
-        revealNextAction(continueBtn);
-        if (typeof trackEvent === 'function') trackEvent('hero_service_selected', card.dataset.id);
+    const next = container.querySelector('[data-dx="next"]');
+    container.querySelectorAll('input[name="dx-service"]').forEach(input => {
+      input.addEventListener('change', () => {
+        const svc = SERVICES_GRID.find(s => s.id === input.value);
+        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; }
+        state.selectedService = svc.id;
+        state.challenge = svc.challenge;
+        next.disabled = false;
+        revealNextAction(next);
+        if (typeof trackEvent === 'function') trackEvent('hero_service_selected', svc.id);
       });
     });
-
-    if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep0, 'back'));
-    if (continueBtn) continueBtn.addEventListener('click', () => {
-      if (!state.selectedService) return;
-      transitionTo(renderStep2, 'next');
-    });
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep0, 'back'));
+    next.addEventListener('click', () => { if (state.selectedService) transitionTo(renderStep2, 'next'); });
   }
 
-  // ── ETAPA 2: Grid de Objetivos Dinâmicos (Cards Quadrados) ──
+  // ── ETAPA 2: objetivo (serviços de operação e produto) ──
   function renderStep2() {
     state.step = 2;
     const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
-
-    if (PRESENCA_DIGITAL_IDS.includes(state.selectedService)) {
-      return renderStep2Modelo(selectedSvc);
-    }
+    if (PRESENCA_DIGITAL_IDS.includes(state.selectedService)) return renderStep2Modelo(selectedSvc);
 
     const objectives = getObjectives(state.selectedService);
-
-    const cardsHtml = objectives.map(obj => `
-      <button type="button"
-        class="hero-objective-card ${state.objective === obj.id ? 'is-selected' : ''}"
-        data-id="${obj.id}"
-        aria-pressed="${state.objective === obj.id}"
-      >
-        <div class="hero-objective-check">
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <span class="hero-objective-text">${obj.label}</span>
-      </button>
-    `).join('');
-
     container.innerHTML = `
-      <div class="hero-step-wrapper hero-step-2-view">
-        <div class="hero-interactive-header">
-          <div class="hero-discovery-topbar">
-            <span class="hero-discovery-tag">
-              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><path d="M12 17h.01"/></svg>
-              OBJETIVO
-            </span>
-            ${renderProgressDots(2, 3)}
-          </div>
-
-          <div class="hero-challenge-context-bar">
-            <span class="hero-challenge-context-icon">${selectedSvc ? selectedSvc.iconSvg : ''}</span>
-            <span class="hero-challenge-context-name">${selectedSvc ? selectedSvc.name : 'Solução selecionada'}</span>
-            <button type="button" class="hero-btn-edit-step" id="hero-btn-edit-challenge">Alterar</button>
-          </div>
-
-          <h2 class="hero-interactive-title" style="margin-top:10px;">Qual resultado você busca?</h2>
-          <p class="hero-interactive-desc">Selecione o objetivo mais próximo da sua necessidade.</p>
+      <div class="hero-step-wrapper dx-view">
+        ${renderDxHead(2, 'Qual resultado você busca?', `Para <strong>${selectedSvc ? selectedSvc.name : 'sua solução'}</strong>. Escolha o objetivo mais próximo.`)}
+        <div class="dx-body">
+          <fieldset class="dx-group">
+            <legend class="sr-only">Objetivo</legend>
+            <div class="dx-grid dx-grid--objective">
+              ${objectives.map(obj => `
+                <label class="dx-option dx-option--row">
+                  <input type="radio" name="dx-objective" value="${obj.id}" ${state.objective === obj.id ? 'checked' : ''}>
+                  <span class="dx-option-name">${obj.label}</span>
+                  <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
+                </label>`).join('')}
+            </div>
+          </fieldset>
         </div>
+        ${renderDxFooter('Voltar', 'Continuar', !state.objective)}
+      </div>`;
 
-        <div class="hero-objective-grid" role="group" aria-label="Selecione o objetivo">
-          ${cardsHtml}
-        </div>
-
-        <div class="hero-discovery-footer" style="margin-top: var(--space-4);">
-          <button type="button" class="btn-hero-back" id="hero-btn-back-2"><i class="bi bi-arrow-left"></i> Voltar</button>
-          <button type="button" class="btn-hero-montar" id="hero-btn-continue-2" ${state.objective ? '' : 'disabled'}>
-            Continuar <span><i class="bi bi-arrow-right"></i></span>
-          </button>
-        </div>
-      </div>
-    `;
-
-    const cards = container.querySelectorAll('.hero-objective-card');
-    const continueBtn = document.getElementById('hero-btn-continue-2');
-    const backBtn = document.getElementById('hero-btn-back-2');
-    const editBtn = document.getElementById('hero-btn-edit-challenge');
-
-    cards.forEach(card => {
-      attachTapHandler(card, () => {
-        state.objective = card.dataset.id;
-
-        cards.forEach(c => {
-          c.classList.remove('is-selected');
-          c.setAttribute('aria-pressed', 'false');
-        });
-        card.classList.add('is-selected');
-        card.setAttribute('aria-pressed', 'true');
-        if (continueBtn) continueBtn.removeAttribute('disabled');
-        revealNextAction(continueBtn);
-        if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', card.dataset.id);
+    const next = container.querySelector('[data-dx="next"]');
+    container.querySelectorAll('input[name="dx-objective"]').forEach(input => {
+      input.addEventListener('change', () => {
+        state.objective = input.value;
+        next.disabled = false;
+        revealNextAction(next);
+        if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', input.value);
       });
     });
-
-    if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
-    if (editBtn) editBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
-    if (continueBtn) continueBtn.addEventListener('click', () => {
-      if (!state.objective) return;
-      transitionTo(renderStep3, 'next');
-    });
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep1, 'back'));
+    next.addEventListener('click', () => { if (state.objective) transitionTo(renderStep3, 'next'); });
   }
 
-  // ── ETAPA 2 ALTERNATIVA: Modelos ──
+  // ── ETAPA 2 (presença digital): modelo pronto ou sob medida ──
   function renderStep2Modelo(selectedSvc) {
-    const iconZap = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>';
-    const iconDesign = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-
-    const modeloProntos = state.objective === 'modelos-prontos';
-    const modeloSobMedida = state.objective === 'sob-medida';
+    const info = PRESENCE_MODELS[state.selectedService];
+    const prontoPrice = presencePrice(state.selectedService, 'modelos-prontos');
+    const sobPrice = presencePrice(state.selectedService, 'sob-medida');
+    const project = state.customProject;
 
     container.innerHTML = `
-      <div class="hero-step-wrapper hero-step-2-view">
-        <div class="hero-interactive-header">
-          <div class="hero-discovery-topbar">
-            <span class="hero-discovery-tag">
-              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><circle cx="12" cy="12" r="10"/><path d="M12 17h.01"/></svg>
-              MODELO
-            </span>
-            ${renderProgressDots(2, 3)}
-          </div>
-
-          <div class="hero-challenge-context-bar">
-            <span class="hero-challenge-context-icon">${selectedSvc ? selectedSvc.iconSvg : ''}</span>
-            <span class="hero-challenge-context-name">${selectedSvc ? selectedSvc.name : 'Solução selecionada'}</span>
-            <button type="button" class="hero-btn-edit-step" id="hero-btn-edit-challenge">Alterar</button>
-          </div>
-
-          <h2 class="hero-interactive-title" style="margin-top:10px;">Como você deseja construir sua solução?</h2>
-          <p class="hero-interactive-desc">Existem diferentes formas de criar uma solução digital.</p>
+      <div class="hero-step-wrapper dx-view">
+        ${renderDxHead(2, `Como você quer construir ${selectedSvc && selectedSvc.id === 'landing-page' ? 'sua landing page' : selectedSvc && selectedSvc.id === 'portfolio' ? 'seu portfólio' : 'seu site'}?`, 'Dois caminhos, com prazo e investimento diferentes. Você pode ver o modelo ou montar a estrutura antes de decidir.')}
+        <div class="dx-body">
+          <fieldset class="dx-group">
+            <legend class="sr-only">Formato</legend>
+            <div class="dx-grid dx-grid--format">
+              <div class="dx-format">
+                <input type="radio" id="dx-format-pronto" name="dx-format" value="modelos-prontos" ${state.objective === 'modelos-prontos' ? 'checked' : ''}>
+                <label for="dx-format-pronto" class="dx-format-label">
+                  <span class="dx-format-top"><span class="dx-chip">Mais rápido</span><span class="dx-radio" aria-hidden="true"></span></span>
+                  <span class="dx-format-name">Modelo pronto</span>
+                  <span class="dx-format-desc">${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.</span>
+                  <span class="dx-facts">
+                    <span><small>Investimento</small><strong>${brl(prontoPrice)}</strong></span>
+                    <span><small>Prazo</small><strong>${info.prazo}</strong></span>
+                  </span>
+                </label>
+                <button type="button" class="dx-link-btn" data-dx-action="preview">Ver o modelo e a demonstração ${DX_ICON.right}</button>
+              </div>
+              <div class="dx-format">
+                <input type="radio" id="dx-format-sob" name="dx-format" value="sob-medida" ${state.objective === 'sob-medida' ? 'checked' : ''}>
+                <label for="dx-format-sob" class="dx-format-label">
+                  <span class="dx-format-top"><span class="dx-chip dx-chip--alt">Personalizado</span><span class="dx-radio" aria-hidden="true"></span></span>
+                  <span class="dx-format-name">Sob medida</span>
+                  <span class="dx-format-desc">Você escolhe seções e componentes, como vídeo, galeria e depoimentos. O layout é desenhado para o seu negócio.</span>
+                  <span class="dx-facts">
+                    <span><small>Investimento</small><strong>a partir de ${brl(sobPrice)}</strong></span>
+                    <span><small>Prazo</small><strong>definido no escopo</strong></span>
+                  </span>
+                </label>
+                ${project ? `
+                  <p class="dx-format-status">${DX_ICON.check} Estrutura montada: ${project.sections.length} seções${project.components.length ? ` · ${project.components.length} componente${project.components.length > 1 ? 's' : ''}` : ''}</p>
+                  <button type="button" class="dx-link-btn" data-dx-action="customize">Editar estrutura ${DX_ICON.right}</button>`
+                : `<button type="button" class="dx-link-btn" data-dx-action="customize">Personalizar estrutura ${DX_ICON.right}</button>`}
+              </div>
+            </div>
+          </fieldset>
         </div>
+        ${renderDxFooter('Voltar', 'Continuar', !state.objective)}
+      </div>`;
 
-        <div class="hero-modelo-grid" role="group" aria-label="Tipo de modelo">
-          <div class="hero-modelo-card ${modeloProntos ? 'is-selected' : ''}" data-id="modelos-prontos">
-            <div class="hero-modelo-card-header">
-              <div class="hero-modelo-card-icon">${iconZap}</div>
-              <label class="hero-model-choice"><input type="radio" name="hero-solution-model" value="modelos-prontos" aria-label="Selecionar Modelos Prontos" ${modeloProntos ? 'checked' : ''}><span>${modeloProntos ? 'Selecionado' : 'Selecionar'}</span></label>
-            </div>
-            <h4 class="hero-modelo-card-title">Modelos Prontos</h4>
-            <p class="hero-modelo-card-desc">Escolha entre estruturas otimizadas para agilidade, conversão e presença digital.</p>
-            <div class="hero-modelo-card-divider"></div>
-            <div class="hero-modelo-card-actions">
-              <button type="button" class="btn-hero-modelo-sec" id="btn-ver-modelo">Ver modelo</button>
-              <button type="button" class="btn-hero-modelo-pri" id="btn-adquirir-modelo">Adquirir modelo</button>
-            </div>
-          </div>
-
-          <div class="hero-modelo-card ${modeloSobMedida ? 'is-selected' : ''}" data-id="sob-medida">
-            <div class="hero-modelo-card-header">
-              <div class="hero-modelo-card-icon">${iconDesign}</div>
-              <label class="hero-model-choice"><input type="radio" name="hero-solution-model" value="sob-medida" aria-label="Selecionar Modelos Sob Medida" ${modeloSobMedida ? 'checked' : ''}><span>${modeloSobMedida ? 'Selecionado' : 'Selecionar'}</span></label>
-            </div>
-            <h4 class="hero-modelo-card-title">Modelos Sob Medida</h4>
-            <p class="hero-modelo-card-desc">Projetos exclusivos focados em alto nível de personalização.</p>
-            <div class="hero-modelo-card-divider"></div>
-            <div class="hero-modelo-card-actions">
-              <button type="button" class="btn-hero-modelo-sec" id="btn-personalizar-sob-medida">Personalizar modelo</button>
-              <button type="button" class="btn-hero-modelo-pri" id="btn-adquirir-sob-medida">Adquirir modelo</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="hero-discovery-footer" style="margin-top: var(--space-4);">
-          <button type="button" class="btn-hero-back" id="hero-btn-back-2"><i class="bi bi-arrow-left"></i> Voltar</button>
-          <button type="button" class="btn-hero-montar" id="hero-btn-continue-2" ${state.objective ? '' : 'disabled'}>
-            Continuar <span><i class="bi bi-arrow-right"></i></span>
-          </button>
-        </div>
-      </div>
-    `;
-
-    const cards = container.querySelectorAll('.hero-modelo-card');
-    const continueBtn = document.getElementById('hero-btn-continue-2');
-    const backBtn = document.getElementById('hero-btn-back-2');
-    const editBtn = document.getElementById('hero-btn-edit-challenge');
-
-    function selectModel(id) {
-      state.objective = id;
-      cards.forEach(card => {
-        const selected = card.dataset.id === id;
-        card.classList.toggle('is-selected', selected);
-        card.querySelector('input').checked = selected;
-        card.querySelector('.hero-model-choice span').textContent = selected ? 'Selecionado' : 'Selecionar';
-      });
-      continueBtn.disabled = false;
-      revealNextAction(continueBtn);
-      if (typeof trackEvent === 'function') trackEvent('hero_model_selected', id);
-    }
-    cards.forEach(card => {
-      attachTapHandler(card, (e) => {
-        if (e.target && e.target.closest('button')) return;
-        selectModel(card.dataset.id);
-      });
-    });
-
-    container.querySelectorAll('[name="hero-solution-model"]').forEach(input => {
-      input.addEventListener('change', () => selectModel(input.value));
-    });
-    const verModeloBtn = document.getElementById('btn-ver-modelo');
-    if (verModeloBtn) {
-      verModeloBtn.addEventListener('click', () => showModelPreview(selectedSvc));
-    }
-    [['btn-adquirir-modelo', 'modelos-prontos'], ['btn-adquirir-sob-medida', 'sob-medida']].forEach(([id, model]) => {
-      const btn = document.getElementById(id);
-      if (btn) {
-        btn.addEventListener('click', () => {
-          selectModel(model);
-          transitionTo(renderStep3, 'next');
-        });
-      }
-    });
-
-    const personalizarBtn = document.getElementById('btn-personalizar-sob-medida');
-    if (personalizarBtn) {
-      personalizarBtn.addEventListener('click', () => {
-        openCustomModelModal(selectedSvc, () => {
-          selectModel('sob-medida');
-          transitionTo(renderStep3, 'next');
-        });
-      });
-    }
-
-    if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
-    if (editBtn) editBtn.addEventListener('click', () => transitionTo(renderStep1, 'back'));
-    if (continueBtn) continueBtn.addEventListener('click', () => {
-      if (!state.objective) return;
+    const next = container.querySelector('[data-dx="next"]');
+    const nextLabel = container.querySelector('[data-dx-next-label]');
+    const syncNext = () => {
+      next.disabled = !state.objective;
+      nextLabel.textContent = state.objective === 'sob-medida' && !state.customProject ? 'Montar estrutura' : 'Continuar';
+    };
+    const openStudio = () => openCustomModelModal(selectedSvc, (summary) => {
+      state.customProject = summary;
+      state.objective = 'sob-medida';
+      if (summary.serviceId && summary.serviceId !== state.selectedService) state.selectedService = summary.serviceId;
       transitionTo(renderStep3, 'next');
+    }, { project: state.customProject });
+
+    container.querySelectorAll('input[name="dx-format"]').forEach(input => {
+      input.addEventListener('change', () => {
+        state.objective = input.value;
+        syncNext();
+        revealNextAction(next);
+        if (typeof trackEvent === 'function') trackEvent('hero_model_selected', input.value);
+      });
+    });
+    syncNext();
+    container.querySelector('[data-dx-action="preview"]').addEventListener('click', () => showModelPreview(selectedSvc));
+    container.querySelector('[data-dx-action="customize"]').addEventListener('click', () => {
+      state.objective = 'sob-medida';
+      container.querySelector('#dx-format-sob').checked = true;
+      syncNext();
+      openStudio();
+    });
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep1, 'back'));
+    next.addEventListener('click', () => {
+      if (!state.objective) return;
+      if (state.objective === 'sob-medida' && !state.customProject) openStudio();
+      else transitionTo(renderStep3, 'next');
     });
   }
 
-  // ── ETAPA 3: Contexto ──
+  // ── ETAPA 3: contexto (opcional) ──
   function renderStep3() {
     state.step = 3;
-
+    const tags = CONTEXT_TAGS[PRESENCA_DIGITAL_IDS.includes(state.selectedService) ? 'presenca' : 'outros'];
     container.innerHTML = `
-      <div class="hero-step-wrapper hero-step-3-view">
-        <div class="hero-interactive-header">
-          <div class="hero-discovery-topbar">
-            <span class="hero-discovery-tag">
-              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              CONTEXTO
-            </span>
-            ${renderProgressDots(3, 3)}
+      <div class="hero-step-wrapper dx-view">
+        ${renderDxHead(3, 'Algo que devemos saber antes?', 'Opcional. Marque o que se aplica ou escreva com suas palavras.')}
+        <div class="dx-body">
+          <fieldset class="dx-group">
+            <legend class="dx-group-label">Marque o que se aplica</legend>
+            <div class="dx-tags">
+              ${tags.map((tag, i) => `
+                <label class="dx-tag"><input type="checkbox" value="${esc(tag)}" ${state.contextTags.includes(tag) ? 'checked' : ''}><span>${tag}</span></label>`).join('')}
+            </div>
+          </fieldset>
+          <div class="dx-field">
+            <label class="dx-group-label" for="hero-context-input">Conte com suas palavras</label>
+            <textarea maxlength="2000" id="hero-context-input" class="dx-textarea" rows="4" aria-describedby="dx-context-count"
+              placeholder="Ex.: Somos uma clínica com duas unidades e queremos receber agendamentos pelo site.">${esc(state.context)}</textarea>
+            <p class="dx-count" id="dx-context-count"><span data-dx-count>${state.context.length}</span>/2000</p>
           </div>
-          <h2 class="hero-interactive-title">Existe algo específico que devemos entender?</h2>
-          <p class="hero-interactive-desc">Campo opcional — nos ajuda a direcionar melhor sua orientação.</p>
         </div>
+        ${renderDxFooter('Voltar', 'Ver meu resumo', false)}
+      </div>`;
 
-        <div class="hero-context-field">
-          <label class="sr-only" for="hero-context-input">Contexto do seu projeto (opcional)</label>
-          <textarea maxlength="2000" id="hero-context-input" class="hero-textarea hero-textarea-lg" rows="4"
-            placeholder="Ex: Hoje controlamos tudo por planilhas e queremos organizar nosso processo de vendas...">${CogitUI.escapeHtml(state.context)}</textarea>
-        </div>
-
-        <div class="hero-discovery-footer" style="margin-top: var(--space-4);">
-          <button type="button" class="btn-hero-back" id="hero-btn-back-3"><i class="bi bi-arrow-left"></i> Voltar</button>
-          <button type="button" class="btn-hero-montar" id="hero-btn-finalize">
-            Gerar diagnóstico <span><i class="bi bi-arrow-right"></i></span>
-          </button>
-        </div>
-      </div>
-    `;
-
-    const textarea = document.getElementById('hero-context-input');
-    const backBtn = document.getElementById('hero-btn-back-3');
-    const finalBtn = document.getElementById('hero-btn-finalize');
-
-    if (textarea) textarea.addEventListener('input', e => { state.context = e.target.value; });
-    if (backBtn) backBtn.addEventListener('click', () => transitionTo(renderStep2, 'back'));
-    if (finalBtn) finalBtn.addEventListener('click', () => {
-      if (textarea) state.context = textarea.value;
-
-      transitionTo(renderAnalyzing, 'next');
+    const textarea = container.querySelector('#hero-context-input');
+    const count = container.querySelector('[data-dx-count]');
+    textarea.addEventListener('input', () => { state.context = textarea.value; count.textContent = String(textarea.value.length); });
+    container.querySelectorAll('.dx-tag input').forEach(input => {
+      input.addEventListener('change', () => {
+        state.contextTags = [...container.querySelectorAll('.dx-tag input:checked')].map(i => i.value);
+      });
+    });
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep2, 'back'));
+    container.querySelector('[data-dx="next"]').addEventListener('click', () => {
+      state.context = textarea.value;
+      transitionTo(renderResult, 'next');
     });
   }
 
-  // ── TELA INTERMEDIÁRIA: Analisando ──
-  function renderAnalyzing() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { renderResult(); return; }
-    container.innerHTML = `
-      <div class="hero-step-wrapper hero-analyzing-view">
-        <div class="hero-analyzing-content">
-          <div class="hero-analyzing-icon">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-          </div>
-          <p class="hero-analyzing-label">Identificando seu cenário...</p>
-          <div class="hero-analyzing-checks">
-            <div class="hero-analyzing-check" id="acheck-1">
-              <div class="hero-analyzing-check-dot"></div>
-              <span>Solução identificada</span>
-            </div>
-            <div class="hero-analyzing-check" id="acheck-2">
-              <div class="hero-analyzing-check-dot"></div>
-              <span>Objetivo mapeado</span>
-            </div>
-            <div class="hero-analyzing-check" id="acheck-3">
-              <div class="hero-analyzing-check-dot"></div>
-              <span>Direcionamento estratégico definido</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-
-    ['acheck-1', 'acheck-2', 'acheck-3'].forEach((id, i) => {
-      setTimeout(() => { const el = document.getElementById(id); if (el) el.classList.add('is-done'); }, 450 + i * 430);
-    });
-    setTimeout(() => transitionTo(renderResult, 'next'), 450 + 3 * 430 + 650);
-  }
-
-  // ── RESULTADO: Diagnóstico Consultivo ──
+  // ── RESULTADO: resumo editável e próximos passos ──
   function renderResult() {
     state.step = 4;
     const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
-    const objectives = getObjectives(state.selectedService);
-    const objData = objectives.find(o => o.id === state.objective);
+    const isPresence = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
+    const model = isPresence && ['modelos-prontos', 'sob-medida'].includes(state.objective) ? state.objective : '';
+    const objData = getObjectives(state.selectedService).find(o => o.id === state.objective);
     const solution = getSolution(state.selectedService, state.objective);
+    const project = model === 'sob-medida' ? state.customProject : null;
+    const svcName = selectedSvc ? selectedSvc.name : 'Solução digital';
 
-    const svcName = selectedSvc ? selectedSvc.name : 'Solução Digital';
     // id do diagnóstico -> id do catálogo (o mesmo usado no configurador e na plataforma)
-    const catalogIds = {
-      'automacao-svc': 'automacao',
-      'sistema-svc': 'sistema',
-      'saas-svc': 'mvp',
-      'mvp-svc': 'mvp',
-      'plataforma-svc': 'plataforma',
-      'outro-svc': 'diagnostico'
-    };
+    const catalogIds = { 'automacao-svc': 'automacao', 'sistema-svc': 'sistema', 'saas-svc': 'mvp', 'mvp-svc': 'mvp', 'plataforma-svc': 'plataforma', 'outro-svc': 'diagnostico' };
     const catalogService = catalogIds[state.selectedService] || state.selectedService || 'diagnostico';
-    const presenceModel = PRESENCA_DIGITAL_IDS.includes(state.selectedService) && ['modelos-prontos', 'sob-medida'].includes(state.objective) ? state.objective : '';
     const configuratorService = state.selectedService === 'outro-svc' ? '' : catalogService;
     const configuratorLink = configuratorService
-      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (presenceModel ? `&model=${presenceModel}` : '')
+      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
       : 'monte-sua-solucao.html';
-    const platformHint = presenceModel === 'modelos-prontos'
-      ? 'Na plataforma você entra ou cria sua conta e paga o modelo pronto com Pix, cartão ou boleto. Seu diagnóstico vai junto.'
-      : 'Na plataforma você entra ou cria sua conta e a equipe valida o escopo. O pagamento é liberado lá mesmo, sem precisar repetir nada.';
+
+    const headline = model === 'modelos-prontos' ? PRESENCE_MODELS[state.selectedService].pronto
+      : project ? project.suggestion : solution.solution;
+    const lede = model === 'modelos-prontos'
+      ? 'Modelo pronto com a identidade da sua marca aplicada: estrutura, animações e responsividade já testadas.'
+      : project ? `${project.sections.length} seções definidas por você${project.components.length ? `, com ${project.components.map(c => c.toLowerCase()).join(', ')}` : ''}.`
+      : solution.desc;
+
+    let price, priceNote, prazo;
+    if (model) {
+      const value = presencePrice(state.selectedService, model);
+      price = model === 'sob-medida' ? `a partir de ${brl(value)}` : brl(value);
+      priceNote = model === 'sob-medida' ? 'O valor final é confirmado depois da validação do escopo.' : 'Valor fixo para o modelo pronto.';
+      prazo = model === 'sob-medida' ? 'Definido na validação do escopo' : PRESENCE_MODELS[state.selectedService].prazo;
+    } else {
+      price = selectedSvc ? selectedSvc.priceLabel : 'Sob consulta';
+      priceNote = 'Estimativa inicial. A equipe confirma o valor depois de entender o escopo.';
+      prazo = 'Definido na validação do escopo';
+    }
+    const steps = model === 'modelos-prontos'
+      ? ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'Pague por Pix, cartão ou boleto.', 'Envie logotipo, textos e imagens para começarmos.']
+      : ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'A equipe revisa o escopo e confirma valor e prazo.', 'Com tudo aprovado, o pagamento é liberado na própria plataforma.'];
+
+    const previewData = typeof MODEL_PREVIEW_DATA !== 'undefined' ? MODEL_PREVIEW_DATA[state.selectedService] : null;
+    const formatLabel = model === 'modelos-prontos' ? 'Modelo pronto' : model === 'sob-medida' ? 'Sob medida' : (objData ? objData.label : '—');
+    const contextText = (state.context || '').trim();
 
     container.innerHTML = `
-      <div class="hero-step-wrapper hero-result-view">
-        <div class="hero-interactive-header">
-          <div class="hero-discovery-topbar">
-            <span class="hero-discovery-tag hero-discovery-tag--success">
-              <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-              DIAGNÓSTICO CONCLUÍDO
-            </span>
-          </div>
-          <h2 class="hero-interactive-title">Entendemos seu cenário.</h2>
-          <p class="hero-interactive-desc">Esta é uma direção inicial para o seu momento.</p>
-        </div>
+      <div class="hero-step-wrapper dx-view dx-view--result">
+        ${renderDxHead(4, 'Seu ponto de partida', 'Revise o que você escolheu. Tudo pode ser ajustado aqui ou com a equipe.')}
+        <div class="dx-result">
+          <section class="dx-summary" aria-labelledby="dx-rec-title">
+            <p class="dx-kicker">Recomendação</p>
+            <h3 class="dx-rec-title" id="dx-rec-title">${esc(headline)}</h3>
+            <p class="dx-rec-lede">${esc(lede)}</p>
 
-        <div class="hero-result-card">
-          <div class="hero-result-row">
-            <span class="hero-result-label">Solução selecionada</span>
-            <span class="hero-result-value">
-              <span class="hero-result-icon-inline">${selectedSvc ? selectedSvc.iconSvg : ''}</span>
-              ${svcName}
-            </span>
-          </div>
-          <div class="hero-result-divider"></div>
-          <div class="hero-result-row">
-            <span class="hero-result-label">Investimento inicial</span>
-            <span class="hero-result-value hero-result-value--accent">${selectedSvc ? selectedSvc.priceLabel : 'Sob consulta'}</span>
-          </div>
-          <div class="hero-result-divider"></div>
-          <div class="hero-result-row">
-            <span class="hero-result-label">Objetivo</span>
-            <span class="hero-result-value">${objData ? objData.label : (state.objective || '—')}</span>
-          </div>
-          <div class="hero-result-divider"></div>
-          <div class="hero-result-row hero-result-row--desc">
-            <span class="hero-result-label">Direção recomendada</span>
-            <span class="hero-result-value hero-result-value--accent">${solution.solution}</span>
-          </div>
-          <div class="hero-result-divider"></div>
-          <div class="hero-result-row hero-result-row--desc">
-            <span class="hero-result-label">Como ajuda</span>
-            <span class="hero-result-desc">${solution.desc}</span>
-          </div>
-          ${state.context && state.context.trim() ? `
-          <div class="hero-result-context">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            <span>"${CogitUI.escapeHtml(state.context.trim())}"</span>
-          </div>` : ''}
-        </div>
+            <dl class="dx-choices">
+              <div><dt>Solução</dt><dd>${svcName}</dd><dd><button type="button" class="dx-edit" data-dx-edit="1">Alterar<span class="sr-only"> solução</span></button></dd></div>
+              <div><dt>${isPresence ? 'Formato' : 'Objetivo'}</dt><dd>${formatLabel}</dd><dd><button type="button" class="dx-edit" data-dx-edit="2">Alterar<span class="sr-only"> ${isPresence ? 'formato' : 'objetivo'}</span></button></dd></div>
+            </dl>
 
-        <p class="hero-interactive-desc">${platformHint}</p>
-        <div class="hero-summary-actions">
-          <button type="button" class="btn-hero-montar" id="hero-btn-plataforma">
-            Continuar na plataforma <span><i class="bi bi-arrow-right"></i></span>
-          </button>
-          <div class="hero-summary-sub-actions">
-            <a href="${configuratorLink}" class="hero-sub-link" id="hero-link-form">Detalhar escopo e estimativa <i class="bi bi-arrow-right"></i></a>
-            <button type="button" class="hero-btn-restart-flow" id="hero-btn-restart"><i class="bi bi-arrow-counterclockwise"></i> Refazer diagnóstico</button>
-          </div>
+            ${project ? `
+              <div class="dx-structure">
+                <div class="dx-structure-head"><p class="dx-kicker">Estrutura</p><button type="button" class="dx-edit" data-dx-edit="studio">Editar estrutura</button></div>
+                <ol class="dx-structure-list">${project.sections.map(s => `<li>${esc(s)}</li>`).join('')}</ol>
+              </div>` : ''}
+            ${model === 'modelos-prontos' && previewData ? `
+              <div class="dx-model-links">
+                <a class="dx-link-btn" href="${location.pathname.includes('/solucoes/') ? '../' : ''}${previewData.liveUrl}" target="_blank" rel="noopener">Abrir a demonstração ${DX_ICON.external}<span class="sr-only"> (nova aba)</span></a>
+                <button type="button" class="dx-link-btn" data-dx-action="preview">Ver o que está incluso</button>
+              </div>` : ''}
+
+            <div class="dx-notes">
+              <div class="dx-structure-head"><p class="dx-kicker">Suas observações</p><button type="button" class="dx-edit" data-dx-edit="3">${contextText || state.contextTags.length ? 'Alterar' : 'Adicionar'}<span class="sr-only"> observações</span></button></div>
+              ${state.contextTags.length ? `<ul class="dx-note-tags">${state.contextTags.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+              ${contextText ? `<p class="dx-note-text">${esc(contextText)}</p>` : ''}
+              ${!contextText && !state.contextTags.length ? '<p class="dx-note-empty">Nenhuma observação. Você pode contar mais à equipe na plataforma.</p>' : ''}
+            </div>
+          </section>
+
+          <aside class="dx-aside" aria-labelledby="dx-invest-title">
+            <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
+            <p class="dx-price">${price}</p>
+            <p class="dx-price-note">${priceNote}</p>
+            <dl class="dx-aside-facts"><div><dt>Prazo</dt><dd>${prazo}</dd></div></dl>
+            <h4 class="dx-kicker">Próximos passos</h4>
+            <ol class="dx-next">${steps.map(s => `<li>${s}</li>`).join('')}</ol>
+            <button type="button" class="dx-btn dx-btn--primary dx-btn--block" id="hero-btn-plataforma"><span>Continuar na plataforma</span>${DX_ICON.right}</button>
+            <p class="dx-reassure">Você revisa tudo antes de qualquer pagamento.</p>
+            <div class="dx-aside-links">
+              <a href="${configuratorLink}" id="hero-link-form">Ajustar no configurador</a>
+              <button type="button" id="hero-btn-restart">${DX_ICON.restart} Recomeçar</button>
+            </div>
+          </aside>
         </div>
-      </div>
-    `;
+      </div>`;
+
+    container.querySelectorAll('[data-dx-edit]').forEach(btn => btn.addEventListener('click', () => {
+      const target = btn.dataset.dxEdit;
+      if (target === 'studio') {
+        openCustomModelModal(selectedSvc, (summary) => {
+          state.customProject = summary;
+          if (summary.serviceId) state.selectedService = summary.serviceId;
+          renderResult();
+          CogitUI.focusHeading(container);
+        }, { project: state.customProject, startAt: 'structure' });
+        return;
+      }
+      transitionTo({ 1: renderStep1, 2: renderStep2, 3: renderStep3 }[target], 'back');
+    }));
+    const previewBtn = container.querySelector('[data-dx-action="preview"]');
+    if (previewBtn) previewBtn.addEventListener('click', () => showModelPreview(selectedSvc));
 
     const platformBtn = document.getElementById('hero-btn-plataforma');
-    const restartBtn = document.getElementById('hero-btn-restart');
-
-    if (platformBtn) platformBtn.addEventListener('click', () => {
+    platformBtn.addEventListener('click', () => {
       if (typeof CogitHandoff === 'undefined') return;
       platformBtn.disabled = true;
       if (typeof trackEvent === 'function') trackEvent('hero_diagnostic_platform', { service: state.selectedService, challenge: state.challenge, objective: state.objective });
+      const notes = [
+        project ? `Estrutura sob medida (${project.suggestion}): ${project.sections.join(' > ')}` : '',
+        project && project.components.length ? `Componentes: ${project.components.join(', ')}` : '',
+        state.contextTags.length ? `Marcado no diagnóstico: ${state.contextTags.join('; ')}` : '',
+        contextText
+      ].filter(Boolean).join('\n');
       CogitHandoff.irParaPlataforma({
         origem: 'diagnostico',
-        servicos: [{ id: catalogService, modelo: presenceModel || null, nome: svcName }],
+        servicos: [{ id: catalogService, modelo: model || null, nome: svcName }],
         complementos: [],
-        notas: (state.context || '').trim(),
-        diagnostico: { objetivo: objData ? objData.label : '', direcao: solution.solution },
-        estimativa: selectedSvc ? selectedSvc.priceLabel : ''
+        notas: notes,
+        diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : formatLabel, direcao: headline },
+        estimativa: price
       });
     });
 
-    if (restartBtn) restartBtn.addEventListener('click', () => {
-      state.step = 0;
-      state.selectedService = null;
-      state.challenge = null;
-      state.objective = null;
-      state.context = '';
+    document.getElementById('hero-btn-restart').addEventListener('click', () => {
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null });
       transitionTo(renderStep0, 'back');
     });
   }
@@ -1292,157 +1205,106 @@ const CUSTOM_ICONS = {
   visual: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
   outro: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
   lock: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
-  up: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
-  down: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
-  trash: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-  check: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  up: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>',
+  down: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
+  trash: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+  check: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+  plus: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
   sparkles: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg>'
 };
 
-const CUSTOM_ADDON_ICONS = {
-  texto: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>',
-  galeria: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5-4 4-2-2-5 5"/></svg>',
-  video: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
-  depoimentos: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
-  formulario: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v1H8V3a1 1 0 0 1 1-1z"/><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 12h6M9 16h6"/></svg>',
-  whatsapp: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.36 7.56L3 20l1.06-5.4A8.5 8.5 0 1 1 21 11.5z"/><path d="M9 10.5s.5 2 1.5 3 2 1.5 3 1.5"/></svg>',
-  blog: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
-  clientes: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-  faq: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
-  integracoes: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3v4H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4h4"/><path d="M14 4l6 6"/><path d="M14 10V4h6"/></svg>'
-};
-
+// serviceId: serviço de presença digital equivalente (usado no resumo e no envio à plataforma).
 const CUSTOM_OBJECTIVES = [
-  {
-    id: 'vender',
-    title: 'Vender produtos ou serviços',
-    desc: 'Quero uma solução focada em apresentar uma oferta e gerar conversões.',
-    suggestion: 'Landing Page de Conversão',
-    basePrice: 700,
-    baseMaxSections: 6
-  },
-  {
-    id: 'empresa',
-    title: 'Apresentar minha empresa',
-    desc: 'Quero uma presença digital profissional para apresentar minha marca, serviços e informações.',
-    suggestion: 'Site Institucional',
-    basePrice: 900,
-    baseMaxSections: 6
-  },
-  {
-    id: 'portfolio',
-    title: 'Mostrar meus trabalhos',
-    desc: 'Quero apresentar projetos, fotos, cases e resultados.',
-    suggestion: 'Portfólio Profissional',
-    basePrice: 800,
-    baseMaxSections: 6
-  },
-  {
-    id: 'visual',
-    title: 'Trabalhar com imagens e vídeos',
-    desc: 'Quero uma experiência visual focada em conteúdo multimídia.',
-    suggestion: 'Experiência Visual',
-    basePrice: 700,
-    baseMaxSections: 5
-  },
-  {
-    id: 'outro',
-    title: 'Outro objetivo',
-    desc: 'Tenho uma ideia específica e quero explicar minha necessidade.',
-    suggestion: 'Estrutura Sob Medida',
-    basePrice: 700,
-    baseMaxSections: 5
-  }
+  { id: 'vender', title: 'Vender produtos ou serviços', desc: 'Apresentar uma oferta e transformar visitas em contatos ou vendas.', suggestion: 'Landing Page de Conversão', serviceId: 'landing-page' },
+  { id: 'empresa', title: 'Apresentar minha empresa', desc: 'Mostrar marca, serviços, diferenciais e canais de contato.', suggestion: 'Site Institucional', serviceId: 'site-institucional' },
+  { id: 'portfolio', title: 'Mostrar meus trabalhos', desc: 'Apresentar projetos, fotos, cases e resultados.', suggestion: 'Portfólio Profissional', serviceId: 'portfolio' },
+  { id: 'visual', title: 'Trabalhar com imagens e vídeos', desc: 'Uma experiência focada em conteúdo visual e multimídia.', suggestion: 'Experiência Visual', serviceId: null },
+  { id: 'outro', title: 'Outro objetivo', desc: 'Tenho uma ideia específica e quero explicar minha necessidade.', suggestion: 'Estrutura Sob Medida', serviceId: null }
 ];
 
+// kind: desenho usado na pré-visualização da estrutura.
 const CUSTOM_STRUCTURES = {
-  vender: {
-    name: 'Landing Page de Conversão',
-    sections: [
-      { id: 'blk-hero-vender', name: 'Hero principal', type: 'mandatory' },
-      { id: 'blk-oferta', name: 'Apresentação da oferta', type: 'recommended' },
-      { id: 'blk-beneficios', name: 'Benefícios', type: 'recommended' },
-      { id: 'blk-depoimentos-base', name: 'Prova social / depoimentos', type: 'recommended' },
-      { id: 'blk-faq-base', name: 'Perguntas frequentes', type: 'recommended' },
-      { id: 'blk-cta-vender', name: 'CTA / WhatsApp / formulário', type: 'mandatory' }
-    ]
-  },
-  empresa: {
-    name: 'Site Institucional',
-    sections: [
-      { id: 'blk-header-empresa', name: 'Header & Navegação', type: 'mandatory' },
-      { id: 'blk-hero-empresa', name: 'Hero institucional', type: 'mandatory' },
-      { id: 'blk-sobre', name: 'Sobre a empresa', type: 'recommended' },
-      { id: 'blk-servicos', name: 'Catálogo de serviços', type: 'recommended' },
-      { id: 'blk-diferenciais', name: 'Diferenciais de mercado', type: 'recommended' },
-      { id: 'blk-contato-empresa', name: 'Contato e localização', type: 'mandatory' }
-    ]
-  },
-  portfolio: {
-    name: 'Portfólio Profissional',
-    sections: [
-      { id: 'blk-hero-port', name: 'Hero de apresentação', type: 'mandatory' },
-      { id: 'blk-sobre-port', name: 'Sobre o profissional', type: 'recommended' },
-      { id: 'blk-projetos', name: 'Galeria de projetos e cases', type: 'recommended' },
-      { id: 'blk-metricas', name: 'Resultados e métricas', type: 'recommended' },
-      { id: 'blk-depoimentos-port', name: 'Depoimentos de clientes', type: 'recommended' },
-      { id: 'blk-cta-port', name: 'Contato direto / contratação', type: 'mandatory' }
-    ]
-  },
-  visual: {
-    name: 'Experiência Visual',
-    sections: [
-      { id: 'blk-hero-visual', name: 'Hero cinematográfico', type: 'mandatory' },
-      { id: 'blk-galeria-visual', name: 'Galeria multimídia', type: 'recommended' },
-      { id: 'blk-video-visual', name: 'Destaque em vídeo', type: 'recommended' },
-      { id: 'blk-cases-visual', name: 'Mostruário imersivo', type: 'recommended' },
-      { id: 'blk-cta-visual', name: 'Contato e redes', type: 'mandatory' }
-    ]
-  },
-  outro: {
-    name: 'Estrutura Sob Medida',
-    sections: [
-      { id: 'blk-hero-custom', name: 'Hero principal', type: 'mandatory' },
-      { id: 'blk-apresentacao-custom', name: 'Apresentação da solução', type: 'recommended' },
-      { id: 'blk-destaques-custom', name: 'Destaques e recursos', type: 'recommended' },
-      { id: 'blk-cta-custom', name: 'Contato e conversão', type: 'mandatory' }
-    ]
-  }
+  vender: { name: 'Landing Page de Conversão', sections: [
+    { id: 'hero', name: 'Abertura com oferta e CTA', type: 'mandatory', kind: 'hero' },
+    { id: 'oferta', name: 'Apresentação da oferta', type: 'recommended', kind: 'split' },
+    { id: 'beneficios', name: 'Benefícios', type: 'recommended', kind: 'cards' },
+    { id: 'depoimentos', name: 'Depoimentos', type: 'recommended', kind: 'quote', component: 'depoimentos' },
+    { id: 'faq', name: 'Perguntas frequentes', type: 'recommended', kind: 'list', component: 'faq' },
+    { id: 'cta', name: 'Contato, WhatsApp e formulário', type: 'mandatory', kind: 'form' }
+  ] },
+  empresa: { name: 'Site Institucional', sections: [
+    { id: 'hero', name: 'Abertura institucional', type: 'mandatory', kind: 'hero' },
+    { id: 'sobre', name: 'Sobre a empresa', type: 'recommended', kind: 'split' },
+    { id: 'servicos', name: 'Serviços', type: 'recommended', kind: 'cards' },
+    { id: 'diferenciais', name: 'Diferenciais', type: 'recommended', kind: 'list' },
+    { id: 'cta', name: 'Contato e localização', type: 'mandatory', kind: 'form' }
+  ] },
+  portfolio: { name: 'Portfólio Profissional', sections: [
+    { id: 'hero', name: 'Apresentação pessoal', type: 'mandatory', kind: 'hero' },
+    { id: 'projetos', name: 'Projetos em destaque', type: 'recommended', kind: 'grid' },
+    { id: 'sobre', name: 'Sobre e competências', type: 'recommended', kind: 'split' },
+    { id: 'servicos', name: 'Serviços', type: 'recommended', kind: 'cards' },
+    { id: 'cta', name: 'Contato direto', type: 'mandatory', kind: 'form' }
+  ] },
+  visual: { name: 'Experiência Visual', sections: [
+    { id: 'hero', name: 'Abertura em tela cheia', type: 'mandatory', kind: 'media' },
+    { id: 'galeria', name: 'Galeria principal', type: 'recommended', kind: 'grid', component: 'galeria' },
+    { id: 'sobre', name: 'Sobre o trabalho', type: 'recommended', kind: 'split' },
+    { id: 'cta', name: 'Contato e redes', type: 'mandatory', kind: 'form' }
+  ] },
+  outro: { name: 'Estrutura Sob Medida', sections: [
+    { id: 'hero', name: 'Abertura', type: 'mandatory', kind: 'hero' },
+    { id: 'apresentacao', name: 'Apresentação da solução', type: 'recommended', kind: 'split' },
+    { id: 'destaques', name: 'Destaques', type: 'recommended', kind: 'cards' },
+    { id: 'cta', name: 'Contato', type: 'mandatory', kind: 'form' }
+  ] }
 };
 
-const CUSTOM_ADDONS = [];
+// Componentes que o cliente pode acrescentar. Sem preço próprio: entram na validação do escopo.
+// Para cobrar algum, preencha `price` (o valor aparece no card e soma na estimativa).
+const CUSTOM_COMPONENTS = [
+  { id: 'video', label: 'Vídeo em destaque', desc: 'Vídeo institucional ou de produto', kind: 'media', price: 0, icon: '<path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/>' },
+  { id: 'imagem', label: 'Banner de imagem', desc: 'Imagem grande entre seções', kind: 'image', price: 0, icon: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.5"/><path d="M21 16l-5-5-8 8"/>' },
+  { id: 'galeria', label: 'Galeria de imagens', desc: 'Grade de fotos com ampliação', kind: 'grid', price: 0, icon: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>' },
+  { id: 'carrossel', label: 'Carrossel', desc: 'Projetos ou fotos em sequência', kind: 'carousel', price: 0, icon: '<rect x="6" y="5" width="12" height="14" rx="1.5"/><path d="M2 8v8M22 8v8"/>' },
+  { id: 'depoimentos', label: 'Depoimentos', desc: 'Relatos de clientes', kind: 'quote', price: 0, icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>' },
+  { id: 'cases', label: 'Cases', desc: 'Projetos com contexto e resultado', kind: 'split', price: 0, icon: '<path d="M4 4h16v16H4z"/><path d="M4 10h16M10 10v10"/>' },
+  { id: 'numeros', label: 'Números e resultados', desc: 'Indicadores com fonte real', kind: 'stats', price: 0, icon: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>' },
+  { id: 'processo', label: 'Como funciona', desc: 'Etapas do atendimento', kind: 'steps', price: 0, icon: '<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h3M14 12h3"/>' },
+  { id: 'precos', label: 'Planos e preços', desc: 'Tabela comparativa de planos', kind: 'cards', price: 0, icon: '<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
+  { id: 'antesdepois', label: 'Antes e depois', desc: 'Comparação com controle deslizante', kind: 'split', price: 0, icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/>' },
+  { id: 'equipe', label: 'Equipe', desc: 'Pessoas, cargos e fotos', kind: 'people', price: 0, icon: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14a5 5 0 0 1 5 5"/>' },
+  { id: 'parceiros', label: 'Clientes e parceiros', desc: 'Faixa de logotipos', kind: 'logos', price: 0, icon: '<rect x="2" y="9" width="5" height="6" rx="1"/><rect x="9.5" y="9" width="5" height="6" rx="1"/><rect x="17" y="9" width="5" height="6" rx="1"/>' },
+  { id: 'faq', label: 'Perguntas frequentes', desc: 'Respostas que tiram dúvidas', kind: 'list', price: 0, icon: '<circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>' },
+  { id: 'mapa', label: 'Mapa e endereço', desc: 'Localização e horários', kind: 'map', price: 0, icon: '<path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>' },
+  { id: 'agenda', label: 'Agendamento online', desc: 'Link ou integração de agenda', kind: 'form', price: 0, icon: '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>' },
+  { id: 'blog', label: 'Blog ou artigos', desc: 'Lista de conteúdos recentes', kind: 'cards', price: 0, icon: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15z"/>' },
+  { id: 'instagram', label: 'Feed do Instagram', desc: 'Últimas publicações', kind: 'grid', price: 0, icon: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/>' },
+  { id: 'downloads', label: 'Materiais para download', desc: 'PDF, catálogo ou apresentação', kind: 'list', price: 0, icon: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>' },
+  { id: 'formulario', label: 'Formulário extra', desc: 'Orçamento, inscrição ou briefing', kind: 'form', price: 0, icon: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>' }
+];
+const CUSTOM_COMPONENTS_BY_OBJECTIVE = {
+  vender: ['video', 'imagem', 'antesdepois', 'precos', 'numeros', 'processo', 'parceiros', 'galeria', 'depoimentos', 'faq', 'agenda', 'formulario'],
+  empresa: ['imagem', 'video', 'equipe', 'processo', 'cases', 'numeros', 'parceiros', 'depoimentos', 'faq', 'mapa', 'blog', 'agenda'],
+  portfolio: ['galeria', 'carrossel', 'video', 'cases', 'processo', 'depoimentos', 'parceiros', 'instagram', 'downloads', 'formulario'],
+  visual: ['video', 'galeria', 'carrossel', 'imagem', 'instagram', 'depoimentos', 'downloads', 'formulario'],
+  outro: CUSTOM_COMPONENTS.map(c => c.id)
+};
 
 // Motor de análise léxica interna (sem IA externa)
 function analyzeCustomKeywords(rawText) {
   if (!rawText || typeof rawText !== 'string') return null;
-  const clean = rawText.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const clean = rawText.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
   const rules = [
-    {
-      id: 'vender',
-      suggestion: 'Landing Page de Conversão',
-      words: ['vender', 'venda', 'vendas', 'produto', 'produtos', 'cliente', 'clientes', 'compra', 'compras', 'orcamento', 'orcamentos', 'oferta', 'ofertas', 'conversao', 'conversoes', 'loja', 'lead', 'leads', 'checkout', 'preco', 'comercio', 'trafego', 'anuncio', 'campanha', 'pagamento']
-    },
-    {
-      id: 'empresa',
-      suggestion: 'Site Institucional',
-      words: ['empresa', 'empresas', 'institucional', 'marca', 'marcas', 'clinica', 'consultorio', 'escritorio', 'consultoria', 'negocio', 'corporativo', 'servico', 'servicos', 'equipe', 'instituicao', 'medica', 'odontologia', 'advocacia', 'contabilidade', 'credibilidade']
-    },
-    {
-      id: 'portfolio',
-      suggestion: 'Portfólio Profissional',
-      words: ['foto', 'fotos', 'fotografia', 'fotografo', 'fotografa', 'projeto', 'projetos', 'trabalho', 'trabalhos', 'portfolio', 'cases', 'case', 'design', 'designer', 'arquiteto', 'arquitetura', 'obras', 'artista', 'artes', 'ensaios', 'galeria pessoal', 'curriculo']
-    },
-    {
-      id: 'visual',
-      suggestion: 'Experiência Visual',
-      words: ['video', 'videos', 'imagem', 'imagens', 'galeria', 'filme', 'filmes', 'multimidia', 'visual', 'audiovisual', 'cinema', 'motion', 'animacao', 'teaser', 'conteudo visual', 'gravações', 'videomaker']
-    }
+    { id: 'vender', suggestion: 'Landing Page de Conversão', words: ['vender', 'venda', 'vendas', 'produto', 'produtos', 'cliente', 'clientes', 'compra', 'compras', 'orcamento', 'orcamentos', 'oferta', 'ofertas', 'conversao', 'conversoes', 'loja', 'lead', 'leads', 'checkout', 'preco', 'comercio', 'trafego', 'anuncio', 'campanha', 'pagamento'] },
+    { id: 'empresa', suggestion: 'Site Institucional', words: ['empresa', 'empresas', 'institucional', 'marca', 'marcas', 'clinica', 'consultorio', 'escritorio', 'consultoria', 'negocio', 'corporativo', 'servico', 'servicos', 'equipe', 'instituicao', 'medica', 'odontologia', 'advocacia', 'contabilidade', 'credibilidade'] },
+    { id: 'portfolio', suggestion: 'Portfólio Profissional', words: ['foto', 'fotos', 'fotografia', 'fotografo', 'fotografa', 'projeto', 'projetos', 'trabalho', 'trabalhos', 'portfolio', 'cases', 'case', 'design', 'designer', 'arquiteto', 'arquitetura', 'obras', 'artista', 'artes', 'ensaios', 'galeria pessoal', 'curriculo'] },
+    { id: 'visual', suggestion: 'Experiência Visual', words: ['video', 'videos', 'imagem', 'imagens', 'galeria', 'filme', 'filmes', 'multimidia', 'visual', 'audiovisual', 'cinema', 'motion', 'animacao', 'teaser', 'conteudo visual', 'gravacoes', 'videomaker'] }
   ];
 
   let bestMatch = null;
   let maxScore = 0;
-
   rules.forEach(rule => {
     const matched = rule.words.filter(w => clean.includes(w));
     if (matched.length > maxScore) {
@@ -1452,81 +1314,89 @@ function analyzeCustomKeywords(rawText) {
   });
 
   if (maxScore > 0) return bestMatch;
-  if (clean.trim().length > 6) {
-    return {
-      id: 'outro',
-      suggestion: 'Estrutura Sob Medida',
-      isUnclear: true,
-      message: 'Vamos analisar sua necessidade — Com base na sua descrição, nossa equipe poderá validar a melhor estrutura para o seu projeto.'
-    };
-  }
+  if (clean.trim().length > 6) return { id: 'outro', suggestion: 'Estrutura Sob Medida', isUnclear: true };
   return null;
 }
 
-function openCustomModelModal(selectedSvc, onFinish) {
+/*
+  Estúdio sob medida: 1) objetivo  2) estrutura (seções + componentes) com pré-visualização.
+  openCustomModelModal(servico, aoConcluir, { project, startAt: 'structure' })
+  - servico: objeto do diagnóstico, id ('portfolio') ou vazio;
+  - aoConcluir(resumo): recebe { objective, objectiveTitle, suggestion, serviceId, sections[], components[] };
+    sem callback, envia para a plataforma (ou para o contato, se o handoff não estiver na página).
+*/
+function openCustomModelModal(selectedSvc, onFinish, options = {}) {
   const existing = document.getElementById('custom-model-dialog');
   if (existing) existing.remove();
 
   const returnFocus = document.activeElement;
-  const checkSvg = CUSTOM_ICONS.check;
-  const arrowRightSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
-  const arrowLeftSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>';
+  const esc = (v) => CogitUI.escapeHtml(v);
+  const arrowRight = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  const arrowLeft = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>';
+  const compIcon = (c) => `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c.icon}</svg>`;
 
-  // Mapeia objetivo inicial
-  let initialObjective = 'vender';
-  if (selectedSvc) {
-    const svcId = (typeof selectedSvc === 'object') ? selectedSvc.id : String(selectedSvc);
-    if (svcId === 'site-institucional') initialObjective = 'empresa';
-    else if (svcId === 'portfolio') initialObjective = 'portfolio';
-    else if (svcId === 'landing-page') initialObjective = 'vender';
-  }
+  const svcId = selectedSvc && typeof selectedSvc === 'object' ? selectedSvc.id : (selectedSvc ? String(selectedSvc) : '');
+  const objectiveFromService = { 'site-institucional': 'empresa', portfolio: 'portfolio', 'landing-page': 'vender' }[svcId] || 'vender';
+  const prior = options.project || null;
 
   const modalState = {
-    step: 2, // Inicia diretamente no Estúdio Visual Unificado (conforme solicitado e visto no screenshot)
-    objective: initialObjective,
+    step: options.startAt === 'structure' && prior ? 2 : 1,
+    objective: prior ? prior.objective : objectiveFromService,
     customText: '',
-    detectedMatch: null,
     blocks: [],
-    addons: new Set()
+    components: new Set()
   };
 
-  // Inicializa lista de blocos da estrutura recomendada
-  function initBlocksForObjective(objId) {
+  function initBlocks(objId) {
     const base = CUSTOM_STRUCTURES[objId] || CUSTOM_STRUCTURES.outro;
     modalState.blocks = base.sections.map(s => ({ ...s }));
-    modalState.addons.clear();
+    modalState.components = new Set(base.sections.filter(s => s.component).map(s => s.component));
   }
-  initBlocksForObjective(modalState.objective);
+  // Reabre com a estrutura montada antes, se houver.
+  if (prior && prior.blocks) {
+    modalState.blocks = prior.blocks.map(b => ({ ...b }));
+    modalState.components = new Set(prior.blocks.filter(b => b.component).map(b => b.component));
+  } else {
+    initBlocks(modalState.objective);
+  }
+  modalState.blockObjective = modalState.objective;
 
-  const modalHTML = `
-    <dialog class="hero-model-dialog custom-model-dialog" id="custom-model-dialog" aria-labelledby="custom-model-title">
-      <div class="hero-modal-content custom-model-content">
-        <div class="hero-modal-header custom-model-header">
-          <div class="hero-modal-header-left">
-            <span class="custom-header-badge">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              SOB MEDIDA
-            </span>
-            <h3 class="custom-header-title" id="custom-model-title">Estrutura recomendada para seu projeto</h3>
+  const currentObjective = () => CUSTOM_OBJECTIVES.find(o => o.id === modalState.objective) || CUSTOM_OBJECTIVES[4];
+  const basePrice = () => {
+    const svc = currentObjective().serviceId || svcId || 'landing-page';
+    const entry = typeof configuratorData !== 'undefined' ? configuratorData.services.find(s => s.id === svc) : null;
+    return entry ? (entry.customPrice || entry.price) : 700;
+  };
+  const finishLabel = typeof onFinish === 'function' ? 'Concluir estrutura' : (typeof CogitHandoff !== 'undefined' ? 'Continuar na plataforma' : 'Enviar para a equipe');
+
+  document.body.insertAdjacentHTML('beforeend', `
+    <dialog class="hero-model-dialog custom-model-dialog studio" id="custom-model-dialog" aria-labelledby="custom-model-title">
+      <div class="studio-shell">
+        <header class="studio-head">
+          <div class="studio-head-text">
+            <p class="studio-eyebrow">Sob medida</p>
+            <h3 class="studio-title" id="custom-model-title"></h3>
           </div>
-          <button type="button" class="hero-modal-close" id="custom-modal-close" aria-label="Fechar modal" autofocus>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <ol class="studio-steps" aria-label="Etapas">
+            <li data-studio-step="1"><span aria-hidden="true">1</span>Objetivo</li>
+            <li data-studio-step="2"><span aria-hidden="true">2</span>Estrutura</li>
+          </ol>
+          <button type="button" class="studio-close" id="custom-modal-close" aria-label="Fechar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
-        </div>
-
-        <div class="custom-model-body" id="custom-model-body"></div>
-        <div class="hero-modal-footer custom-model-footer" id="custom-model-footer"></div>
+        </header>
+        <div class="studio-body" id="custom-model-body"></div>
+        <footer class="studio-foot" id="custom-model-footer"></footer>
       </div>
-    </dialog>
-  `;
-
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
+      <p class="sr-only" aria-live="polite" id="studio-live"></p>
+    </dialog>`);
 
   const modal = document.getElementById('custom-model-dialog');
-  const closeBtn = document.getElementById('custom-modal-close');
   const titleEl = document.getElementById('custom-model-title');
   const bodyEl = document.getElementById('custom-model-body');
   const footerEl = document.getElementById('custom-model-footer');
+  const live = document.getElementById('studio-live');
+  const announce = (text) => { live.textContent = ''; requestAnimationFrame(() => { live.textContent = text; }); };
 
   lockModalScroll();
   modal.showModal();
@@ -1536,533 +1406,282 @@ function openCustomModelModal(selectedSvc, onFinish) {
     modal.remove();
     returnFocus?.focus?.({ preventScroll: true });
   });
-  closeBtn.addEventListener('click', closeModal);
+  document.getElementById('custom-modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-  // ── Cálculo de Estimativa em Tempo Real ──
-  function calculateEstimate() {
-    const currentObj = CUSTOM_OBJECTIVES.find(o => o.id === modalState.objective) || CUSTOM_OBJECTIVES[4];
-    let basePrice = currentObj.basePrice;
-    let addonsTotal = 0;
-
-    CUSTOM_ADDONS.forEach(addon => {
-      if (modalState.addons.has(addon.id)) {
-        addonsTotal += addon.price;
-      }
-    });
-
-    const totalSections = modalState.blocks.length;
-    const extraSectionsCount = Math.max(0, totalSections - currentObj.baseMaxSections);
-    const extraSectionsCost = 0;
-
-    const totalEstimate = basePrice + addonsTotal + extraSectionsCost;
-    const installmentVal = Math.round(totalEstimate / 12);
-
-    const objName = modalState.detectedMatch && !modalState.detectedMatch.isUnclear
-      ? modalState.detectedMatch.suggestion
-      : currentObj.suggestion;
-
+  function summary() {
+    const obj = currentObjective();
+    const detected = modalState.objective === 'outro' ? analyzeCustomKeywords(modalState.customText) : null;
     return {
-      basePrice,
-      addonsTotal,
-      extraSectionsCount,
-      total: totalEstimate,
-      installmentVal,
-      totalSections,
-      addedCount: modalState.addons.size,
-      objName
+      objective: obj.id,
+      objectiveTitle: obj.title,
+      suggestion: detected && !detected.isUnclear ? detected.suggestion : obj.suggestion,
+      serviceId: obj.serviceId || (['site-institucional', 'landing-page', 'portfolio'].includes(svcId) ? svcId : null),
+      sections: modalState.blocks.map(b => b.name),
+      components: modalState.blocks.filter(b => b.type === 'component').map(b => b.name),
+      blocks: modalState.blocks.map(b => ({ ...b })),
+      note: modalState.objective === 'outro' ? modalState.customText.trim() : '',
+      estimate: basePrice() + modalState.blocks.filter(b => b.type === 'component').reduce((t, b) => t + ((CUSTOM_COMPONENTS.find(c => c.id === b.component) || {}).price || 0), 0)
     };
   }
 
-  // ── Finalização / Passagem de dados ──
-  function finalizeProject() {
-    const estimate = calculateEstimate();
-    const projectSummary = {
-      objective: modalState.objective,
-      suggestion: estimate.objName,
-      customText: modalState.customText,
-      blocks: modalState.blocks.map((b, idx) => ({ order: idx + 1, name: b.name, type: b.type })),
-      addons: Array.from(modalState.addons),
-      totalEstimate: estimate.total,
-      installments: estimate.installmentVal,
-      sectionsCount: estimate.totalSections,
-      savedAt: new Date().toISOString()
-    };
-
-    try {
-      window.__cogitCustomProject = projectSummary;
-      localStorage.setItem('cogit_custom_project', JSON.stringify(projectSummary));
-    } catch (err) {
-      /* ignore storage errors */
-    }
-
+  function finish() {
+    const result = summary();
+    // Mantido apenas em memória: textos livres não são gravados no navegador.
+    window.__cogitCustomProject = result;
+    if (typeof trackEvent === 'function') trackEvent('custom_model_finished', result.objective);
     closeModal();
-    if (typeof trackEvent === 'function') trackEvent('custom_model_finished', modalState.objective);
+    if (typeof onFinish === 'function') { onFinish(result); return; }
+    if (typeof CogitHandoff !== 'undefined') {
+      CogitHandoff.irParaPlataforma({
+        origem: 'diagnostico',
+        servicos: [{ id: result.serviceId || 'diagnostico', modelo: result.serviceId ? 'sob-medida' : null, nome: result.suggestion }],
+        complementos: [],
+        notas: [`Estrutura sob medida (${result.suggestion}): ${result.sections.join(' > ')}`, result.components.length ? `Componentes: ${result.components.join(', ')}` : '', result.note].filter(Boolean).join('\n'),
+        diagnostico: { objetivo: `Sob medida · ${result.objectiveTitle}`, direcao: result.suggestion },
+        estimativa: `a partir de R$ ${result.estimate.toLocaleString('pt-BR')}`
+      });
+      return;
+    }
+    window.location.href = `${location.pathname.includes('/solucoes/') ? '../' : ''}contato.html?solucao=modelos-sob-medida&origem=custom-studio`;
+  }
 
-    if (typeof onFinish === 'function') {
-      onFinish(projectSummary);
+  function setStepIndicator() {
+    modal.querySelectorAll('[data-studio-step]').forEach(li => {
+      const n = Number(li.dataset.studioStep);
+      li.classList.toggle('is-current', n === modalState.step);
+      li.classList.toggle('is-done', n < modalState.step);
+      if (n === modalState.step) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+    });
+  }
+
+  // ── Etapa 1: objetivo ──
+  function renderObjective() {
+    modalState.step = 1;
+    setStepIndicator();
+    titleEl.textContent = 'Qual é o objetivo principal do projeto?';
+    bodyEl.className = 'studio-body studio-body--objective';
+    bodyEl.innerHTML = `
+      <p class="studio-lede">A resposta define a estrutura inicial. No próximo passo você acrescenta, remove e reordena seções.</p>
+      <fieldset class="studio-objectives">
+        <legend class="sr-only">Objetivo</legend>
+        ${CUSTOM_OBJECTIVES.map(o => `
+          <label class="studio-objective">
+            <input type="radio" name="studio-objective" value="${o.id}" ${modalState.objective === o.id ? 'checked' : ''}>
+            <span class="studio-objective-icon" aria-hidden="true">${CUSTOM_ICONS[o.id]}</span>
+            <span class="studio-objective-text">
+              <strong>${o.title}</strong>
+              <span>${o.desc}</span>
+              <small>Estrutura base: ${o.suggestion}</small>
+            </span>
+            <span class="studio-objective-mark" aria-hidden="true">${CUSTOM_ICONS.check}</span>
+          </label>`).join('')}
+      </fieldset>
+      <div class="studio-context" ${modalState.objective === 'outro' ? '' : 'hidden'}>
+        <label for="custom-context-input">Conte em poucas linhas o que você precisa</label>
+        <textarea id="custom-context-input" rows="3" maxlength="600" placeholder="Ex.: Quero um site para minha clínica com serviços, fotos e agendamento pelo WhatsApp.">${esc(modalState.customText)}</textarea>
+        <p class="studio-hint" id="custom-keyword-feedback"></p>
+      </div>`;
+
+    const contextBox = bodyEl.querySelector('.studio-context');
+    const textarea = bodyEl.querySelector('#custom-context-input');
+    const feedback = bodyEl.querySelector('#custom-keyword-feedback');
+    const updateFeedback = () => {
+      const detected = analyzeCustomKeywords(modalState.customText);
+      feedback.textContent = detected && !detected.isUnclear ? `Pelo que você descreveu, a estrutura de ${detected.suggestion} é um bom ponto de partida.` : '';
+    };
+    bodyEl.querySelectorAll('input[name="studio-objective"]').forEach(input => input.addEventListener('change', () => {
+      modalState.objective = input.value;
+      contextBox.hidden = input.value !== 'outro';
+      if (typeof trackEvent === 'function') trackEvent('custom_model_objective_selected', input.value);
+    }));
+    textarea.addEventListener('input', () => { modalState.customText = textarea.value; updateFeedback(); });
+    updateFeedback();
+
+    footerEl.innerHTML = `
+      <button type="button" class="studio-btn studio-btn--ghost" data-studio="cancel">Cancelar</button>
+      <button type="button" class="studio-btn studio-btn--primary" data-studio="next"><span>Montar estrutura</span>${arrowRight}</button>`;
+    footerEl.querySelector('[data-studio="cancel"]').addEventListener('click', closeModal);
+    footerEl.querySelector('[data-studio="next"]').addEventListener('click', () => {
+      const detected = modalState.objective === 'outro' ? analyzeCustomKeywords(modalState.customText) : null;
+      const structureFor = detected && !detected.isUnclear ? detected.id : modalState.objective;
+      if (modalState.blockObjective !== structureFor) initBlocks(structureFor);
+      modalState.blockObjective = structureFor;
+      renderStructure();
+    });
+    bodyEl.querySelector('input[name="studio-objective"]:checked')?.focus({ preventScroll: true });
+  }
+
+  // ── Etapa 2: estrutura ──
+  function renderStructure() {
+    modalState.step = 2;
+    setStepIndicator();
+    const obj = currentObjective();
+    titleEl.textContent = 'Monte a estrutura';
+    bodyEl.className = 'studio-body studio-body--structure';
+    const available = (CUSTOM_COMPONENTS_BY_OBJECTIVE[modalState.objective] || CUSTOM_COMPONENTS_BY_OBJECTIVE.outro).map(id => CUSTOM_COMPONENTS.find(c => c.id === id));
+
+    bodyEl.innerHTML = `
+      <div class="studio-main">
+        <section class="studio-panel" aria-labelledby="studio-sections-title">
+          <div class="studio-panel-head">
+            <h4 id="studio-sections-title">Seções da página <span class="studio-count" data-studio-count></span></h4>
+            <p>Base para <strong>${esc(obj.suggestion)}</strong>. Abertura e contato ficam fixos.</p>
+          </div>
+          <ol class="studio-sections" id="custom-structure-pills"></ol>
+        </section>
+        <section class="studio-panel" aria-labelledby="studio-components-title">
+          <div class="studio-panel-head">
+            <h4 id="studio-components-title">Adicionar componentes</h4>
+            <p>Cada componente entra como uma seção, antes do contato. Você pode reordenar depois.</p>
+          </div>
+          <div class="studio-components">
+            ${available.map(c => `
+              <button type="button" class="studio-component" data-component="${c.id}" aria-pressed="false">
+                <span class="studio-component-icon">${compIcon(c)}</span>
+                <span class="studio-component-text"><strong>${c.label}</strong><span>${c.desc}</span></span>
+                <span class="studio-component-state" aria-hidden="true"></span>
+              </button>`).join('')}
+          </div>
+        </section>
+      </div>
+      <aside class="studio-side" aria-label="Pré-visualização e estimativa">
+        <button type="button" class="studio-preview-toggle" aria-expanded="false" aria-controls="custom-preview-mount">Ver prévia da página</button>
+        <div class="studio-preview" id="custom-preview-mount"></div>
+        <div class="studio-estimate" id="custom-estimate-summary-mount"></div>
+      </aside>`;
+
+    const toggle = bodyEl.querySelector('.studio-preview-toggle');
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? 'Ocultar prévia' : 'Ver prévia da página';
+      bodyEl.querySelector('.studio-side').classList.toggle('is-preview-open', open);
+    });
+    bodyEl.querySelectorAll('.studio-component').forEach(btn => btn.addEventListener('click', () => toggleComponent(btn.dataset.component)));
+    refresh();
+
+    footerEl.innerHTML = `
+      <button type="button" class="studio-btn studio-btn--ghost" data-studio="back">${arrowLeft}<span>Objetivo</span></button>
+      <div class="studio-foot-right">
+        <button type="button" class="studio-btn studio-btn--text" data-studio="reset">Restaurar padrão</button>
+        <button type="button" class="studio-btn studio-btn--primary" data-studio="finish" id="custom-btn-finish-studio"><span>${finishLabel}</span>${arrowRight}</button>
+      </div>`;
+    footerEl.querySelector('[data-studio="back"]').addEventListener('click', renderObjective);
+    footerEl.querySelector('[data-studio="reset"]').addEventListener('click', () => {
+      initBlocks(modalState.blockObjective || modalState.objective);
+      refresh();
+      announce('Estrutura restaurada para o padrão.');
+    });
+    footerEl.querySelector('[data-studio="finish"]').addEventListener('click', finish);
+  }
+
+  // Seções fixas no topo e no fim; as demais podem subir, descer e sair.
+  function bounds() {
+    const b = modalState.blocks;
+    let top = 0; while (top < b.length && b[top].type === 'mandatory') top++;
+    let bottom = 0; while (bottom < b.length && b[b.length - 1 - bottom].type === 'mandatory') bottom++;
+    return { first: top, last: b.length - 1 - bottom };
+  }
+
+  function toggleComponent(id) {
+    const comp = CUSTOM_COMPONENTS.find(c => c.id === id);
+    if (modalState.components.has(id)) {
+      modalState.components.delete(id);
+      modalState.blocks = modalState.blocks.filter(b => b.component !== id);
+      announce(`${comp.label} removido da estrutura.`);
     } else {
-      const targetUrl = `contato.html?solucao=modelos-sob-medida&origem=custom-studio`;
-      window.location.href = targetUrl;
+      modalState.components.add(id);
+      const block = { id: `c-${id}`, name: comp.label, type: 'component', kind: comp.kind, component: id, isNew: true };
+      const { last } = bounds();
+      modalState.blocks.splice(last + 1, 0, block);
+      announce(`${comp.label} adicionado antes do contato.`);
     }
+    if (typeof trackEvent === 'function') trackEvent('custom_model_component_toggled', id);
+    refresh();
   }
 
-  // ── Wireframe Mockup Renderer (Fiel ao screenshot: blocos escuros limpos com texto centralizado) ──
-  function renderWireframePreviewHtml() {
-    const blocks = modalState.blocks;
-    const blocksHtml = blocks.map(b => `
-      <div class="custom-wf-block" data-block-id="${b.id}">
-        <span>${b.name}</span>
-      </div>
-    `).join('');
-
-    return `
-      <div class="custom-preview-mockup">
-        <div class="custom-browser-bar">
-          <div class="custom-browser-dots">
-            <span></span><span></span><span></span>
-          </div>
-        </div>
-        <div class="custom-preview-wireframe-scroll" id="custom-wf-scroll">
-          ${blocksHtml}
-        </div>
-      </div>
-    `;
+  function move(index, dir) {
+    const { first, last } = bounds();
+    const target = index + dir;
+    if (target < first || target > last) return;
+    [modalState.blocks[index], modalState.blocks[target]] = [modalState.blocks[target], modalState.blocks[index]];
+    refresh();
+    announce(`${modalState.blocks[target].name} movido para a posição ${target + 1}.`);
+    bodyEl.querySelector(`[data-index="${target}"][data-action="${dir < 0 ? 'up' : 'down'}"]`)?.focus()
+      || bodyEl.querySelector(`[data-index="${target}"][data-action]`)?.focus();
   }
 
-  function updateDynamicPreview() {
-    const previewContainer = document.getElementById('custom-preview-mount');
-    if (previewContainer) {
-      previewContainer.innerHTML = renderWireframePreviewHtml();
-    }
-    updateEstimateDisplay();
-  }
-
-  // ── Painel de Estimativa Compacto e Elegante ──
-  function updateEstimateDisplay() {
-    const estimateEl = document.getElementById('custom-estimate-summary-mount');
-    if (!estimateEl) return;
-    const est = calculateEstimate();
-
-    estimateEl.innerHTML = `
-      <div class="custom-est-card">
-        <div class="custom-est-row">
-          <span class="custom-est-key">Estrutura base:</span>
-          <strong class="custom-est-val">${est.objName}</strong>
-        </div>
-        <div class="custom-est-row">
-          <span class="custom-est-key">Seções ativas:</span>
-          <strong class="custom-est-val">${est.totalSections}</strong>
-        </div>
-        <div class="custom-est-row">
-          <span class="custom-est-key">Adicionais selecionados:</span>
-          <strong class="custom-est-val">${est.addedCount}</strong>
-        </div>
-        <div class="custom-est-divider"></div>
-        <div class="custom-est-row custom-est-row--total">
-          <span class="custom-est-key">Investimento estimado:</span>
-          <div class="custom-est-price-wrap">
-            <span class="custom-est-price-number">R$ ${est.total.toLocaleString('pt-BR')}</span>
-            <small class="custom-est-price-sub">Valor inicial; proposta final conforme o escopo.</small>
-          </div>
-        </div>
-        <p class="custom-est-disclaimer">*Estimativa preliminar sujeita à validação de arquitetura no discovery.</p>
-      </div>
-    `;
-  }
-
-  // ── Regras de Bloqueio de Movimento (Header/Hero no topo, CTA/Footer no final) ──
-  function getMovementBounds() {
-    const blocks = modalState.blocks;
-    let topLocked = 0;
-    while (topLocked < blocks.length && blocks[topLocked].type === 'mandatory') {
-      topLocked++;
-    }
-    let bottomLocked = 0;
-    while (bottomLocked < blocks.length && blocks[blocks.length - 1 - bottomLocked].type === 'mandatory') {
-      bottomLocked++;
-    }
-    return { topLocked, bottomLocked };
-  }
-
-  function moveBlock(index, direction) {
-    const target = index + direction;
-    const { topLocked, bottomLocked } = getMovementBounds();
-    const lastAllowed = modalState.blocks.length - 1 - bottomLocked;
-
-    if (target < topLocked || target > lastAllowed) return;
-
-    const temp = modalState.blocks[index];
-    modalState.blocks[index] = modalState.blocks[target];
-    modalState.blocks[target] = temp;
-    renderStructurePillsList();
-    updateDynamicPreview();
-  }
-
-  function removeBlock(index) {
+  function remove(index) {
     const block = modalState.blocks[index];
     if (!block || block.type === 'mandatory') return;
-
-    if (block.addonId) {
-      modalState.addons.delete(block.addonId);
-      updateAddonCardsState();
-    }
+    if (block.component) modalState.components.delete(block.component);
     modalState.blocks.splice(index, 1);
-    renderStructurePillsList();
-    updateDynamicPreview();
-    if (typeof trackEvent === 'function') trackEvent('custom_model_block_removed', block.id);
+    refresh();
+    announce(`${block.name} removido.`);
   }
 
-  function updateAddonCardsState() {
-    const cards = bodyEl.querySelectorAll('.custom-addon-card');
-    cards.forEach(card => {
-      const id = card.dataset.id;
-      const isAdded = modalState.addons.has(id);
-      card.classList.toggle('is-added', isAdded);
-      const actionEl = card.querySelector('.custom-addon-btn');
-      if (actionEl) {
-        actionEl.innerHTML = isAdded ? `${checkSvg} Adicionado` : '+ Adicionar';
-      }
-    });
-  }
-
-  function toggleAddon(addonId) {
-    const addon = CUSTOM_ADDONS.find(a => a.id === addonId);
-    if (!addon) return;
-
-    if (modalState.addons.has(addonId)) {
-      modalState.addons.delete(addonId);
-      modalState.blocks = modalState.blocks.filter(b => b.addonId !== addonId);
-    } else {
-      modalState.addons.add(addonId);
-      const newBlock = {
-        id: `addon-${addon.id}-${Date.now()}`,
-        name: addon.blockTitle,
-        type: 'addon',
-        addonId: addon.id
-      };
-      // Insere imediatamente antes das seções obrigatórias finais (ex: CTA final)
-      const lastMandatoryIndex = modalState.blocks.length - 1;
-      if (lastMandatoryIndex > 0 && modalState.blocks[lastMandatoryIndex].type === 'mandatory') {
-        modalState.blocks.splice(lastMandatoryIndex, 0, newBlock);
-      } else {
-        modalState.blocks.push(newBlock);
-      }
-    }
-    updateAddonCardsState();
-    renderStructurePillsList();
-    updateDynamicPreview();
-    if (typeof trackEvent === 'function') trackEvent('custom_model_addon_toggled', addonId);
-  }
-
-  // ── Renderização da Lista de Seções em Pills de 2 Colunas (Idêntico ao Screenshot) ──
-  function renderStructurePillsList() {
-    const listEl = document.getElementById('custom-structure-pills');
-    if (!listEl) return;
-
-    const { topLocked, bottomLocked } = getMovementBounds();
-    const lastAllowed = modalState.blocks.length - 1 - bottomLocked;
-
-    listEl.innerHTML = modalState.blocks.map((b, idx) => {
-      const isMandatory = b.type === 'mandatory';
-      const canUp = !isMandatory && idx > topLocked;
-      const canDown = !isMandatory && idx < lastAllowed;
-
+  function refresh() {
+    const list = document.getElementById('custom-structure-pills');
+    if (!list) return;
+    const { first, last } = bounds();
+    list.innerHTML = modalState.blocks.map((b, i) => {
+      const fixed = b.type === 'mandatory';
       return `
-        <div class="custom-structure-pill ${isMandatory ? 'is-mandatory' : ''}" data-index="${idx}">
-          <div class="custom-pill-left">
-            <span class="custom-pill-check">${checkSvg}</span>
-            <span class="custom-pill-title">${b.name}</span>
-          </div>
-          <div class="custom-pill-controls">
-            ${canUp ? `
-              <button type="button" class="custom-pill-btn" data-action="up" data-index="${idx}" title="Mover para cima" aria-label="Mover para cima">
-                ${CUSTOM_ICONS.up}
-              </button>
-            ` : ''}
-            ${canDown ? `
-              <button type="button" class="custom-pill-btn" data-action="down" data-index="${idx}" title="Mover para baixo" aria-label="Mover para baixo">
-                ${CUSTOM_ICONS.down}
-              </button>
-            ` : ''}
-            ${!isMandatory ? `
-              <button type="button" class="custom-pill-btn custom-pill-btn--trash" data-action="remove" data-index="${idx}" title="Remover seção" aria-label="Remover seção">
-                ${CUSTOM_ICONS.trash}
-              </button>
-            ` : `
-              <span class="custom-pill-lock-hint" title="Item obrigatório">${CUSTOM_ICONS.lock}</span>
-            `}
-          </div>
-        </div>
-      `;
+        <li class="studio-section${fixed ? ' is-fixed' : ''}${b.type === 'component' ? ' is-component' : ''}${b.isNew ? ' is-new' : ''}">
+          <span class="studio-section-n" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
+          <span class="studio-section-name">${esc(b.name)}${b.type === 'component' ? '<span class="studio-badge">Adicionado</span>' : ''}</span>
+          <span class="studio-section-actions">
+            ${fixed ? `<span class="studio-fixed" title="Seção fixa">${CUSTOM_ICONS.lock}<span class="sr-only">Seção fixa</span></span>` : `
+              <button type="button" class="studio-icon-btn" data-action="up" data-index="${i}" ${i <= first ? 'disabled' : ''} aria-label="Mover ${esc(b.name)} para cima">${CUSTOM_ICONS.up}</button>
+              <button type="button" class="studio-icon-btn" data-action="down" data-index="${i}" ${i >= last ? 'disabled' : ''} aria-label="Mover ${esc(b.name)} para baixo">${CUSTOM_ICONS.down}</button>
+              <button type="button" class="studio-icon-btn studio-icon-btn--remove" data-action="remove" data-index="${i}" aria-label="Remover ${esc(b.name)}">${CUSTOM_ICONS.trash}</button>`}
+          </span>
+        </li>`;
     }).join('');
+    modalState.blocks.forEach(b => { delete b.isNew; });
+    list.querySelectorAll('[data-action]').forEach(btn => btn.addEventListener('click', () => {
+      const i = Number(btn.dataset.index);
+      if (btn.dataset.action === 'up') move(i, -1);
+      else if (btn.dataset.action === 'down') move(i, 1);
+      else remove(i);
+    }));
 
-    // Eventos de botões up/down/remove
-    listEl.querySelectorAll('[data-action]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const action = btn.dataset.action;
-        const index = parseInt(btn.dataset.index, 10);
-        if (action === 'up') moveBlock(index, -1);
-        else if (action === 'down') moveBlock(index, 1);
-        else if (action === 'remove') removeBlock(index);
-      });
-    });
-  }
-
-  // ── Renderização da ETAPA 1: Seleção de Objetivo (Acessível via "Voltar ao objetivo") ──
-  function renderStep1View() {
-    titleEl.textContent = 'Qual o objetivo principal do seu projeto?';
-    bodyEl.className = 'hero-modal-body custom-model-body custom-model-body--step1';
-
-    const cardsHTML = CUSTOM_OBJECTIVES.map(o => `
-      <button type="button" class="custom-objective-card ${modalState.objective === o.id ? 'is-selected' : ''}" data-id="${o.id}">
-        <div class="custom-objective-top">
-          <span class="custom-objective-icon">${CUSTOM_ICONS[o.id]}</span>
-          <span class="custom-objective-tag">${o.suggestion}</span>
-        </div>
-        <strong class="custom-objective-title">${o.title}</strong>
-        <p class="custom-objective-desc">${o.desc}</p>
-        <span class="custom-objective-action-hint">${modalState.objective === o.id ? checkSvg + ' Selecionado' : 'Selecionar'}</span>
-      </button>
-    `).join('');
-
-    bodyEl.innerHTML = `
-      <div class="custom-step1-container">
-        <p class="custom-model-subtitle">Selecione o objetivo da sua solução para adaptarmos a estrutura ideal para você.</p>
-        <div class="custom-objective-grid">${cardsHTML}</div>
-        
-        ${modalState.objective === 'outro' ? `
-          <div class="custom-context-field">
-            <label class="custom-context-label" for="custom-context-input">
-              <span>Conte sua ideia ou necessidade</span>
-              <small class="custom-context-hint">Identificaremos o direcionamento ideal para sua solução.</small>
-            </label>
-            <textarea id="custom-context-input" rows="3" placeholder="Exemplo: Quero um site para minha clínica mostrando serviços, fotos e contato pelo WhatsApp.">${CogitUI.escapeHtml(modalState.customText)}</textarea>
-            <div class="custom-keyword-feedback" id="custom-keyword-feedback"></div>
-          </div>
-        ` : ''}
-      </div>
-    `;
-
-    bodyEl.querySelectorAll('.custom-objective-card').forEach(card => {
-      attachTapHandler(card, () => {
-        const prevObj = modalState.objective;
-        const newObj = card.dataset.id;
-        if (prevObj === newObj) return;
-
-        modalState.objective = newObj;
-        initBlocksForObjective(modalState.objective);
-
-        if (prevObj === 'outro' || newObj === 'outro') {
-          const scrollPos = bodyEl.scrollTop;
-          renderStep1View();
-          renderFooter();
-          requestAnimationFrame(() => { bodyEl.scrollTop = scrollPos; });
-          if (newObj === 'outro') {
-            const ta = document.getElementById('custom-context-input');
-            if (ta) ta.focus();
-          }
-        } else {
-          bodyEl.querySelectorAll('.custom-objective-card').forEach(c => {
-            const isSel = c.dataset.id === newObj;
-            c.classList.toggle('is-selected', isSel);
-            const hint = c.querySelector('.custom-objective-action-hint');
-            if (hint) hint.innerHTML = isSel ? checkSvg + ' Selecionado' : 'Selecionar';
-          });
-          renderFooter();
-        }
-        if (typeof trackEvent === 'function') trackEvent('custom_model_objective_selected', modalState.objective);
-      });
+    bodyEl.querySelector('[data-studio-count]').textContent = `(${modalState.blocks.length})`;
+    bodyEl.querySelectorAll('.studio-component').forEach(btn => {
+      const inBase = modalState.blocks.some(b => b.component === btn.dataset.component && b.type !== 'component');
+      const on = modalState.components.has(btn.dataset.component);
+      btn.setAttribute('aria-pressed', String(on));
+      btn.classList.toggle('is-on', on);
+      btn.disabled = inBase;
+      btn.querySelector('.studio-component-state').innerHTML = inBase ? 'Na base' : on ? CUSTOM_ICONS.check : CUSTOM_ICONS.plus;
     });
 
-    const textarea = document.getElementById('custom-context-input');
-    const feedbackEl = document.getElementById('custom-keyword-feedback');
+    // Pré-visualização: um desenho simples por tipo de seção.
+    document.getElementById('custom-preview-mount').innerHTML = `
+      <div class="studio-browser" aria-hidden="true">
+        <div class="studio-browser-bar"><i></i><i></i><i></i></div>
+        <div class="studio-browser-page">
+          ${modalState.blocks.map(b => `<div class="wf wf--${b.kind || 'split'}${b.type === 'component' ? ' is-component' : ''}"><span class="wf-label">${esc(b.name)}</span><span class="wf-art"></span></div>`).join('')}
+        </div>
+      </div>`;
 
-    function updateKeywordFeedback() {
-      if (!feedbackEl) return;
-      const detected = analyzeCustomKeywords(modalState.customText);
-      modalState.detectedMatch = detected;
-
-      if (detected) {
-        if (!detected.isUnclear) {
-          feedbackEl.innerHTML = `
-            <div class="custom-keyword-pill">
-              ${CUSTOM_ICONS.sparkles}
-              <span>Direcionamento sugerido: <strong>${detected.suggestion}</strong></span>
-            </div>
-          `;
-          // Sincroniza blocos sugeridos caso usuário opte pela estrutura detectada
-          const matchingObj = CUSTOM_STRUCTURES[detected.id];
-          if (matchingObj) {
-            modalState.blocks = matchingObj.sections.map(s => ({ ...s }));
-          }
-        } else {
-          feedbackEl.innerHTML = `
-            <div class="custom-keyword-pill custom-keyword-pill--neutral">
-              <span><strong>Vamos analisar sua necessidade</strong> — Com base na sua descrição, nossa equipe poderá validar a melhor estrutura para o seu projeto.</span>
-            </div>
-          `;
-        }
-      } else {
-        feedbackEl.innerHTML = '';
-      }
-    }
-
-    if (textarea) {
-      textarea.addEventListener('input', e => {
-        modalState.customText = e.target.value;
-        updateKeywordFeedback();
-      });
-      updateKeywordFeedback();
-    }
-
-    renderFooter();
+    const current = summary();
+    const extras = current.components;
+    const est = current.estimate;
+    document.getElementById('custom-estimate-summary-mount').innerHTML = `
+      <dl class="studio-est">
+        <div><dt>Estrutura</dt><dd>${esc(current.suggestion)}</dd></div>
+        <div><dt>Seções</dt><dd>${modalState.blocks.length}</dd></div>
+        <div><dt>Componentes adicionados</dt><dd>${extras.length}</dd></div>
+        <div class="studio-est-total"><dt>Investimento</dt><dd>a partir de R$ ${est.toLocaleString('pt-BR')}</dd></div>
+      </dl>
+      <p class="studio-est-note">${extras.length ? 'Os componentes adicionados entram na validação do escopo; o valor final é confirmado pela equipe antes do pagamento.' : 'Valor inicial do projeto sob medida. A equipe confirma o valor final antes do pagamento.'}</p>`;
   }
 
-  // ── Renderização da ETAPA 2 (Estúdio Visual Unificado — Base Visual Idêntica ao Screenshot) ──
-  function renderStep2DesktopStudio() {
-    titleEl.textContent = 'Estrutura recomendada para seu projeto';
-    bodyEl.className = 'hero-modal-body custom-model-body custom-model-body--studio';
-
-    const currentObj = CUSTOM_OBJECTIVES.find(o => o.id === modalState.objective) || CUSTOM_OBJECTIVES[4];
-    const structureName = modalState.detectedMatch && !modalState.detectedMatch.isUnclear
-      ? modalState.detectedMatch.suggestion
-      : currentObj.suggestion;
-
-    bodyEl.innerHTML = `
-      <!-- Coluna Esquerda: Decisão e Personalização -->
-      <div class="custom-studio-left">
-        
-        <!-- 1. Título e Seções Recomendadas -->
-        <div class="custom-structure-intro">
-          <span class="custom-eyebrow">ESTRUTURA RECOMENDADA</span>
-          <h4 class="custom-structure-title">${structureName}</h4>
-          <p class="custom-structure-desc">Com base no objetivo escolhido, montamos uma estrutura inicial para sua solução.</p>
-        </div>
-
-        <div class="custom-pills-grid" id="custom-structure-pills"></div>
-
-        <!-- 2. Personalização com Adicionais (Cards compactos de 2 colunas, sem textos longos) -->
-        <div class="custom-addons-block">
-          <h4 class="custom-addons-title">Personalize sua estrutura</h4>
-          <p class="custom-addons-desc">Adicione elementos extras para deixar seu projeto ainda mais alinhado com a sua necessidade.</p>
-          
-          <div class="custom-addon-grid">
-            ${CUSTOM_ADDONS.map(a => `
-              <button type="button" class="custom-addon-card ${modalState.addons.has(a.id) ? 'is-added' : ''}" data-id="${a.id}">
-                <span class="custom-addon-icon">${CUSTOM_ADDON_ICONS[a.id]}</span>
-                <div class="custom-addon-info">
-                  <strong class="custom-addon-name">${a.label}</strong>
-                  <span class="custom-addon-price">+R$ ${a.price}</span>
-                </div>
-                <span class="custom-addon-btn">${modalState.addons.has(a.id) ? checkSvg + ' Adicionado' : '+ Adicionar'}</span>
-              </button>
-            `).join('')}
-          </div>
-        </div>
-
-        <!-- 3. IA Secundária e Discreta (conforme diretriz) -->
-        <div class="custom-ia-card">
-          <div class="custom-ia-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3.2"/></svg>
-          </div>
-          <div class="custom-ia-text">
-            <h5>Personalize sua estrutura com IA <span class="custom-ia-info" tabindex="0" data-tooltip="Os recursos de IA ficam disponíveis dentro da plataforma Cogit para acompanhamento e personalizações futuras.">i</span></h5>
-            <p>Nossa IA poderá ajudar na criação de sugestões visuais, estruturas e personalizações dentro da plataforma.</p>
-          </div>
-          <button type="button" class="custom-ia-btn" id="custom-ia-access">Acessar pela plataforma</button>
-        </div>
-
-      </div>
-
-      <!-- Coluna Direita: Mockup Minimalista + Estimativa Compacta -->
-      <div class="custom-studio-right">
-        <div class="custom-preview-sticky-wrap">
-          <div class="custom-preview-header">
-            <span class="custom-preview-label">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-              PRÉ-VISUALIZAÇÃO DA ESTRUTURA
-            </span>
-          </div>
-
-          <div class="custom-preview-mount" id="custom-preview-mount">
-            ${renderWireframePreviewHtml()}
-          </div>
-
-          <div class="custom-estimate-summary-mount" id="custom-estimate-summary-mount"></div>
-        </div>
-      </div>
-    `;
-
-    renderStructurePillsList();
-    updateEstimateDisplay();
-
-    // Eventos dos cards de adicionais
-    bodyEl.querySelectorAll('.custom-addon-card').forEach(card => {
-      attachTapHandler(card, () => {
-        toggleAddon(card.dataset.id);
-      });
-    });
-
-    const iaBtn = document.getElementById('custom-ia-access');
-    if (iaBtn) {
-      iaBtn.addEventListener('click', finalizeProject);
-    }
-
-    renderFooter();
-  }
-
-  // ── Renderização do Rodapé ──
-  function renderFooter() {
-    if (modalState.step === 1) {
-      footerEl.innerHTML = `
-        <button type="button" class="hero-modal-btn-back" id="custom-btn-back-to-studio">${arrowLeftSvg} Voltar à estrutura</button>
-        <button type="button" class="hero-modal-btn-select" id="custom-btn-confirm-objective">Continuar com esta estrutura ${arrowRightSvg}</button>
-      `;
-      document.getElementById('custom-btn-back-to-studio').addEventListener('click', () => {
-        modalState.step = 2;
-        renderStep2DesktopStudio();
-      });
-      document.getElementById('custom-btn-confirm-objective').addEventListener('click', () => {
-        initBlocksForObjective(modalState.objective);
-        modalState.step = 2;
-        renderStep2DesktopStudio();
-      });
-    } else {
-      footerEl.innerHTML = `
-        <button type="button" class="hero-modal-btn-back" id="custom-btn-change-objective">${arrowLeftSvg} Voltar ao objetivo</button>
-        <div class="custom-footer-actions-right">
-          <button type="button" class="custom-btn-secondary-link" id="custom-btn-reset-blocks">Restaurar padrão</button>
-          <button type="button" class="hero-modal-btn-select" id="custom-btn-finish-studio">Finalizar personalização ${checkSvg}</button>
-        </div>
-      `;
-      document.getElementById('custom-btn-change-objective').addEventListener('click', () => {
-        modalState.step = 1;
-        renderStep1View();
-      });
-      document.getElementById('custom-btn-reset-blocks').addEventListener('click', () => {
-        initBlocksForObjective(modalState.objective);
-        renderStructurePillsList();
-        updateAddonCardsState();
-        updateDynamicPreview();
-      });
-      document.getElementById('custom-btn-finish-studio').addEventListener('click', finalizeProject);
-    }
-  }
-
-  function renderModalView() {
-    if (modalState.step === 1) {
-      renderStep1View();
-    } else {
-      renderStep2DesktopStudio();
-    }
-    bodyEl.classList.add('is-step-entering');
-    requestAnimationFrame(() => requestAnimationFrame(() => bodyEl.classList.remove('is-step-entering')));
-  }
-
-  renderModalView();
-  if (typeof trackEvent === 'function') trackEvent('custom_model_modal_opened', selectedSvc && selectedSvc.id);
+  if (modalState.step === 2) renderStructure();
+  else renderObjective();
+  if (typeof trackEvent === 'function') trackEvent('custom_model_modal_opened', svcId);
 }
 window.openCustomModelModal = openCustomModelModal;
 

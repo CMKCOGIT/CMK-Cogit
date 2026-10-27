@@ -284,3 +284,9 @@ html:not(.js) .screen[data-screen="0"] { opacity: 1; transform: none; }
   *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
 }
 .logo { min-height: 44px; }
+
+/* Assinatura do desenvolvedor */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.credit a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-2); text-decoration: none; }
+.credit strong { margin-left: 0.3em; color: var(--ink); font-weight: 700; }
+.credit a:hover strong { color: var(--primary); text-decoration: underline; text-underline-offset: 0.2em; }

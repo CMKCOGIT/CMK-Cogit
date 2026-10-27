@@ -72,6 +72,7 @@
 
 .section-header h2 {
   margin-bottom: var(--space-2);
+  text-wrap: balance;
 }
 
 .section-header p {

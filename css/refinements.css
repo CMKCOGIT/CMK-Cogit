@@ -259,8 +259,7 @@ body:has(.cookie-banner) :is(.mobile-fixed-cta, .whatsapp-float) { visibility: h
 }
 @media (max-width: 480px) {
   :root { --gutter: 1rem; }
-  .hero h1,
-.solution-hero h1 { font-size: clamp(1.875rem, 8vw, 2.5rem); }
+  .hero h1 { font-size: clamp(1.875rem, 8vw, 2.5rem); }
   #hero-interactive-container { padding: 20px 16px; }
   
   
@@ -770,7 +769,6 @@ html:not(.animations-ready) #brand-intro { display: none; }
 }
 
 .si-investment .section-header h2 {
-  font-size: clamp(1.85rem, 3.2vw, 2.6rem);
   letter-spacing: -0.02em;
   margin-top: var(--space-2);
   margin-bottom: var(--space-3);

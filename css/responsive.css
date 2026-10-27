@@ -259,8 +259,7 @@
   }
 
   .section-header h2 {
-    font-size: clamp(1.45rem, 5.2vw, 1.85rem);
-    line-height: 1.25;
+    line-height: 1.2;
     text-wrap: balance;
     letter-spacing: -0.01em;
     margin-bottom: 8px;
@@ -631,8 +630,7 @@
   }
 
   .solution-hero h1 {
-    font-size: clamp(1.65rem, 6vw, 2.1rem);
-    line-height: 1.22;
+    line-height: 1.12;
     text-wrap: balance;
   }
 
@@ -825,8 +823,7 @@
 
   /* Typography */
   .hero h1,
-  .hero-content h1,
-  .solution-hero h1 {
+  .hero-content h1 {
     font-size: clamp(1.4rem, 6.8vw, 1.7rem);
     line-height: 1.22;
   }
@@ -835,11 +832,6 @@
     font-size: 13px;
     line-height: 1.48;
     max-width: 100%;
-  }
-
-  .section-header h2 {
-    font-size: 1.35rem;
-    line-height: 1.25;
   }
 
   .section-header p {

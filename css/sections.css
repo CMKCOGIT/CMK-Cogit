@@ -39,6 +39,7 @@
 
 .hero-content .hero-subtitle {
   margin-bottom: 0 !important;
+  margin-inline: 0; /* hero alinhado à esquerda: o parágrafo não centraliza */
 }
 
 .hero-content .hero-ctas {
@@ -739,10 +740,14 @@
 }
 
 .hero h1 {
+  /* Mesmo tamanho dos trechos do título (definidos no HTML), para a linha não herdar outra altura */
+  font-size: clamp(2rem, 3.3vw, 3.4rem);
+  line-height: 1.15;
   font-weight: var(--fw-extrabold);
   color: var(--white);
   margin-bottom: var(--space-4);
-  letter-spacing: var(--tracking-tight);
+  /* Mantém o espaçamento original (antes herdado do h1 de 68px), com 4 linhas no desktop */
+  letter-spacing: -0.028em;
 }
 
 .hero-title-main {
@@ -1091,8 +1096,8 @@
   gap: var(--space-6);
   position: relative;
   padding-bottom: var(--space-16);
-  /* Etapa inativa atenuada, mas ainda legível (contraste mínimo de leitura) */
-  opacity: 0.72;
+  /* Etapa inativa atenuada, mas legível: com 0.82 o texto secundário fica em 4.7:1 */
+  opacity: 0.82;
   transform: translateY(15px);
   transition: all 500ms var(--ease-out);
 }
@@ -1180,7 +1185,7 @@
   font-family: var(--font-heading);
   font-size: var(--text-sm);
   font-weight: var(--fw-bold);
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   margin-bottom: var(--space-2);
   display: block;
   letter-spacing: 0.1em;
@@ -1517,6 +1522,126 @@
 }
 
 /* ── VISUAL GRAPHIC STATES ── */
+
+.state-1 .v-layer-dots {
+  opacity: 1;
+}
+
+.state-1 .visual-core {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.state-2 .v-layer-dots {
+  opacity: 0.5;
+}
+
+.state-2 .v-layer-lines {
+  opacity: 1;
+}
+
+.state-2 .v-svg-lines path {
+  stroke-dashoffset: 0;
+}
+
+.state-2 .visual-core {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.state-2 .visual-core-inner {
+  border-radius: 50%;
+  transform: rotate(0deg);
+}
+
+.state-3 .v-layer-lines {
+  opacity: 0.2;
+}
+
+.state-3 .v-layer-blocks {
+  opacity: 1;
+}
+
+.state-3 .v-block {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.state-3 .v-block-1 {
+  transform: translateX(-50%) scale(1);
+}
+
+.state-3 .visual-core {
+  width: 140px;
+  height: 140px;
+  background: transparent;
+  border: 1px dashed var(--purple);
+}
+
+.state-4 .v-layer-blocks {
+  opacity: 0.1;
+}
+
+.state-4 .v-layer-ui {
+  opacity: 1;
+}
+
+.state-4 .v-ui-window {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.state-4 .visual-core {
+  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0;
+}
+
+.state-5 .v-layer-ui {
+  opacity: 1;
+}
+
+.state-5 .v-ui-window {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: var(--purple);
+}
+
+.state-5 .v-ui-box {
+  background: var(--purple);
+  border-style: solid;
+}
+
+.state-5 .v-ui-line {
+  background: var(--lilac);
+}
+
+.state-6 .v-layer-ui {
+  opacity: 0.3;
+  transform: scale(0.9) translateY(-20px);
+}
+
+.state-6 .v-layer-data {
+  opacity: 1;
+}
+
+.state-6 .v-chart-bar.b1 {
+  height: 40px;
+}
+
+.state-6 .v-chart-bar.b2 {
+  height: 80px;
+}
+
+.state-6 .v-chart-bar.b3 {
+  height: 60px;
+}
+
+.state-6 .v-chart-line {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.state-6 .visual-conceptual-phrase {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 /* ── CASES / PROJETOS ── */
 
@@ -2269,7 +2394,8 @@ body.no-scroll .mobile-fixed-cta {
 
 .solution-hero h1 {
   color: var(--white);
-  font-size: clamp(1.625rem, 3.5vw, 2.375rem);
+  font-size: var(--fs-hero);
+  text-wrap: balance;
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   margin-bottom: var(--space-2);

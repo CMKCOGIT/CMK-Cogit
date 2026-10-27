@@ -936,7 +936,7 @@ function renderHeroInteractive() {
             </div>
           </section>
 
-          <aside class="dx-aside" aria-labelledby="dx-invest-title">
+          <section class="dx-aside" aria-labelledby="dx-invest-title">
             <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
             <p class="dx-price">${price}</p>
             <p class="dx-price-note">${priceNote}</p>
@@ -949,7 +949,7 @@ function renderHeroInteractive() {
               <a href="${configuratorLink}" id="hero-link-form">Ajustar no configurador</a>
               <button type="button" id="hero-btn-restart">${DX_ICON.restart} Recomeçar</button>
             </div>
-          </aside>
+          </section>
         </div>
       </div>`;
 
@@ -1552,11 +1552,11 @@ function openCustomModelModal(selectedSvc, onFinish, options = {}) {
           </div>
         </section>
       </div>
-      <aside class="studio-side" aria-label="Pré-visualização e estimativa">
+      <section class="studio-side" aria-label="Pré-visualização e estimativa">
         <button type="button" class="studio-preview-toggle" aria-expanded="false" aria-controls="custom-preview-mount">Ver prévia da página</button>
         <div class="studio-preview" id="custom-preview-mount"></div>
         <div class="studio-estimate" id="custom-estimate-summary-mount"></div>
-      </aside>`;
+      </section>`;
 
     const toggle = bodyEl.querySelector('.studio-preview-toggle');
     toggle.addEventListener('click', () => {

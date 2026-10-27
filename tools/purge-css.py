@@ -16,7 +16,9 @@ for pattern in ROOT_GLOBS:
 tokens = set(re.findall(r'[A-Za-z0-9_-]+', source))
 # Prefixos de classes montadas dinamicamente: `pre-${x}` ou 'pre-' + x
 dynamic = set(re.findall(r'([A-Za-z][A-Za-z0-9_-]*-)\$\{', source))
-dynamic |= set(re.findall(r"['\"]([A-Za-z][A-Za-z0-9_-]*-)['\"]\s*\+", source))
+# o prefixo pode ser a última palavra da string: 'process-visual-graphic state-' + n
+dynamic |= set(re.findall(r"([A-Za-z][A-Za-z0-9_-]*-)['\"]\s*\+", source))
+dynamic |= set(re.findall(r"([A-Za-z][A-Za-z0-9_-]*-)\$\{", source))
 dynamic |= set(re.findall(r'([A-Za-z][A-Za-z0-9_-]*--)\$\{', source))
 
 

@@ -46,7 +46,7 @@
 .contact-hero .section-label,
 .contact-form-section .section-label,
 .contact-faq-section .section-label { margin-bottom: 1.4rem; }
-.contact-hero h1 { max-width: 12ch; margin: 0; color: var(--white); font-size: clamp(2.75rem,5.4vw,5.4rem); line-height: .98; letter-spacing: -.055em; }
+.contact-hero h1 { max-width: 12ch; margin: 0; color: var(--white); font-size: var(--fs-hero); line-height: .98; letter-spacing: -.055em; }
 .contact-hero-lead { max-width: 39rem; margin: 1.75rem 0 0; color: rgba(255,255,255,.72); font-size: clamp(1rem,1.35vw,1.2rem); line-height: 1.7; }
 .contact-trust-row { display: flex; flex-wrap: wrap; gap: .8rem 1.4rem; margin-top: 2rem; color: rgba(255,255,255,.78); font-family: var(--font-heading); font-size: .84rem; font-weight: 600; }
 .contact-trust-row span { display: inline-flex; align-items: center; gap: .55rem; }
@@ -81,7 +81,7 @@
 .contact-form-intro,
 .contact-faq-heading { position: sticky; top: var(--sticky-top); }
 .contact-form-intro h2,
-.contact-faq-heading h2 { margin: 0; color: var(--ink); font-size: clamp(2.2rem,4vw,4rem); line-height: 1.04; letter-spacing: -.05em; }
+.contact-faq-heading h2 { margin: 0; color: var(--ink); font-size: var(--fs-section); line-height: 1.04; letter-spacing: -.05em; }
 .contact-form-intro > p,
 .contact-faq-heading > p { max-width: 35rem; margin: 1.3rem 0 0; color: var(--text-secondary); font-size: 1rem; line-height: 1.75; }
 .contact-steps { display: grid; gap: 0; margin: 2.25rem 0 0; padding: 0; list-style: none; }
@@ -174,7 +174,6 @@
   .contact-hero { padding: 7.6rem 0 4.2rem; }
   .contact-grid-bg { background-size: 48px 48px; }
   .contact-orbit { right: -17rem; top: 7rem; opacity: .7; }
-  .contact-hero h1 { font-size: clamp(2.35rem,12vw,3.5rem); }
   .contact-hero-lead { margin-top: 1.25rem; font-size: 1rem; }
   .contact-trust-row { display: grid; gap: .7rem; }
   .contact-channel-panel { margin-inline: -.15rem; padding: 1.2rem; border-radius: 1.1rem; }
@@ -190,7 +189,6 @@
 }
 
 @media (max-width: 340px) {
-  .contact-hero h1 { font-size: 2.25rem; }
   .contact-channel { grid-template-columns: 2.4rem 1fr; }
   .contact-channel-icon { width: 2.4rem; border-radius: .65rem; }
   .contact-channel-arrow { display: none; }

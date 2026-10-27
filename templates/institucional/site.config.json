@@ -1,0 +1,10 @@
+{
+  "$comment": "Pontos de publicação. Depois de editar, rode: node tools/templates/configure.mjs institucional",
+  "mode": "demo",
+  "siteUrl": null,
+  "host": null,
+  "allowEmbedFrom": "https://cmkcogit.com.br",
+  "formEndpoint": "",
+  "pages": ["index.html", "privacidade.html"],
+  "indexable": ["index.html", "privacidade.html"]
+}

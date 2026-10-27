@@ -1,0 +1,63 @@
+/*
+  Tokens do template Landing Page.
+  Personalização por cliente: altere este arquivo (cores, fontes, ritmo).
+  As seções em styles.css usam apenas estes nomes.
+*/
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("../fonts/bricolage-grotesque-latin-opsz-normal.woff2") format("woff2-variations");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Figtree";
+  src: url("../fonts/figtree-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 300 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Cor */
+  --bg: #fbfaf6;
+  --bg-2: #f1efe7;
+  --surface: #ffffff;
+  --ink: #12172b;
+  --ink-2: #4a5068;
+  --primary: #2447d6;      /* ação principal: 6.6:1 com branco */
+  --primary-deep: #1a35a8;
+  --primary-soft: #e7ecfc;
+  --butter: #f4d35e;       /* destaque: nunca como cor de texto sobre claro */
+  --night: #12172b;
+  --on-night: #f3f2ec;
+  --on-night-2: #a9aec4;
+  --ok: #1f7a4a;
+  --ok-soft: #dcf2e4;
+  --warn: #9a5b00;
+  --warn-soft: #fbedc9;
+  --line: rgb(18 23 43 / 0.12);
+  --error: #b42318;
+
+  /* Tipografia */
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-text: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-hero: clamp(2.6rem, 6vw, 5.4rem);
+  --fs-h2: clamp(2rem, 4vw, 3.5rem);
+  --fs-h3: clamp(1.25rem, 1.8vw, 1.5rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.92rem;
+  --fs-micro: 0.8rem;
+
+  /* Ritmo */
+  --gutter: clamp(20px, 4vw, 48px);
+  --max: 1240px;
+  --section: clamp(80px, 11vw, 144px);
+  --radius: 18px;
+  --radius-sm: 10px;
+  --header-h: 72px;
+
+  /* Movimento */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 700ms;
+}

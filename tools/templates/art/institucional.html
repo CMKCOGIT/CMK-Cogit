@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Arte — Institucional</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+:root { --green: #123f33; --brass: #b88a3e; --ink: #17201c; --muted: #6b766f; }
+.page { position: absolute; background: #fbfaf7; box-shadow: 0 2.4vw 4vw -1.6vw rgb(20 30 25 / .45), 0 .2vw .5vw rgb(20 30 25 / .12); padding: 5%; font-family: "Public Sans"; color: var(--ink); overflow: hidden; }
+.logo { display: flex; align-items: center; gap: .8vw; color: var(--green); font-family: "Newsreader"; font-weight: 500; font-size: 2.6vw; }
+.logo svg { width: 2.6vw; height: 2.6vw; }
+.eyebrow { font-size: 1.05vw; letter-spacing: .16em; text-transform: uppercase; color: #87621f; font-weight: 600; }
+.h { font-family: "Newsreader"; font-weight: 400; color: var(--green); line-height: 1.05; }
+.rule { height: 1px; background: rgb(23 32 28 / .15); margin: 2vw 0; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2vw; }
+.kpi b { display: block; font-family: "Newsreader"; font-weight: 500; font-size: 2.5vw; color: var(--ink); line-height: 1.1; }
+.kpi span { font-size: 1vw; color: var(--muted); text-transform: uppercase; letter-spacing: .1em; }
+.bars { display: flex; align-items: flex-end; gap: 1.3%; height: 100%; }
+.bars i { flex: 1; background: var(--green); display: block; position: relative; }
+.bars i::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: var(--t, 22%); background: var(--brass); }
+.lines { position: absolute; inset: 0; background: repeating-linear-gradient(180deg, transparent 0 calc(25% - 1px), rgb(23 32 28 / .1) calc(25% - 1px) 25%); }
+.txt i { display: block; height: .7vw; background: rgb(23 32 28 / .14); margin-bottom: .9vw; border-radius: 1px; }
+.pen { position: absolute; height: 1.4vw; width: 40%; background: linear-gradient(180deg, #1f2a25, #0d1512); border-radius: .7vw; box-shadow: 0 .8vw 1.2vw -.4vw rgb(0 0 0 / .5); }
+.pen::before { content: ""; position: absolute; left: 0; width: 22%; top: 0; bottom: 0; background: linear-gradient(180deg, #d9b26a, #a77c32); border-radius: .7vw 0 0 .7vw; }
+.pen::after { content: ""; position: absolute; right: -4%; top: 25%; bottom: 25%; width: 5%; background: #a77c32; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.cup { position: absolute; border-radius: 50%; background: radial-gradient(circle at 50% 50%, #3b2416 0 52%, #f3efe8 53% 66%, #e4ded3 67% 100%); box-shadow: 0 1.2vw 2vw -.6vw rgb(0 0 0 / .45); }
+</style>
+</head>
+<body>
+
+<section class="scene grain vignette" id="hero-report" style="background: linear-gradient(160deg, #d9d3c7, #c4bcad)">
+  <div class="page paper-tex" style="left:9%; top:7%; width:62%; height:76%; transform: rotate(-5deg)">
+    <div class="logo"><svg viewBox="0 0 32 32"><path d="M4 28 16 4l12 24" fill="none" stroke="currentColor" stroke-width="2.6"/><path d="M9.5 19h13" stroke="currentColor" stroke-width="2.6"/></svg>Arrimo</div>
+    <div style="margin-top:14%" class="eyebrow">Relatório gerencial</div>
+    <div class="h" style="font-size:6.4vw; margin-top:2vw">Março<br>2026</div>
+    <div class="rule" style="margin-top:6vw"></div>
+    <div class="kpis"><div class="kpi"><b>R$ 412 mil</b><span>Receita</span></div><div class="kpi"><b>18,4%</b><span>Margem</span></div><div class="kpi"><b>9,1%</b><span>Carga</span></div></div>
+    <div style="position:absolute; left:5%; right:5%; bottom:5%; height:26%"><div class="lines"></div>
+      <div class="bars" style="position:relative">
+        <i style="height:52%"></i><i style="height:58%"></i><i style="height:49%;--t:26%"></i><i style="height:63%"></i><i style="height:60%"></i><i style="height:71%;--t:18%"></i><i style="height:66%"></i><i style="height:74%"></i><i style="height:69%;--t:20%"></i><i style="height:78%"></i><i style="height:82%"></i><i style="height:88%;--t:17%"></i>
+      </div></div>
+  </div>
+  <div class="page paper-tex" style="left:44%; top:38%; width:50%; height:56%; transform: rotate(4deg)">
+    <div class="eyebrow">Calendário fiscal · abril</div>
+    <div class="h" style="font-size:3vw; margin-top:1.2vw">O que vence este mês</div>
+    <div class="rule"></div>
+    <div style="display:grid; gap:1.4vw; font-size:1.35vw">
+      <div style="display:flex;justify-content:space-between"><span>DAS · Simples Nacional</span><span style="color:#2e6b45">pago · 18/04</span></div>
+      <div style="display:flex;justify-content:space-between"><span>FGTS Digital</span><span style="color:#2e6b45">pago · 18/04</span></div>
+      <div style="display:flex;justify-content:space-between"><span>DCTFWeb</span><span style="color:#87621f">vence 30/04</span></div>
+      <div style="display:flex;justify-content:space-between"><span>ISS · prestação</span><span style="color:#87621f">vence 15/05</span></div>
+    </div>
+    <div class="rule"></div>
+    <div class="txt"><i style="width:92%"></i><i style="width:84%"></i><i style="width:88%"></i><i style="width:60%"></i></div>
+  </div>
+  <div class="pen" style="left:6%; top:86%; transform: rotate(-12deg)"></div>
+  <div class="cup" style="left:72%; top:6%; width:22vw; height:22vw"></div>
+</section>
+
+<section class="scene grain vignette" id="case-padaria" style="background: linear-gradient(150deg, #eadccb, #d6c3ab)">
+  <div class="page paper-tex" style="left:12%; top:10%; width:56%; height:84%; transform: rotate(-3deg)">
+    <div class="eyebrow">Simulação de regime · 2026</div>
+    <div class="h" style="font-size:3.6vw; margin-top:1vw">Simples × Presumido</div>
+    <div class="rule"></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:3vw; height:56%; align-items:end">
+      <div style="display:grid; gap:.8vw"><div style="height:24vw; background:#c9bfae; position:relative"><span style="position:absolute;top:-2.4vw;font-family:Newsreader;font-size:2vw">11,2%</span></div><span class="eyebrow" style="color:#6b766f">Simples</span></div>
+      <div style="display:grid; gap:.8vw"><div style="height:17vw; background:var(--green); position:relative"><span style="position:absolute;top:-2.4vw;font-family:Newsreader;font-size:2vw;color:var(--green)">8,6%</span></div><span class="eyebrow">Presumido</span></div>
+    </div>
+  </div>
+  <div class="page" style="left:62%; top:24%; width:30%; height:50%; transform: rotate(6deg)">
+    <div class="eyebrow">Lojas</div>
+    <div style="display:grid; gap:1.2vw; margin-top:1.4vw; font-family:Newsreader; font-size:2vw; color:var(--green)"><div>01 Savassi</div><div>02 Sion</div><div style="color:#87621f">03 Lourdes · nova</div></div>
+    <div class="rule"></div><div class="txt"><i style="width:90%"></i><i style="width:70%"></i><i style="width:80%"></i></div>
+  </div>
+</section>
+
+<section class="scene grain vignette" id="case-clinica" style="background: linear-gradient(150deg, #dfe5e3, #c3cdca)">
+  <div class="page paper-tex" style="left:14%; top:12%; width:72%; height:80%; transform: rotate(-2deg)">
+    <div class="eyebrow">Estrutura da equipe</div>
+    <div style="position:relative; height:70%; margin-top:2vw">
+      <div style="position:absolute; left:38%; top:0; width:24%; height:22%; background:var(--green)"></div>
+      <div style="position:absolute; left:50%; top:22%; width:1px; height:14%; background:var(--ink)"></div>
+      <div style="position:absolute; left:14%; top:36%; width:72%; height:1px; background:var(--ink)"></div>
+      <div style="position:absolute; left:6%; top:44%; width:22%; height:20%; border:2px solid var(--green)"></div>
+      <div style="position:absolute; left:39%; top:44%; width:22%; height:20%; border:2px solid var(--green)"></div>
+      <div style="position:absolute; left:72%; top:44%; width:22%; height:20%; background:var(--brass)"></div>
+      <div style="position:absolute; left:6%; right:6%; top:78%" class="txt"><i style="width:80%"></i><i style="width:55%"></i></div>
+    </div>
+  </div>
+</section>
+
+<section class="scene grain vignette" id="case-software" style="background: linear-gradient(150deg, #2a3a35, #16221e)">
+  <div class="page" style="left:12%; top:14%; width:76%; height:76%; transform: rotate(2deg)">
+    <div class="eyebrow">Fluxo de caixa · 18 meses</div>
+    <svg viewBox="0 0 400 160" style="width:100%; margin-top:2vw">
+      <g stroke="rgb(23 32 28 / .12)"><line x1="0" y1="40" x2="400" y2="40"/><line x1="0" y1="80" x2="400" y2="80"/><line x1="0" y1="120" x2="400" y2="120"/></g>
+      <path d="M0 120 C60 118 90 128 140 112 S220 80 260 70 S340 34 400 20" fill="none" stroke="#123f33" stroke-width="4"/>
+      <path d="M260 70 S340 34 400 20 L400 60 S330 86 260 70Z" fill="#b88a3e" opacity=".3"/>
+      <line x1="260" y1="0" x2="260" y2="160" stroke="#b88a3e" stroke-dasharray="4 4" stroke-width="2"/>
+    </svg>
+  </div>
+</section>
+
+<section class="scene grain" id="og" style="background: #123f33">
+  <div style="position:absolute; left:7%; top:16%; color:#f5f3ee; font-family:Newsreader; font-size:5.6vw; line-height:1.05; width:52%">A contabilidade que participa das decisões.</div>
+  <div class="logo" style="position:absolute; left:7%; bottom:12%; color:#f5f3ee; font-size:3vw"><svg viewBox="0 0 32 32"><path d="M4 28 16 4l12 24" fill="none" stroke="#b88a3e" stroke-width="2.6"/><path d="M9.5 19h13" stroke="#b88a3e" stroke-width="2.6"/></svg>Arrimo Contabilidade</div>
+  <div class="page" style="left:66%; top:14%; width:28%; height:84%; transform: rotate(5deg)"><div class="eyebrow">Relatório gerencial</div><div class="h" style="font-size:4vw; margin-top:1vw">Março<br>2026</div><div class="rule"></div><div class="txt"><i style="width:90%"></i><i style="width:70%"></i><i style="width:80%"></i></div></div>
+</section>
+
+<section class="scene" id="icon" style="background:#123f33"><svg viewBox="0 0 32 32" style="position:absolute; inset:22%"><path d="M4 28 16 4l12 24" fill="none" stroke="#f5f3ee" stroke-width="2.6"/><path d="M9.5 19h13" stroke="#b88a3e" stroke-width="2.6"/></svg></section>
+
+<script>
+document.getElementById(new URLSearchParams(location.search).get('scene'))?.classList.add('on');
+document.fonts.ready.then(() => { document.body.dataset.ready = '1'; });
+</script>
+</body>
+</html>

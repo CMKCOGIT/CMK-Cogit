@@ -1,0 +1,76 @@
+/*
+  Tokens do template Institucional.
+  Personalização por cliente: altere este arquivo (cores, fontes, ritmo).
+  As seções em styles.css usam apenas estes nomes.
+*/
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-latin-opsz-normal.woff2") format("woff2-variations");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Newsreader";
+  src: url("../fonts/newsreader-latin-opsz-italic.woff2") format("woff2-variations");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Public Sans";
+  src: url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fonte de reserva com métricas ajustadas: evita deslocamento de layout enquanto a fonte carrega. */
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Times New Roman"), local("Liberation Serif");
+  size-adjust: 103.7%;
+  ascent-override: 73%;
+  descent-override: 28%;
+}
+
+:root {
+  /* Cor */
+  --bg: #f5f3ee;
+  --bg-2: #ebe7de;
+  --surface: #ffffff;
+  --ink: #17201c;
+  --ink-2: #4c5852;
+  --brand: #123f33;        /* cor institucional principal */
+  --brand-deep: #0b2a22;
+  --on-brand: #f5f3ee;
+  --on-brand-2: #b4c4bc;
+  --accent: #b88a3e;       /* latão: superfícies e detalhes */
+  --accent-text: #87621f;  /* latão para texto sobre --bg (5.1:1) */
+  --accent-ink: #1b1406;   /* texto sobre --accent */
+  --line: rgb(23 32 28 / 0.14);
+  --line-on-brand: rgb(245 243 238 / 0.18);
+  --error: #a3341f;
+  --success: #2e6b45;
+
+  /* Tipografia */
+  --font-display: "Newsreader", "Newsreader Fallback", Georgia, serif;
+  --font-text: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-hero: clamp(2.6rem, 5.4vw, 5rem);
+  --fs-h2: clamp(2rem, 3.6vw, 3.25rem);
+  --fs-h3: clamp(1.25rem, 1.6vw, 1.5rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9rem;
+  --fs-micro: 0.78rem;
+
+  /* Ritmo */
+  --gutter: clamp(20px, 4vw, 48px);
+  --max: 1280px;
+  --section: clamp(80px, 11vw, 152px);
+  --radius: 3px;
+  --header-h: 76px;
+
+  /* Movimento */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur: 800ms;
+}

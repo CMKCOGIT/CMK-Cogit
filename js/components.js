@@ -1091,33 +1091,42 @@ function renderHeroInteractive() {
 }
 
 // ── Dados dos Modelos Prontos por Serviço ──
+// Endereços das demonstrações: enquanto os subdomínios não existem, as demos são servidas
+// a partir de /templates/ deste próprio site. Para usar subdomínios, troque liveUrl por
+// 'https://template-<nome>.cmkcogit.com.br/' (use hífen; sublinhado não é aceito em certificados).
 const MODEL_PREVIEW_DATA = {
   'site-institucional': {
     name: 'Site Institucional Essencial',
     tagLabel: 'SITE',
-    description: 'Uma estrutura profissional para apresentar sua empresa, serviços e gerar credibilidade no mercado digital.',
-    audience: ['Pequenas e médias empresas', 'Prestadores de serviço', 'Consultorias e escritórios', 'Negócios locais'],
-    features: ['Design estratégico e profissional', 'Estrutura 100% responsiva', 'Otimização de carregamento', 'SEO técnico inicial', 'CTA para contato e WhatsApp', 'Identidade visual aplicada à estrutura pronta'],
-    previewImg: 'assets/previews/preview-site.jpg',
-    liveUrl: null
+    category: 'Site institucional',
+    description: 'Para empresas que precisam transmitir solidez e explicar serviços com clareza: painel institucional, serviços em abas, método em linha do tempo, casos, dúvidas e pedido de proposta.',
+    audience: ['Pequenas e médias empresas', 'Escritórios e consultorias', 'Clínicas e prestadores de serviço', 'Negócios locais'],
+    features: ['Composição sóbria, sem visual genérico', 'Serviços em abas acessíveis por teclado', 'Formulário de proposta com validação e LGPD', 'SEO técnico e dados estruturados', 'Responsivo e rápido no celular', 'Cores, fontes e conteúdo trocados sem refazer o layout'],
+    previewImg: 'assets/videos/templates/institucional-poster.jpg',
+    video: 'assets/videos/templates/institucional.mp4',
+    liveUrl: 'templates/institucional/'
   },
   'landing-page': {
     name: 'Landing Page Essencial',
     tagLabel: 'LANDING PAGE',
-    description: 'Uma estrutura criada para apresentar serviços, fortalecer sua presença digital e gerar mais conversões.',
-    audience: ['Pequenas empresas', 'Profissionais liberais', 'Prestadores de serviço', 'Negócios digitais'],
-    features: ['Design focado em conversão', 'Estrutura 100% responsiva', 'Otimização de carregamento', 'SEO básico aplicado', 'CTA para contato e WhatsApp', 'Identidade visual aplicada à estrutura pronta'],
-    previewImg: 'assets/previews/preview-landing.jpg',
-    liveUrl: null
+    category: 'Landing page',
+    description: 'Uma narrativa de conversão: do problema do público à solução em cenas, provas, etapas, objeções respondidas e um formulário curto no final.',
+    audience: ['Campanhas e anúncios', 'Lançamento de serviços', 'Captação de leads', 'Produtos digitais'],
+    features: ['Fluxo persuasivo sem gatilhos artificiais', 'Seção de solução com tela que acompanha o texto', 'CTA fixo no celular e formulário com validação', 'SEO técnico e dados estruturados', 'Carregamento leve, sem bibliotecas', 'Cores, fontes e conteúdo trocados sem refazer o layout'],
+    previewImg: 'assets/videos/templates/landing-poster.jpg',
+    video: 'assets/videos/templates/landing.mp4',
+    liveUrl: 'templates/landing/'
   },
   'portfolio': {
     name: 'Portfólio Profissional',
     tagLabel: 'PORTFÓLIO',
-    description: 'Mostre seus melhores trabalhos e projetos com uma apresentação visual que transmite profissionalismo.',
-    audience: ['Fotógrafos e designers', 'Arquitetos e engenheiros', 'Freelancers criativos', 'Agências e estúdios'],
-    features: ['Galeria de projetos otimizada', 'Estrutura visual pronta', 'Estrutura 100% responsiva', 'SEO técnico inicial', 'CTA para contato e WhatsApp', 'Estrutura fixa com identidade visual aplicada'],
-    previewImg: 'assets/previews/preview-portfolio.jpg',
-    liveUrl: null
+    category: 'Portfólio',
+    description: 'Projetos apresentados como em uma revista: composições diferentes para cada trabalho, contexto e entrega, competências, serviços, processo e contato.',
+    audience: ['Designers e fotógrafos', 'Arquitetos e engenheiros', 'Consultores e especialistas', 'Estúdios e freelancers'],
+    features: ['Projetos em composição editorial', 'Imagens otimizadas em AVIF e WebP', 'Processo em cartões sobrepostos', 'SEO técnico e dados estruturados', 'Formulário de projeto com validação', 'Cores, fontes e conteúdo trocados sem refazer o layout'],
+    previewImg: 'assets/videos/templates/portfolio-poster.jpg',
+    video: 'assets/videos/templates/portfolio.mp4',
+    liveUrl: 'templates/portfolio/'
   }
 };
 
@@ -1153,17 +1162,29 @@ function openModelPreviewModal(modelId, title) {
   const checkSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
   const featuresList = data.features.map(f => `<li>${checkSvg} ${f}</li>`).join('');
 
+  // Caminhos relativos à raiz do site, inclusive quando o modal abre em /solucoes/.
+  const rootPrefix = location.pathname.includes('/solucoes/') ? '../' : '';
+  const asset = (p) => (p && !/^https?:/.test(p) ? rootPrefix + p : p);
+  const liveHref = asset(data.liveUrl);
+
   // Live URL button (only if URL exists)
-  const liveUrlBtn = data.liveUrl
-    ? `<a href="${data.liveUrl}" target="_blank" rel="noopener noreferrer" class="hero-modal-live-link">
+  const liveUrlBtn = liveHref
+    ? `<a href="${liveHref}" target="_blank" rel="noopener" class="hero-modal-live-link">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Ver modelo ao vivo
+        Ver demonstração completa
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+        <span class="sr-only">(abre em nova aba)</span>
       </a>`
     : `<span class="hero-modal-live-link" style="opacity:0.5; cursor:default; pointer-events:none;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
         Demonstração em breve
       </span>`;
+
+  // Vídeo de apresentação: sem som, em loop; não inicia sozinho para quem prefere menos movimento.
+  const autoplay = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const previewMedia = data.video
+    ? `<video class="hero-modal-preview-img hero-modal-preview-video" src="${asset(data.video)}" poster="${asset(data.previewImg)}" muted loop playsinline controls preload="metadata" ${autoplay ? 'autoplay' : ''} aria-label="Vídeo de apresentação do modelo ${data.name}"></video>`
+    : `<img src="${asset(data.previewImg)}" alt="Prévia do modelo ${data.name}" class="hero-modal-preview-img" loading="lazy" />`;
 
   const modalHTML = `
     <dialog class="hero-model-dialog" id="hero-model-preview-modal" aria-labelledby="hero-model-preview-title">
@@ -1198,15 +1219,10 @@ function openModelPreviewModal(modelId, title) {
 
           <div class="hero-modal-preview">
             <div class="hero-modal-preview-container">
-              <img src="${location.pathname.includes('/solucoes/') ? '../' : ''}${data.previewImg}" alt="Prévia do modelo ${data.name}" class="hero-modal-preview-img" loading="lazy" />
-              <div class="hero-modal-preview-overlay">
-                <div class="hero-modal-play-btn" aria-hidden="true" style="opacity:.35">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                </div>
-              </div>
+              ${previewMedia}
               <span class="hero-modal-preview-badge">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                Prévia visual · vídeo em produção
+                ${data.video ? 'Vídeo de apresentação · ' + data.category : 'Prévia visual'}
               </span>
             </div>
             ${liveUrlBtn}

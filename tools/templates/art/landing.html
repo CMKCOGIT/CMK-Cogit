@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Arte — Landing</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+.ev { position: absolute; left: 0; right: 0; height: 15%; border-radius: .6vw; border-left: .35vw solid #2447d6; background: #e7ecfc; color: #1a35a8; font-family: Figtree; font-weight: 700; font-size: 1.15vw; padding: .5vw .7vw; }
+.ev.w { background: #dcf2e4; color: #1f7a4a; border-color: #1f7a4a; }
+</style>
+</head>
+<body>
+<section class="scene" id="og" style="background:#fbfaf6">
+  <div style="position:absolute;left:6%;top:12%;display:flex;align-items:center;gap:1vw;font-family:Bricolage;font-weight:700;font-size:3vw;color:#12172b;letter-spacing:-.03em"><svg viewBox="0 0 28 28" style="width:3vw"><circle cx="14" cy="14" r="13" fill="#12172b"/><path d="M7 16.5c2.2-4.4 11.8-4.4 14 0" fill="none" stroke="#f4d35e" stroke-width="2.6" stroke-linecap="round"/></svg>alento</div>
+  <div style="position:absolute;left:6%;top:30%;width:46%;font-family:Bricolage;font-weight:700;font-size:5.4vw;line-height:.98;letter-spacing:-.045em;color:#12172b">Menos faltas. <span style="background:linear-gradient(transparent 58%,#f4d35e 58% 92%,transparent 92%)">Mais tempo</span> para os pacientes.</div>
+  <div style="position:absolute;left:6%;bottom:11%;font-family:Figtree;font-weight:600;font-size:1.6vw;color:#4a5068">Agenda e confirmação automática para psicólogos</div>
+  <div style="position:absolute;left:58%;top:12%;width:38%;height:76%;background:#fff;border:1px solid rgb(18 23 43 / .12);border-radius:1.6vw;box-shadow:0 3vw 6vw -3vw rgb(18 23 43 / .4);transform:rotate(-2deg);padding:2vw;display:grid;grid-template-columns:repeat(3,1fr);gap:1vw">
+    <div style="position:relative"><i class="ev" style="top:2%">Ana M.</i><i class="ev" style="top:38%">Bruno T.</i><i class="ev" style="top:74%">Carla S.</i></div>
+    <div style="position:relative"><i class="ev" style="top:20%">Diego R.</i><i class="ev w" style="top:56%">Vago → lista</i></div>
+    <div style="position:relative"><i class="ev" style="top:2%">Elisa P.</i><i class="ev" style="top:38%">Fábio L.</i><i class="ev" style="top:74%">Gabi N.</i></div>
+  </div>
+  <div style="position:absolute;left:74%;top:66%;width:22%;padding:1.4vw;background:#dcf2e4;border-radius:1.4vw 1.4vw .4vw 1.4vw;font-family:Figtree;font-size:1.2vw;color:#12172b;box-shadow:0 2vw 3vw -1.5vw rgb(18 23 43 / .45)"><b style="color:#1f7a4a">Alento · lembrete</b><br>Sua sessão é amanhã às 10h. Confirma?</div>
+</section>
+<section class="scene" id="icon" style="background:#12172b"><svg viewBox="0 0 28 28" style="position:absolute;inset:22%"><path d="M5 16.5c3-6 15-6 18 0" fill="none" stroke="#f4d35e" stroke-width="3" stroke-linecap="round"/></svg></section>
+<script>
+document.getElementById(new URLSearchParams(location.search).get('scene'))?.classList.add('on');
+document.fonts.ready.then(() => { document.body.dataset.ready = '1'; });
+</script>
+</body>
+</html>

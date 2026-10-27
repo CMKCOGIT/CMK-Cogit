@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Arte — Portfólio</title>
+<link rel="stylesheet" href="_base.css">
+<style>
+/* ===== Casa Brava: embalagens ===== */
+.bag { position: absolute; width: var(--w); height: calc(var(--w) * 1.42); }
+.bag-shadow { position: absolute; left: 4%; right: -6%; bottom: -3.5%; height: 9%; background: rgb(40 20 5 / .45); filter: blur(calc(var(--w) * .05)); border-radius: 50%; }
+.bag-body {
+  position: absolute; inset: 9% 0 0 0; border-radius: 1.5% 1.5% 3% 3% / 1% 1% 2% 2%;
+  background:
+    linear-gradient(90deg, rgb(0 0 0 / .26), rgb(255 255 255 / .08) 18%, rgb(255 255 255 / .14) 42%, rgb(0 0 0 / .03) 70%, rgb(0 0 0 / .3)),
+    linear-gradient(180deg, rgb(255 255 255 / .1), rgb(0 0 0 / .14)),
+    var(--bag);
+  box-shadow: inset 0 calc(var(--w) * -.02) calc(var(--w) * .05) rgb(0 0 0 / .2);
+}
+.bag-top {
+  position: absolute; left: 1.5%; right: 1.5%; top: 0; height: 11%;
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / .12) 0 1px, transparent 1px 6px),
+    linear-gradient(90deg, rgb(0 0 0 / .3), rgb(255 255 255 / .1) 40%, rgb(0 0 0 / .25)),
+    var(--bag);
+  clip-path: polygon(0 100%, 0 12%, 3% 0, 6% 12%, 9% 0, 12% 12%, 15% 0, 18% 12%, 21% 0, 24% 12%, 27% 0, 30% 12%, 33% 0, 36% 12%, 39% 0, 42% 12%, 45% 0, 48% 12%, 51% 0, 54% 12%, 57% 0, 60% 12%, 63% 0, 66% 12%, 69% 0, 72% 12%, 75% 0, 78% 12%, 81% 0, 84% 12%, 87% 0, 90% 12%, 93% 0, 96% 12%, 100% 0, 100% 100%);
+}
+.bag-fold { position: absolute; left: 0; right: 0; top: 9%; height: 2.4%; background: linear-gradient(180deg, rgb(0 0 0 / .35), transparent); }
+.label {
+  position: absolute; left: 13%; right: 13%; top: 22%; bottom: 14%;
+  background: var(--label); color: var(--ink);
+  padding: calc(var(--w) * .07) calc(var(--w) * .065);
+  display: flex; flex-direction: column;
+  box-shadow: 0 1px 0 rgb(0 0 0 / .08);
+}
+.label::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgb(0 0 0 / .1), transparent 30%, transparent 70%, rgb(0 0 0 / .12)); pointer-events: none; }
+.cb-word { font-family: "Bricolage"; font-weight: 800; font-variation-settings: "opsz" 96; font-size: calc(var(--w) * .145); line-height: .82; letter-spacing: -.02em; color: var(--ink); }
+.cb-sub { font-family: "Instrument Sans"; font-weight: 600; font-size: calc(var(--w) * .032); letter-spacing: .16em; text-transform: uppercase; margin-top: calc(var(--w) * .03); color: var(--ink); opacity: .8; }
+.cb-origin { margin-top: auto; font-family: "Instrument Serif"; font-style: italic; font-size: calc(var(--w) * .118); line-height: .95; color: var(--accent); }
+.cb-row { display: flex; justify-content: space-between; margin-top: calc(var(--w) * .035); padding-top: calc(var(--w) * .025); border-top: 1px solid currentColor; font-family: "Instrument Sans"; font-weight: 600; font-size: calc(var(--w) * .03); text-transform: uppercase; letter-spacing: .06em; color: var(--ink); }
+.cb-stamp { position: absolute; right: calc(var(--w) * .06); top: calc(var(--w) * .06); width: calc(var(--w) * .16); height: calc(var(--w) * .16); border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); display: grid; place-items: center; font-family: "Instrument Serif"; font-size: calc(var(--w) * .06); transform: rotate(-12deg); }
+
+.bean { position: absolute; width: var(--s, 2.2vw); height: calc(var(--s, 2.2vw) * .72); border-radius: 50%; background: radial-gradient(60% 70% at 35% 30%, #7a4a2c, #3a1f10 70%); box-shadow: 0 .3vw .5vw rgb(30 10 0 / .45); transform: rotate(var(--r, 0deg)); }
+.bean::after { content: ""; position: absolute; left: 48%; top: 10%; bottom: 10%; width: 8%; border-radius: 50%; background: #241106; transform: rotate(8deg); }
+
+/* Cenas Casa Brava */
+#casa-brava-cover { background: radial-gradient(90% 70% at 50% 35%, #e3cfb0, #c9ae8a 70%, #b39370); }
+#casa-brava-cover .floor { position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(180deg, #bb9a74, #a8865f); }
+#casa-brava-wide { background: linear-gradient(180deg, #d8c4a5 0 62%, #c2a37d 62% 100%); }
+#casa-brava-wide .wall-light { position: absolute; inset: 0 0 38% 0; background: linear-gradient(115deg, transparent 30%, rgb(255 246 225 / .45) 45%, transparent 62%); }
+#casa-brava-label { background: #b08661; }
+
+/* ===== Livraria Margem ===== */
+.poster { position: absolute; background: #f4f0e6; box-shadow: 0 2vw 4vw -1vw rgb(0 0 0 / .35), 0 .3vw .6vw rgb(0 0 0 / .15); }
+#margem-poster { background: linear-gradient(160deg, #cfc8bb, #b9b1a2); }
+#margem-poster .poster { left: 9%; top: 6%; width: 82%; height: 88%; padding: 6% 7%; color: #1f3a93; overflow: hidden; }
+.mg-top { display: flex; justify-content: space-between; font-family: "Instrument Sans"; font-weight: 600; font-size: 1.9vw; letter-spacing: .14em; text-transform: uppercase; }
+.mg-rule { position: absolute; top: 0; bottom: 0; left: 22%; width: 1px; background: #1f3a93; opacity: .7; }
+.mg-word { position: absolute; left: 3%; bottom: 25%; font-family: "Newsreader"; font-style: italic; font-weight: 300; font-size: 23.5vw; line-height: .8; letter-spacing: -.04em; white-space: nowrap; }
+.mg-note { position: absolute; left: 5%; width: 15%; font-family: "Newsreader"; font-size: 1.75vw; line-height: 1.3; }
+.mg-body { position: absolute; left: 26%; right: 7%; bottom: 6%; display: grid; grid-template-columns: 1fr 1fr; gap: 4%; font-family: "Newsreader"; font-size: 2.1vw; line-height: 1.3; }
+.mg-body strong { display: block; font-family: "Instrument Sans"; font-size: 1.6vw; letter-spacing: .14em; text-transform: uppercase; margin-bottom: 1vw; }
+.mg-mark { position: absolute; color: #c8401f; font-family: "Newsreader"; font-style: italic; font-size: 5vw; }
+
+#margem-flatlay { background: radial-gradient(100% 80% at 30% 20%, #ded6c6, #c8bda8); }
+.tote { position: absolute; left: 6%; top: 18%; width: 38%; height: 70%; background: linear-gradient(135deg, #efe8d8, #ddd3bf); transform: rotate(-6deg); box-shadow: 0 1.6vw 2.4vw -.6vw rgb(0 0 0 / .35); padding: 9% 6%; color: #1f3a93; }
+.tote::before, .tote::after { content: ""; position: absolute; top: -20%; width: 16%; height: 30%; border: 1.1vw solid #e3dac6; border-bottom: 0; border-radius: 50% 50% 0 0; }
+.tote::before { left: 18%; } .tote::after { right: 18%; }
+.tote .mg-word { font-size: 10vw; position: static; display: block; }
+.tote .t-line { margin-top: 2vw; font-family: "Instrument Sans"; font-weight: 600; font-size: 1.1vw; letter-spacing: .16em; text-transform: uppercase; }
+.bm { position: absolute; width: 7%; height: 46%; padding: 1vw .8vw; box-shadow: 0 1vw 1.6vw -.6vw rgb(0 0 0 / .4); font-family: "Newsreader"; font-style: italic; }
+.bm span { position: absolute; bottom: 8%; left: 50%; transform: translateX(-50%) rotate(-90deg); transform-origin: center; white-space: nowrap; font-size: 2.6vw; }
+.bm::before { content: ""; position: absolute; top: 6%; left: 50%; width: 1.1vw; height: 1.1vw; border-radius: 50%; background: rgb(0 0 0 / .35); transform: translateX(-50%); }
+.card { position: absolute; width: 22%; height: 26%; padding: 1.6vw; box-shadow: 0 1vw 1.8vw -.6vw rgb(0 0 0 / .4); font-family: "Instrument Sans"; }
+.book { position: absolute; right: -6%; top: -10%; width: 36%; height: 64%; background: linear-gradient(90deg, #8d2f1c, #a63a22 8%, #a03821); transform: rotate(12deg); box-shadow: 0 2vw 3vw -1vw rgb(0 0 0 / .45); }
+.book::after { content: ""; position: absolute; left: 4%; right: 0; bottom: 0; height: 3%; background: repeating-linear-gradient(90deg, #efe6d4 0 2px, #d9cfbb 2px 4px); }
+
+/* ===== Maré Cheia ===== */
+.wave-poster { position: absolute; inset: 0; background: var(--bg); color: var(--fg); overflow: hidden; }
+.wave-poster svg { position: absolute; left: -5%; width: 110%; }
+.mc-title { position: absolute; left: 7%; top: 6%; font-family: "Bricolage"; font-weight: 800; font-variation-settings: "opsz" 96; font-size: 17vw; line-height: .78; letter-spacing: -.045em; text-transform: uppercase; }
+.mc-meta { position: absolute; left: 7%; right: 7%; bottom: 5%; display: flex; justify-content: space-between; align-items: flex-end; font-family: "Instrument Sans"; font-weight: 600; font-size: 2.3vw; letter-spacing: .05em; text-transform: uppercase; line-height: 1.35; }
+.mc-big { font-family: "Bricolage"; font-weight: 700; font-size: 6vw; line-height: .9; letter-spacing: -.02em; }
+
+#mare-tickets { background: #e9e2d6; }
+.ticket { position: absolute; width: 56%; height: 24%; display: grid; grid-template-columns: 1fr 26%; box-shadow: 0 1.4vw 2.6vw -.8vw rgb(0 0 0 / .45); overflow: hidden; }
+.ticket .main { position: relative; background: var(--bg); color: var(--fg); padding: 3vw; overflow: hidden; }
+.ticket .stub { background: var(--fg); color: var(--bg); padding: 3vw 2vw; border-left: .5vw dotted var(--bg); font-family: "Instrument Sans"; font-weight: 700; font-size: 2.2vw; letter-spacing: .08em; text-transform: uppercase; writing-mode: vertical-rl; display: flex; justify-content: space-between; align-items: center; }
+.ticket .t-title { position: relative; font-family: "Bricolage"; font-weight: 800; font-size: 6.4vw; line-height: .82; letter-spacing: -.04em; text-transform: uppercase; z-index: 1; }
+.ticket .t-meta { position: relative; z-index: 1; margin-top: 2vw; font-family: "Instrument Sans"; font-weight: 600; font-size: 1.9vw; letter-spacing: .08em; text-transform: uppercase; }
+.ticket svg { position: absolute; left: 0; bottom: -10%; width: 100%; opacity: .9; }
+.band { position: absolute; height: 5.2%; width: 120%; left: -10%; background: var(--bg); color: var(--fg); font-family: "Instrument Sans"; font-weight: 700; font-size: 2vw; letter-spacing: .3em; display: flex; align-items: center; gap: 4vw; padding-left: 8vw; text-transform: uppercase; box-shadow: 0 .8vw 1.4vw -.4vw rgb(0 0 0 / .35); }
+
+#mare-grid { background: #ddd5c8; padding: 6%; }
+.grid { position: absolute; inset: 5%; display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; gap: 2.2%; }
+.post { position: relative; overflow: hidden; background: var(--bg); color: var(--fg); padding: 1.8vw; font-family: "Bricolage"; font-weight: 800; text-transform: uppercase; letter-spacing: -.03em; font-size: 4.2vw; line-height: .85; box-shadow: 0 .8vw 1.4vw -.6vw rgb(0 0 0 / .3); }
+.post small { display: block; font-family: "Instrument Sans"; font-weight: 600; font-size: 1.4vw; letter-spacing: .08em; margin-top: 1vw; }
+.post svg { position: absolute; left: -5%; width: 110%; bottom: 0; }
+
+/* ===== Clínica Raiz ===== */
+#raiz-signage { background: linear-gradient(180deg, #b4bfa9 0 78%, #8d7c6a 78% 79%, #c9b49b 79% 100%); }
+#raiz-signage .light { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 0 34%, rgb(255 250 235 / .35) 34% 52%, transparent 52% 58%, rgb(255 250 235 / .28) 58% 70%, transparent 70%); }
+.plaque { position: absolute; left: 12%; top: 18%; width: 40%; height: 42%; background: linear-gradient(140deg, #c8835f, #b06b48); border-radius: .4vw; box-shadow: 1.2vw 1.8vw 2.4vw -.6vw rgb(40 30 20 / .45), inset 0 0 0 .3vw rgb(255 255 255 / .08); color: #f5ede1; padding: 4vw 3.6vw; display: flex; flex-direction: column; justify-content: space-between; }
+.raiz-word { font-family: "Newsreader"; font-weight: 400; font-size: 9vw; line-height: .8; letter-spacing: -.035em; }
+.raiz-root { display: inline-block; width: 1.2vw; height: 1.2vw; border-radius: 50%; background: #f5ede1; margin-left: .4vw; }
+.raiz-sub { font-family: "Public Sans"; font-weight: 500; font-size: 1.35vw; letter-spacing: .2em; text-transform: uppercase; }
+.wayfind { position: absolute; left: 60%; width: 26%; padding: 1.4vw 1.8vw; background: #f2ebe0; color: #3d4a37; font-family: "Public Sans"; font-weight: 500; font-size: 1.5vw; display: flex; justify-content: space-between; box-shadow: .8vw 1.2vw 1.6vw -.6vw rgb(40 30 20 / .35); border-radius: .2vw; }
+.wayfind b { font-family: "Newsreader"; font-weight: 400; font-size: 1.9vw; }
+.plant { position: absolute; right: 4%; bottom: 13%; width: 9%; height: 30%; }
+.plant .pot { position: absolute; bottom: 0; left: 10%; right: 10%; height: 34%; background: linear-gradient(90deg, #a35e3f, #c5805c 50%, #a35e3f); border-radius: 0 0 20% 20%; }
+.plant .leaf { position: absolute; bottom: 30%; left: 50%; width: 22%; height: 60%; background: linear-gradient(90deg, #4f6b45, #6f8c5f); border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%; transform-origin: bottom center; }
+
+#raiz-cards { background: linear-gradient(150deg, #cf9a78, #b77a57); }
+.rcard { position: absolute; width: 64%; height: 38%; padding: 5vw 5vw; box-shadow: 0 2vw 3vw -1vw rgb(60 30 10 / .5); display: flex; flex-direction: column; justify-content: space-between; }
+.rcard .raiz-word { font-size: 12vw; }
+.rcard .raiz-sub { font-size: 2.2vw; }
+.rcard .slots { font-family: "Public Sans"; font-size: 2.6vw; line-height: 2.1; }
+.rcard .slots div { border-bottom: 1px solid currentColor; display: flex; justify-content: space-between; opacity: .9; }
+
+/* ===== Estúdio ===== */
+#studio { background: radial-gradient(110% 90% at 30% 20%, #e8e2d6, #cfc6b5); }
+.sheet { position: absolute; background: #f6f3ec; box-shadow: 0 1.4vw 2.4vw -.8vw rgb(0 0 0 / .35); }
+.swatch { position: absolute; width: 16%; height: 46%; transform-origin: 50% 92%; box-shadow: 0 1vw 1.4vw -.6vw rgb(0 0 0 / .4); padding: 1.4vw; font-family: "Instrument Sans"; font-weight: 600; font-size: 1.6vw; letter-spacing: .04em; }
+.swatch::after { content: ""; position: absolute; left: 45%; bottom: 5%; width: 1.4vw; height: 1.4vw; border-radius: 50%; background: #c9c1b3; box-shadow: inset 0 0 0 .3vw #8d857a; }
+.pencil { position: absolute; height: 1.6vw; width: 54%; background: linear-gradient(180deg, #2b2a27, #161513 60%, #0d0c0b); border-radius: .3vw; box-shadow: 0 .8vw 1vw -.3vw rgb(0 0 0 / .45); }
+.pencil::before { content: ""; position: absolute; right: -6%; top: 0; bottom: 0; width: 7%; background: linear-gradient(180deg, #e2c49d, #c79f72); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.ruler { position: absolute; height: 4vw; width: 70%; background: repeating-linear-gradient(90deg, #555 0 1px, transparent 1px 1.2vw), linear-gradient(180deg, #e9edf0, #cfd6db); background-size: 100% 30%, 100% 100%; background-repeat: no-repeat; box-shadow: 0 .8vw 1.4vw -.6vw rgb(0 0 0 / .4); }
+.sketch { position: absolute; inset: 10%; border: 1px dashed rgb(22 21 19 / .25); }
+
+/* ===== Arquivo ===== */
+.arch { position: absolute; inset: 0; display: grid; place-items: center; }
+.tag { width: 40%; height: 64%; background: #efe7d9; border-radius: 1vw; position: relative; box-shadow: 0 2vw 3vw -1vw rgb(0 0 0 / .4); display: grid; place-items: center; transform: rotate(-8deg); }
+.tag::before { content: ""; position: absolute; top: 7%; width: 6%; aspect-ratio: 1; border-radius: 50%; background: #9b8b76; }
+.wine { position: absolute; bottom: 0; width: 18%; height: 86%; background: linear-gradient(90deg, #12180f, #2c3826 35%, #1b2317 70%, #0c100a); border-radius: 40% 40% 4% 4% / 14% 14% 2% 2%; box-shadow: 0 2vw 2vw -1vw rgb(0 0 0 / .5); }
+.wine::before { content: ""; position: absolute; left: 32%; right: 32%; top: -22%; height: 26%; background: linear-gradient(90deg, #12180f, #2c3826 40%, #0c100a); border-radius: .5vw .5vw 0 0; }
+.wine .wl { position: absolute; left: 6%; right: 6%; top: 44%; height: 34%; background: var(--l); display: grid; place-items: center; text-align: center; font-family: "Newsreader"; font-size: 2.6vw; line-height: 1; color: #2a2318; }
+.loaf-bag { width: 40%; height: 74%; background: linear-gradient(90deg, #cdb38c, #e2cda9 45%, #c9ad85); clip-path: polygon(6% 0, 94% 0, 100% 100%, 0 100%); position: relative; box-shadow: 0 2vw 3vw -1vw rgb(0 0 0 / .4); display: grid; place-items: center; }
+</style>
+</head>
+<body>
+
+<!-- 01 · Casa Brava, capa (4:5) -->
+<section class="scene grain vignette" id="casa-brava-cover">
+  <div class="floor"></div>
+  <div class="bag" style="--w:58vw; left:21vw; top:24vh; --bag:#c4612b; --label:#f3e7d3; --ink:#2b170c; --accent:#b4471a">
+    <div class="bag-shadow"></div><div class="bag-top"></div><div class="bag-body"></div><div class="bag-fold"></div>
+    <div class="label">
+      <div class="cb-word">Casa<br>Brava</div>
+      <div class="cb-sub">Torrefação · Curitiba</div>
+      <div class="cb-origin">Mantiqueira</div>
+      <div class="cb-row"><span>1.250 m</span><span>Natural</span><span>Torra média</span></div>
+      <div class="cb-stamp">CB</div>
+    </div>
+  </div>
+  <div class="bean" style="left:12vw; top:86vh; --r:20deg; --s:5vw"></div>
+  <div class="bean" style="left:18vw; top:90vh; --r:-40deg; --s:4.6vw"></div>
+  <div class="bean" style="left:80vw; top:88vh; --r:70deg; --s:5vw"></div>
+</section>
+
+<!-- 01 · Casa Brava, panorâmica (16:9) -->
+<section class="scene grain vignette" id="casa-brava-wide">
+  <div class="wall-light"></div>
+  <div class="bag" style="--w:19vw; left:22vw; top:22vh; --bag:#3b2417; --label:#e9b48d; --ink:#2b170c; --accent:#7a2e12">
+    <div class="bag-shadow"></div><div class="bag-top"></div><div class="bag-body"></div><div class="bag-fold"></div>
+    <div class="label"><div class="cb-word">Casa<br>Brava</div><div class="cb-sub">Torrefação · Curitiba</div><div class="cb-origin">Cerrado</div><div class="cb-row"><span>1.100 m</span><span>Natural</span><span>Escura</span></div><div class="cb-stamp">CB</div></div>
+  </div>
+  <div class="bag" style="--w:21vw; left:40vw; top:14vh; --bag:#c4612b; --label:#f3e7d3; --ink:#2b170c; --accent:#b4471a">
+    <div class="bag-shadow"></div><div class="bag-top"></div><div class="bag-body"></div><div class="bag-fold"></div>
+    <div class="label"><div class="cb-word">Casa<br>Brava</div><div class="cb-sub">Torrefação · Curitiba</div><div class="cb-origin">Mantiqueira</div><div class="cb-row"><span>1.250 m</span><span>Natural</span><span>Média</span></div><div class="cb-stamp">CB</div></div>
+  </div>
+  <div class="bag" style="--w:19vw; left:60vw; top:22vh; --bag:#e8dcc5; --label:#c4612b; --ink:#f6ead6; --accent:#2b170c">
+    <div class="bag-shadow"></div><div class="bag-top"></div><div class="bag-body"></div><div class="bag-fold"></div>
+    <div class="label"><div class="cb-word">Casa<br>Brava</div><div class="cb-sub">Torrefação · Curitiba</div><div class="cb-origin">Caparaó</div><div class="cb-row"><span>1.400 m</span><span>Lavado</span><span>Clara</span></div><div class="cb-stamp">CB</div></div>
+  </div>
+  <div class="bean" style="left:12vw; top:84vh; --r:20deg; --s:2.4vw"></div>
+  <div class="bean" style="left:15vw; top:88vh; --r:-30deg"></div>
+  <div class="bean" style="left:84vw; top:80vh; --r:60deg"></div>
+  <div class="bean" style="left:87vw; top:86vh; --r:-10deg; --s:2.6vw"></div>
+  <div class="bean" style="left:81vw; top:89vh; --r:100deg"></div>
+</section>
+
+<!-- 01 · Casa Brava, rótulo de perto (4:5) -->
+<section class="scene grain vignette" id="casa-brava-label">
+  <div class="bag" style="--w:118vw; left:-9vw; top:-24vh; --bag:#c4612b; --label:#f3e7d3; --ink:#2b170c; --accent:#b4471a; transform: rotate(-7deg)">
+    <div class="bag-body"></div>
+    <div class="label"><div class="cb-word">Casa<br>Brava</div><div class="cb-sub">Torrefação · Curitiba · desde 2017</div><div class="cb-origin">Mantiqueira<br>de Minas</div><div class="cb-row"><span>1.250 m</span><span>Natural</span><span>Torra média</span><span>250 g</span></div><div class="cb-stamp">CB</div></div>
+  </div>
+</section>
+
+<!-- 02 · Margem, cartaz (4:5) -->
+<section class="scene grain vignette" id="margem-poster">
+  <div class="poster paper-tex">
+    <div class="mg-rule"></div>
+    <div class="mg-top"><span style="margin-left:22%">Livraria Margem</span><span>Rua Itupava, 1180</span></div>
+    <div class="mg-note" style="top:18%">Toda leitura deixa uma anotação.</div>
+    <div class="mg-note" style="top:34%"><em>Clube de leitura</em><br>quintas, 19h</div>
+    <div class="mg-mark" style="left:5%; top:52%">¶</div>
+    <div class="mg-word">Margem</div>
+    <div class="mg-body"><div><strong>Novembro</strong>Ensaios sobre a cidade, lidos devagar e em voz alta.</div><div><strong>Entrada livre</strong>Traga o livro que estiver lendo. Café por conta da casa.</div></div>
+  </div>
+</section>
+
+<!-- 02 · Margem, flat lay (3:2) -->
+<section class="scene grain vignette" id="margem-flatlay">
+  <div class="book"></div>
+  <div class="tote paper-tex"><span class="mg-word">Margem</span><div class="t-line">Livros lidos devagar</div></div>
+  <div class="bm" style="left:52%; top:14%; background:#1f3a93; color:#f4f0e6; transform:rotate(4deg)"><span>Margem</span></div>
+  <div class="bm" style="left:61%; top:20%; background:#f4f0e6; color:#1f3a93; transform:rotate(-3deg)"><span>¶ página</span></div>
+  <div class="bm" style="left:70%; top:16%; background:#c8401f; color:#f4f0e6; transform:rotate(7deg)"><span>Anote</span></div>
+  <div class="card" style="left:56%; top:66%; background:#f4f0e6; color:#1f3a93; transform:rotate(-8deg)"><div style="font-family:Newsreader;font-style:italic;font-size:3vw;line-height:1">Margem</div><div style="margin-top:1.4vw;font-size:1vw;letter-spacing:.14em;text-transform:uppercase;font-weight:600">Cartão do leitor</div><div style="display:grid;grid-template-columns:repeat(5,1fr);gap:.6vw;margin-top:1.2vw">
+    <i style="aspect-ratio:1;border-radius:50%;background:#1f3a93"></i><i style="aspect-ratio:1;border-radius:50%;background:#1f3a93"></i><i style="aspect-ratio:1;border-radius:50%;background:#1f3a93"></i><i style="aspect-ratio:1;border-radius:50%;border:1px solid #1f3a93"></i><i style="aspect-ratio:1;border-radius:50%;border:1px solid #1f3a93"></i></div></div>
+  <div class="card" style="left:76%; top:58%; background:#1f3a93; color:#f4f0e6; transform:rotate(9deg)"><div style="font-family:Newsreader;font-size:1.3vw;line-height:1.4">“O que fica na margem<br>é o que a gente leva.”</div></div>
+</section>
+
+<!-- 03 · Maré Cheia, cartaz (3:4) -->
+<section class="scene grain" id="mare-poster">
+  <div class="wave-poster paper-tex" style="--bg:#0f4c4a; --fg:#ff7a59">
+    <svg viewBox="0 0 1200 900" preserveAspectRatio="none" style="top:34%; height:44%" data-waves="9" data-amp="34" data-color="#ff7a59"></svg>
+    <div class="mc-title">Maré<br>Cheia</div>
+    <div class="mc-meta"><div><div class="mc-big">14—16<br>nov</div>Florianópolis · 2025</div><div style="text-align:right">Terceira edição<br>Doze bandas, três palcos<br>Praia da Armação</div></div>
+  </div>
+</section>
+
+<!-- 03 · Maré Cheia, ingressos (1:1) -->
+<section class="scene grain vignette" id="mare-tickets">
+  <div class="band" style="top:12%; --bg:#0f4c4a; --fg:#ff7a59; transform:rotate(-4deg)"><span>Maré Cheia 2025</span><span>Acesso livre</span><span>Maré Cheia 2025</span></div>
+  <div class="ticket" style="left:6%; top:24%; --bg:#283a6b; --fg:#f5c84b; transform:rotate(-9deg)"><div class="main"><svg viewBox="0 0 600 300" data-waves="5" data-amp="18" data-color="#f5c84b"></svg><div class="t-title">Maré<br>Cheia</div><div class="t-meta">2023 · 1ª edição</div></div><div class="stub"><span>Pista</span><span>001</span></div></div>
+  <div class="ticket" style="left:34%; top:40%; --bg:#4a2140; --fg:#8fe0c0; transform:rotate(6deg)"><div class="main"><svg viewBox="0 0 600 300" data-waves="5" data-amp="18" data-color="#8fe0c0"></svg><div class="t-title">Maré<br>Cheia</div><div class="t-meta">2024 · 2ª edição</div></div><div class="stub"><span>Pista</span><span>217</span></div></div>
+  <div class="ticket" style="left:14%; top:62%; --bg:#0f4c4a; --fg:#ff7a59; transform:rotate(-3deg)"><div class="main"><svg viewBox="0 0 600 300" data-waves="5" data-amp="18" data-color="#ff7a59"></svg><div class="t-title">Maré<br>Cheia</div><div class="t-meta">2025 · 3ª edição</div></div><div class="stub"><span>Pista</span><span>468</span></div></div>
+  <div class="band" style="top:90%; --bg:#ff7a59; --fg:#0f4c4a; transform:rotate(3deg)"><span>Doze bandas</span><span>Três palcos</span><span>Praia da Armação</span></div>
+</section>
+
+<!-- 03 · Maré Cheia, grade de redes (4:5) -->
+<section class="scene grain" id="mare-grid">
+  <div class="grid">
+    <div class="post" style="--bg:#0f4c4a;--fg:#ff7a59">Maré<br>Cheia<small>14—16 nov</small><svg viewBox="0 0 400 300" data-waves="4" data-amp="14" data-color="#ff7a59"></svg></div>
+    <div class="post" style="--bg:#ff7a59;--fg:#0f4c4a">Line<br>up<small>Doze bandas</small><svg viewBox="0 0 400 300" data-waves="3" data-amp="22" data-color="#0f4c4a"></svg></div>
+    <div class="post" style="--bg:#f2ead9;--fg:#0f4c4a">Palco<br>Areia<small>Sábado, 17h</small><svg viewBox="0 0 400 300" data-waves="5" data-amp="10" data-color="#ff7a59"></svg></div>
+    <div class="post" style="--bg:#283a6b;--fg:#f5c84b">2023<small>Primeira onda</small><svg viewBox="0 0 400 300" data-waves="6" data-amp="12" data-color="#f5c84b"></svg></div>
+    <div class="post" style="--bg:#0f4c4a;--fg:#f2ead9">Fila<br>verde<small>Venha de bike</small><svg viewBox="0 0 400 300" data-waves="2" data-amp="26" data-color="#8fe0c0"></svg></div>
+    <div class="post" style="--bg:#4a2140;--fg:#8fe0c0">2024<small>Segunda onda</small><svg viewBox="0 0 400 300" data-waves="6" data-amp="12" data-color="#8fe0c0"></svg></div>
+    <div class="post" style="--bg:#ff7a59;--fg:#f2ead9">Ingres<br>sos<small>Lote único</small><svg viewBox="0 0 400 300" data-waves="4" data-amp="16" data-color="#0f4c4a"></svg></div>
+    <div class="post" style="--bg:#f2ead9;--fg:#ff7a59">Mapa<small>Três palcos</small><svg viewBox="0 0 400 300" data-waves="7" data-amp="8" data-color="#0f4c4a"></svg></div>
+    <div class="post" style="--bg:#0f4c4a;--fg:#ff7a59">2025<small>Terceira onda</small><svg viewBox="0 0 400 300" data-waves="6" data-amp="12" data-color="#ff7a59"></svg></div>
+    <div class="post" style="--bg:#283a6b;--fg:#f2ead9">Até<br>ano que<br>vem<svg viewBox="0 0 400 300" data-waves="3" data-amp="18" data-color="#f5c84b"></svg></div>
+    <div class="post" style="--bg:#f2ead9;--fg:#283a6b">Obri<br>gado<small>18 mil pessoas</small><svg viewBox="0 0 400 300" data-waves="5" data-amp="12" data-color="#283a6b"></svg></div>
+    <div class="post" style="--bg:#ff7a59;--fg:#283a6b">Maré<br>Cheia<svg viewBox="0 0 400 300" data-waves="5" data-amp="14" data-color="#283a6b"></svg></div>
+  </div>
+</section>
+
+<!-- 04 · Raiz, sinalização (3:2) -->
+<section class="scene grain vignette" id="raiz-signage">
+  <div class="light"></div>
+  <div class="plaque"><div class="raiz-word">raiz<span class="raiz-root"></span></div><div class="raiz-sub">Fisioterapia &amp; Pilates</div></div>
+  <div class="wayfind" style="top:22%"><span>Recepção</span><b>←</b></div>
+  <div class="wayfind" style="top:33%"><span>Sala 1 · Pilates</span><b>→</b></div>
+  <div class="wayfind" style="top:44%"><span>Salas 2 e 3</span><b>↑</b></div>
+  <div class="plant"><div class="pot"></div><div class="leaf" style="transform:translateX(-50%) rotate(-24deg)"></div><div class="leaf" style="transform:translateX(-50%) rotate(4deg); height:72%"></div><div class="leaf" style="transform:translateX(-50%) rotate(30deg); height:56%"></div></div>
+</section>
+
+<!-- 04 · Raiz, cartões (4:5) -->
+<section class="scene grain vignette" id="raiz-cards">
+  <div class="rcard" style="left:10%; top:12%; background:#e9e2d4; color:#3d4a37; transform:rotate(-7deg)"><div class="raiz-word">raiz<span class="raiz-root" style="background:#c47a55"></span></div><div class="raiz-sub">Fisioterapia &amp; Pilates · Ahú</div></div>
+  <div class="rcard" style="left:26%; top:48%; background:#3d4a37; color:#e9e2d4; transform:rotate(5deg)"><div class="raiz-sub">Próximas sessões</div><div class="slots"><div><span>ter 14/10</span><span>07h30</span></div><div><span>qui 16/10</span><span>07h30</span></div><div><span>ter 21/10</span><span>—</span></div></div></div>
+</section>
+
+<!-- Estúdio, mesa de trabalho (4:5) -->
+<section class="scene grain vignette" id="studio">
+  <div class="sheet paper-tex" style="left:8%; top:8%; width:56%; height:46%; transform:rotate(-4deg)"><div class="sketch"></div>
+    <div style="position:absolute;left:14%;top:20%;font-family:'Instrument Serif';font-size:9vw;line-height:.9;color:#161513">Aa<span style="font-style:italic;color:#b23a1c">g</span></div>
+    <div style="position:absolute;left:14%;bottom:16%;right:14%;display:grid;grid-template-columns:repeat(4,1fr);gap:1.4vw"><i style="aspect-ratio:1;background:#161513"></i><i style="aspect-ratio:1;background:#b23a1c"></i><i style="aspect-ratio:1;background:#d9d2c4"></i><i style="aspect-ratio:1;background:#3f7d4f"></i></div>
+  </div>
+  <div class="swatch" style="left:58%; top:30%; background:#b23a1c; color:#f6ead6; transform:rotate(-34deg)">PMS 7599</div>
+  <div class="swatch" style="left:58%; top:30%; background:#1f3a93; color:#f4f0e6; transform:rotate(-20deg)">PMS 7686</div>
+  <div class="swatch" style="left:58%; top:30%; background:#0f4c4a; color:#ff7a59; transform:rotate(-6deg)">PMS 7476</div>
+  <div class="swatch" style="left:58%; top:30%; background:#c4612b; color:#f3e7d3; transform:rotate(8deg)">PMS 7585</div>
+  <div class="swatch" style="left:58%; top:30%; background:#e9e2d4; color:#3d4a37; transform:rotate(22deg)">Warm Gray 1</div>
+  <div class="sheet" style="left:12%; top:60%; width:40%; height:30%; transform:rotate(5deg); padding:3vw; font-family:'Instrument Sans'; font-size:1.6vw; color:#55514a; line-height:1.6"><b style="color:#161513;font-size:1.8vw">Prova de cor — 03</b><br>Papel pólen 90 g<br>Aprovado: ____<br>Data: ___/___</div>
+  <div class="pencil" style="left:30%; top:56%; transform:rotate(-22deg)"></div>
+  <div class="ruler" style="left:-10%; top:92%; transform:rotate(-3deg)"></div>
+</section>
+
+<!-- Arquivo (4:3) -->
+<section class="scene grain vignette" id="archive-no" style="background:linear-gradient(160deg,#8f9c90,#6e7c71)"><div class="arch"><div class="tag paper-tex"><div style="text-align:center;font-family:'Newsreader';color:#3a3128"><div style="font-size:9vw;line-height:.8;font-style:italic">nó</div><div style="font-family:'Instrument Sans';font-size:1.8vw;letter-spacing:.24em;margin-top:2vw">ATELIÊ · CERÂMICA</div></div></div></div></section>
+<section class="scene grain vignette" id="archive-serra" style="background:linear-gradient(180deg,#e7ddd0,#cbbca8)">
+  <div class="wine" style="left:24%; --l:#efe6d6"><div class="wl">Serra<br>Alta<br><small style="font-size:1.3vw">Merlot</small></div></div>
+  <div class="wine" style="left:42%; --l:#c9a46a"><div class="wl">Serra<br>Alta<br><small style="font-size:1.3vw">Rosé</small></div></div>
+  <div class="wine" style="left:60%; --l:#7b2f2f"><div class="wl" style="color:#efe6d6">Serra<br>Alta<br><small style="font-size:1.3vw">Reserva</small></div></div>
+</section>
+<section class="scene grain vignette" id="archive-fermento" style="background:#2f3b33"><div class="arch"><div class="loaf-bag"><div style="text-align:center;color:#2f3b33"><div style="font-family:'Bricolage';font-weight:800;font-size:5.4vw;letter-spacing:-.03em">fermento</div><div style="font-family:'Instrument Sans';font-size:1.6vw;letter-spacing:.2em;margin-top:1vw">PADARIA · 48 H</div></div></div></div></section>
+<section class="scene grain vignette" id="archive-quadra" style="background:#d6d3cc"><div class="arch"><div style="width:42%; margin-top:-6%;aspect-ratio:1;border:1.4vw solid #1d1d1b;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr"><i style="background:#1d1d1b"></i><i></i><i></i><i style="border-top:1.4vw solid #1d1d1b;border-left:1.4vw solid #1d1d1b"></i></div><div style="position:absolute;bottom:9%;font-family:'Public Sans';font-weight:600;font-size:2.4vw;letter-spacing:.5em;color:#1d1d1b">QUADRA</div></div></section>
+
+<!-- Compartilhamento (1200×630) -->
+<section class="scene grain" id="og" style="background:#eeeae2">
+  <div style="position:absolute;left:6%;top:14%;font-family:'Instrument Serif';font-size:9vw;line-height:.9;color:#161513;letter-spacing:-.02em">Lia Toledo</div>
+  <div style="position:absolute;left:6%;top:47%;font-family:'Instrument Serif';font-style:italic;font-size:3.6vw;color:#b23a1c">identidade visual &amp; embalagem</div>
+  <div style="position:absolute;left:6%;bottom:12%;font-family:'Instrument Sans';font-weight:600;font-size:1.4vw;letter-spacing:.16em;color:#55514a">CURITIBA · BRASIL</div>
+  <div class="bag" style="--w:20vw; left:62vw; top:16vh; --bag:#c4612b; --label:#f3e7d3; --ink:#2b170c; --accent:#b4471a; transform:rotate(-4deg)">
+    <div class="bag-shadow"></div><div class="bag-top"></div><div class="bag-body"></div><div class="bag-fold"></div>
+    <div class="label"><div class="cb-word">Casa<br>Brava</div><div class="cb-sub">Torrefação</div><div class="cb-origin">Mantiqueira</div><div class="cb-row"><span>1.250 m</span><span>Natural</span></div></div>
+  </div>
+  <div style="position:absolute;left:81vw;top:24vh;width:15vw;height:20vw;transform:rotate(5deg);box-shadow:0 2vw 3vw -1vw rgb(0 0 0 / .35)"><div class="wave-poster" style="--bg:#0f4c4a;--fg:#ff7a59"><svg viewBox="0 0 400 500" style="top:40%" data-waves="6" data-amp="12" data-color="#ff7a59"></svg><div class="mc-title" style="font-size:3.6vw">Maré<br>Cheia</div></div></div>
+</section>
+
+<!-- Ícone (quadrado) -->
+<section class="scene" id="icon" style="background:#161513"><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Instrument Serif';font-size:46vw;line-height:1;color:#eeeae2;white-space:nowrap;padding-bottom:4vw">L<span style="font-style:italic;color:#e0532f">t</span></div></section>
+
+<script>
+// Ondas do Maré Cheia: senoides empilhadas, desenhadas uma única vez.
+document.querySelectorAll('svg[data-waves]').forEach((svg) => {
+  const [, , w, h] = svg.getAttribute('viewBox').split(' ').map(Number);
+  const n = +svg.dataset.waves, amp = +svg.dataset.amp, color = svg.dataset.color;
+  const step = h / (n + 1);
+  let out = '';
+  for (let i = 0; i < n; i++) {
+    const y0 = step * (i + 1), phase = i * 0.9, freq = 2.2 + (i % 3) * 0.35;
+    let d = `M0 ${h} L0 ${y0}`;
+    for (let x = 0; x <= w; x += w / 60) d += ` L${x.toFixed(1)} ${(y0 + Math.sin((x / w) * Math.PI * freq + phase) * amp).toFixed(1)}`;
+    d += ` L${w} ${h} Z`;
+    out += `<path d="${d}" fill="${i % 2 ? 'none' : color}" stroke="${color}" stroke-width="${i % 2 ? 6 : 0}" opacity="${0.55 + (i / n) * 0.45}"/>`;
+  }
+  svg.innerHTML = out;
+});
+const id = new URLSearchParams(location.search).get('scene');
+document.getElementById(id)?.classList.add('on');
+document.fonts.ready.then(() => { document.body.dataset.ready = '1'; });
+</script>
+</body>
+</html>

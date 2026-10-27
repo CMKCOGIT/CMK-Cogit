@@ -54,3 +54,7 @@ O projeto não contém um backend de formulários. O canal implementado utiliza 
 Os arquivos originais não incluíam demonstrações reais dos modelos. O botão “Ver modelo” abre informações e orienta a solicitar os modelos disponíveis à equipe. Não foram inventados exemplos de projetos.
 
 As fontes locais mantêm suas licenças SIL Open Font License em `assets/fonts`.
+
+## Templates comerciais (Modelos prontos)
+
+Os três modelos demonstrativos (portfólio, site institucional e landing page) ficam em `templates/`, cada um como um site independente. As instruções de personalização, publicação, SEO e gravação dos vídeos estão em `templates/README.md`, e o relatório da entrega está em `docs/TEMPLATES-RELATORIO.md`. Verificação: `node tools/templates/check.mjs`.

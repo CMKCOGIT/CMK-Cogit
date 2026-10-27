@@ -79,7 +79,7 @@
 .contact-form-section { position: relative; padding: clamp(4.5rem,8vw,8rem) 0; background: #f4f5f8; }
 .contact-form-layout { display: grid; grid-template-columns: minmax(0,.86fr) minmax(28rem,1.14fr); gap: clamp(3rem,8vw,7rem); align-items: start; }
 .contact-form-intro,
-.contact-faq-heading { position: sticky; top: 7rem; }
+.contact-faq-heading { position: sticky; top: var(--sticky-top); }
 .contact-form-intro h2,
 .contact-faq-heading h2 { margin: 0; color: var(--ink); font-size: clamp(2.2rem,4vw,4rem); line-height: 1.04; letter-spacing: -.05em; }
 .contact-form-intro > p,
@@ -144,8 +144,9 @@
 .contact-faq-item p { margin: 0; color: var(--text-secondary); font-size: .94rem; line-height: 1.75; }
 @keyframes contactAnswerIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: none; } }
 
-[data-contact-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); }
-[data-contact-reveal].is-visible { opacity: 1; transform: none; }
+:where(.js) [data-contact-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out); }
+:where(.js) [data-contact-reveal].is-visible { opacity: 1; transform: none; }
+:where(.js) [data-contact-reveal].is-above:not(.is-visible) { transform: translateY(-24px); }
 
 @media (min-width: 1600px) {
   .contact-hero-grid { max-width: 1320px; }

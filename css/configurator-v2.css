@@ -12,7 +12,8 @@
 
 .page-configurator .configurator-hero {
   min-height: auto;
-  padding: clamp(3.75rem, 5vw, 5rem) 0 clamp(1.75rem, 3vw, 2.75rem);
+  /* O cabeçalho é fixo: o respiro superior começa abaixo dele. */
+  padding: calc(var(--header-h) + clamp(1.5rem, 3vw, 2.5rem)) 0 clamp(1.75rem, 3vw, 2.75rem);
   overflow: hidden;
 }
 .page-configurator .configurator-hero .container { position: relative; }
@@ -110,7 +111,7 @@
   display: grid;
   justify-items: center;
   gap: .55rem;
-  color: #9097a9;
+  color: var(--text-tertiary);
   font-size: .75rem;
 }
 .page-configurator .cfg-progress-list li > span {
@@ -434,7 +435,7 @@
 /* Resumo lateral */
 .page-configurator .cfg-summary-v2 {
   position: sticky;
-  top: 6.2rem;
+  top: var(--sticky-top);
   overflow: hidden;
   border: 1px solid rgba(167,155,255,.2);
   border-radius: 1.4rem;
@@ -523,15 +524,7 @@
 .page-configurator .cfg-form .form-input,
 .page-configurator .cfg-form .form-textarea { font-size: 1rem; }
 .page-configurator .cfg-submit-btn { width: 100%; margin-top: .9rem; }
-.page-configurator .cfg-whatsapp-link {
-  display: block;
-  margin-top: .9rem;
-  color: var(--cfg-purple);
-  font-size: .78rem;
-  font-weight: 700;
-  text-align: center;
-  text-underline-offset: 3px;
-}
+
 .page-configurator .cfg-mobile-dock { display: none; }
 .page-configurator .mobile-fixed-cta { display: none !important; }
 .page-configurator .contact-hub { display: none !important; }
@@ -599,7 +592,7 @@
   .page-configurator .cfg-mobile-dock button:disabled { opacity: .45; }
 }
 @media (max-width: 620px) {
-  .page-configurator .configurator-hero { padding: 2.4rem 0 1.6rem; }
+  .page-configurator .configurator-hero { padding: calc(var(--header-h) + 1.25rem) 0 1.6rem; }
   .page-configurator .configurator-hero h1 { letter-spacing: -.04em; }
   .page-configurator .configurator-time { display: none; }
   .page-configurator .cfg-main { padding: 1rem; border-radius: 1rem; }

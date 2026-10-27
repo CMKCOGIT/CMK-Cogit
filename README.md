@@ -40,7 +40,6 @@ Os atalhos `npm run dev` e `npm run check` executam esses mesmos comandos.
 - `js/analytics.js`: carregamento da análise somente após consentimento.
 - `js/components.js`: diagnóstico da página inicial e diálogo de modelos.
 - `js/configurator.js`: estimativa, adicionais e mensagem do configurador.
-- `js/form.js`: fluxo legado de diagnóstico mantido para compatibilidade com as demais páginas.
 - `js/contact-page.js`: contexto de origem, contador e preparação segura da mensagem da nova página de contato.
 - `js/utils.js`: escape de texto, telefone, movimento reduzido e foco.
 - `docs/RELATORIO.md`: achados, alterações, testes e limites da entrega.

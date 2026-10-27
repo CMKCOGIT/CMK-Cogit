@@ -19,9 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize animations (scroll reveals, counters)
   if (typeof initAnimations === 'function') initAnimations();
 
-  // Initialize form validation
-  if (typeof initForm === 'function') initForm();
-
   // Contact Hub (ex-WhatsApp float)
   if (typeof initContactHub === 'function') initContactHub();
 

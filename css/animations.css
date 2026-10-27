@@ -9,8 +9,8 @@
    1. SCROLL REVEAL (UNIVERSAL)
    ══════════════════════════════════════════ */
 
-.reveal,
-.reveal-up {
+:where(.js) .reveal,
+:where(.js) .reveal-up {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -18,13 +18,20 @@
   will-change: opacity, transform;
 }
 
-.reveal.is-visible,
-.reveal-up.is-visible {
+:where(.js) .reveal.is-visible,
+:where(.js) .reveal-up.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.reveal-left {
+/* Saiu pelo topo: ao voltar rolando para cima, entra de cima para baixo. */
+:where(.js) .reveal.is-above:not(.is-visible),
+:where(.js) .reveal-up.is-above:not(.is-visible),
+:where(.js) .card-stagger-item.is-above:not(.is-visible) {
+  transform: translateY(-30px);
+}
+
+:where(.js) .reveal-left {
   opacity: 0;
   transform: translateX(-40px);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -32,12 +39,12 @@
   will-change: opacity, transform;
 }
 
-.reveal-left.is-visible {
+:where(.js) .reveal-left.is-visible {
   opacity: 1;
   transform: translateX(0);
 }
 
-.reveal-right {
+:where(.js) .reveal-right {
   opacity: 0;
   transform: translateX(40px);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -45,12 +52,12 @@
   will-change: opacity, transform;
 }
 
-.reveal-right.is-visible {
+:where(.js) .reveal-right.is-visible {
   opacity: 1;
   transform: translateX(0);
 }
 
-.reveal-scale {
+:where(.js) .reveal-scale {
   opacity: 0;
   transform: scale(0.95);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -58,18 +65,18 @@
   will-change: opacity, transform;
 }
 
-.reveal-scale.is-visible {
+:where(.js) .reveal-scale.is-visible {
   opacity: 1;
   transform: scale(1);
 }
 
-.reveal-fade {
+:where(.js) .reveal-fade {
   opacity: 0;
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity;
 }
 
-.reveal-fade.is-visible {
+:where(.js) .reveal-fade.is-visible {
   opacity: 1;
 }
 
@@ -81,7 +88,6 @@
 .reveal-delay-5 { transition-delay: 0.50s; }
 .reveal-delay-6 { transition-delay: 0.60s; }
 
-
 /* ══════════════════════════════════════════
    2. CARD LATERAL & DIRECTIONAL ENTRANCE
    Card 1: Left (-40px)
@@ -89,7 +95,7 @@
    Card 3: Right (40px)
    ══════════════════════════════════════════ */
 
-.card-stagger-item {
+:where(.js) .card-stagger-item {
   opacity: 0;
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--card-stagger-delay, 0ms),
               transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--card-stagger-delay, 0ms),
@@ -98,33 +104,32 @@
   will-change: opacity, transform;
 }
 
-.card-from-left {
+:where(.js) .card-from-left {
   transform: translateX(-40px);
 }
 
-.card-from-bottom {
+:where(.js) .card-from-bottom {
   transform: translateY(30px);
 }
 
-.card-from-right {
+:where(.js) .card-from-right {
   transform: translateX(40px);
 }
 
-.card-stagger-item.is-visible {
+:where(.js) .card-stagger-item.is-visible {
   opacity: 1;
   transform: translate(0, 0);
 }
-
 
 /* ══════════════════════════════════════════
    3. HERO ENTRANCE SEQUENCE
    1. Title -> 2. Subtitle -> 3. Buttons/Widget
    ══════════════════════════════════════════ */
 
-.hero-animate-1,
-.hero-animate-2,
-.hero-animate-3,
-.hero-animate-4 {
+:where(.js) .hero-animate-1,
+:where(.js) .hero-animate-2,
+:where(.js) .hero-animate-3,
+:where(.js) .hero-animate-4 {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -132,7 +137,7 @@
   will-change: opacity, transform;
 }
 
-.hero-animate-5 {
+:where(.js) .hero-animate-5 {
   opacity: 0;
   transform: scale(0.96) translateY(12px);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
@@ -140,15 +145,14 @@
   will-change: opacity, transform;
 }
 
-.hero-animate-1.is-hero-animated,
-.hero-animate-2.is-hero-animated,
-.hero-animate-3.is-hero-animated,
-.hero-animate-4.is-hero-animated,
-.hero-animate-5.is-hero-animated {
+:where(.js) .hero-animate-1.is-hero-animated,
+:where(.js) .hero-animate-2.is-hero-animated,
+:where(.js) .hero-animate-3.is-hero-animated,
+:where(.js) .hero-animate-4.is-hero-animated,
+:where(.js) .hero-animate-5.is-hero-animated {
   opacity: 1;
   transform: translate(0, 0) scale(1);
 }
-
 
 /* ══════════════════════════════════════════
    4. CARDS MICRO-INTERACTIONS (HOVER ELEVATION)
@@ -159,12 +163,9 @@
 .service-card,
 .case-card,
 .home-process-card,
-.solution-card,
 .pricing-card,
 .package-card,
-.feature-card,
-.start-plan-card,
-.diag-svc-card {
+.feature-card {
   transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
               box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1),
               border-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -176,17 +177,14 @@
 .service-card:hover,
 .case-card:hover,
 .home-process-card:hover,
-.solution-card:hover,
 .pricing-card:hover,
 .package-card:hover,
-.feature-card:hover,
-.start-plan-card:hover {
+.feature-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 36px -8px rgba(15, 27, 51, 0.12),
               0 4px 12px rgba(74, 61, 219, 0.08);
   border-color: rgba(74, 61, 219, 0.35);
 }
-
 
 /* ══════════════════════════════════════════
    5. BUTTON INTERACTIONS & TACTILE FEEDBACK
@@ -231,15 +229,12 @@
   transition-duration: 80ms !important;
 }
 
-
 /* ══════════════════════════════════════════
    6. HIGHLIGHT ELEMENTS & COUNTERS
    Fade + subtle scale
    ══════════════════════════════════════════ */
 
-.highlight-badge,
 .section-label,
-.stat-item,
 .hero-badge {
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -252,7 +247,6 @@
   font-variant-numeric: tabular-nums;
   will-change: transform;
 }
-
 
 /* ══════════════════════════════════════════
    7. METHODOLOGY LINE ANIMATION
@@ -287,7 +281,6 @@
   transition: all 0.4s ease;
 }
 
-
 /* ══════════════════════════════════════════
    8. DARK SECTIONS & PROGRESSIVE GLOW
    ══════════════════════════════════════════ */
@@ -305,7 +298,6 @@
   box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.65),
               0 0 40px rgba(74, 61, 219, 0.12);
 }
-
 
 /* ══════════════════════════════════════════
    9. DIAGNOSTIC & FORM STEP TRANSITIONS
@@ -344,7 +336,6 @@
   opacity: 0;
   transform: translateX(-30px);
 }
-
 
 /* ══════════════════════════════════════════
    10. BRAND INTRO / REVEAL (~1.8s)
@@ -551,7 +542,6 @@ body.intro-animating {
     filter: blur(0);
   }
 }
-
 
 /* ══════════════════════════════════════════
    11. ACCESSIBILITY / PREFERS REDUCED MOTION

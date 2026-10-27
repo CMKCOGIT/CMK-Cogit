@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <script>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="icon" type="image/png" href="../assets/images/cmk.png">
@@ -326,25 +327,25 @@
 
         <div class="home-process-grid">
           <div class="home-process-card reveal reveal-delay-1">
-            <div class="home-process-num">01</div>
+            <div class="home-process-num" aria-hidden="true">01</div>
             <h3>Você escolhe o modelo</h3>
             <p>Seleciona o modelo que melhor representa o objetivo do seu projeto: Portfólio, Landing Page ou Site Institucional.</p>
           </div>
 
           <div class="home-process-card reveal reveal-delay-2">
-            <div class="home-process-num">02</div>
+            <div class="home-process-num" aria-hidden="true">02</div>
             <h3>Você envia o conteúdo e a marca</h3>
             <p>Logotipo, paleta de cores, textos, fotos e informações essenciais sobre o seu negócio. Nossa equipe orienta nesse processo.</p>
           </div>
 
           <div class="home-process-card reveal reveal-delay-3">
-            <div class="home-process-num">03</div>
+            <div class="home-process-num" aria-hidden="true">03</div>
             <h3>A Cogit adapta e apresenta</h3>
             <p>Nossa equipe aplica a identidade visual e o conteúdo da sua marca na estrutura escolhida. Você revisa e sugere ajustes pontuais.</p>
           </div>
 
           <div class="home-process-card reveal reveal-delay-4">
-            <div class="home-process-num">04</div>
+            <div class="home-process-num" aria-hidden="true">04</div>
             <h3>Publicamos seu projeto</h3>
             <p>Após a aprovação final, realizamos os testes técnicos e publicamos sua presença digital na internet.</p>
           </div>
@@ -369,7 +370,7 @@
           </p>
         </div>
 
-        <div style="overflow-x: auto; background: var(--white); border-radius: var(--radius-xl); border: 1px solid rgba(15, 27, 51, 0.08); box-shadow: var(--shadow-sm); margin-bottom: var(--space-8);" class="reveal">
+        <div role="region" aria-label="Comparativo entre modelos prontos e sob medida" tabindex="0" style="overflow-x: auto; background: var(--white); border-radius: var(--radius-xl); border: 1px solid rgba(15, 27, 51, 0.08); box-shadow: var(--shadow-sm); margin-bottom: var(--space-8);" class="reveal">
           <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: var(--text-sm);">
             <thead>
               <tr style="border-bottom: 2px solid var(--neutral-dark); background: var(--surface-subtle);">
@@ -525,7 +526,7 @@
             <img src="../assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img">
           </a>
           <p class="footer-tagline" style="font-size: var(--text-lg); margin-top: var(--space-4);">Pensamos antes de construir.</p>
-          <p class="footer-sub-tagline" style="font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: var(--space-4); text-transform: uppercase;">Pensar. Estruturar. Construir.</p>
+          <p class="footer-sub-tagline" style="font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.1em; margin-bottom: var(--space-4); text-transform: uppercase;">Pensar. Estruturar. Construir.</p>
           <p class="footer-description">Tecnologia, estratégia e inovação para transformar problemas e ideias em soluções digitais que funcionam.</p>
           <div class="footer-social" id="footer-social">
             <!-- Rendered by components.js -->
@@ -533,7 +534,7 @@
         </div>
 
         <div class="footer-column">
-          <h4>Soluções &amp; investimentos</h4>
+          <h2>Soluções &amp; investimentos</h2>
           <div class="footer-links">
             <a href="modelos-prontos.html">Modelos Prontos</a>
             <a href="modelos-sob-medida.html">Modelos Sob Medida</a>
@@ -546,7 +547,7 @@
         </div>
 
         <div class="footer-column">
-          <h4>Empresa</h4>
+          <h2>Empresa</h2>
           <div class="footer-links">
             <a href="../sobre.html">Sobre &amp; projetos</a>
             <a href="../como-trabalhamos.html">Como trabalhamos</a>
@@ -555,7 +556,7 @@
         </div>
 
         <div class="footer-column">
-          <h4>Contato</h4>
+          <h2>Contato</h2>
           <div class="footer-links">
             <a href="../contato.html">Fale conosco</a>
             <a href="../monte-sua-solucao.html">Montar projeto</a>
@@ -635,7 +636,6 @@
   <script src="../js/configurator.js"></script>
   <script src="../js/animations.js"></script>
   <script src="../js/header.js"></script>
-  <script src="../js/form.js"></script>
   <script src="../js/main.js"></script>
 
 </body>

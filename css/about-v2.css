@@ -497,6 +497,7 @@
   transition-delay: var(--about-delay,0ms);
 }
 .page-about-v2.about-motion-ready [data-about-reveal].is-visible { opacity: 1; transform: translateY(0); }
+.page-about-v2.about-motion-ready [data-about-reveal].is-above:not(.is-visible) { transform: translateY(-24px); }
 
 @media (min-width: 1700px) {
   .page-about-v2 .about-hero-inner,

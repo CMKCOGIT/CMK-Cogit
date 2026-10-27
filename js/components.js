@@ -449,6 +449,13 @@ function renderHeroInteractive() {
 
     function runPathAnimation() {
       if (stopCurrentAnimation) stopCurrentAnimation();
+      // Movimento reduzido: trilha estática, sem bolinha nem partículas.
+      if (prefersReducedMotion()) {
+        container.querySelectorAll('.hip-label').forEach(l => l.classList.add('hip-label--active'));
+        const staticBall = container.querySelector('.hip-ball');
+        if (staticBall) staticBall.style.opacity = '0';
+        return;
+      }
 
       const ball   = container.querySelector('.hip-ball');
       const labels = container.querySelectorAll('.hip-label');
@@ -1860,7 +1867,7 @@ function renderProcess() {
         ${i < processData.length - 1 ? '<div class="process-step-line"><div class="process-step-line-fill"></div></div>' : ''}
       </div>
       <div class="process-step-content">
-        <span class="process-step-number">${step.number}</span>
+        <span class="process-step-number" aria-hidden="true">${step.number}</span>
         <h3>${step.title}</h3>
         <p class="process-step-keywords">${step.keywords}</p>
         <p class="process-step-desc">${step.description}</p>

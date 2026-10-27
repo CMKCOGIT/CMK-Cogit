@@ -1,0 +1,74 @@
+/*
+  Tokens do template Portfólio.
+  Personalização por cliente: altere apenas este arquivo (cores, fontes, ritmo).
+  A composição das seções em styles.css depende destes nomes, não dos valores.
+*/
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/instrument-sans-latin-wght-normal.woff2") format("woff2-variations");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Fonte de reserva com métricas ajustadas: evita deslocamento de layout enquanto a fonte carrega. */
+@font-face {
+  font-family: "Instrument Serif Fallback";
+  src: local("Times New Roman"), local("Liberation Serif");
+  size-adjust: 83.6%;
+  ascent-override: 100%;
+  descent-override: 30%;
+}
+
+:root {
+  /* Cor */
+  --paper: #eeeae2;
+  --paper-2: #e4ded3;
+  --paper-3: #d9d2c4;
+  --ink: #161513;
+  --ink-2: #55514a;
+  --ink-soft: #2a2825;
+  --on-ink: #eeeae2;
+  --on-ink-2: #aaa49a;
+  --accent: #b23a1c;        /* texto e detalhes: contraste 4.8:1 sobre --paper */
+  --accent-bright: #e0532f; /* apenas sobre fundos escuros */
+  --line: rgb(22 21 19 / 0.16);
+  --line-on-ink: rgb(238 234 226 / 0.16);
+
+  /* Tipografia */
+  --font-display: "Instrument Serif", "Instrument Serif Fallback", Georgia, serif;
+  --font-text: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-display: clamp(3rem, 8.4vw, 8.75rem);
+  --fs-h2: clamp(2.25rem, 4.6vw, 4.5rem);
+  --fs-h3: clamp(1.75rem, 3vw, 2.75rem);
+  --fs-lede: clamp(1.25rem, 1.8vw, 1.625rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.875rem;
+  --fs-micro: 0.75rem;
+
+  /* Ritmo */
+  --gutter: clamp(20px, 4vw, 56px);
+  --max: 1440px;
+  --section: clamp(96px, 14vw, 200px);
+  --radius: 2px;
+  --header-h: 72px;
+
+  /* Movimento */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur: 900ms;
+}

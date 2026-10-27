@@ -350,3 +350,8 @@ html:not(.js) .slider-controls { display: none; }
   .slide blockquote p { max-width: 30ch; }
 }
 .logo { min-height: 44px; }
+
+/* Assinatura do desenvolvedor */
+.credit a { display: inline-flex; align-items: center; min-height: 44px; color: var(--on-brand-2); text-decoration: none; }
+.credit strong { margin-left: 0.3em; color: var(--on-brand); font-weight: 600; }
+.credit a:hover strong { text-decoration: underline; text-underline-offset: 0.2em; }

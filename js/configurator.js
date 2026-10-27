@@ -320,7 +320,7 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('[data-service-id]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.serviceId)));
     containerEl.querySelectorAll('[data-remove-service]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.removeService)));
     containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click', () => selectSolutionModel(button.dataset.modelId, button.dataset.modelService)));
-    containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => { const entry = getEntry(button.dataset.previewService); if (!entry) return; if (entry.modelId === 'sob-medida' && window.openCustomModelModal) window.openCustomModelModal(entry.serviceId); else if (window.openModelPreviewModal) window.openModelPreviewModal(entry.serviceId); }));
+    containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => { const entry = getEntry(button.dataset.previewService); if (!entry) return; if (entry.modelId === 'sob-medida' && window.openCustomModelModal) window.openCustomModelModal(entry.serviceId, summary => { customStructures[entry.serviceId] = summary; }); else if (window.openModelPreviewModal) window.openModelPreviewModal(entry.serviceId); }));
     containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click', () => selectLevel(button.dataset.levelService, button.dataset.levelId)));
     containerEl.querySelectorAll('.cfg-addon-select').forEach(button => button.addEventListener('click', () => toggleAddon(button.dataset.addonId)));
     containerEl.querySelectorAll('[data-addon-action]').forEach(button => button.addEventListener('click', () => updateAddonQuantity(button.dataset.addonId, button.dataset.addonAction)));
@@ -421,8 +421,12 @@ const ConfiguratorApp = (() => {
     const behavior = typeof CogitUI !== 'undefined' && CogitUI.motion ? CogitUI.motion() : 'smooth';
     window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior });
   }
+  // Estruturas montadas no estúdio sob medida, só em memória (vão nas notas do envio).
+  const customStructures = {};
   function buildHandoff() {
     const notes = document.getElementById('cfg-notes');
+    const structures = state.selectedServices.filter(entry => entry.modelId === 'sob-medida' && customStructures[entry.serviceId])
+      .map(entry => { const c = customStructures[entry.serviceId]; return `Estrutura sob medida (${c.suggestion}): ${c.sections.join(' > ')}${c.components.length ? `\nComponentes: ${c.components.join(', ')}` : ''}`; });
     return {
       origem: 'configurador',
       objetivos: state.selectedObjectives.slice(),
@@ -431,7 +435,7 @@ const ConfiguratorApp = (() => {
         return { id: entry.serviceId, modelo: entry.modelId || null, nome: service ? service.name : entry.serviceId };
       }),
       complementos: state.selectedAddons.map(entry => ({ id: entry.addonId, qtd: entry.quantity || 1, nome: entry.name })),
-      notas: notes ? notes.value.trim() : (state.formData['cfg-notes'] || ''),
+      notas: structures.concat(notes ? notes.value.trim() : (state.formData['cfg-notes'] || '')).filter(Boolean).join('\n'),
       estimativa: estimate(false)
     };
   }

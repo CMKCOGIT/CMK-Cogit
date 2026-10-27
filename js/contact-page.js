@@ -24,10 +24,10 @@
       return;
     }
     const observer = new IntersectionObserver(entries => {
+      // Nos dois sentidos: ao sair pelo topo, volta de cima.
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        observer.unobserve(entry.target);
+        entry.target.classList.toggle('is-visible', entry.isIntersecting);
+        entry.target.classList.toggle('is-above', !entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
     elements.forEach(element => observer.observe(element));

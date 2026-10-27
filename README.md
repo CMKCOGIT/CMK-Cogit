@@ -40,10 +40,33 @@ Os atalhos `npm run dev` e `npm run check` executam esses mesmos comandos.
 - `js/analytics.js`: carregamento da análise somente após consentimento.
 - `js/components.js`: diagnóstico da página inicial e diálogo de modelos.
 - `js/configurator.js`: estimativa, adicionais e mensagem do configurador.
-- `js/form.js`: fluxo legado de diagnóstico mantido para compatibilidade com as demais páginas.
 - `js/contact-page.js`: contexto de origem, contador e preparação segura da mensagem da nova página de contato.
 - `js/utils.js`: escape de texto, telefone, movimento reduzido e foco.
 - `docs/RELATORIO.md`: achados, alterações, testes e limites da entrega.
+- `docs/AUDITORIA-2026-10.md`: auditoria de valores, visual, responsividade, acessibilidade e desempenho (outubro de 2026), com as divergências que ainda dependem de confirmação comercial.
+
+### Tokens de layout e tipografia
+
+Ficam em `css/variables.css` e substituem números soltos espalhados pelas folhas:
+
+- `--header-h` / `--header-h-compact`: altura do cabeçalho (transparente sobre o hero e compacto ao rolar). Mudam sozinhas no celular e em telas baixas na horizontal. Todo hero deve somar `var(--header-h)` ao próprio respiro, nunca um valor fixo, para o título não ficar por baixo do cabeçalho.
+- `--sticky-top`: distância do topo para resumos e painéis fixos (`position: sticky`).
+- `--fs-hero`, `--fs-section`, `--fs-card`: tamanhos de h1, h2 de seção e título de card, já fluidos (`clamp`). Não crie tamanhos por página no `responsive.css`; ajuste o token.
+- `--text-tertiary`: cinza de apoio que ainda passa no contraste AA sobre branco e `--neutral`.
+
+### Animações de rolagem
+
+`js/animations.js` revela os elementos `.reveal`, `.reveal-up` e `.card-stagger-item` ao entrar na tela e os esconde de novo ao sair (`is-visible` / `is-above`), nos dois sentidos. O estado escondido só vale com JavaScript ativo (`html.js`, definido no início de cada página) e é desligado com `prefers-reduced-motion`.
+
+### CSS sem uso
+
+`python3 tools/purge-css.py css/arquivo.css` relata as regras cujas classes e ids não aparecem em nenhum HTML ou JS (com `--write`, remove). Classes montadas no JS por prefixo (`'state-' + n`, `` `wf--${x}` ``) são preservadas. Depois de rodar, confira a página afetada no navegador: a ferramenta não enxerga classes vindas de fora do repositório.
+
+### Fontes e ícones
+
+- `assets/fonts/cogit-font-*.woff2` (Inter e Manrope) são subconjuntos em WOFF2 com latim básico, Latin-1 e Latin Extended-A, mais os sinais tipográficos usados nas páginas. As fontes completas estão no histórico do Git (`cogit-font-*.ttf`, até o commit `5e8f7cb`). Para incluir outro alfabeto, gere de novo a partir delas com `pyftsubset` (fonttools).
+- `css/bootstrap-icons.css` e `css/fonts/bootstrap-icons.woff2/.woff` contêm só os ícones usados no site. Para usar um ícone novo, copie a regra `.bi-nome::before` da versão completa (Bootstrap Icons 1.11.3, também no histórico até `5e8f7cb`) e gere a fonte de novo com os códigos das regras presentes.
+- `assets/images/cmk-symbol.png` é o símbolo em 192 px de altura usado como ícone da aba e no menu móvel. O original em alta resolução continua em `assets/images/cmk.png`.
 
 ## Configurações existentes
 
@@ -51,7 +74,7 @@ O identificador `siteConfig.gaId` em `js/data.js` permanece vazio, como no origi
 
 O projeto não contém um backend de formulários. O canal implementado utiliza o WhatsApp existente da COGIT. O visitante precisa revisar e enviar a mensagem no WhatsApp para a equipe recebê-la. O site não afirma que uma mensagem apenas preparada já foi recebida.
 
-Os arquivos originais não incluíam demonstrações reais dos modelos. O botão “Ver modelo” abre informações e orienta a solicitar os modelos disponíveis à equipe. Não foram inventados exemplos de projetos.
+O botão “Ver modelo” abre o vídeo e a demonstração navegável dos três modelos prontos (`templates/`). Não foram inventados exemplos de projetos de clientes.
 
 As fontes locais mantêm suas licenças SIL Open Font License em `assets/fonts`.
 

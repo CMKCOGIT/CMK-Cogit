@@ -20,7 +20,7 @@
   /* ── Text Colors ── */
   --text-primary:   #0F1B33;
   --text-secondary: #4A5568;
-  --text-tertiary:  #718096;
+  --text-tertiary:  #5F6B7F; /* 5.4:1 sobre branco, 4.9:1 sobre --neutral */
   --text-on-dark:   #FFFFFF;
   --text-on-dark-secondary: rgba(255, 255, 255, 0.7);
   --text-on-dark-tertiary:  rgba(255, 255, 255, 0.5);
@@ -47,6 +47,11 @@
   --text-5xl:       clamp(2.25rem, 6vw, 3rem); /* 36px-48px */
   --text-6xl:       clamp(2.75rem, 7vw, 3.75rem); /* 44px-60px */
   --text-7xl:       clamp(3rem, 8vw, 4.5rem); /* 48px-72px */
+
+  /* Escala de títulos (hierarquia comum a todas as páginas) */
+  --fs-hero:    clamp(2.125rem, 1.4rem + 3.2vw, 4.25rem);   /* h1 de hero: 34px → 68px */
+  --fs-section: clamp(1.75rem, 1.2rem + 1.8vw, 2.75rem);    /* h2 de seção: 28px → 44px */
+  --fs-card:    clamp(1.125rem, 1.02rem + 0.4vw, 1.375rem); /* h3 de card: 18px → 22px */
 
   --leading-tight:  1.15;
   --leading-snug:   1.3;
@@ -111,4 +116,17 @@
   --z-modal:     400;
   --z-whatsapp:  500;
   --z-header:    600;
+
+  /* ── Cabeçalho fixo: as seções do topo descontam esta altura ── */
+  --header-h:         100px;
+  --header-h-compact: 80px;
+  /* Topo de painéis sticky: abaixo do cabeçalho compacto, com respiro */
+  --sticky-top:       calc(var(--header-h-compact) + 1.5rem);
+}
+
+@media (max-width: 768px), (max-height: 520px) and (orientation: landscape) {
+  :root {
+    --header-h:         72px;
+    --header-h-compact: 64px;
+  }
 }

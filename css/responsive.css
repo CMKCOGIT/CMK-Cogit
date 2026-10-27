@@ -60,15 +60,8 @@
   }
 
   /* Configurator */
-  .cfg-wrapper {
-    grid-template-columns: 1fr 260px;
-    gap: var(--space-6);
+  
   }
-
-  .cfg-services-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 
 /* ── Tablet (≤992px) ── */
 
@@ -76,7 +69,7 @@
   /* Hero */
   .hero {
     min-height: auto;
-    padding-top: 120px;
+    padding-top: calc(var(--header-h) + 1.25rem);
     padding-bottom: var(--space-16);
   }
 
@@ -107,32 +100,15 @@
     justify-content: center !important;
   }
 
-  .hero-visual {
-    display: block;
-  }
   
-  .hero-card-saas, .hero-card-mvp {
-    display: none;
-  }
-
-  .hero-card-site     { top: 70%; left: -5%; opacity: 0.08; transform: scale(0.85); }
-  .hero-card-sistema  { top: 10%; right: -5%; opacity: 0.10; transform: scale(0.85); }
-  .hero-card-automacao{ top: 80%; right: 0%; opacity: 0.06; transform: scale(0.85); }
-
-  .hero-connections-svg {
-    opacity: 0.5;
-  }
-
-  .mobile-break {
-    display: block !important;
-  }
-
-
-
-  .hero-support-line {
-    font-size: clamp(1rem, 4vw, 1.25rem);
-  }
-
+  
+  
+  
+  
+  
+  
+  
+  
   .hero-subtitle {
     max-width: 100%;
   }
@@ -145,10 +121,7 @@
   }
 
   /* Grids */
-  .solutions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
+  
   .pricing-grid {
     grid-template-columns: 1fr;
     max-width: 480px;
@@ -170,50 +143,17 @@
   }
 
   /* Configurator */
-  .cfg-wrapper {
-    grid-template-columns: 1fr;
-  }
-
-  .cfg-summary {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    border-radius: 16px 16px 0 0;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
-    z-index: 50;
-    padding: var(--space-4) var(--space-5);
-  }
-
-  .cfg-summary-items {
-    display: none;
-  }
-
-  .cfg-summary-title {
-    display: none;
-  }
-
-  .cfg-summary-total {
-    border: none;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
+  
+  
+  
+  
+  
   .cfg-summary-empty {
     display: none;
   }
 
-  .cfg-services-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .cfg-addons-grid {
-    grid-template-columns: 1fr;
-  }
-
+  
+  
   .cfg-form-grid {
     grid-template-columns: 1fr;
   }
@@ -246,29 +186,11 @@
   }
 
   /* Custom plan banner */
-  .custom-plan-banner {
-    flex-direction: column;
-    text-align: center;
-    padding: var(--space-8);
-  }
-
-  .custom-plan-banner p {
-    max-width: 100%;
-  }
-
+  
+  
   /* Solutions transition grid */
-  .solutions-transition .grid-2,
-  .process-transition .grid-2 {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .solutions-transition .grid-2 div:last-child,
-  .process-transition .grid-2 div:last-child {
-    text-align: center;
-    align-items: center !important;
-  }
-
+  
+  
   /* Footer */
   .footer-top {
     grid-template-columns: 1fr 1fr;
@@ -291,7 +213,6 @@
   }
 }
 
-
 /* ── Mobile (≤768px) ── */
 
 /* ── Mobile (≤768px) ── */
@@ -303,20 +224,7 @@
     gap: 8px;
   }
 
-  /* Header Mobile */
-  .header {
-    height: 72px;
-  }
-
-  .header.is-scrolled {
-    height: 64px;
-  }
-
-  body:not(:has(.hero)):not(:has(.solution-hero)) .header,
-  .header.header-solid {
-    height: 64px;
-  }
-
+  /* Altura do cabeçalho no celular: tokens --header-h em variables.css */
   .logo-img {
     height: 42px;
   }
@@ -350,17 +258,14 @@
     display: inline-block;
   }
 
-  .section-header h2,
-  .section-title {
-    font-size: clamp(1.45rem, 5.2vw, 1.85rem);
-    line-height: 1.25;
+  .section-header h2 {
+    line-height: 1.2;
     text-wrap: balance;
     letter-spacing: -0.01em;
     margin-bottom: 8px;
   }
 
-  .section-header p,
-  .section-lead {
+  .section-header p {
     font-size: 13.5px;
     line-height: 1.55;
     color: var(--text-secondary);
@@ -415,11 +320,8 @@
   }
 
   .hero-ctas .btn,
-  .hero-ctas #cta-hero-contact,
-  .hero-ctas #cta-hero-start,
-  .orientation-block .btn,
-  .solutions-transition .btn,
-  .process-transition .btn {
+.hero-ctas #cta-hero-contact,
+.hero-ctas #cta-hero-start {
     width: 100% !important;
     max-width: 100% !important;
     min-height: 48px;
@@ -437,14 +339,7 @@
     text-align: center;
   }
 
-  .hero-capacities {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 6px 12px;
-    font-size: 11px;
-    margin-top: 14px;
-  }
-
+  
   /* ══════════════════════════════════════════
      COGIT DIAGNOSTIC — HERO INTERACTIVE COMPONENT
      ══════════════════════════════════════════ */
@@ -467,16 +362,8 @@
     max-width: 100%;
   }
 
-  .hero-invite-icon {
-    width: 48px;
-    height: 48px;
-  }
-
-  .hero-invite-icon svg {
-    width: 22px;
-    height: 22px;
-  }
-
+  
+  
   .hero-invite-eyebrow {
     font-size: 10.5px;
     letter-spacing: 0.14em;
@@ -512,159 +399,40 @@
   }
 
   /* Topbar & Progress */
-  .hero-discovery-topbar {
-    margin-bottom: 10px;
-  }
-
-  .hero-discovery-tag {
-    font-size: 10px;
-    padding: 3px 8px;
-    gap: 4px;
-  }
-
-  .hero-progress-label {
-    display: none;
-  }
-
-  .hero-progress-dot {
-    width: 18px;
-    height: 18px;
-  }
-
-  .hero-progress-line {
-    min-width: 8px;
-  }
-
-  .hero-diag-dot {
-    width: 18px;
-    height: 18px;
-    font-size: 9.5px;
-  }
-
-  .hero-diag-dot-label {
-    font-size: 9px;
-  }
-
-  .hero-diag-dot-line {
-    width: 12px;
-  }
-
-  .hero-interactive-title {
-    font-size: 1.15rem;
-    line-height: 1.25;
-    margin-bottom: 4px;
-  }
-
-  .hero-interactive-desc {
-    font-size: 12px;
-    line-height: 1.4;
-    color: #94A3B8;
-    margin-bottom: 10px;
-  }
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   /* Etapa 1: Grid de Serviços */
-  .hero-svc-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-
-  .hero-svc-card {
-    padding: 10px 8px;
-    min-height: 66px;
-    gap: 4px;
-    border-radius: 10px;
-  }
-
-  .hero-svc-name {
-    font-size: 11.5px;
-    line-height: 1.2;
-  }
-
+  
+  
+  
   /* Etapa 2: Desafios */
-  .hero-challenges-list {
-    gap: 6px;
-    margin-top: 8px;
-  }
-
-  .hero-challenge-card {
-    padding: 9px 12px;
-    gap: 8px;
-    border-radius: 10px;
-  }
-
-  .hero-challenge-icon {
-    width: 28px;
-    height: 28px;
-  }
-
-  .hero-challenge-icon svg {
-    width: 14px;
-    height: 14px;
-  }
-
-  .hero-challenge-title {
-    font-size: 12.5px;
-  }
-
-  .hero-challenge-phrase {
-    font-size: 11px;
-  }
-
+  
+  
+  
+  
+  
+  
   /* Etapa 3: Objetivos */
-  .hero-objective-grid {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-
-  .hero-objective-card {
-    min-height: 60px;
-    padding: 10px 12px;
-    gap: 6px;
-    border-radius: 10px;
-  }
-
-  .hero-objective-text {
-    font-size: 13px;
-  }
-
-  .hero-objective-price {
-    font-size: 10px;
-    padding: 2px 6px;
-  }
-
+  
+  
+  
+  
   /* Analyzing Screen */
-  .hero-analyzing-view {
-    min-height: 200px;
-  }
-
+  
   /* Result Screen */
-  .hero-result-card {
-    padding: 12px 12px;
-    border-radius: 12px;
-    gap: 6px;
-  }
-
-  .hero-result-value {
-    font-size: 13px;
-  }
-
-  .hero-result-desc {
-    font-size: 11.5px;
-  }
-
-  .hero-result-commitment {
-    font-size: 11px;
-    padding: 6px 10px;
-  }
-
-  .hero-discovery-footer {
-    flex-direction: column;
-    gap: 8px;
-    align-items: stretch;
-    text-align: center;
-    padding-top: 10px;
-  }
-
+  
+  
+  
+  
+  
   .btn-hero-back {
     width: 100%;
     justify-content: center;
@@ -681,19 +449,8 @@
   /* ══════════════════════════════════════════
      SEÇÕES DO SITE (GRIDS & CARDS)
      ══════════════════════════════════════════ */
-  .grid-2,
-  .grid-3,
-  .grid-4,
-  .solutions-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .solutions-grid {
-    max-width: 440px;
-    margin-inline: auto;
-  }
-
+  
+  
   .service-card {
     padding: 20px 16px;
     border-radius: 14px;
@@ -758,16 +515,8 @@
     font-size: 1.15rem;
   }
 
-  .pricing-card-price .amount {
-    font-size: 1.75rem;
-  }
-
-  .pricing-features li {
-    font-size: 13px;
-    line-height: 1.4;
-    padding: 5px 0;
-  }
-
+  
+  
   /* Process Steps */
   .process-wrapper {
     grid-template-columns: 1fr;
@@ -813,47 +562,15 @@
     margin-bottom: 10px;
   }
 
-  .cfg-services-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-  }
-
-  .cfg-service-card {
-    padding: 10px 8px;
-    border-radius: 10px;
-    min-height: 66px;
-  }
-
-  .cfg-service-card-name {
-    font-size: 11.5px;
-  }
-
-  .cfg-level-options {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .cfg-modelo-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-4);
-  }
-
-  .cfg-modelo-card {
-    padding: var(--space-5);
-  }
-
-  .cfg-modelo-card-title {
-    font-size: var(--text-base);
-  }
-
-  .cfg-estimate-value {
-    font-size: 1.4rem;
-  }
-
-  .cfg-result {
-    padding: var(--space-4);
-  }
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
   /* Impact Stats */
   .impact-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -862,35 +579,12 @@
     margin-inline: auto;
   }
 
-  .impact-stat {
-    padding: 14px 10px;
-    border-radius: 12px;
-    text-align: center;
-  }
-
-  .impact-stat-number {
-    font-size: clamp(1.5rem, 5.2vw, 2rem);
-  }
-
-  .impact-stat-label {
-    font-size: 11.5px;
-    line-height: 1.3;
-  }
-
+  
+  
+  
   /* Orientation / Custom Plan Block */
-  .orientation-block,
-  .custom-plan-banner {
-    padding: 24px 16px;
-    border-radius: 14px;
-    text-align: center;
-  }
-
-  .orientation-block h3,
-  .custom-plan-banner h3 {
-    font-size: 1.15rem;
-    margin-bottom: 6px;
-  }
-
+  
+  
   /* CTA Final — full-width on mobile: no margin-inline, no border-radius.
      The dark background must reach screen edges; content padding lives inside .container. */
   .cta-final {
@@ -931,27 +625,18 @@
 
   /* Solution Inner Pages */
   .solution-hero {
-    padding-top: 88px;
+    padding-top: calc(var(--header-h) + 1rem);
     padding-bottom: 32px;
   }
 
   .solution-hero h1 {
-    font-size: clamp(1.65rem, 6vw, 2.1rem);
-    line-height: 1.22;
+    line-height: 1.12;
     text-wrap: balance;
   }
 
-  .solution-hero-lead {
-    font-size: 14px;
-    line-height: 1.55;
-  }
-
+  
   /* Form */
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
+  
   .form-group {
     margin-bottom: 12px;
   }
@@ -997,7 +682,6 @@
   }
 }
 
-
 /* ── Small Mobile (≤480px) ── */
 
 @media (max-width: 480px) {
@@ -1025,24 +709,13 @@
     font-size: 13px;
   }
 
-  .cfg-services-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
-  }
-
-  .cfg-service-card {
-    padding: 8px 6px;
-  }
-
-  .cfg-service-card-name {
-    font-size: 11px;
-  }
-
+  
+  
+  
   .challenge-card {
     padding: 16px 14px;
   }
 }
-
 
 /* ── Mobile Fixed CTA & Cookies (≤992px) ── */
 
@@ -1055,9 +728,8 @@
     bottom: calc(76px + env(safe-area-inset-bottom, 0px));
   }
 
-
   .page-legal {
-    padding-top: 100px;
+    padding-top: calc(var(--header-h) + 1.75rem);
   }
 
   .testimonials-grid {
@@ -1068,22 +740,9 @@
 /* ── Error & Thank-you pages (≤768px) ── */
 
 @media (max-width: 768px) {
-  .page-error-ctas,
-  .page-thankyou-ctas {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .page-error-ctas .btn,
-  .page-thankyou-ctas .btn {
-    width: 100%;
-    max-width: 300px;
-  }
-
-  .page-error-eyebrow {
-    font-size: clamp(2.5rem, 9vw, 4rem);
-  }
-
+  
+  
+  
   .page-legal-links {
     flex-direction: column;
     gap: var(--space-3);
@@ -1101,11 +760,7 @@
 /* ── Tablet Transition (769px to 1024px) ── */
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .solutions-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-
+  
   .challenge-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
@@ -1168,27 +823,18 @@
 
   /* Typography */
   .hero h1,
-  .hero-content h1,
-  .solution-hero h1 {
+  .hero-content h1 {
     font-size: clamp(1.4rem, 6.8vw, 1.7rem);
     line-height: 1.22;
   }
 
-  .hero-subtitle,
-  .solution-hero-lead {
+  .hero-subtitle {
     font-size: 13px;
     line-height: 1.48;
     max-width: 100%;
   }
 
-  .section-header h2,
-  .section-title {
-    font-size: 1.35rem;
-    line-height: 1.25;
-  }
-
-  .section-header p,
-  .section-lead {
+  .section-header p {
     font-size: 12.5px;
     line-height: 1.5;
   }
@@ -1218,89 +864,25 @@
     height: 46px;
   }
 
-  .hero-discovery-topbar {
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .hero-diag-dots {
-    gap: 4px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .hero-diag-dot-label {
-    display: none;
-  }
-
-  .hero-diag-dot-line {
-    width: 8px;
-    min-width: 8px;
-  }
-
+  
+  
+  
+  
   /* Service Grid: 1 column on ultra-small mobile prevents text squishing */
-  .hero-svc-grid {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .hero-svc-card {
-    min-height: 54px;
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: left;
-    gap: 10px;
-  }
-
-  .hero-svc-name {
-    font-size: 13px;
-    margin: 0;
-  }
-
-  .hero-svc-check {
-    margin-left: auto;
-  }
-
+  
+  
+  
+  
   /* Challenges & Objectives */
-  .hero-challenge-card {
-    padding: 10px 10px;
-    gap: 8px;
-  }
-
-  .hero-challenge-title {
-    font-size: 12px;
-  }
-
-  .hero-challenge-phrase {
-    font-size: 10.5px;
-  }
-
-  .hero-objective-card {
-    padding: 10px 10px;
-    min-height: 52px;
-  }
-
-  .hero-objective-text {
-    font-size: 12.5px;
-  }
-
+  
+  
+  
+  
+  
   /* Results */
-  .hero-result-card {
-    padding: 12px 10px;
-  }
-
-  .hero-result-value {
-    font-size: 12.5px;
-  }
-
-  .hero-result-desc {
-    font-size: 11px;
-  }
-
+  
+  
+  
   /* Cards & Spacings */
   .service-card {
     padding: 16px 12px;
@@ -1336,23 +918,14 @@
     font-size: 1.05rem;
   }
 
-  .pricing-card-price .amount {
-    font-size: 1.55rem;
-  }
-
+  
   .impact-grid {
     grid-template-columns: 1fr;
     gap: 8px;
   }
 
-  .impact-stat {
-    padding: 12px 10px;
-  }
-
-  .impact-stat-number {
-    font-size: 1.5rem;
-  }
-
+  
+  
   /* Buttons */
   .btn,
   .btn-lg,
@@ -1420,7 +993,4 @@
     max-width: var(--container-wide);
   }
 }
-
-
-
 

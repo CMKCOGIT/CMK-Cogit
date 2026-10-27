@@ -30,6 +30,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Nenhum título cai no tamanho padrão do navegador; componentes ajustam quando precisam. */
+h1 { font-size: var(--fs-hero); }
+h2 { font-size: var(--fs-section); }
+h3 { font-size: var(--fs-card); }
+
 h1, h2, h3, h4, h5, h6 {
   overflow-wrap: break-word;
   font-family: var(--font-heading);

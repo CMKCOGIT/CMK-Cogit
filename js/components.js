@@ -449,6 +449,13 @@ function renderHeroInteractive() {
 
     function runPathAnimation() {
       if (stopCurrentAnimation) stopCurrentAnimation();
+      // Movimento reduzido: trilha estática, sem bolinha nem partículas.
+      if (prefersReducedMotion()) {
+        container.querySelectorAll('.hip-label').forEach(l => l.classList.add('hip-label--active'));
+        const staticBall = container.querySelector('.hip-ball');
+        if (staticBall) staticBall.style.opacity = '0';
+        return;
+      }
 
       const ball   = container.querySelector('.hip-ball');
       const labels = container.querySelectorAll('.hip-label');
@@ -929,7 +936,7 @@ function renderHeroInteractive() {
             </div>
           </section>
 
-          <aside class="dx-aside" aria-labelledby="dx-invest-title">
+          <section class="dx-aside" aria-labelledby="dx-invest-title">
             <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
             <p class="dx-price">${price}</p>
             <p class="dx-price-note">${priceNote}</p>
@@ -942,7 +949,7 @@ function renderHeroInteractive() {
               <a href="${configuratorLink}" id="hero-link-form">Ajustar no configurador</a>
               <button type="button" id="hero-btn-restart">${DX_ICON.restart} Recomeçar</button>
             </div>
-          </aside>
+          </section>
         </div>
       </div>`;
 
@@ -1545,11 +1552,11 @@ function openCustomModelModal(selectedSvc, onFinish, options = {}) {
           </div>
         </section>
       </div>
-      <aside class="studio-side" aria-label="Pré-visualização e estimativa">
+      <section class="studio-side" aria-label="Pré-visualização e estimativa">
         <button type="button" class="studio-preview-toggle" aria-expanded="false" aria-controls="custom-preview-mount">Ver prévia da página</button>
         <div class="studio-preview" id="custom-preview-mount"></div>
         <div class="studio-estimate" id="custom-estimate-summary-mount"></div>
-      </aside>`;
+      </section>`;
 
     const toggle = bodyEl.querySelector('.studio-preview-toggle');
     toggle.addEventListener('click', () => {
@@ -1860,7 +1867,7 @@ function renderProcess() {
         ${i < processData.length - 1 ? '<div class="process-step-line"><div class="process-step-line-fill"></div></div>' : ''}
       </div>
       <div class="process-step-content">
-        <span class="process-step-number">${step.number}</span>
+        <span class="process-step-number" aria-hidden="true">${step.number}</span>
         <h3>${step.title}</h3>
         <p class="process-step-keywords">${step.keywords}</p>
         <p class="process-step-desc">${step.description}</p>

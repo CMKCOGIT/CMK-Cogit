@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const observer = new IntersectionObserver(entries => {
+    // Nos dois sentidos; a linha da história, depois de desenhada, permanece.
     entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-visible');
-      entry.target.querySelectorAll('[data-story-line]').forEach(line => line.classList.add('is-drawn'));
-      observer.unobserve(entry.target);
+      entry.target.classList.toggle('is-visible', entry.isIntersecting);
+      entry.target.classList.toggle('is-above', !entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
+      if (entry.isIntersecting) entry.target.querySelectorAll('[data-story-line]').forEach(line => line.classList.add('is-drawn'));
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -7% 0px' });
 

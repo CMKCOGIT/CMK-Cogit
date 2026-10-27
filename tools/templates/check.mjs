@@ -43,7 +43,8 @@ for (const name of names) {
     const h = document.documentElement.scrollHeight;
     const ys = []; for (let y = 0; y <= h; y += Math.round(innerHeight * 0.6)) ys.push(y);
     if (dir === 'up') ys.reverse();
-    for (const y of ys) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 120)); }
+    // 'instant': o scroll-behavior: smooth dos modelos animaria cada salto e atrasaria a rolagem do teste
+    for (const y of ys) { window.scrollTo({ top: y, behavior: 'instant' }); await new Promise((r) => setTimeout(r, 120)); }
   }, dir);
 
   for (const page of cfg.pages) {
@@ -213,7 +214,7 @@ for (const name of names) {
       assert.ok(await page.evaluate(() => scrollY > 200), 'rolou até a seção');
     } else {
       // Landing: CTA principal sempre acessível; o fixo aparece após o hero.
-      await page.evaluate(() => window.scrollTo(0, innerHeight * 2));
+      await page.evaluate(() => window.scrollTo({ top: innerHeight * 2, behavior: 'instant' }));
       await page.waitForTimeout(700);
       assert.ok(await page.locator('[data-sticky-cta].is-visible').count(), 'CTA fixo visível após o hero');
       await page.locator('#demonstracao').scrollIntoViewIfNeeded();
@@ -241,8 +242,11 @@ for (const name of names) {
     await page.goto(base, { waitUntil: 'load' });
     await page.waitForTimeout(1500);
     const initial = bytes;
+    // O LCP é lido antes da rolagem: no navegador ele se encerra na primeira interação,
+    // e a rolagem por script não conta como interação. O CLS cobre a página inteira.
+    const lcp = await page.evaluate(() => window.__lcp);
     await scrollThrough(page);
-    const { lcp, cls } = await page.evaluate(() => ({ lcp: window.__lcp, cls: window.__cls }));
+    const cls = await page.evaluate(() => window.__cls);
     console.log(`         LCP ${Math.round(lcp)} ms · CLS ${cls.toFixed(3)} · carga inicial ${Math.round(initial / 1024)} KB · total ${Math.round(bytes / 1024)} KB`);
     assert.ok(lcp < 2500, `LCP ${Math.round(lcp)} ms`);
     assert.ok(cls < 0.1, `CLS ${cls.toFixed(3)}`);

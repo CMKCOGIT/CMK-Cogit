@@ -12,6 +12,17 @@
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   };
 
+  // Aplica o estado de revelação conforme a interseção (descendo ou subindo).
+  function toggleReveal(el, entry) {
+    if (entry.isIntersecting) {
+      el.classList.add('is-visible');
+      el.classList.remove('is-above');
+    } else {
+      el.classList.remove('is-visible');
+      el.classList.toggle('is-above', entry.boundingClientRect.bottom <= 0);
+    }
+  }
+
   // ── 1. Scroll Reveal Observer (Universal) ──
   function initScrollReveal() {
     if (prefersReducedMotion()) {
@@ -27,15 +38,11 @@
 
     if (!revealElements.length) return;
 
+    // Entra e sai nos dois sentidos: ao sair pelo topo recebe .is-above para voltar de cima.
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
-          observer.unobserve(entry.target); // Lazy trigger & zero memory leak
-        }
-      });
+      entries.forEach(entry => toggleReveal(entry.target, entry));
     }, {
-      threshold: 0.01,
+      threshold: 0,
       rootMargin: '0px 0px -40px 0px'
     });
 
@@ -92,14 +99,10 @@
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const gridCards = entry.target.querySelectorAll('.card-stagger-item');
-            gridCards.forEach(card => card.classList.add('is-visible'));
-            observer.unobserve(entry.target);
-          }
+          entry.target.querySelectorAll('.card-stagger-item').forEach(card => toggleReveal(card, entry));
         });
       }, {
-        threshold: 0.01,
+        threshold: 0,
         rootMargin: '0px 0px -40px 0px'
       });
 

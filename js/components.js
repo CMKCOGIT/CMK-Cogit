@@ -349,12 +349,8 @@ function renderHeroInteractive() {
 
   const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
 
-  // Nome comercial e prazo dos modelos prontos. Preços vêm do catálogo (configuratorData em data.js).
-  const PRESENCE_MODELS = {
-    'landing-page': { pronto: 'Landing Page Essencial', prazo: '5 a 8 dias úteis' },
-    'portfolio': { pronto: 'Portfólio Profissional', prazo: '5 a 7 dias úteis' },
-    'site-institucional': { pronto: 'Site Institucional Essencial', prazo: '7 a 12 dias úteis' }
-  };
+  // Nome comercial e prazo dos modelos prontos (data.js). Preços vêm do catálogo (configuratorData).
+  const PRESENCE_MODELS = presenceModels;
   const SERVICE_GROUPS = [
     { label: 'Presença digital', ids: ['site-institucional', 'landing-page', 'portfolio'] },
     { label: 'Operação e produto', ids: ['automacao-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] }

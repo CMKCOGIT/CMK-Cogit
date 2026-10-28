@@ -214,24 +214,42 @@ const ConfiguratorApp = (() => {
   function levelPrice(level) {
     return ['analysis', 'custom'].includes(level.priceType) || level.price == null ? 'Sob análise' : (level.priceType === 'from' ? 'A partir de ' : '') + money(level.price);
   }
-  function renderModel(entry, modelId, name, description) {
+  // Cada formato mostra o que muda na decisão (preço e prazo) no próprio cartão, como no diagnóstico.
+  function renderModel(entry, service, modelId) {
     const selected = entry.modelId === modelId;
-    return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '"><span class="cfg-model-radio" aria-hidden="true"></span><span><strong>' + name + '</strong><small>' + description + '</small></span></button>';
+    const pronto = modelId === 'modelos-prontos';
+    const info = (typeof presenceModels !== 'undefined' && presenceModels[service.id]) || {};
+    const name = pronto ? 'Modelo pronto' : 'Sob medida';
+    const chip = pronto ? 'Mais rápido' : 'Personalizado';
+    const description = pronto
+      ? (info.pronto ? info.pronto + ': estrutura' : 'Estrutura') + ' já testada. Aplicamos sua marca, seus textos e suas imagens.'
+      : 'Você escolhe seções e componentes, como vídeo, galeria e depoimentos. O layout é desenhado para o seu negócio.';
+    const price = pronto ? money(service.price) : 'a partir de ' + money(service.customPrice);
+    const prazo = pronto ? (info.prazo || 'definido no escopo') : 'definido no escopo';
+    return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '">'
+      + '<span class="cfg-model-top"><span class="cfg-model-chip' + (pronto ? '' : ' is-alt') + '">' + chip + '</span><span class="cfg-model-radio" aria-hidden="true"></span></span>'
+      + '<span class="cfg-model-copy"><strong>' + name + '</strong><small>' + description + '</small></span>'
+      + '<span class="cfg-model-facts"><span><small>Investimento</small><b>' + price + '</b></span><span><small>Prazo</small><b>' + prazo + '</b></span></span></button>';
   }
   const ACTION_ICONS = {
     play: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor" stroke="none"/></svg>',
     layout: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>'
   };
-  // Ação de cada formato: modelo pronto abre vídeo e demonstração; sob medida abre o estúdio de estrutura.
+  // Próximo passo do formato escolhido, num painel logo abaixo das opções:
+  // modelo pronto abre vídeo e demonstração; sob medida abre o estúdio de estrutura (opcional).
   function renderModelAction(entry) {
-    if (!entry.modelId) return '';
+    if (!entry.modelId) return '<p class="cfg-format-hint">Escolha um formato para continuar.</p>';
     const pronto = entry.modelId === 'modelos-prontos';
+    const info = (typeof presenceModels !== 'undefined' && presenceModels[entry.serviceId]) || {};
     const structure = !pronto && customStructures[entry.serviceId];
     const label = pronto ? 'Ver modelo e demonstração' : (structure ? 'Editar estrutura' : 'Personalizar estrutura');
-    const note = pronto ? 'Vídeo e site navegável do modelo'
-      : structure ? 'Estrutura montada: ' + structure.sections.length + ' seções' + (structure.components.length ? ' · ' + structure.components.length + ' componente' + (structure.components.length > 1 ? 's' : '') : '')
-      : 'Escolha seções e componentes, como vídeo e galeria';
-    return '<div class="cfg-model-action"><button class="cfg-model-action-btn" type="button" data-preview-service="' + entry.serviceId + '">' + ACTION_ICONS[pronto ? 'play' : 'layout'] + '<span>' + label + '</span></button><span class="cfg-model-action-note">' + esc(note) + '</span></div>';
+    let title; let text;
+    if (pronto) { title = 'Veja o modelo antes de decidir'; text = 'Vídeo e site navegável do modelo' + (info.pronto ? ' ' + info.pronto : '') + '.'; }
+    else if (structure) {
+      title = 'Estrutura montada';
+      text = structure.sections.length + ' seções' + (structure.components.length ? ' · ' + structure.components.length + ' componente' + (structure.components.length > 1 ? 's' : '') : '') + ': ' + structure.sections.join(' › ');
+    } else { title = 'Monte a estrutura (opcional)'; text = 'Escolha seções e componentes. O escopo final é confirmado na proposta.'; }
+    return '<div class="cfg-model-action' + (structure ? ' is-done' : '') + '"><span class="cfg-model-action-icon">' + ACTION_ICONS[pronto ? 'play' : 'layout'] + '</span><span class="cfg-model-action-copy"><strong>' + title + '</strong><small>' + esc(text) + '</small></span><button class="cfg-model-action-btn" type="button" data-preview-service="' + entry.serviceId + '">' + label + '</button></div>';
   }
   function openModelAction(serviceId) {
     const entry = getEntry(serviceId);
@@ -253,7 +271,8 @@ const ConfiguratorApp = (() => {
     if (!service) return '';
     let controls = '';
     if (isPresence(service.id)) {
-      controls += '<div class="cfg-control-group"><span class="cfg-control-label">Modelo</span><div class="cfg-model-toggle">' + renderModel(entry, 'modelos-prontos', 'Modelo pronto', 'Você envia identidade visual, textos e imagens. A estrutura não muda.') + renderModel(entry, 'sob-medida', 'Sob medida', 'Estrutura, seções e visual personalizados para o seu negócio.') + '</div>' + renderModelAction(entry) + '</div>';
+      const labelId = 'cfg-format-' + service.id;
+      controls += '<div class="cfg-control-group"><span class="cfg-control-label" id="' + labelId + '">Formato</span><div class="cfg-model-toggle" role="group" aria-labelledby="' + labelId + '">' + renderModel(entry, service, 'modelos-prontos') + renderModel(entry, service, 'sob-medida') + '</div>' + renderModelAction(entry) + '</div>';
     }
     const showLevels = service.hasLevels && (!isPresence(service.id) || entry.modelId === 'modelos-prontos');
     if (showLevels) {
@@ -263,10 +282,6 @@ const ConfiguratorApp = (() => {
       }).join('') + '</div></div>';
     } else if (!service.hasLevels && !isPresence(service.id)) {
       controls += '<div class="cfg-diagnosis-box"><span>Diagnóstico orientado</span><p>A COGIT valida regras, integrações e prioridades antes de confirmar escopo e investimento.</p></div>';
-    } else if (isPresence(service.id) && entry.modelId === 'sob-medida') {
-      controls += '<div class="cfg-diagnosis-box"><span>A partir de ' + money(service.customPrice) + '</span><p>Estrutura, seções e visual podem ser definidos para o negócio. O escopo final será confirmado em proposta.</p></div>';
-    } else if (isPresence(service.id) && entry.modelId === 'modelos-prontos' && !service.hasLevels) {
-      controls += '<div class="cfg-diagnosis-box is-ready"><span>Estrutura pronta para personalizar</span><p>Identidade visual, conteúdo e informações do seu negócio serão aplicados ao modelo.</p></div>';
     }
     return '<article class="cfg-config-block" style="--cfg-index:' + index + '"><header><span class="cfg-config-number">' + String(index + 1).padStart(2, '0') + '</span><div>' + icon(service.icon) + '<h3>' + service.name + '</h3></div><button type="button" class="cfg-remove-service" data-remove-service="' + service.id + '" aria-label="Remover ' + esc(service.name) + '">Remover</button></header>' + controls + '</article>';
   }

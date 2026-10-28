@@ -133,3 +133,14 @@ Durante o trabalho, a comparação visual pegou uma regressão: a primeira vers�
 | Valores quebrando no meio em colunas estreitas | Legibilidade e responsividade pelo contêiner | Container query: abaixo de 640 px de bloco as opções empilham e os valores nunca quebram no meio |
 
 Prazos dos modelos prontos passaram a vir de `presenceModels` em `js/data.js`, usado pelo diagnóstico e pelo configurador.
+
+## Adendo — seção Nexus (Sobre)
+
+A seção repetia o card da Nexus de “Projetos em movimento”, cujo botão “Ver solução” levava ao contato. Agora o card leva à seção (`#nexus`), e a seção aprofunda o assunto em vez de repeti-lo:
+
+- **Narrativa na ordem de quem lê**: o que é → problema → como vai funcionar (Anunciar, Conectar, Comprovar) → para quem (empresas; pessoas, gratuito) → em que ponto está → conversa.
+- **Honestidade de estágio**: linha do tempo Ideia → Estruturação (atual) → Negócio próprio, tirada do texto original, sem números nem parceiros inventados.
+- **Visual sem clichês de interface gerada** (cartão escuro com brilho, textura de grade, diagrama A → N → B, caixa com borda lateral): faixa clara com o verde da marca Nexus, leitura editorial com numeração e filetes, texto de 16 px ou mais com contraste AA.
+- **Uma ação principal**: “Conversar com a COGIT” leva ao contato com o contexto “Nexus e projetos de impacto”.
+
+No mesmo trabalho, as âncoras do site deixaram de somar `scroll-padding` no `html` e `scroll-margin` nas seções, o que fazia o título parar a 208 px do topo em vez de 104 px.

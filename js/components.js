@@ -2003,10 +2003,11 @@ function renderCases() {
   container.innerHTML = casesToRender.map((c, i) => {
     const delayClass = `reveal-delay-${(i % 3) + 1}`;
     const isExternal = Boolean(c.link && c.link.startsWith('http'));
-    const ctaHref = c.link || targetUrl;
+    // Links internos são relativos à raiz do site; nas subpastas sobem um nível.
+    const ctaHref = c.link ? (isExternal || !isSubfolder ? c.link : '../' + c.link) : targetUrl;
     const ctaTarget = isExternal ? ' target="_blank" rel="noopener noreferrer"' : '';
     const ctaText = c.ctaText || (isExternal ? 'Ver site ao vivo' : 'Ver solução');
-    const ctaIcon = isExternal ? 'bi-box-arrow-up-right' : 'bi-arrow-right';
+    const ctaIcon = c.ctaIcon || (isExternal ? 'bi-box-arrow-up-right' : 'bi-arrow-right');
 
     return `
       <div class="case-card ${delayClass}" id="case-${c.id}" data-about-reveal>

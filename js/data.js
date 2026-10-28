@@ -443,7 +443,9 @@ const casesData = [
     ],
     technologies: ['HTML5', 'CSS3', 'JavaScript', 'PHP', 'SQL'],
     image: 'assets/images/case-nexus.jpg',
-    ctaText: 'Ver solução'
+    ctaText: 'Conhecer a Nexus',
+    ctaIcon: 'bi-arrow-down-right',
+    link: 'sobre.html#nexus'
   },
   {
     id: 'trivium-finance',

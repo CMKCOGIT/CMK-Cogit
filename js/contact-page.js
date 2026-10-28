@@ -13,7 +13,8 @@
     mvp: 'MVP',
     plataforma: 'Plataforma digital',
     'modelos-prontos': 'Modelo pronto',
-    'modelos-sob-medida': 'Projeto sob medida'
+    'modelos-sob-medida': 'Projeto sob medida',
+    nexus: 'Nexus e projetos de impacto'
   };
 
   function initReveal() {

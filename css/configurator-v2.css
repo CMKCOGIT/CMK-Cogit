@@ -371,6 +371,52 @@
 .page-configurator :is(.cfg-model-option,.cfg-level-v2) > span { display: grid; min-width: 0; gap: .25rem; }
 .page-configurator :is(.cfg-model-option,.cfg-level-v2) strong { font-size: .88rem; line-height: 1.3; }
 .page-configurator :is(.cfg-model-option,.cfg-level-v2) small { color: var(--cfg-muted); font-size: .75rem; line-height: 1.42; }
+.page-configurator .cfg-model-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .9rem;
+  margin-top: .85rem;
+}
+.page-configurator .cfg-model-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  min-height: 44px;
+  padding: .6rem 1.1rem .6rem .9rem;
+  border: 1px solid rgba(74,61,219,.28);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cfg-purple);
+  font: inherit;
+  font-size: .84rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(16,26,50,.06);
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease;
+}
+.page-configurator .cfg-model-action-btn svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.page-configurator .cfg-model-action-btn:hover {
+  border-color: var(--cfg-purple);
+  background: var(--cfg-purple);
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(74,61,219,.22);
+}
+.page-configurator .cfg-model-action-btn:focus-visible { outline: 3px solid rgba(74,61,219,.35); outline-offset: 2px; }
+.page-configurator .cfg-model-action-note { color: var(--cfg-muted); font-size: .75rem; line-height: 1.4; }
+@media (max-width: 480px) {
+  .page-configurator .cfg-model-action-btn { width: 100%; justify-content: center; }
+  .page-configurator .cfg-model-action-note { width: 100%; text-align: center; }
+}
 .page-configurator .cfg-level-v2 { flex-direction: column; justify-content: space-between; min-height: 154px; }
 .page-configurator .cfg-level-price { color: var(--cfg-purple); font-size: .73rem; font-style: normal; font-weight: 800; }
 .page-configurator .cfg-diagnosis-box {

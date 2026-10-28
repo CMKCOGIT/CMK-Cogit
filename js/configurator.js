@@ -218,12 +218,42 @@ const ConfiguratorApp = (() => {
     const selected = entry.modelId === modelId;
     return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '"><span class="cfg-model-radio" aria-hidden="true"></span><span><strong>' + name + '</strong><small>' + description + '</small></span></button>';
   }
+  const ACTION_ICONS = {
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M10 8.5v7l5.5-3.5z" fill="currentColor" stroke="none"/></svg>',
+    layout: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>'
+  };
+  // Ação de cada formato: modelo pronto abre vídeo e demonstração; sob medida abre o estúdio de estrutura.
+  function renderModelAction(entry) {
+    if (!entry.modelId) return '';
+    const pronto = entry.modelId === 'modelos-prontos';
+    const structure = !pronto && customStructures[entry.serviceId];
+    const label = pronto ? 'Ver modelo e demonstração' : (structure ? 'Editar estrutura' : 'Personalizar estrutura');
+    const note = pronto ? 'Vídeo e site navegável do modelo'
+      : structure ? 'Estrutura montada: ' + structure.sections.length + ' seções' + (structure.components.length ? ' · ' + structure.components.length + ' componente' + (structure.components.length > 1 ? 's' : '') : '')
+      : 'Escolha seções e componentes, como vídeo e galeria';
+    return '<div class="cfg-model-action"><button class="cfg-model-action-btn" type="button" data-preview-service="' + entry.serviceId + '">' + ACTION_ICONS[pronto ? 'play' : 'layout'] + '<span>' + label + '</span></button><span class="cfg-model-action-note">' + esc(note) + '</span></div>';
+  }
+  function openModelAction(serviceId) {
+    const entry = getEntry(serviceId);
+    if (!entry) return;
+    if (entry.modelId === 'sob-medida' && window.openCustomModelModal) {
+      window.openCustomModelModal(serviceId, summary => {
+        customStructures[serviceId] = summary;
+        if (getEntry(serviceId)?.modelId !== 'sob-medida') selectSolutionModel('sob-medida', serviceId); else render();
+      }, { project: customStructures[serviceId] || null });
+    } else if (window.openModelPreviewModal) {
+      window.openModelPreviewModal(serviceId, undefined, {
+        // Só troca o formato se ainda não for modelo pronto: selectSolutionModel zera o escopo escolhido.
+        onSelect: () => { if (getEntry(serviceId)?.modelId !== 'modelos-prontos') selectSolutionModel('modelos-prontos', serviceId); }
+      });
+    }
+  }
   function renderConfiguration(entry, index) {
     const service = getService(entry.serviceId);
     if (!service) return '';
     let controls = '';
     if (isPresence(service.id)) {
-      controls += '<div class="cfg-control-group"><span class="cfg-control-label">Modelo</span><div class="cfg-model-toggle">' + renderModel(entry, 'modelos-prontos', 'Modelo pronto', 'Você envia identidade visual, textos e imagens. A estrutura não muda.') + renderModel(entry, 'sob-medida', 'Sob medida', 'Estrutura, seções e visual personalizados para o seu negócio.') + '</div>' + (entry.modelId ? '<button class="cfg-text-action" type="button" data-preview-service="' + service.id + '">' + (entry.modelId === 'modelos-prontos' ? 'Ver prévia (vídeo e site ao vivo em breve)' : 'Ver prévia do projeto sob medida') + '</button>' : '') + '</div>';
+      controls += '<div class="cfg-control-group"><span class="cfg-control-label">Modelo</span><div class="cfg-model-toggle">' + renderModel(entry, 'modelos-prontos', 'Modelo pronto', 'Você envia identidade visual, textos e imagens. A estrutura não muda.') + renderModel(entry, 'sob-medida', 'Sob medida', 'Estrutura, seções e visual personalizados para o seu negócio.') + '</div>' + renderModelAction(entry) + '</div>';
     }
     const showLevels = service.hasLevels && (!isPresence(service.id) || entry.modelId === 'modelos-prontos');
     if (showLevels) {
@@ -320,7 +350,7 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('[data-service-id]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.serviceId)));
     containerEl.querySelectorAll('[data-remove-service]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.removeService)));
     containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click', () => selectSolutionModel(button.dataset.modelId, button.dataset.modelService)));
-    containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => { const entry = getEntry(button.dataset.previewService); if (!entry) return; if (entry.modelId === 'sob-medida' && window.openCustomModelModal) window.openCustomModelModal(entry.serviceId, summary => { customStructures[entry.serviceId] = summary; }); else if (window.openModelPreviewModal) window.openModelPreviewModal(entry.serviceId); }));
+    containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => openModelAction(button.dataset.previewService)));
     containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click', () => selectLevel(button.dataset.levelService, button.dataset.levelId)));
     containerEl.querySelectorAll('.cfg-addon-select').forEach(button => button.addEventListener('click', () => toggleAddon(button.dataset.addonId)));
     containerEl.querySelectorAll('[data-addon-action]').forEach(button => button.addEventListener('click', () => updateAddonQuantity(button.dataset.addonId, button.dataset.addonAction)));

@@ -118,3 +118,18 @@ Durante o trabalho, a comparação visual pegou uma regressão: a primeira vers�
 2. **Numerais decorativos** de baixo contraste (`.home-process-num`). São decoração, isenta pela WCAG. Se a equipe preferir zerar o alerta do axe, dá para movê-los para `::before` com `content: attr(...)`.
 3. **Lighthouse oficial** não estava disponível no ambiente. Os números acima são medições de laboratório com Playwright. Vale rodar o PageSpeed Insights depois da publicação.
 4. Os arquivos originais completos (fontes TTF e pacote de ícones) estão no histórico do Git. O README explica como gerar de novo os subconjuntos.
+
+## Adendo — etapa de formato do “Monte sua solução”
+
+| Problema | Princípio | Mudança |
+|---|---|---|
+| Botão de ação colado na caixa de preço | Proximidade (Gestalt) e respiro | A ação do formato escolhido fica num painel próprio, logo abaixo das opções e com 1rem de distância |
+| Preço só aparecia depois da escolha, numa caixa separada | Informação no ponto de decisão (reconhecer em vez de lembrar) | Cada opção mostra investimento e prazo, como no diagnóstico da página inicial |
+| Caixas que repetiam a descrição da opção | Minimalismo: cada elemento com uma função | Removidas as caixas “A partir de…” e “Estrutura pronta para personalizar” |
+| Rótulo “Modelo”, diferente do resto do fluxo | Consistência | Rótulo “Formato”, igual à etapa e ao diagnóstico |
+| Sem indicação do que falta | Visibilidade do estado | “Escolha um formato para continuar” enquanto nada foi escolhido; após o estúdio, “Estrutura montada” com as seções |
+| Linha de seleção vazando do card; check dos complementos empurrando o texto | Acabamento | Card recorta a linha; check alinhado à esquerda |
+| No celular, o resumo vinha antes da tarefa | Hierarquia: a tarefa primeiro | Resumo depois da etapa; a barra inferior já mostra a estimativa |
+| Valores quebrando no meio em colunas estreitas | Legibilidade e responsividade pelo contêiner | Container query: abaixo de 640 px de bloco as opções empilham e os valores nunca quebram no meio |
+
+Prazos dos modelos prontos passaram a vir de `presenceModels` em `js/data.js`, usado pelo diagnóstico e pelo configurador.

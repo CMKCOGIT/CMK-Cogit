@@ -349,12 +349,8 @@ function renderHeroInteractive() {
 
   const PRESENCA_DIGITAL_IDS = ['site-institucional', 'landing-page', 'portfolio'];
 
-  // Nome comercial e prazo dos modelos prontos. Preços vêm do catálogo (configuratorData em data.js).
-  const PRESENCE_MODELS = {
-    'landing-page': { pronto: 'Landing Page Essencial', prazo: '5 a 8 dias úteis' },
-    'portfolio': { pronto: 'Portfólio Profissional', prazo: '5 a 7 dias úteis' },
-    'site-institucional': { pronto: 'Site Institucional Essencial', prazo: '7 a 12 dias úteis' }
-  };
+  // Nome comercial e prazo dos modelos prontos (data.js). Preços vêm do catálogo (configuratorData).
+  const PRESENCE_MODELS = presenceModels;
   const SERVICE_GROUPS = [
     { label: 'Presença digital', ids: ['site-institucional', 'landing-page', 'portfolio'] },
     { label: 'Operação e produto', ids: ['automacao-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] }
@@ -803,7 +799,14 @@ function renderHeroInteractive() {
       });
     });
     syncNext();
-    container.querySelector('[data-dx-action="preview"]').addEventListener('click', () => showModelPreview(selectedSvc));
+    container.querySelector('[data-dx-action="preview"]').addEventListener('click', () => showModelPreview(selectedSvc, {
+      onSelect: () => {
+        const pronto = container.querySelector('#dx-format-pronto');
+        if (!pronto) return;
+        pronto.checked = true;
+        pronto.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    }));
     container.querySelector('[data-dx-action="customize"]').addEventListener('click', () => {
       state.objective = 'sob-medida';
       container.querySelector('#dx-format-sob').checked = true;
@@ -1051,13 +1054,16 @@ const MODEL_PREVIEW_DATA = {
 };
 
 // ── Modal de Informações do Modelo (Premium) ──
-function showModelPreview(selectedSvc) {
+function showModelPreview(selectedSvc, options) {
   const modelId = (selectedSvc && typeof selectedSvc === 'object' && selectedSvc.id) ? selectedSvc.id : (typeof selectedSvc === 'string' ? selectedSvc : 'modelo');
   const title = (selectedSvc && typeof selectedSvc === 'object' && selectedSvc.name) ? selectedSvc.name : (typeof selectedSvc === 'string' && selectedSvc !== 'modelo' ? selectedSvc : 'Landing Page');
-  openModelPreviewModal(modelId, title);
+  openModelPreviewModal(modelId, title, options);
 }
 
-function openModelPreviewModal(modelId, title) {
+// options.onSelect: chamado por "Escolher este modelo". Sem ele, o botão não aparece
+// (a prévia é só informativa, por exemplo quando o modelo já foi escolhido).
+function openModelPreviewModal(modelId, title, options = {}) {
+  const onSelect = typeof options.onSelect === 'function' ? options.onSelect : null;
   let finalId = modelId;
   let finalTitle = title;
   if (typeof modelId === 'object' && modelId !== null) {
@@ -1154,10 +1160,10 @@ function openModelPreviewModal(modelId, title) {
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
             Voltar
           </button>
-          <button type="button" class="hero-modal-btn-select" id="hero-modal-select">
+          ${onSelect ? `<button type="button" class="hero-modal-btn-select" id="hero-modal-select">
             Escolher este modelo
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </button>
+          </button>` : ''}
         </div>
       </div>
     </dialog>
@@ -1185,11 +1191,9 @@ function openModelPreviewModal(modelId, title) {
     if (e.target === modal) closeModal();
   });
 
-  selectBtn.addEventListener('click', () => {
+  if (selectBtn) selectBtn.addEventListener('click', () => {
     closeModal();
-    // Simula o clique no botão adquirir para avançar
-    const adquirirBtn = document.getElementById('btn-adquirir-modelo');
-    if (adquirirBtn) adquirirBtn.click();
+    onSelect();
   });
 
   if (typeof trackEvent === 'function') trackEvent('model_preview_opened', finalId);

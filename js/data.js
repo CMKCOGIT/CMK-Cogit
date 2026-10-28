@@ -317,6 +317,14 @@ const plansData = [
 
 
 // ── Configurator Data ──
+// Nome comercial e prazo dos modelos prontos de presença digital (diagnóstico e configurador).
+// Os preços ficam no catálogo abaixo (configuratorData), igual ao do aplicativo.
+const presenceModels = {
+  'landing-page': { pronto: 'Landing Page Essencial', prazo: '5 a 8 dias úteis' },
+  'portfolio': { pronto: 'Portfólio Profissional', prazo: '5 a 7 dias úteis' },
+  'site-institucional': { pronto: 'Site Institucional Essencial', prazo: '7 a 12 dias úteis' }
+};
+
 const configuratorData = {
   services: [
     {id:'diagnostico',name:'Diagnóstico Inicial',icon:'consulting',description:'Reunião para entender negócio, problema e objetivo.',priceType:'fixed',price:0},

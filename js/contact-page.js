@@ -49,7 +49,7 @@
         const messageField = document.getElementById('contact-message');
         if (messageField && !messageField.value) {
           const blocksNames = p.blocks ? p.blocks.map(b => b.name).join(', ') : '';
-          messageField.value = `Olá! Estruturei meu projeto no diagnóstico sob medida da Cogit (${p.suggestion}).\nEstrutura: ${blocksNames}.\nEstimativa preliminar: R$ ${Number(p.totalEstimate).toLocaleString('pt-BR')}.`;
+          messageField.value = `Olá! Estruturei meu projeto no diagnóstico sob medida da COGIT (${p.suggestion}).\nEstrutura: ${blocksNames}.\nEstimativa preliminar: R$ ${Number(p.totalEstimate).toLocaleString('pt-BR')}.`;
           const counter = document.getElementById('contact-message-count');
           if (counter) counter.textContent = `${messageField.value.length}/500`;
         }

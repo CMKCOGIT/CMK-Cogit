@@ -127,14 +127,21 @@
    ══════════════════════════════════════════ */
 
 :where(.js) .hero-animate-1,
-:where(.js) .hero-animate-2,
-:where(.js) .hero-animate-3,
-:where(.js) .hero-animate-4 {
+:where(.js) .hero-animate-2 {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
+}
+
+/* Título e subtítulo: visíveis desde a 1ª pintura (são o LCP da página) e só
+   deslizam até o lugar. Com opacity 0 o navegador ignorava o título e o LCP
+   virava o banner de cookies, segundos depois. */
+:where(.js) .hero-animate-3,
+:where(.js) .hero-animate-4 {
+  transform: translateY(14px);
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 :where(.js) .hero-animate-5 {
@@ -378,6 +385,7 @@ body.intro-animating {
 .brand-intro.is-hidden {
   display: none !important;
 }
+html.intro-vista .brand-intro { display: none !important; }
 
 .brand-intro-grid {
   position: absolute;

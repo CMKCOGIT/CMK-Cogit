@@ -1,11 +1,14 @@
 /* ============================================
-   COGIT — Master Stylesheet
-   Imports all CSS modules in order
+   CMKCOGIT — folha principal (ORIGEM do pacote)
+   As páginas carregam css/site.min.css, gerado a partir deste arquivo por
+   tools/build-css.mjs (sem cascata de @import). Mudou algo em css/? Rode
+   node tools/build-css.mjs (o tools/check.mjs avisa se esquecer).
    ============================================ */
 
 @import 'fonts.css';
 @import 'bootstrap-icons.css';
 
+@import 'tokens.css';
 @import 'variables.css';
 @import 'reset.css';
 @import 'base.css';

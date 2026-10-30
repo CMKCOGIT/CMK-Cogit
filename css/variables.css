@@ -1,33 +1,36 @@
 /* ============================================
-   COGIT — Design Tokens
+   CMKCOGIT — nomes antigos dos tokens (compatibilidade)
+   As cores e fontes agora vêm de css/tokens.css (fonte única, igual na
+   plataforma). Estes nomes continuam valendo para o CSS existente; em
+   código novo, prefira --color-*, --fs-*, --sp-*, --radius-*, --dur-*.
    ============================================ */
 
 :root {
   /* ── Brand Colors ── */
-  --ink:            #0F1B33;
-  --ink-light:      #1A2847;
-  --ink-lighter:    #243560;
-  --purple:         #4A3DDB;
-  --purple-hover:   #3D31C4;
-  --purple-light:   #5B4FE6;
-  --lilac:          #A79BFF;
+  --ink: var(--color-navy-900);
+  --ink-light: var(--color-navy-800);
+  --ink-lighter: var(--color-navy-700);
+  --purple: var(--color-brand-600);
+  --purple-hover: var(--color-brand-700);
+  --purple-light: var(--color-brand-500);
+  --lilac: var(--color-brand-300);
   --lilac-soft:     rgba(167, 155, 255, 0.12);
   --lilac-bg:       rgba(167, 155, 255, 0.06);
-  --neutral:        #F4F5F8;
-  --neutral-dark:   #E8EAF0;
-  --white:          #FFFFFF;
+  --neutral: var(--color-neutral-100);
+  --neutral-dark: var(--color-neutral-200);
+  --white: var(--color-neutral-0);
 
   /* ── Text Colors ── */
-  --text-primary:   #0F1B33;
-  --text-secondary: #4A5568;
-  --text-tertiary:  #5F6B7F; /* 5.4:1 sobre branco, 4.9:1 sobre --neutral */
+  --text-primary: var(--color-text);
+  --text-secondary: var(--color-text-muted);
+  --text-tertiary: var(--color-text-subtle); /* 5.4:1 sobre branco, 4.9:1 sobre --neutral */
   --text-on-dark:   #FFFFFF;
   --text-on-dark-secondary: rgba(255, 255, 255, 0.7);
   --text-on-dark-tertiary:  rgba(255, 255, 255, 0.5);
 
   /* ── Typography ── */
-  --font-heading:   'Inter', sans-serif;
-  --font-body:      'Manrope', sans-serif;
+  --font-heading: var(--font-heading-stack);
+  --font-body: var(--font-body-stack);
 
   --fw-regular:     400;
   --fw-medium:      500;

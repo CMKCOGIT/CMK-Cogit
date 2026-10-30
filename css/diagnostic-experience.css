@@ -497,3 +497,13 @@
     font-size: 0.75rem;
   }
 }
+
+/* Espaço reservado para o diagnóstico enquanto o components.js o monta
+   (abaixo de 1024 px ele nascia com ~38 px e ia a ~380-440 px, empurrando o
+   hero inteiro — CLS). No desktop a altura já vem do layout. */
+@media (max-width: 1023.98px) {
+  html.js #hero-interactive-container { min-height: 370px; }
+}
+@media (min-width: 768px) and (max-width: 1023.98px) {
+  html.js #hero-interactive-container { min-height: 430px; }
+}

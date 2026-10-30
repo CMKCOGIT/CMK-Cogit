@@ -179,7 +179,7 @@
           isHeroTriggered = true;
           triggerHeroSequence();
         }
-      }, 2200);
+      }, 1800);
     } else {
       setTimeout(triggerHeroSequence, 80);
     }
@@ -352,7 +352,11 @@
     const introEl = document.getElementById('brand-intro');
     if (!introEl) return;
 
-    if (prefersReducedMotion()) {
+    // Uma vez por visita: quem chega de outra página do site, recarrega ou volta
+    // pelo histórico não espera de novo. O <head> marca html.intro-vista antes da
+    // pintura (sem piscar) e sem gravar nada no navegador.
+    const jaVista = document.documentElement.classList.contains('intro-vista');
+    if (prefersReducedMotion() || jaVista) {
       introEl.classList.add('is-hidden');
       document.body.classList.remove('intro-animating');
       return;
@@ -381,8 +385,8 @@
     // Allow user to click to skip intro instantly
     introEl.addEventListener('click', exitIntro, { once: true });
 
-    // Standard reveal dwell time (~1.5s)
-    exitTimer = setTimeout(exitIntro, 1500);
+    // Tempo de exibição: curto o bastante para não segurar o conteúdo
+    exitTimer = setTimeout(exitIntro, 1100);
 
     // Failsafe watchdog
     setTimeout(() => {
@@ -393,7 +397,7 @@
       if (!introEl.classList.contains('is-hidden')) {
         introEl.classList.add('is-hidden');
       }
-    }, 2200);
+    }, 1800);
   }
 
   // ── Master Initialization ──

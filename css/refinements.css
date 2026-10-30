@@ -1551,3 +1551,23 @@ html:not(.animations-ready) #brand-intro { display: none; }
 @media (max-width: 768px) {
   summary { min-height: 44px; }
 }
+
+/* Título do hero como UM bloco de texto (linhas por <br>): o navegador mede o
+   h1 inteiro como maior elemento visível (LCP) em vez de cada linha separada. */
+.hero h1 > .hero-title-main,
+.hero h1 > .hero-title-highlight { display: inline; }
+.hero h1 .quebra-celular { display: none; }
+@media (max-width: 599.98px) { .hero h1 .quebra-celular { display: inline; } }
+
+/* Banner de privacidade compacto no celular: ocupava ~40% da tela (3 botões
+   empilhados). Texto inalterado; Rejeitar e Aceitar lado a lado, com o MESMO
+   peso visual (sem induzir o aceite); "Configurar" como link abaixo. */
+@media (max-width: 599.98px) {
+  .cookie-banner { bottom: 10px; left: 10px; right: 10px; padding: 14px 14px 12px; border-radius: 14px; }
+  .cookie-banner h2 { margin-bottom: 4px; font-size: 0.9375rem; }
+  .cookie-banner p { font-size: 0.8125rem; line-height: 1.45; }
+  .cookie-banner-inner { gap: 10px; }
+  .cookie-banner-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cookie-banner-actions .cookie-action { min-height: 44px; padding: 8px 10px; font-size: 0.8125rem; }
+  .cookie-banner-actions .cookie-action-settings { grid-column: 1 / -1; min-height: 36px; padding: 4px; }
+}

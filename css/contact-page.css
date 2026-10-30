@@ -202,3 +202,8 @@
   [data-contact-reveal] { opacity: 1; transform: none; transition: none; }
   .contact-faq-item > div { animation: none; }
 }
+
+/* Abertura da página: visível desde a 1ª pintura (é o maior elemento, LCP);
+   só desliza até o lugar. As demais seções continuam com o fade. */
+:where(.js) .contact-hero-copy[data-contact-reveal] { opacity: 1; transform: translateY(14px); transition: transform 700ms var(--ease-out); }
+:where(.js) .contact-hero-copy[data-contact-reveal].is-visible { transform: none; }

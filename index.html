@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <script>document.documentElement.classList.add('js')</script>
+  <script>document.documentElement.classList.add('js');try{var r=document.referrer,n=(performance.getEntriesByType('navigation')[0]||{}).type;if((r&&new URL(r).origin===location.origin)||n==='reload'||n==='back_forward')document.documentElement.classList.add('intro-vista')}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="icon" type="image/png" href="assets/images/cmk-symbol.png">
@@ -35,7 +35,9 @@
   <!-- Fonts -->
 
   <!-- Styles -->
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="preload" href="assets/fonts/cogit-font-5.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/cogit-font-6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.min.css">
 
   <!-- Schema.org - Organization -->
   <script type="application/ld+json">
@@ -220,8 +222,8 @@
             </div>
             
             <h1 class="hero-animate-3">
-              <span class="hero-title-main" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15; display: block;">Sua empresa tem um desafio.</span>
-              <span class="hero-title-highlight" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15;"><span class="hero-title-connector">Nós estruturamos</span> a tecnologia para resolver.</span>
+              <span class="hero-title-main" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15;">Sua empresa tem um desafio.</span><br>
+              <span class="hero-title-highlight" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15;"><span class="hero-title-connector">Nós estruturamos</span><br class="quebra-celular"> a tecnologia<br class="quebra-celular"> para resolver.</span>
             </h1>
 
             <p class="hero-subtitle hero-animate-4" style="margin-top: var(--space-6); margin-bottom: 0; font-size: var(--text-lg); max-width: 95%;">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
@@ -445,9 +447,9 @@
   </div>
 
   <!-- Scripts -->
+  <script src="js/privacy.js"></script>
   <script src="js/data.js"></script>
   <script src="js/utils.js"></script>
-  <script src="js/privacy.js"></script>
   <script src="js/analytics.js"></script>
   <script src="js/handoff.js"></script>
   <script src="js/components.js"></script>

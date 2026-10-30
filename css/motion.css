@@ -1,0 +1,50 @@
+/* =====================================================================
+   CMKCOGIT — movimento e utilitários do design system (tokens.css)
+   Regra: só transform/opacity; nada fica invisível sem JS (o estado
+   escondido exige html.animations-ready, posto pelo animations.js).
+   ===================================================================== */
+
+/* Ícones SVG do sprite (assets/icons/bi.svg): herdam cor e tamanho do texto */
+.i { width: 1em; height: 1em; flex: none; fill: currentColor; vertical-align: -0.125em; }
+.i-sm { width: var(--icon-sm); height: var(--icon-sm); }
+.i-md { width: var(--icon-md); height: var(--icon-md); }
+.i-lg { width: var(--icon-lg); height: var(--icon-lg); }
+.i-xl { width: var(--icon-xl); height: var(--icon-xl); }
+
+/* Revelação ao rolar: <el data-reveal data-reveal-delay="80" data-reveal-from="left"> */
+html.animations-ready [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, var(--reveal-distance), 0);
+  transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+html.animations-ready [data-reveal-from="left"] { transform: translate3d(calc(-1 * var(--reveal-distance)), 0, 0); }
+html.animations-ready [data-reveal-from="right"] { transform: translate3d(var(--reveal-distance), 0, 0); }
+html.animations-ready [data-reveal-from="scale"] { transform: scale(0.96); }
+html.animations-ready [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* Barra de progresso de leitura */
+.progresso-leitura {
+  position: fixed;
+  z-index: calc(var(--z-header) + 1);
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-brand-500), var(--color-brand-300));
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* Âncoras não ficam escondidas atrás do cabeçalho fixo */
+:where(section[id], [id].section, h2[id], h3[id]) { scroll-margin-top: calc(var(--header-h-compact, 80px) + 1rem); }
+
+/* Transição entre páginas (View Transitions, navegação no mesmo site).
+   Navegadores sem suporte simplesmente trocam de página. */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--dur-base); animation-timing-function: var(--ease-out); }
+[data-parallax] { will-change: transform; }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  [data-parallax] { will-change: auto; transform: none !important; }
+}

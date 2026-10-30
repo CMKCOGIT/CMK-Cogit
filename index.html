@@ -200,8 +200,8 @@
          01 — HERO (2 COLUNAS / DESCOBERTA INTERATIVA)
          ═══════════════════════════════════════ -->
     <section class="hero" id="hero" aria-label="Apresentação da COGIT">
-      <div class="hero-bg-grid"></div>
-      <div class="hero-bg-gradient"></div>
+      <div class="hero-bg-grid" aria-hidden="true" data-parallax="0.12"></div>
+      <div class="hero-bg-gradient" aria-hidden="true" data-parallax="0.06"></div>
 
       <div class="container container-wide">
         <div class="hero-inner">
@@ -247,6 +247,71 @@
       </div>
     </section>
 
+
+    <!-- ═══════════════════════════════════════
+         02b — NÚMEROS DO CATÁLOGO (contagem animada; valores vêm de js/data.js)
+         ═══════════════════════════════════════ -->
+    <section class="home-numeros" aria-label="A CMKCOGIT em números">
+      <div class="container">
+        <ul class="home-numeros-lista" role="list">
+          <li data-reveal data-reveal-delay="0"><strong><span data-counter="12" data-numero="solucoes">12</span></strong><span>soluções no catálogo</span></li>
+          <li data-reveal data-reveal-delay="80"><strong><span data-counter="4" data-numero="frentes">4</span></strong><span>frentes de atuação</span></li>
+          <li data-reveal data-reveal-delay="160"><strong><span data-counter="3">3</span></strong><span>modelos prontos para começar</span></li>
+          <li data-reveal data-reveal-delay="240"><strong>R$ <span data-counter="350" data-numero="minimo">350</span></strong><span>menor investimento para começar</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         02c — SOLUÇÕES (4 frentes; serviços e "a partir de" vêm de js/data.js)
+         ═══════════════════════════════════════ -->
+    <section class="section home-frentes" id="solucoes" aria-labelledby="frentes-titulo">
+      <div class="container">
+        <div class="section-header" data-reveal>
+          <span class="section-label">SOLUÇÕES</span>
+          <h2 id="frentes-titulo">Comece pelo que sua empresa precisa resolver.</h2>
+          <p class="text-body-lg">Modelos prontos para sair rápido ou projetos sob medida para o que é único no seu negócio.</p>
+        </div>
+        <div class="home-frentes-grade">
+          <div class="home-frente-celula" data-reveal data-reveal-delay="0">
+          <a class="home-frente" href="solucoes/index.html#presenca-digital" data-frente="atrair-converter">
+            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#atrair"></use></svg></span>
+            <h3>Atrair e converter</h3>
+            <p>Para empresas que precisam melhorar presença, posicionamento e geração de oportunidades.</p>
+            <ul class="home-frente-servicos" data-servicos></ul>
+            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
+          </a>
+          </div>
+          <div class="home-frente-celula" data-reveal data-reveal-delay="80">
+          <a class="home-frente" href="solucoes/index.html#automacoes" data-frente="ganhar-eficiencia">
+            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#eficiencia"></use></svg></span>
+            <h3>Ganhar eficiência</h3>
+            <p>Para reduzir tarefas manuais, conectar ferramentas e melhorar processos.</p>
+            <ul class="home-frente-servicos" data-servicos></ul>
+            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
+          </a>
+          </div>
+          <div class="home-frente-celula" data-reveal data-reveal-delay="160">
+          <a class="home-frente" href="solucoes/index.html#sistemas" data-frente="organizar-operacao">
+            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#operacao"></use></svg></span>
+            <h3>Organizar a operação</h3>
+            <p>Centralize processos e estruture informações.</p>
+            <ul class="home-frente-servicos" data-servicos></ul>
+            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
+          </a>
+          </div>
+          <div class="home-frente-celula" data-reveal data-reveal-delay="240">
+          <a class="home-frente" href="solucoes/index.html#produtos-digitais" data-frente="criar-novo">
+            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#criar"></use></svg></span>
+            <h3>Criar algo novo</h3>
+            <p>Transforme ideias em negócios e produtos digitais.</p>
+            <ul class="home-frente-servicos" data-servicos></ul>
+            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
+          </a>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- ═══════════════════════════════════════
          03 — PROJETOS / PROVAS (CURTO)
@@ -457,6 +522,7 @@
   <script src="js/animations.js"></script>
   <script src="js/header.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/home.js"></script>
 
 </body>
 </html>

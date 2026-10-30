@@ -400,6 +400,70 @@
     }, 1800);
   }
 
+  // ── 10. Revelação por atributos (design system) ──
+  // <el data-reveal data-reveal-delay="80" data-reveal-from="up|left|right|scale">
+  // O estado escondido só existe com html.animations-ready (nada some sem JS).
+  // Cada elemento é observado UMA vez e solto depois de revelado.
+  let revealObserver = null;
+  function initDataReveal() {
+    const els = document.querySelectorAll('[data-reveal]:not(.is-visible)');
+    if (!els.length) return;
+    if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    els.forEach((el) => {
+      const atraso = parseInt(el.dataset.revealDelay || '0', 10);
+      if (atraso > 0) el.style.setProperty('--reveal-delay', Math.min(atraso, 600) + 'ms');
+    });
+    revealObserver = revealObserver || new IntersectionObserver((entradas) => {
+      entradas.forEach((e) => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-visible');
+        revealObserver.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+    els.forEach((el) => revealObserver.observe(el));
+  }
+
+  // ── 11. Barra de progresso de leitura (topo) ──
+  function initReadingProgress() {
+    if (document.querySelector('.progresso-leitura')) return;
+    const barra = document.createElement('div');
+    barra.className = 'progresso-leitura';
+    barra.setAttribute('aria-hidden', 'true');
+    document.body.prepend(barra);
+    let pendente = false;
+    const atualizar = () => {
+      pendente = false;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      barra.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0).toFixed(4) + ')';
+    };
+    window.addEventListener('scroll', () => { if (!pendente) { pendente = true; requestAnimationFrame(atualizar); } }, { passive: true });
+    window.addEventListener('resize', atualizar, { passive: true });
+    atualizar();
+  }
+
+  // ── 12. Parallax sutil: <el data-parallax="0.12"> (máx. 0.15 da rolagem) ──
+  // Só transform, só enquanto a seção está na tela; desligado com movimento reduzido.
+  function initParallax() {
+    if (prefersReducedMotion()) return;
+    const camadas = [...document.querySelectorAll('[data-parallax]')];
+    if (!camadas.length) return;
+    let pendente = false;
+    const mover = () => {
+      pendente = false;
+      camadas.forEach((el) => {
+        const caixa = el.parentElement.getBoundingClientRect();
+        if (caixa.bottom < 0 || caixa.top > window.innerHeight) return;
+        const fator = Math.min(parseFloat(el.dataset.parallax) || 0, 0.15);
+        el.style.transform = 'translate3d(0,' + (-caixa.top * fator).toFixed(1) + 'px,0)';
+      });
+    };
+    window.addEventListener('scroll', () => { if (!pendente) { pendente = true; requestAnimationFrame(mover); } }, { passive: true });
+    mover();
+  }
+
   // ── Master Initialization ──
   function initAnimations() {
     document.documentElement.classList.add('animations-ready');
@@ -412,12 +476,16 @@
     initButtonInteractions();
     initDarkSectionGlow();
     initSmoothScroll();
+    initDataReveal();
+    initReadingProgress();
+    initParallax();
   }
 
   // Expose global animation controller
   window.COGIT_ANIMATIONS = {
     init: initAnimations,
     refresh: function() {
+      initDataReveal();
       initScrollReveal();
       initCardStaggerAnimation();
       initCounterAnimation();

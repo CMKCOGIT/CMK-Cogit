@@ -445,7 +445,7 @@
   }
 
   // ── 12. Parallax sutil: <el data-parallax="0.12"> (máx. 0.15 da rolagem) ──
-  // Só transform, só enquanto a seção está na tela; desligado com movimento reduzido.
+  // Só translate (GPU), só enquanto a seção está na tela; desligado com movimento reduzido.
   function initParallax() {
     if (prefersReducedMotion()) return;
     const camadas = [...document.querySelectorAll('[data-parallax]')];
@@ -457,7 +457,8 @@
         const caixa = el.parentElement.getBoundingClientRect();
         if (caixa.bottom < 0 || caixa.top > window.innerHeight) return;
         const fator = Math.min(parseFloat(el.dataset.parallax) || 0, 0.15);
-        el.style.transform = 'translate3d(0,' + (-caixa.top * fator).toFixed(1) + 'px,0)';
+        // propriedade translate: soma-se ao transform que a camada já usa para se posicionar
+        el.style.translate = '0 ' + (-caixa.top * fator).toFixed(1) + 'px';
       });
     };
     window.addEventListener('scroll', () => { if (!pendente) { pendente = true; requestAnimationFrame(mover); } }, { passive: true });

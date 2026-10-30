@@ -42,9 +42,9 @@ html.animations-ready [data-reveal].is-visible { opacity: 1; transform: none; }
    Navegadores sem suporte simplesmente trocam de página. */
 @view-transition { navigation: auto; }
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: var(--dur-base); animation-timing-function: var(--ease-out); }
-[data-parallax] { will-change: transform; }
+[data-parallax] { will-change: translate; }
 
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
-  [data-parallax] { will-change: auto; transform: none !important; }
+  [data-parallax] { will-change: auto; translate: none !important; }
 }

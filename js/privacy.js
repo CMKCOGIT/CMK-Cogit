@@ -62,8 +62,8 @@ window.CogitPrivacy = (() => {
     banner.setAttribute('aria-labelledby', 'cookie-title');
     banner.innerHTML = `<div class="cookie-banner-inner">
       <div class="cookie-copy"><h2 id="cookie-title">Sua privacidade, sua escolha.</h2>
-        <p>Guardamos sua preferência de privacidade neste navegador. Cookies de análise são opcionais e só são ativados com sua autorização.
-        Consulte a <a href="${siteUrl('privacidade.html')}">Política de Privacidade</a> e os <a href="${siteUrl('termos-de-uso.html')}">Termos de Uso</a>.</p>
+        <p>Cookies de análise são opcionais e só ativam com sua autorização.
+        Veja a <a href="${siteUrl('privacidade.html')}">Política de Privacidade</a> e os <a href="${siteUrl('termos-de-uso.html')}">Termos de Uso</a>.</p>
       </div>
       <div class="cookie-banner-actions">
         <button type="button" class="cookie-action" id="cookie-reject">Rejeitar opcionais</button>

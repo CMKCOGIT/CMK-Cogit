@@ -2876,3 +2876,7 @@ dialog.custom-model-dialog::backdrop {
     transition: none !important;
   }
 }
+
+/* Etapas montadas por components.js: altura reservada para o rodapé não saltar (CLS) */
+html.js .process-steps-container { min-height: 900px; }
+@media (min-width: 1024px) { html.js .process-steps-container { min-height: 1730px; } }

@@ -9,7 +9,8 @@ const read=file=>fs.readFileSync(path.join(root,file),'utf8');
 function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(path.join(dir,e.name)):[path.join(dir,e.name)]);}
 let checks=0;function check(label,fn){fn();checks++;console.log('PASS',label);}
 // Os templates em /templates são sites independentes, verificados por tools/templates/check.mjs.
-const files=walk(root).filter(f=>!f.includes(path.sep+'tools'+path.sep)&&!f.includes(path.sep+'templates'+path.sep)&&!f.includes(path.sep+'.git'+path.sep));
+// /docs é documentação interna (styleguide), fora da hospedagem.
+const files=walk(root).filter(f=>!f.includes(path.sep+'tools'+path.sep)&&!f.includes(path.sep+'templates'+path.sep)&&!f.includes(path.sep+'docs'+path.sep)&&!f.includes(path.sep+'.git'+path.sep));
 const html=files.filter(f=>f.endsWith('.html'));
 check('All JavaScript files parse',()=>{for(const file of files.filter(f=>f.endsWith('.js'))){const result=spawnSync(process.execPath,['--check',file],{encoding:'utf8'});assert.equal(result.status,0,result.stderr);}});
 check('Local HTML references exist; IDs are unique',()=>{

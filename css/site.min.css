@@ -3460,6 +3460,18 @@ left: var(--space-2);
 color: var(--purple);
 font-weight: bold;
 }
+.page-legal-content ol {
+padding-left: var(--space-6);
+margin: 0 0 var(--space-6);
+list-style: decimal;
+}
+.page-legal-content ol li {
+padding-left: var(--space-2);
+font-size: var(--text-base);
+color: var(--text-secondary);
+line-height: var(--leading-relaxed);
+margin-bottom: var(--space-2);
+}
 .page-legal-content a {
 color: var(--purple);
 text-decoration: none;

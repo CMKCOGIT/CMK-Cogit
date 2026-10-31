@@ -292,7 +292,8 @@ function renderHeroInteractive() {
     objective: null,
     context: '',
     contextTags: [],
-    customProject: null
+    customProject: null,
+    plan: 'vitalicio' // plano do modelo pronto (js/data.js: readyModelPlans)
   };
 
   const heroSection = container.closest('.hero');
@@ -749,7 +750,7 @@ function renderHeroInteractive() {
                   <span class="dx-format-name">Modelo pronto</span>
                   <span class="dx-format-desc">${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.</span>
                   <span class="dx-facts">
-                    <span><small>Investimento</small><strong>${brl(prontoPrice)}</strong></span>
+                    <span><small>Investimento</small><strong>${brl(prontoPrice)}${dxPlan('mensal') ? ` ou ${brl(dxPlan('mensal').price)}/mês` : ''}</strong></span>
                     <span><small>Prazo</small><strong>${info.prazo}</strong></span>
                   </span>
                 </label>
@@ -861,6 +862,20 @@ function renderHeroInteractive() {
     });
   }
 
+  // Planos do modelo pronto: vitalício (domínio do cliente) ou mensal/anual (endereço CMKCOGIT)
+  const DX_PLANS = typeof readyModelPlans !== 'undefined' ? readyModelPlans : [];
+  function dxPlan(id) { return DX_PLANS.find(p => p.id === id) || null; }
+  function renderDxPlans(basePrice) {
+    if (!DX_PLANS.length) return '';
+    return `<fieldset class="dx-plans"><legend class="dx-kicker">Plano</legend>${DX_PLANS.map(p => {
+      const price = p.price == null ? brl(basePrice) : brl(p.price) + (p.billing === 'yearly' ? '/ano' : '/mês');
+      return `<label class="dx-plan"><input type="radio" name="dx-plan" value="${p.id}" ${state.plan === p.id ? 'checked' : ''}>
+        <span class="dx-plan-name">${p.name}${p.discount ? ` <em>−${p.discount}%</em>` : ''}</span>
+        <span class="dx-plan-price">${price}</span>
+        <span class="dx-plan-domain">${p.domain}</span></label>`;
+    }).join('')}</fieldset>`;
+  }
+
   // ── RESULTADO: resumo editável e próximos passos ──
   function renderResult() {
     state.step = 4;
@@ -877,7 +892,7 @@ function renderHeroInteractive() {
     const catalogService = catalogIds[state.selectedService] || state.selectedService || 'diagnostico';
     const configuratorService = state.selectedService === 'outro-svc' ? '' : catalogService;
     const configuratorLink = configuratorService
-      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
+      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '') + (model === 'modelos-prontos' ? `&plan=${state.plan}` : '')
       : 'monte-sua-solucao.html';
 
     const headline = model === 'modelos-prontos' ? PRESENCE_MODELS[state.selectedService].pronto
@@ -890,8 +905,12 @@ function renderHeroInteractive() {
     let price, priceNote, prazo;
     if (model) {
       const value = presencePrice(state.selectedService, model);
-      price = model === 'sob-medida' ? `a partir de ${brl(value)}` : brl(value);
-      priceNote = model === 'sob-medida' ? 'O valor final é confirmado depois da validação do escopo.' : 'Valor fixo para o modelo pronto.';
+      const plan = model === 'modelos-prontos' ? dxPlan(state.plan) : null;
+      price = model === 'sob-medida' ? `a partir de ${brl(value)}`
+        : plan && plan.price != null ? brl(plan.price) + (plan.billing === 'yearly' ? '/ano' : '/mês') : brl(value);
+      priceNote = model === 'sob-medida' ? 'O valor final é confirmado depois da validação do escopo.'
+        : plan && plan.price != null ? `Site em seunome.cmkcogit.com.br. ${plan.billing === 'yearly' ? 'Pago uma vez por ano, com 10% de desconto.' : 'Sem valor de entrada; cancele quando quiser.'}`
+        : 'Pagamento único, com o site no seu domínio.';
       prazo = model === 'sob-medida' ? 'Definido na validação do escopo' : PRESENCE_MODELS[state.selectedService].prazo;
     } else {
       price = selectedSvc ? selectedSvc.priceLabel : 'Sob consulta';
@@ -903,7 +922,7 @@ function renderHeroInteractive() {
       : ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'A equipe revisa o escopo e confirma valor e prazo.', 'Com tudo aprovado, o pagamento é liberado na própria plataforma.'];
 
     const previewData = typeof MODEL_PREVIEW_DATA !== 'undefined' ? MODEL_PREVIEW_DATA[state.selectedService] : null;
-    const formatLabel = model === 'modelos-prontos' ? 'Modelo pronto' : model === 'sob-medida' ? 'Sob medida' : (objData ? objData.label : '—');
+    const formatLabel = model === 'modelos-prontos' ? 'Modelo pronto' + (dxPlan(state.plan) ? ' · plano ' + dxPlan(state.plan).name.toLowerCase() : '') : model === 'sob-medida' ? 'Sob medida' : (objData ? objData.label : '—');
     const contextText = (state.context || '').trim();
 
     container.innerHTML = `
@@ -941,6 +960,7 @@ function renderHeroInteractive() {
 
           <section class="dx-aside" aria-labelledby="dx-invest-title">
             <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
+            ${model === 'modelos-prontos' ? renderDxPlans(presencePrice(state.selectedService, 'modelos-prontos')) : ''}
             <p class="dx-price">${price}</p>
             <p class="dx-price-note">${priceNote}</p>
             <dl class="dx-aside-facts"><div><dt>Prazo</dt><dd>${prazo}</dd></div></dl>
@@ -971,6 +991,12 @@ function renderHeroInteractive() {
     }));
     const previewBtn = container.querySelector('[data-dx-action="preview"]');
     if (previewBtn) previewBtn.addEventListener('click', () => showModelPreview(selectedSvc));
+    container.querySelectorAll('input[name="dx-plan"]').forEach(input => input.addEventListener('change', () => {
+      state.plan = input.value;
+      if (typeof trackEvent === 'function') trackEvent('hero_plan_selected', input.value);
+      renderResult();
+      container.querySelector(`input[name="dx-plan"][value="${input.value}"]`)?.focus();
+    }));
 
     const platformBtn = document.getElementById('hero-btn-plataforma');
     platformBtn.addEventListener('click', () => {
@@ -985,7 +1011,7 @@ function renderHeroInteractive() {
       ].filter(Boolean).join('\n');
       CogitHandoff.irParaPlataforma({
         origem: 'diagnostico',
-        servicos: [{ id: catalogService, modelo: model || null, nome: svcName }],
+        servicos: [{ id: catalogService, modelo: model || null, plano: model === 'modelos-prontos' ? state.plan : null, nome: svcName }],
         complementos: [],
         notas: notes,
         diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : formatLabel, direcao: headline },
@@ -994,7 +1020,7 @@ function renderHeroInteractive() {
     });
 
     document.getElementById('hero-btn-restart').addEventListener('click', () => {
-      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null });
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, plan: 'vitalicio' });
       transitionTo(renderStep0, 'back');
     });
   }

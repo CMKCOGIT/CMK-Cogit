@@ -574,6 +574,11 @@ const ConfiguratorApp = (() => {
       preselectAndScroll(services.split(',').map(item => item.trim()).filter(Boolean));
       const model = params.get('model');
       if (['modelos-prontos', 'sob-medida'].includes(model) && state.selectedServices.some(entry => isPresence(entry.serviceId))) selectSolutionModel(model);
+      const plan = params.get('plan');
+      if (model === 'modelos-prontos' && getPlan(plan)) {
+        state.selectedServices.filter(entry => entry.modelId === 'modelos-prontos').forEach(entry => applyPlan(entry, plan));
+        render();
+      }
       return;
     }
     restoreSession();

@@ -7608,6 +7608,28 @@ dialog.custom-model-dialog.studio { width: 100%; height: 100dvh; max-height: 100
 @media (prefers-reduced-motion: reduce) {
 .studio-section.is-new { animation: none; }
 }
+.dx-plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin: 0; padding: 0; border: 0; }
+.dx-plans legend { margin-bottom: 8px; }
+.dx-plan {
+position: relative;
+display: grid;
+gap: 2px;
+padding: 10px;
+border: 1px solid var(--dx-line);
+border-radius: 10px;
+background: var(--dx-surface);
+cursor: pointer;
+transition: border-color 150ms var(--dx-ease), background-color 150ms var(--dx-ease);
+}
+.dx-plan:hover { background: var(--dx-surface-hover); }
+.dx-plan input { position: absolute; opacity: 0; pointer-events: none; }
+.dx-plan:has(input:checked) { border-color: var(--dx-accent); background: var(--dx-accent-soft); }
+.dx-plan:has(input:focus-visible) { outline: 2px solid var(--dx-accent); outline-offset: 2px; }
+.dx-plan-name { color: var(--dx-text); font-size: 0.85rem; font-weight: 700; }
+.dx-plan-name em { color: var(--dx-success); font-size: 0.72rem; font-style: normal; }
+.dx-plan-price { color: var(--dx-text); font-size: 0.8rem; font-weight: 600; }
+.dx-plan-domain { color: var(--dx-faint); font-size: 0.68rem; line-height: 1.3; }
+@media (max-width: 380px) { .dx-plans { grid-template-columns: 1fr; } }
 .i { width: 1em; height: 1em; flex: none; fill: currentColor; vertical-align: -0.125em; }
 .i-sm { width: var(--icon-sm); height: var(--icon-sm); }
 .i-md { width: var(--icon-md); height: var(--icon-md); }

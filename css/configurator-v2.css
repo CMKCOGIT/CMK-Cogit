@@ -746,3 +746,39 @@
    "pular" — CLS). Valores um pouco abaixo da altura real medida. */
 html.js #configurator-app { min-height: 1300px; }
 @media (min-width: 768px) { html.js #configurator-app { min-height: 960px; } }
+
+/* Plano do modelo pronto: vitalício (domínio do cliente), mensal ou anual (endereço CMKCOGIT) */
+.page-configurator .cfg-plan-toggle { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .65rem; }
+.page-configurator .cfg-plan-option {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: .3rem;
+  min-width: 0;
+  padding: .95rem 1rem;
+  border: 1px solid var(--cfg-line);
+  border-radius: .85rem;
+  background: #fff;
+  color: var(--cfg-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+.page-configurator .cfg-plan-option:hover { border-color: rgba(74,61,219,.35); }
+.page-configurator .cfg-plan-option.is-selected { border-color: var(--cfg-purple); background: #f7f6ff; box-shadow: 0 0 0 1px var(--cfg-purple) inset; }
+.page-configurator .cfg-plan-option:focus-visible { outline: 2px solid var(--cfg-purple); outline-offset: 2px; }
+.page-configurator .cfg-plan-top { display: flex; align-items: center; gap: .45rem; }
+.page-configurator .cfg-plan-top strong { font-size: .98rem; }
+.page-configurator .cfg-plan-top .cfg-model-radio { margin: 0 0 0 auto; width: 1.1rem; height: 1.1rem; }
+.page-configurator .cfg-plan-option.is-selected .cfg-model-radio { border-color: var(--cfg-purple); background: var(--cfg-purple); }
+.page-configurator .cfg-plan-badge { padding: .1rem .45rem; border-radius: 999px; background: #e3f1e8; color: #1e7a4c; font-size: .68rem; font-weight: 800; }
+.page-configurator .cfg-plan-domain { color: var(--cfg-muted); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.page-configurator .cfg-plan-price { margin-top: .2rem; color: var(--cfg-ink); font-size: 1.15rem; font-weight: 800; }
+.page-configurator .cfg-plan-price small { color: var(--cfg-muted); font-size: .75rem; font-weight: 600; }
+.page-configurator .cfg-plan-desc { color: var(--cfg-muted); font-size: .76rem; line-height: 1.45; }
+@container (max-width: 640px) {
+  .page-configurator .cfg-plan-toggle { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .page-configurator .cfg-plan-toggle { grid-template-columns: 1fr; }
+}

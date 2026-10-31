@@ -143,7 +143,9 @@ const ConfiguratorApp = (() => {
       const service = getService(entry.serviceId);
       const modelId = isPresence(service.id) && ['modelos-prontos', 'sob-medida'].includes(entry.modelId) ? entry.modelId : null;
       const custom = modelId === 'sob-medida';
-      return { serviceId: service.id, modelId, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
+      const restoredEntry = { serviceId: service.id, modelId, planId: null, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
+      if (modelId === 'modelos-prontos') applyPlan(restoredEntry, getPlan(entry.planId) ? entry.planId : 'vitalicio');
+      return restoredEntry;
     });
     const allowed = allowedAddons();
     state.selectedAddons = (saved.addons || []).filter(entry => entry && getAddon(entry.addonId) && allowed.has(entry.addonId)).map(entry => {
@@ -214,6 +216,41 @@ const ConfiguratorApp = (() => {
   function levelPrice(level) {
     return ['analysis', 'custom'].includes(level.priceType) || level.price == null ? 'Sob análise' : (level.priceType === 'from' ? 'A partir de ' : '') + money(level.price);
   }
+  // Planos do modelo pronto (js/data.js): vitalício no domínio do cliente, mensal ou anual no endereço CMKCOGIT.
+  const PLANS = typeof readyModelPlans !== 'undefined' ? readyModelPlans : [];
+  function getPlan(id) { return PLANS.find(plan => plan.id === id) || null; }
+  function planSuffix(entry) {
+    const plan = entry.modelId === 'modelos-prontos' ? getPlan(entry.planId) : null;
+    return plan && plan.billing === 'monthly' ? '/mês' : plan && plan.billing === 'yearly' ? '/ano' : '';
+  }
+  function applyPlan(entry, planId) {
+    const service = getService(entry.serviceId);
+    const plan = getPlan(planId);
+    entry.planId = plan ? plan.id : null;
+    if (!service) return;
+    if (plan && plan.price != null) { entry.price = plan.price; entry.priceType = 'fixed'; }
+    else { entry.price = service.price; entry.priceType = service.priceType; }
+  }
+  function renderPlans(entry, service) {
+    if (!PLANS.length) return '';
+    const labelId = 'cfg-plan-' + service.id;
+    return '<div class="cfg-control-group"><span class="cfg-control-label" id="' + labelId + '">Plano</span><div class="cfg-plan-toggle" role="group" aria-labelledby="' + labelId + '">' + PLANS.map(plan => {
+      const selected = entry.planId === plan.id;
+      const price = plan.price == null ? money(service.price) + '<small> pagamento único</small>' : money(plan.price) + '<small>' + (plan.billing === 'yearly' ? '/ano' : '/mês') + '</small>';
+      return '<button type="button" class="cfg-plan-option' + (selected ? ' is-selected' : '') + '" data-plan-service="' + service.id + '" data-plan-id="' + plan.id + '" aria-pressed="' + selected + '">'
+        + '<span class="cfg-plan-top"><strong>' + plan.name + '</strong>' + (plan.discount ? '<span class="cfg-plan-badge">−' + plan.discount + '%</span>' : '') + '<span class="cfg-model-radio" aria-hidden="true"></span></span>'
+        + '<span class="cfg-plan-domain">' + plan.domain + '</span>'
+        + '<span class="cfg-plan-price">' + price + '</span>'
+        + '<small class="cfg-plan-desc">' + plan.description + '</small></button>';
+    }).join('') + '</div></div>';
+  }
+  function selectPlan(serviceId, planId) {
+    const entry = getEntry(serviceId);
+    if (!entry || entry.modelId !== 'modelos-prontos' || !getPlan(planId)) return;
+    applyPlan(entry, planId);
+    track('configurator_plan', serviceId + ':' + planId);
+    render();
+  }
   // Cada formato mostra o que muda na decisão (preço e prazo) no próprio cartão, como no diagnóstico.
   function renderModel(entry, service, modelId) {
     const selected = entry.modelId === modelId;
@@ -224,7 +261,8 @@ const ConfiguratorApp = (() => {
     const description = pronto
       ? (info.pronto ? info.pronto + ': estrutura' : 'Estrutura') + ' já testada. Aplicamos sua marca, seus textos e suas imagens.'
       : 'Você escolhe seções e componentes, como vídeo, galeria e depoimentos. O layout é desenhado para o seu negócio.';
-    const price = pronto ? money(service.price) : 'a partir de ' + money(service.customPrice);
+    const monthly = PLANS.find(plan => plan.billing === 'monthly');
+    const price = pronto ? money(service.price) + (monthly ? ' ou ' + money(monthly.price) + '/mês' : '') : 'a partir de ' + money(service.customPrice);
     const prazo = pronto ? (info.prazo || 'definido no escopo') : 'definido no escopo';
     return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '">'
       + '<span class="cfg-model-top"><span class="cfg-model-chip' + (pronto ? '' : ' is-alt') + '">' + chip + '</span><span class="cfg-model-radio" aria-hidden="true"></span></span>'
@@ -273,6 +311,7 @@ const ConfiguratorApp = (() => {
     if (isPresence(service.id)) {
       const labelId = 'cfg-format-' + service.id;
       controls += '<div class="cfg-control-group"><span class="cfg-control-label" id="' + labelId + '">Formato</span><div class="cfg-model-toggle" role="group" aria-labelledby="' + labelId + '">' + renderModel(entry, service, 'modelos-prontos') + renderModel(entry, service, 'sob-medida') + '</div>' + renderModelAction(entry) + '</div>';
+      if (entry.modelId === 'modelos-prontos') controls += renderPlans(entry, service);
     }
     const showLevels = service.hasLevels && (!isPresence(service.id) || entry.modelId === 'modelos-prontos');
     if (showLevels) {
@@ -313,13 +352,14 @@ const ConfiguratorApp = (() => {
   }
   function entryPrice(entry) {
     if (['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
-    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + (entry.billing === 'monthly' ? '/mês após 3 meses grátis' : '');
+    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + planSuffix(entry) + (entry.billing === 'monthly' ? '/mês após 3 meses grátis' : '');
   }
   function summaryService(entry) {
     const service = getService(entry.serviceId);
     if (!service) return '';
     const detail = [];
     if (entry.modelId) detail.push(entry.modelId === 'modelos-prontos' ? 'Modelo pronto' : 'Sob medida');
+    if (entry.modelId === 'modelos-prontos' && getPlan(entry.planId)) detail.push('Plano ' + getPlan(entry.planId).name.toLowerCase());
     if (entry.levelName) detail.push(entry.levelName);
     return '<div><span><strong>' + service.name + '</strong><small>' + (detail.length ? detail.join(' · ') : 'A configurar') + '</small></span><em>' + entryPrice(entry) + '</em></div>';
   }
@@ -365,6 +405,7 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('[data-service-id]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.serviceId)));
     containerEl.querySelectorAll('[data-remove-service]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.removeService)));
     containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click', () => selectSolutionModel(button.dataset.modelId, button.dataset.modelService)));
+    containerEl.querySelectorAll('[data-plan-service]').forEach(button => button.addEventListener('click', () => selectPlan(button.dataset.planService, button.dataset.planId)));
     containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => openModelAction(button.dataset.previewService)));
     containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click', () => selectLevel(button.dataset.levelService, button.dataset.levelId)));
     containerEl.querySelectorAll('.cfg-addon-select').forEach(button => button.addEventListener('click', () => toggleAddon(button.dataset.addonId)));
@@ -392,7 +433,7 @@ const ConfiguratorApp = (() => {
       const service = getService(id);
       if (!service) return;
       if (service.billing === 'monthly') state.selectedServices = state.selectedServices.filter(entry => entry.billing !== 'monthly');
-      state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
+      state.selectedServices.push({ serviceId: id, modelId: null, planId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
       track('configurator_select', id);
     }
     const allowed = allowedAddons();
@@ -406,9 +447,11 @@ const ConfiguratorApp = (() => {
       entry.modelId = modelId;
       entry.levelId = null;
       entry.levelName = null;
+      entry.planId = null;
       if (modelId === 'sob-medida') { entry.price = service.customPrice; entry.priceType = 'from'; }
       else if (!service.hasLevels) { entry.price = service.price; entry.priceType = service.priceType; entry.billing = service.billing || null; }
       else { entry.price = null; entry.priceType = null; }
+      if (modelId === 'modelos-prontos' && !service.hasLevels) applyPlan(entry, 'vitalicio');
     });
     track('configurator_model', (serviceId || 'presence') + ':' + modelId);
     render();
@@ -477,7 +520,7 @@ const ConfiguratorApp = (() => {
       objetivos: state.selectedObjectives.slice(),
       servicos: state.selectedServices.map(entry => {
         const service = getService(entry.serviceId);
-        return { id: entry.serviceId, modelo: entry.modelId || null, nome: service ? service.name : entry.serviceId };
+        return { id: entry.serviceId, modelo: entry.modelId || null, plano: entry.modelId === 'modelos-prontos' ? (entry.planId || 'vitalicio') : null, nome: service ? service.name : entry.serviceId };
       }),
       complementos: state.selectedAddons.map(entry => ({ id: entry.addonId, qtd: entry.quantity || 1, nome: entry.name })),
       notas: structures.concat(notes ? notes.value.trim() : (state.formData['cfg-notes'] || '')).filter(Boolean).join('\n'),
@@ -510,7 +553,7 @@ const ConfiguratorApp = (() => {
     state.selectedServices = [];
     Array.from(new Set(servicesArray)).forEach(id => {
       const service = getService(id);
-      if (service) state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
+      if (service) state.selectedServices.push({ serviceId: id, modelId: null, planId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
     });
     state.currentStep = state.selectedServices.length ? 3 : 1;
     render();

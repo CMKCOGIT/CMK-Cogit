@@ -325,6 +325,18 @@ const presenceModels = {
   'site-institucional': { pronto: 'Site Institucional Essencial', prazo: '7 a 12 dias úteis' }
 };
 
+// Planos do modelo pronto. Vitalício = pagamento único, site no domínio do cliente (preço do
+// modelo no catálogo abaixo). Mensal e anual = site num endereço da CMKCOGIT
+// (seunome.cmkcogit.com.br). O anual tem 10% de desconto sobre 12 mensalidades.
+// Valores provisórios (mensal em validação); a plataforma usa os MESMOS valores
+// (lib/selecao.js no repositório do app) — mudou aqui, mude lá.
+const PLANO_MENSAL_PRONTO = 30;
+const readyModelPlans = [
+  { id: 'vitalicio', name: 'Vitalício', domain: 'Seu domínio', description: 'Pagamento único. O site fica no seu domínio (ex.: suaempresa.com.br).', billing: 'once' },
+  { id: 'mensal', name: 'Mensal', domain: 'Endereço CMKCOGIT', description: 'Site em seunome.cmkcogit.com.br. Sem valor de entrada; cancele quando quiser.', billing: 'monthly', price: PLANO_MENSAL_PRONTO },
+  { id: 'anual', name: 'Anual', domain: 'Endereço CMKCOGIT', description: 'Mesmo endereço do mensal, pago uma vez por ano com 10% de desconto.', billing: 'yearly', price: Math.round(PLANO_MENSAL_PRONTO * 12 * 0.9), discount: 10 }
+];
+
 const configuratorData = {
   services: [
     {id:'diagnostico',name:'Diagnóstico Inicial',icon:'consulting',description:'Reunião para entender negócio, problema e objetivo.',priceType:'fixed',price:0},

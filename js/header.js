@@ -151,4 +151,31 @@ function initHeader() {
   }
 
   window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+  // ── Menu "Soluções & investimentos" (desktop): abre no clique/toque e pelo teclado;
+  //    no mouse também abre ao passar por cima (CSS). Fecha com Esc ou clique fora.
+  document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+    const toggle = dropdown.querySelector('.nav-dropdown-toggle');
+    if (!toggle) return;
+    const setOpen = (open, focusToggle) => {
+      dropdown.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      if (!open && focusToggle) toggle.focus();
+    };
+    toggle.addEventListener('click', event => {
+      event.stopPropagation();
+      const open = toggle.getAttribute('aria-expanded') !== 'true';
+      setOpen(open);
+      if (open) dropdown.querySelector('.nav-dropdown-link')?.focus();
+    });
+    dropdown.addEventListener('keydown', event => {
+      if (event.key === 'Escape' && dropdown.classList.contains('is-open')) setOpen(false, true);
+    });
+    dropdown.addEventListener('focusout', event => {
+      if (!dropdown.contains(event.relatedTarget)) setOpen(false);
+    });
+    document.addEventListener('click', event => {
+      if (!dropdown.contains(event.target)) setOpen(false);
+    });
+  });
 }

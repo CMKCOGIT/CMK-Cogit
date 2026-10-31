@@ -46,9 +46,9 @@ window.CogitHandoff = (() => {
 
   // cfg: { origem, objetivos, servicos: [{id, modelo, nome}], complementos: [{id, qtd, nome}], notas, diagnostico, estimativa }
   function montar(cfg) {
-    const servicos = (cfg.servicos || []).map(s => ({ id: s.id, modelo: s.modelo || null, nome: s.nome || '' }));
+    const servicos = (cfg.servicos || []).map(s => ({ id: s.id, modelo: s.modelo || null, plano: s.plano || null, nome: s.nome || '' }));
     const complementos = (cfg.complementos || []).map(c => ({ id: c.id, qtd: c.qtd || 1, nome: c.nome || '' }));
-    const assinatura = JSON.stringify([cfg.origem, servicos.map(s => s.id + ':' + s.modelo), complementos.map(c => c.id + ':' + c.qtd)]);
+    const assinatura = JSON.stringify([cfg.origem, servicos.map(s => s.id + ':' + s.modelo + ':' + s.plano), complementos.map(c => c.id + ':' + c.qtd)]);
     return {
       v: 1,
       ref: refPara(assinatura),

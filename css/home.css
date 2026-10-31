@@ -2,39 +2,156 @@
    Home — números do catálogo e as 4 frentes de soluções
    (conteúdo e preços vêm de js/data.js via js/home.js)
    ===================================================================== */
-.home-numeros { position: relative; z-index: 2; padding-top: var(--sp-8); padding-bottom: var(--sp-4); }
-@media (min-width: 1024px) { .home-numeros { margin-top: calc(-1 * var(--sp-10)); padding-top: 0; } }
+.home-numeros { position: relative; z-index: 3; padding-top: var(--sp-8); padding-bottom: var(--sp-4); }
+@media (min-width: 1024px) { .home-numeros { margin-top: calc(-1 * var(--sp-12)); padding-top: 0; } }
+
+/* Faixa de números: um só cartão, divisórias finas, cada dado com rótulo, ícone e "o que significa" */
 .home-numeros-lista {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1px;
+  grid-template-columns: 1fr;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
+  padding: var(--sp-2);
   list-style: none;
-  border: 1px solid var(--color-border-brand);
-  border-radius: var(--radius-xl);
-  background: var(--color-neutral-200);
-  box-shadow: var(--shadow-3);
-}
-.home-numeros-lista > li {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-1);
-  padding: var(--sp-5) var(--sp-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
   background: var(--color-surface);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset, var(--shadow-3);
 }
-.home-numeros-lista strong {
+.home-numero {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  grid-template-areas: "topo topo" "valor desc" "balao balao";
+  align-items: center;
+  column-gap: var(--sp-4);
+  row-gap: var(--sp-2);
+  padding: var(--sp-4);
+  border-radius: var(--radius-xl);
+  transition: background-color var(--dur-fast) ease;
+}
+.home-numero + .home-numero { border-top: 1px solid var(--color-neutral-200); border-radius: 0; }
+.home-numero:hover { background: var(--color-surface-muted); }
+.home-numero-topo { grid-area: topo; display: flex; align-items: center; gap: var(--sp-2); }
+.home-numero-icone {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-md);
+  background: var(--color-brand-50);
   color: var(--color-brand-600);
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
-  font-weight: var(--fw-extrabold);
-  line-height: 1.05;
-  letter-spacing: var(--tracking-tight);
-  font-variant-numeric: tabular-nums;
+  font-size: 0.875rem;
 }
-.home-numeros-lista > li > span { color: var(--color-text-muted); font-size: var(--fs-small); line-height: 1.35; }
-@media (min-width: 768px) { .home-numeros-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.home-numero-rotulo {
+  color: var(--color-text-subtle);
+  font-size: 0.6875rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.home-numero-info {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  margin: -0.25rem -0.25rem -0.25rem auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-subtle);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color var(--dur-fast) ease, background-color var(--dur-fast) ease;
+}
+.home-numero-info:hover,
+.home-numero-info[aria-expanded="true"] { background: var(--color-brand-50); color: var(--color-brand-600); }
+.home-numero-info:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.home-numero-valor {
+  grid-area: valor;
+  color: var(--color-text);
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);
+  font-weight: var(--fw-extrabold);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.home-numero-valor small {
+  color: var(--color-brand-600);
+  font-size: 0.45em;
+  font-weight: var(--fw-bold);
+  letter-spacing: 0;
+  vertical-align: 0.9em;
+}
+.home-numero-desc { grid-area: desc; color: var(--color-text-muted); font-size: var(--fs-small); line-height: 1.4; }
+.home-numero-balao {
+  grid-area: balao;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-navy-900);
+  color: var(--color-text-on-dark-muted);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  box-shadow: var(--shadow-4);
+}
+.home-numero-balao p { margin: 0; }
+.home-numero-balao[hidden] { display: none; }
+
+@media (min-width: 640px) {
+  .home-numeros-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .home-numero {
+    grid-template-columns: 1fr;
+    grid-template-areas: "topo" "valor" "desc";
+    align-content: start;
+    padding: var(--sp-5);
+  }
+  .home-numero-topo { margin-bottom: var(--sp-3); }
+  .home-numero + .home-numero { border-top: 0; border-radius: var(--radius-xl); }
+  .home-numero:nth-child(n + 3) { border-top: 1px solid var(--color-neutral-200); border-radius: 0 0 var(--radius-xl) var(--radius-xl); }
+  .home-numero:nth-child(even)::before {
+    content: "";
+    position: absolute;
+    top: var(--sp-5);
+    bottom: var(--sp-5);
+    left: 0;
+    width: 1px;
+    background: var(--color-neutral-200);
+  }
+  /* balão flutua sob o botão, sem empurrar o layout */
+  .home-numero-balao {
+    position: absolute;
+    z-index: 5;
+    top: calc(var(--sp-5) + 2.25rem);
+    right: var(--sp-3);
+    left: var(--sp-3);
+  }
+  .home-numero-balao::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    right: calc(var(--sp-2) + 0.55rem);
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+}
+@media (min-width: 1024px) {
+  .home-numeros-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .home-numero:nth-child(n + 3) { border-top: 0; border-radius: var(--radius-xl); }
+  .home-numero + .home-numero::before {
+    content: "";
+    position: absolute;
+    top: var(--sp-5);
+    bottom: var(--sp-5);
+    left: 0;
+    width: 1px;
+    background: var(--color-neutral-200);
+  }
+}
 
 .home-frentes .section-header { max-width: 720px; margin-bottom: var(--sp-10); }
 .home-frente-celula { display: flex; }

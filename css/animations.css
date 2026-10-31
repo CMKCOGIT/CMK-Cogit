@@ -282,10 +282,7 @@
 
 .home-process-card.methodology-active .home-process-num {
   color: var(--purple);
-  border-color: rgba(74, 61, 219, 0.4);
-  background: rgba(74, 61, 219, 0.08);
-  box-shadow: 0 0 16px rgba(74, 61, 219, 0.2);
-  transition: all 0.4s ease;
+  transition: color 0.4s ease;
 }
 
 /* ══════════════════════════════════════════

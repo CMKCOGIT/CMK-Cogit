@@ -260,10 +260,62 @@
     <section class="home-numeros" aria-label="A CMKCOGIT em números">
       <div class="container">
         <ul class="home-numeros-lista" role="list">
-          <li data-reveal data-reveal-delay="0"><strong><span data-counter="12" data-numero="solucoes">12</span></strong><span>soluções no catálogo</span></li>
-          <li data-reveal data-reveal-delay="80"><strong><span data-counter="4" data-numero="frentes">4</span></strong><span>frentes de atuação</span></li>
-          <li data-reveal data-reveal-delay="160"><strong><span data-counter="3">3</span></strong><span>modelos prontos para começar</span></li>
-          <li data-reveal data-reveal-delay="240"><strong>R$ <span data-counter="350" data-numero="minimo">350</span></strong><span>menor investimento para começar</span></li>
+          <li class="home-numero" data-reveal data-reveal-delay="0">
+            <div class="home-numero-topo">
+              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#solucoes"></use></svg></span>
+              <span class="home-numero-rotulo">Catálogo</span>
+              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-1" aria-label="O que significa: soluções no catálogo">
+                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
+              </button>
+            </div>
+            <strong class="home-numero-valor"><span data-counter="12" data-numero="solucoes">12</span></strong>
+            <span class="home-numero-desc">soluções no catálogo</span>
+            <div class="home-numero-balao" id="numero-info-1" role="note" hidden>
+              <p>Serviços com escopo e investimento definidos: de consultoria e landing pages a sistemas, automações e MVPs. Dá para combinar mais de um em “Monte sua solução”.</p>
+            </div>
+          </li>
+          <li class="home-numero" data-reveal data-reveal-delay="80">
+            <div class="home-numero-topo">
+              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#operacao"></use></svg></span>
+              <span class="home-numero-rotulo">Frentes</span>
+              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-2" aria-label="O que significa: frentes de atuação">
+                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
+              </button>
+            </div>
+            <strong class="home-numero-valor"><span data-counter="4" data-numero="frentes">4</span></strong>
+            <span class="home-numero-desc">frentes de atuação</span>
+            <div class="home-numero-balao" id="numero-info-2" role="note" hidden>
+              <p>Organizamos as soluções pelo objetivo do seu negócio: atrair e converter clientes, ganhar eficiência, organizar a operação ou criar algo novo.</p>
+            </div>
+          </li>
+          <li class="home-numero" data-reveal data-reveal-delay="160">
+            <div class="home-numero-topo">
+              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#visao-cards"></use></svg></span>
+              <span class="home-numero-rotulo">Modelos prontos</span>
+              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-3" aria-label="O que significa: modelos prontos para começar">
+                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
+              </button>
+            </div>
+            <strong class="home-numero-valor"><span data-counter="3">3</span></strong>
+            <span class="home-numero-desc">modelos prontos para começar</span>
+            <div class="home-numero-balao" id="numero-info-3" role="note" hidden>
+              <p>Landing Page, Portfólio e Site com estrutura já desenvolvida. Você envia textos, imagens e identidade visual, e o site fica pronto mais rápido e com investimento menor.</p>
+            </div>
+          </li>
+          <li class="home-numero" data-reveal data-reveal-delay="240">
+            <div class="home-numero-topo">
+              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#valor"></use></svg></span>
+              <span class="home-numero-rotulo">Investimento</span>
+              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-4" aria-label="O que significa: menor investimento para começar">
+                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
+              </button>
+            </div>
+            <strong class="home-numero-valor"><small>R$</small> <span data-counter="350" data-numero="minimo">350</span></strong>
+            <span class="home-numero-desc">menor investimento para começar</span>
+            <div class="home-numero-balao" id="numero-info-4" role="note" hidden>
+              <p data-numero-explica="minimo">Valor inicial do serviço “Consultoria e Planejamento Digital”, o ponto de partida mais acessível. Sites com modelo pronto começam em R$ 500.</p>
+            </div>
+          </li>
         </ul>
       </div>
     </section>

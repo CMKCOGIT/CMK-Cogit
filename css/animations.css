@@ -188,9 +188,9 @@
 .package-card:hover,
 .feature-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 36px -8px rgba(15, 27, 51, 0.12),
-              0 4px 12px rgba(74, 61, 219, 0.08);
-  border-color: rgba(74, 61, 219, 0.35);
+  box-shadow: 0 16px 36px -8px rgba(12, 12, 18, 0.12),
+              0 4px 12px rgba(106, 75, 255, 0.08);
+  border-color: rgba(106, 75, 255, 0.35);
 }
 
 /* ══════════════════════════════════════════
@@ -300,7 +300,7 @@
 .hero-interactive-container.is-dark-revealed,
 .cta-banner.is-dark-revealed {
   box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.65),
-              0 0 40px rgba(74, 61, 219, 0.12);
+              0 0 40px rgba(106, 75, 255, 0.12);
 }
 
 /* ══════════════════════════════════════════
@@ -347,7 +347,7 @@
 
 body.intro-animating {
   overflow: hidden !important;
-  background-color: var(--ink, #0F1B33);
+  background-color: var(--ink, #0C0C12);
 }
 
 .brand-intro {
@@ -359,8 +359,8 @@ body.intro-animating {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--ink, #0F1B33);
-  background: radial-gradient(circle at center, #14213d 0%, #0c1527 60%, #070d18 100%);
+  background-color: var(--ink, #0C0C12);
+  background: radial-gradient(circle at center, #15151E 0%, #0C0C12 60%, #08080C 100%);
   opacity: 1;
   visibility: visible;
   transition: opacity 0.48s cubic-bezier(0.16, 1, 0.3, 1),
@@ -405,7 +405,7 @@ html.intro-vista .brand-intro { display: none !important; }
   height: 620px;
   max-width: 95vw;
   max-height: 95vw;
-  background: radial-gradient(circle, rgba(74, 61, 219, 0.32) 0%, rgba(167, 155, 255, 0.06) 45%, transparent 70%);
+  background: radial-gradient(circle, rgba(106, 75, 255, 0.32) 0%, rgba(167, 155, 255, 0.06) 45%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   animation: introGlowPulse 2.2s ease-in-out infinite;
@@ -449,7 +449,7 @@ html.intro-vista .brand-intro { display: none !important; }
   max-height: 85px;
   display: block;
   object-fit: contain;
-  filter: drop-shadow(0 4px 24px rgba(74, 61, 219, 0.35));
+  filter: drop-shadow(0 4px 24px rgba(106, 75, 255, 0.35));
 }
 
 .brand-intro-shimmer {
@@ -530,7 +530,7 @@ html.intro-vista .brand-intro { display: none !important; }
 }
 
 .brand-intro-triad .triad-dot {
-  color: var(--purple-light, #5B4FE6);
+  color: var(--purple-light, #6A4BFF);
   font-size: 10px;
   opacity: 0.9;
 }

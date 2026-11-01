@@ -14,7 +14,7 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 OUT = os.path.join(ROOT, 'assets', 'brand', 'logo')
 os.makedirs(OUT, exist_ok=True)
 
-INK, PAPER, VOLT, ULTRA = '#0C0C12', '#F2EFE6', '#C8FF2E', '#6A4BFF'
+INK, PAPER, ELETRICO, COBALTO = '#0A0F1E', '#F1F4FA', '#4DA8FF', '#2D4FFF'
 
 font = instantiateVariableFont(TTFont(os.path.join(ROOT, 'assets/fonts/anybody-var.woff2')), {'wdth': 150, 'wght': 850})
 gs, cmap, hmtx = font.getGlyphSet(), font.getBestCmap(), font['hmtx']
@@ -53,8 +53,8 @@ def save(name, content):
     with open(os.path.join(OUT, name), 'w') as f: f.write(content)
 
 variants = {
-    'dark':       dict(a=PAPER, b=VOLT,  s=PAPER, cur=VOLT),   # para fundos escuros (principal)
-    'light':      dict(a=INK,   b=ULTRA, s=INK,   cur=ULTRA),  # para fundos claros
+    'dark':       dict(a=PAPER, b=ELETRICO,  s=PAPER, cur=ELETRICO),   # para fundos escuros (principal)
+    'light':      dict(a=INK,   b=COBALTO, s=INK,   cur=COBALTO),  # para fundos claros
     'mono-white': dict(a='#FFFFFF', b='#FFFFFF', s='#FFFFFF', cur='#FFFFFF'),
     'mono-black': dict(a='#000000', b='#000000', s='#000000', cur='#000000'),
 }
@@ -89,10 +89,10 @@ for key, v in variants.items():
 # ícones de app (quadrado arredondado)
 def app(bg, c, cur):
     return svg(64, 64, f'<rect width="64" height="64" rx="15" fill="{bg}"/>' + symbol_group(c, cur, 0.72, 64*0.14+1.2, 64*0.14), 'CMKCOGIT')
-save('cmkcogit-app-ink.svg', app(INK, PAPER, VOLT))
-save('cmkcogit-app-volt.svg', app(VOLT, INK, INK))
-save('cmkcogit-app-ultra.svg', app(ULTRA, PAPER, VOLT))
-with open(os.path.join(ROOT, 'favicon.svg'), 'w') as f: f.write(app(INK, PAPER, VOLT))
+save('cmkcogit-app-ink.svg', app(INK, PAPER, ELETRICO))
+save('cmkcogit-app-eletrico.svg', app(ELETRICO, INK, INK))
+save('cmkcogit-app-cobalto.svg', app(COBALTO, PAPER, ELETRICO))
+with open(os.path.join(ROOT, 'favicon.svg'), 'w') as f: f.write(app(INK, PAPER, ELETRICO))
 
 # wordmark animável (inline no site): caminhos separados para o brand intro
 with open(os.path.join(OUT, 'paths.json'), 'w') as f:

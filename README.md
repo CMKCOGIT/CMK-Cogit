@@ -1,5 +1,7 @@
 # COGIT — site revisado
 
+> **Rebrand 2026:** nova identidade visual em tons de azul (símbolo C-cursor, Anybody/Geist, Tinta · Papel · Elétrico · Cobalto). Brand book em [`marca/index.html`](marca/index.html), estratégia em [`docs/REBRAND-2026.md`](docs/REBRAND-2026.md), camada visual em `css/rebrand.css` e movimento em `js/rebrand-motion.js`.
+
 Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em HTML, CSS e JavaScript, sem dependências de produção ou etapa de build.
 
 ## O que mudou

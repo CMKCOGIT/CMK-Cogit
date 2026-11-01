@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <script>document.documentElement.classList.add('js');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="../favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png">
+  <meta name="theme-color" content="#0A0F1E">
+  <title>Brand Book 2026 | CMKCOGIT</title>
+  <meta name="description" content="Identidade visual CMKCOGIT 2026: conceito, logo, cores, tipografia, movimento, aplicações e downloads.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="preload" href="../assets/fonts/anybody-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="../assets/fonts/geist-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="../css/site.min.css">
+  <style>
+    .bb { --ink:#0A0F1E; --ink2:#121A2E; --ink3:#1A2440; --paper:#F1F4FA; --paper2:#FAFBFE; --paper3:#E3E8F2; --eletrico:#4DA8FF; --cobalto:#2D4FFF; --brasa:#FF5B37; --muted:#A9B4CC; --mutedL:#4E5A72; background:var(--ink); color:var(--paper); font-family:var(--font-ui); }
+    .bb *{ box-sizing:border-box; }
+    .bb h1, .bb h2, .bb h3{ color:inherit; }
+    .mini-site, .phone .screen, .story, .badge, .bcard.front{ color:var(--paper); }
+    .bcard.back, .slide{ color:var(--ink); }
+    .bb a{ color:inherit; }
+    .bb-wrap{ width:min(1240px, 100% - 2*clamp(1rem,4vw,3rem)); margin-inline:auto; }
+    .bb-nav{ position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:24px; justify-content:space-between; padding:14px clamp(1rem,4vw,3rem); background:rgba(10, 15, 30,.9); backdrop-filter:blur(14px); border-bottom:1px solid rgba(241, 244, 250,.08); }
+    .bb-nav img{ height:24px; width:auto; display:block; }
+    .bb-nav ul{ display:flex; gap:4px; list-style:none; margin:0; padding:0; overflow-x:auto; scrollbar-width:none; }
+    .bb-nav ul a{ display:block; padding:8px 12px; border-radius:999px; font:500 .8rem var(--font-code); letter-spacing:.06em; text-transform:uppercase; text-decoration:none; color:rgba(241, 244, 250,.7); white-space:nowrap; }
+    .bb-nav ul a:hover{ color:var(--ink); background:var(--eletrico); }
+    .bb-sec{ padding:clamp(4rem,3rem+5vw,8rem) 0; border-bottom:1px solid rgba(241, 244, 250,.08); }
+    .bb-sec.light{ background:var(--paper); color:var(--ink); border-color:rgba(10, 15, 30,.1); }
+    .bb-num{ font:500 .8rem var(--font-code); letter-spacing:.12em; color:var(--eletrico); text-transform:uppercase; display:flex; gap:10px; align-items:center; }
+    .bb-num::before{ content:''; width:.55em; height:1.05em; background:currentColor; animation:cmkBlink 1.1s steps(1) infinite; }
+    .bb-sec.light .bb-num{ color:#2442E0; }
+    .bb h2{ font-size:clamp(2.2rem,1rem+4.6vw,5.2rem); margin:.4em 0 .3em; max-width:16ch; }
+    .bb h3{ font-size:clamp(1.2rem,1rem+.8vw,1.7rem); margin:0 0 .5em; }
+    .bb .lead{ font-size:clamp(1.05rem,1rem+.3vw,1.25rem); line-height:1.6; max-width:60ch; color:var(--muted); }
+    .bb-sec.light .lead{ color:var(--mutedL); }
+    .bb-grid{ display:grid; gap:16px; }
+    @media(min-width:760px){ .g2{grid-template-columns:repeat(2,1fr)} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} }
+    .tile{ position:relative; border-radius:24px; padding:clamp(1.25rem,1rem+1.5vw,2.25rem); border:1px solid rgba(241, 244, 250,.1); background:var(--ink2); overflow:hidden; }
+    .bb-sec.light .tile{ border-color:rgba(10, 15, 30,.1); background:var(--paper2); }
+    .tile.t-ink{ background:var(--ink); } .tile.t-paper{ background:var(--paper); color:var(--ink); } .tile.t-eletrico{ background:var(--eletrico); color:var(--ink); } .tile.t-cobalto{ background:var(--cobalto); color:#fff; }
+    .tile .cap{ font:500 .72rem var(--font-code); letter-spacing:.1em; text-transform:uppercase; opacity:.6; margin-top:18px; display:block; }
+    .logo-stage{ min-height:220px; display:grid; place-items:center; }
+    .logo-stage img{ max-width:88%; height:auto; }
+
+    /* capa */
+    .bb-cover{ min-height:calc(100svh - 53px); display:grid; align-content:center; position:relative; overflow:hidden; padding:6rem 0 4rem; background:
+      radial-gradient(50% 60% at 85% 20%, rgba(45, 79, 255,.28), transparent 70%),
+      linear-gradient(rgba(241, 244, 250,.04) 1px, transparent 1px) 0 0/72px 72px,
+      linear-gradient(90deg, rgba(241, 244, 250,.04) 1px, transparent 1px) 0 0/72px 72px, var(--ink); }
+    .bb-cover h1{ font-size:clamp(3rem,1rem+9vw,10rem); line-height:.86; letter-spacing:-.05em; margin:.2em 0; font-stretch:var(--w,125%); }
+    .bb-cover h1 em{ font-style:normal; color:var(--eletrico); }
+    .cover-mark{ width:clamp(90px,12vw,150px); height:auto; }
+    .cover-mark .f{ stroke-dasharray:1; stroke-dashoffset:1; animation:cmkDraw 1s cubic-bezier(.7,0,.2,1) .1s forwards; }
+    .cover-mark .c{ opacity:0; animation:cmkCursorIn .2s .9s forwards, cmkBlink 1s steps(1) 1.1s infinite; }
+    .cover-meta{ display:flex; flex-wrap:wrap; gap:10px 28px; font:500 .8rem var(--font-code); letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+    .replay{ margin-top:28px; }
+
+    /* conceito */
+    .equation{ display:flex; flex-wrap:wrap; align-items:center; gap:clamp(12px,2vw,28px); margin-top:40px; }
+    .equation .eq{ display:grid; place-items:center; gap:10px; text-align:center; }
+    .equation svg{ width:clamp(90px,12vw,150px); height:auto; }
+    .equation .op{ font:800 clamp(2rem,1rem+3vw,4rem) var(--font-display); color:var(--eletrico); }
+    .equation small{ font:500 .75rem var(--font-code); letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+    .traits{ margin-top:48px; }
+    .traits td, .traits th{ padding:14px 16px; border-bottom:1px solid rgba(241, 244, 250,.1); text-align:left; vertical-align:top; }
+    .traits{ width:100%; border-collapse:collapse; }
+    .traits th{ font:500 .75rem var(--font-code); letter-spacing:.1em; text-transform:uppercase; color:var(--eletrico); }
+    .traits td:last-child{ color:var(--muted); }
+
+    /* construção */
+    .construct{ position:relative; background:var(--paper2); border-radius:24px; padding:40px; display:grid; place-items:center; }
+    .construct svg{ width:min(420px,100%); height:auto; }
+    .clear{ display:grid; place-items:center; padding:30px; }
+    .clear .box{ position:relative; padding:44px; outline:1.5px dashed #2442E0; outline-offset:0; background:repeating-linear-gradient(45deg, rgba(45, 79, 255,.06) 0 8px, transparent 8px 16px); }
+    .clear .box img{ display:block; height:56px; width:auto; background:var(--paper); }
+    .clear .lbl{ position:absolute; font:500 .7rem var(--font-code); color:#2442E0; }
+    .min-sizes{ display:flex; gap:28px; align-items:end; flex-wrap:wrap; }
+    .min-sizes figure{ margin:0; display:grid; gap:8px; justify-items:start; }
+    .min-sizes figcaption{ font:500 .72rem var(--font-code); color:var(--mutedL); }
+    .dont{ position:relative; min-height:150px; display:grid; place-items:center; border-radius:18px; background:var(--paper2); border:1px solid rgba(10, 15, 30,.08); overflow:hidden; }
+    .dont img{ height:34px; width:auto; }
+    .dont::after{ content:'✕'; position:absolute; top:10px; right:12px; width:26px; height:26px; display:grid; place-items:center; border-radius:50%; background:var(--brasa); color:var(--ink); font:700 .8rem var(--font-ui); }
+    .dont p{ position:absolute; bottom:10px; left:14px; right:14px; margin:0; font-size:.8rem; color:var(--mutedL); }
+
+    /* cores */
+    .sw{ border-radius:24px; overflow:hidden; border:1px solid rgba(241, 244, 250,.1); background:var(--ink2); cursor:pointer; text-align:left; padding:0; color:inherit; font:inherit; width:100%; }
+    .sw .chip{ height:170px; display:flex; align-items:flex-end; padding:16px; font:800 1.6rem var(--font-display); font-stretch:130%; letter-spacing:-.03em; }
+    .sw .info{ padding:16px; display:grid; gap:4px; font:400 .82rem var(--font-code); color:var(--muted); }
+    .sw .info strong{ font:600 1rem var(--font-ui); color:var(--paper); }
+    .sw.copied .info strong::after{ content:' · copiado'; color:var(--eletrico); font-weight:500; }
+    .ratio{ display:flex; height:64px; border-radius:16px; overflow:hidden; margin-top:24px; border:1px solid rgba(241, 244, 250,.1); }
+    .ratio span{ display:grid; place-items:center; font:500 .75rem var(--font-code); }
+    .pairs{ display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); margin-top:24px; }
+    .pair{ border-radius:14px; padding:16px; font-weight:600; display:flex; justify-content:space-between; gap:10px; align-items:center; }
+    .pair small{ font:500 .72rem var(--font-code); opacity:.85; }
+
+    /* tipografia */
+    .specimen{ font-family:var(--font-display); font-size:clamp(3rem,1rem+8vw,9rem); line-height:.9; letter-spacing:-.04em; font-stretch:var(--wd,125%); font-weight:var(--wg,800); margin:24px 0; word-break:break-word; }
+    .tester{ display:grid; gap:18px; padding:24px; border-radius:24px; background:var(--ink2); border:1px solid rgba(241, 244, 250,.1); }
+    .tester label{ display:grid; grid-template-columns:110px 1fr 60px; gap:14px; align-items:center; font:500 .78rem var(--font-code); color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .tester input[type=range]{ accent-color:var(--eletrico); width:100%; }
+    .tester input[type=text]{ width:100%; padding:12px 14px; border-radius:12px; border:1px solid rgba(241, 244, 250,.15); background:var(--ink); color:var(--paper); font:500 1rem var(--font-ui); }
+    .scale div{ display:grid; grid-template-columns:120px 1fr; gap:20px; align-items:baseline; padding:14px 0; border-bottom:1px solid rgba(241, 244, 250,.08); }
+    .scale small{ font:500 .72rem var(--font-code); color:var(--muted); }
+    .glyphs{ font-family:var(--font-display); font-stretch:120%; font-weight:700; font-size:clamp(1.4rem,1rem+1.4vw,2.2rem); line-height:1.4; letter-spacing:.02em; color:var(--muted); word-break:break-all; }
+
+    /* movimento */
+    .motion-card{ min-height:220px; display:grid; place-items:center; }
+    .demo-blink{ width:22px; height:44px; background:var(--eletrico); animation:cmkBlink 1.1s steps(1) infinite; }
+    .demo-type{ font:800 2rem var(--font-display); font-stretch:140%; letter-spacing:-.03em; overflow:hidden; white-space:nowrap; width:0; animation:bbType 2.4s steps(8) infinite; border-right:12px solid var(--eletrico); }
+    @keyframes bbType{ 0%{width:0} 55%,100%{width:8.1ch} }
+    .demo-mask{ font:800 2.2rem var(--font-display); font-stretch:125%; overflow:hidden; line-height:1.05; }
+    .demo-mask span{ display:inline-block; animation:bbRise 2.4s cubic-bezier(.22,1,.36,1) infinite; }
+    @keyframes bbRise{ 0%{transform:translateY(110%)} 35%,100%{transform:translateY(0)} }
+    .demo-stretch{ font:800 2.4rem var(--font-display); letter-spacing:-.03em; animation:bbStretch 3s ease-in-out infinite alternate; color:var(--eletrico); }
+    @keyframes bbStretch{ from{font-stretch:60%} to{font-stretch:150%} }
+    .demo-draw svg{ width:110px; } .demo-draw .f{ stroke-dasharray:1; animation:bbDraw 2.4s cubic-bezier(.7,0,.2,1) infinite; } @keyframes bbDraw{ 0%{stroke-dashoffset:1} 50%,100%{stroke-dashoffset:0} }
+    .demo-marquee{ width:100%; overflow:hidden; background:var(--eletrico); color:var(--ink); transform:rotate(-3deg); padding:10px 0; }
+    .demo-marquee div{ display:flex; gap:22px; width:max-content; font:800 1.2rem var(--font-display); font-stretch:140%; animation:bbMar 8s linear infinite; white-space:nowrap; }
+    @keyframes bbMar{ to{ transform:translateX(-50%) } }
+    .tokens{ font:400 .85rem/1.7 var(--font-code); background:var(--ink); border:1px solid rgba(241, 244, 250,.1); border-radius:18px; padding:22px; overflow:auto; color:var(--muted); white-space:pre; }
+    .tokens b{ color:var(--eletrico); font-weight:500; }
+
+    /* mockups */
+    .mock-row{ display:grid; gap:24px; align-items:center; }
+    @media(min-width:900px){ .mock-row.cards{ grid-template-columns:1fr 1fr } .mock-row.devices{ grid-template-columns:1.6fr 1fr } .mock-row.social{ grid-template-columns:repeat(3,1fr) } }
+    .scene{ border-radius:28px; padding:clamp(1.5rem,1rem+3vw,4rem); display:grid; place-items:center; position:relative; overflow:hidden; }
+    .scene.s-paper{ background:linear-gradient(160deg,#E6ECF6,#CBD6EA); }
+    .scene.s-ink{ background:radial-gradient(70% 60% at 30% 20%, #1B2A52, var(--ink)); }
+    .scene.s-cobalto{ background:linear-gradient(160deg,#3D63FF,#2442E0); }
+    .bcard{ width:min(420px,100%); aspect-ratio:85/55; border-radius:14px; position:relative; box-shadow:0 40px 80px -30px rgba(0,0,0,.55), 0 2px 0 rgba(255,255,255,.04) inset; transform:perspective(1200px) rotateX(14deg) rotateY(-16deg) rotateZ(4deg); }
+    .bcard.back{ transform:perspective(1200px) rotateX(10deg) rotateY(14deg) rotateZ(-5deg); }
+    .bcard.front{ background:var(--ink); display:grid; place-items:center; }
+    .bcard.front img{ width:62%; }
+    .bcard.back{ background:var(--paper); color:var(--ink); padding:9% 8%; display:grid; align-content:space-between; }
+    .bcard.back strong{ font:800 1.25rem var(--font-display); font-stretch:125%; letter-spacing:-.02em; display:block; }
+    .bcard.back span{ font:500 .7rem var(--font-code); letter-spacing:.06em; color:var(--mutedL); }
+    .bcard.back .row{ display:flex; justify-content:space-between; align-items:end; gap:10px; }
+    .bcard.back ul{ list-style:none; padding:0; margin:0; font:500 .68rem/1.7 var(--font-code); }
+    .bcard.back .cur{ width:14px; height:26px; background:var(--cobalto); }
+    .browser{ width:100%; border-radius:16px; overflow:hidden; background:var(--ink); box-shadow:0 50px 100px -40px rgba(0,0,0,.6); border:1px solid rgba(241, 244, 250,.12); }
+    .browser .bar{ display:flex; align-items:center; gap:8px; padding:10px 14px; background:#141C30; }
+    .browser .dots i{ display:inline-block; width:10px; height:10px; border-radius:50%; background:#34405C; margin-right:6px; }
+    .browser .tab{ display:flex; align-items:center; gap:8px; padding:6px 12px; border-radius:8px; background:var(--ink); font:500 .72rem var(--font-ui); color:var(--paper); }
+    .browser .tab img{ width:14px; height:14px; }
+    .browser .url{ flex:1; padding:6px 12px; border-radius:8px; background:#0D1426; font:400 .72rem var(--font-code); color:var(--muted); }
+    .mini-site{ position:relative; aspect-ratio:16/9.4; padding:5% 6%; background:linear-gradient(rgba(241, 244, 250,.04) 1px, transparent 1px) 0 0/36px 36px, linear-gradient(90deg, rgba(241, 244, 250,.04) 1px, transparent 1px) 0 0/36px 36px, radial-gradient(50% 60% at 85% 20%, rgba(45, 79, 255,.3), transparent 70%), var(--ink); overflow:hidden; }
+    .mini-site .top{ display:flex; justify-content:space-between; align-items:center; }
+    .mini-site .top img{ height:14px; }
+    .mini-site .top b{ background:var(--eletrico); color:var(--ink); border-radius:99px; font:600 .55rem var(--font-ui); padding:5px 10px; }
+    .mini-site .h{ font-family:var(--font-display); font-weight:800; font-size:clamp(1.4rem,.6rem + 2.4vw,2.6rem); line-height:.92; font-stretch:125%; letter-spacing:-.045em; margin-top:9%; max-width:11ch; }
+    .mini-site .h em{ font-style:normal; color:var(--eletrico); }
+    .mini-site .p{ font-size:.7rem; color:var(--muted); max-width:34ch; margin-top:10px; }
+    .mini-site .btn-m{ display:inline-block; margin-top:12px; background:var(--eletrico); color:var(--ink); border-radius:99px; font:600 .62rem var(--font-ui); padding:7px 14px; }
+    .mini-site .band{ position:absolute; left:-5%; right:-5%; bottom:9%; transform:rotate(-2deg); background:var(--eletrico); color:var(--ink); font:800 .9rem var(--font-display); font-stretch:140%; padding:6px 0; white-space:nowrap; overflow:hidden; }
+    .phone{ width:min(270px,80%); aspect-ratio:9/19.2; border-radius:42px; padding:11px; background:#04070F; box-shadow:0 50px 100px -40px rgba(0,0,0,.7), inset 0 0 0 2px #202A44; margin-inline:auto; }
+    .phone .screen{ position:relative; height:100%; border-radius:32px; overflow:hidden; background:linear-gradient(rgba(241, 244, 250,.05) 1px, transparent 1px) 0 0/30px 30px, var(--ink); padding:44px 18px 18px; display:flex; flex-direction:column; gap:12px; }
+    .phone .notch{ position:absolute; top:10px; left:50%; transform:translateX(-50%); width:80px; height:22px; border-radius:99px; background:#04070F; }
+    .phone .screen img{ height:13px; width:auto; align-self:flex-start; }
+    .phone .h{ font:800 1.7rem/.92 var(--font-display); font-stretch:110%; letter-spacing:-.04em; margin-top:18px; }
+    .phone .h em{ font-style:normal; color:var(--eletrico); }
+    .phone .p{ font-size:.68rem; color:var(--muted); line-height:1.5; }
+    .phone .cta{ margin-top:auto; background:var(--eletrico); color:var(--ink); border-radius:99px; text-align:center; font:600 .72rem var(--font-ui); padding:11px; }
+    .phone .card{ border-radius:16px; background:var(--ink2); border:1px solid rgba(241, 244, 250,.1); padding:12px; font-size:.65rem; color:var(--muted); }
+    .phone .card b{ display:block; font:800 1.1rem var(--font-display); font-stretch:125%; color:var(--paper); }
+    .post{ width:100%; aspect-ratio:4/5; border-radius:18px; overflow:hidden; position:relative; padding:9%; display:flex; flex-direction:column; justify-content:space-between; box-shadow:0 30px 60px -30px rgba(0,0,0,.5); }
+    .post .tag{ font:500 .62rem var(--font-code); letter-spacing:.1em; text-transform:uppercase; display:flex; align-items:center; gap:8px; }
+    .post .tag::before{ content:''; width:.55em; height:1.05em; background:currentColor; }
+    .post .h{ font-family:var(--font-display); font-weight:800; font-size:clamp(1.5rem,.9rem + 1.5vw,2.3rem); line-height:.92; font-stretch:125%; letter-spacing:-.045em; }
+    .post .foot{ display:flex; justify-content:space-between; align-items:center; font:500 .62rem var(--font-code); letter-spacing:.06em; }
+    .post .foot img{ height:12px; width:auto; }
+    .post.p1{ background:var(--ink); color:var(--paper); } .post.p1 em{ font-style:normal; color:var(--eletrico); } .post.p1 .tag{ color:var(--eletrico); }
+    .post.p2{ background:var(--eletrico); color:var(--ink); }
+    .post.p3{ background:var(--cobalto); color:#fff; }
+    .post.p3 .big{ position:absolute; right:-28%; bottom:-14%; width:95%; opacity:1; }
+    .post.p2 .list{ font:800 1.05rem/1.25 var(--font-display); font-stretch:130%; letter-spacing:-.02em; }
+    .post.p2 .list span{ display:block; border-top:1.5px solid var(--ink); padding:6px 0; }
+    .profile{ display:flex; align-items:center; gap:18px; padding:22px; border-radius:22px; background:var(--paper2); color:var(--ink); border:1px solid rgba(10, 15, 30,.08); }
+    .profile img{ width:84px; height:84px; border-radius:50%; }
+    .profile strong{ font:700 1.05rem var(--font-ui); display:block; }
+    .profile span{ font-size:.85rem; color:var(--mutedL); }
+    .story{ width:min(240px,70%); aspect-ratio:9/16; border-radius:24px; overflow:hidden; background:var(--ink); color:var(--paper); position:relative; padding:28px 20px; display:flex; flex-direction:column; justify-content:space-between; margin-inline:auto; box-shadow:0 40px 80px -30px rgba(0,0,0,.6); }
+    .story .bars{ display:flex; gap:4px; } .story .bars i{ flex:1; height:2px; background:rgba(241, 244, 250,.3); } .story .bars i:first-child{ background:var(--paper); }
+    .story .h{ font:800 2rem/.9 var(--font-display); font-stretch:120%; letter-spacing:-.04em; }
+    .story .h em{ font-style:normal; color:var(--eletrico); display:block; }
+    .story .sticker{ align-self:center; background:var(--eletrico); color:var(--ink); font:600 .75rem var(--font-ui); padding:10px 16px; border-radius:12px; transform:rotate(-3deg); }
+    .sig{ background:#fff; color:#222; border-radius:16px; padding:26px; font-family:Arial, Helvetica, sans-serif; box-shadow:0 20px 50px -30px rgba(0,0,0,.4); }
+    .sig table{ border-collapse:collapse; } .sig td{ vertical-align:top; padding:0 16px 0 0; }
+    .sig .n{ font-weight:700; font-size:15px; color:#0A0F1E; } .sig .r{ font-size:12px; color:#4E5A72; } .sig .c{ font-size:12px; color:#0A0F1E; line-height:1.7; margin-top:8px; }
+    .sig .bar{ width:4px; background:#4DA8FF; padding:0; }
+    .shirt svg{ width:min(320px,100%); height:auto; filter:drop-shadow(0 30px 40px rgba(0,0,0,.35)); }
+    .stickers{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; }
+    .stickers > *{ box-shadow:0 14px 30px -14px rgba(0,0,0,.5); }
+    .stk1{ width:110px; height:110px; border-radius:50%; background:var(--eletrico); display:grid; place-items:center; transform:rotate(-8deg); }
+    .stk1 img{ width:60%; }
+    .stk2{ padding:14px 20px; border-radius:16px; background:var(--ink); transform:rotate(6deg); } .stk2 img{ height:22px; display:block; }
+    .stk3{ padding:12px 18px; border-radius:999px; background:var(--cobalto); color:#fff; font:800 1rem var(--font-display); font-stretch:130%; transform:rotate(-4deg); }
+    .stk4{ width:96px; height:96px; border-radius:22px; overflow:hidden; transform:rotate(9deg); } .stk4 img{ width:100%; height:100%; display:block; }
+    .badge{ width:220px; aspect-ratio:54/86; border-radius:16px; background:var(--ink); color:var(--paper); padding:22px 18px; display:flex; flex-direction:column; justify-content:space-between; position:relative; transform:rotate(-4deg); box-shadow:0 40px 70px -30px rgba(0,0,0,.6); }
+    .badge::before{ content:''; position:absolute; top:12px; left:50%; width:44px; height:8px; border-radius:6px; transform:translateX(-50%); background:#26314F; }
+    .badge img{ height:15px; width:auto; align-self:flex-start; margin-top:14px; }
+    .badge .av{ width:84px; height:84px; border-radius:50%; background:linear-gradient(135deg,#26314F,#1A2440); border:3px solid var(--eletrico); }
+    .badge strong{ font:800 1.4rem/.95 var(--font-display); font-stretch:120%; letter-spacing:-.03em; }
+    .badge span{ font:500 .62rem var(--font-code); letter-spacing:.1em; text-transform:uppercase; color:var(--eletrico); }
+    .slide{ width:100%; aspect-ratio:16/9; border-radius:16px; overflow:hidden; background:var(--paper); color:var(--ink); padding:5% 6%; display:grid; grid-template-columns:1.2fr 1fr; gap:6%; align-items:center; box-shadow:0 40px 80px -40px rgba(0,0,0,.6); }
+    .slide .h{ font-family:var(--font-display); font-weight:800; font-size:clamp(1.3rem,.5rem + 2vw,2.4rem); line-height:.95; font-stretch:125%; letter-spacing:-.045em; }
+    .slide .h em{ font-style:normal; color:#2442E0; }
+    .slide .nums{ display:grid; gap:10px; }
+    .slide .nums div{ background:var(--ink); color:var(--paper); border-radius:14px; padding:10px 14px; font-size:.7rem; color:var(--muted); }
+    .slide .nums b{ display:block; color:var(--eletrico); font:800 1.5rem var(--font-display); font-stretch:135%; }
+    .tabs-demo{ display:flex; gap:6px; padding:10px; background:#DEE1E6; border-radius:12px 12px 0 0; }
+    .tabs-demo div{ display:flex; gap:8px; align-items:center; background:#fff; color:#222; padding:8px 14px; border-radius:10px 10px 0 0; font:500 .78rem Arial, sans-serif; min-width:180px; }
+    .tabs-demo div.off{ background:transparent; color:#555; }
+    .tabs-demo img{ width:16px; height:16px; }
+
+    /* downloads */
+    .dl{ display:grid; gap:10px; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); }
+    .dl a{ display:flex; align-items:center; gap:14px; padding:14px; border-radius:16px; background:var(--ink2); border:1px solid rgba(241, 244, 250,.1); text-decoration:none; transition:border-color .3s, transform .4s cubic-bezier(.22,1,.36,1); }
+    .dl a:hover{ border-color:var(--eletrico); transform:translateY(-3px); }
+    .dl .th{ width:56px; height:56px; border-radius:12px; display:grid; place-items:center; flex:none; background:var(--ink); border:1px solid rgba(241, 244, 250,.08); overflow:hidden; }
+    .dl .th.l{ background:var(--paper); }
+    .dl .th img{ max-width:80%; max-height:70%; }
+    .dl strong{ display:block; font-size:.9rem; } .dl small{ font:400 .72rem var(--font-code); color:var(--muted); }
+    .bb-foot{ padding:48px 0; display:flex; flex-wrap:wrap; gap:16px; justify-content:space-between; align-items:center; color:var(--muted); font-size:.85rem; }
+    .bb-foot img{ height:22px; }
+    @media (prefers-reduced-motion: reduce){ .bb *{ animation:none !important; } .cover-mark .f, .demo-draw .f{ stroke-dashoffset:0; } .cover-mark .c{ opacity:1; } .demo-type{ width:8.1ch; } }
+  </style>
+</head>
+<body class="bb">
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+
+  <nav class="bb-nav" aria-label="Seções do brand book">
+    <a href="../index.html" aria-label="Voltar ao site CMKCOGIT"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="CMKCOGIT" width="212" height="24"></a>
+    <ul>
+      <li><a href="#conceito">Conceito</a></li>
+      <li><a href="#logo">Logo</a></li>
+      <li><a href="#cores">Cores</a></li>
+      <li><a href="#tipografia">Tipografia</a></li>
+      <li><a href="#movimento">Movimento</a></li>
+      <li><a href="#aplicacoes">Aplicações</a></li>
+      <li><a href="#downloads">Downloads</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <!-- CAPA -->
+    <header class="bb-cover">
+      <div class="bb-wrap">
+        <svg class="cover-mark" id="cover-mark" viewBox="0 0 64 64" aria-hidden="true"><path class="f" d="M52 13H24A11 11 0 0 0 13 24V40A11 11 0 0 0 24 51H52" fill="none" stroke="#F1F4FA" stroke-width="10" pathLength="1"/><rect class="c" x="32" y="23" width="9" height="18" fill="#4DA8FF"/></svg>
+        <h1 id="cover-title">Pensamos antes de <em>construir.</em></h1>
+        <div class="cover-meta"><span>Brand Book · Identidade visual 2026</span><span>v1.0 · Novembro 2026</span><span>CMKCOGIT</span></div>
+        <button type="button" class="btn btn-secondary replay" id="replay">Ver o logo se desenhar de novo ↺</button>
+      </div>
+    </header>
+
+    <!-- CONCEITO -->
+    <section class="bb-sec" id="conceito" aria-labelledby="t-conceito">
+      <div class="bb-wrap">
+        <span class="bb-num">01 · Conceito</span>
+        <h2 id="t-conceito">Uma moldura. Um cursor. Uma ideia.</h2>
+        <p class="lead">Toda construção digital começa com um cursor piscando numa tela vazia: é o momento de <strong>pensar</strong>. A moldura em C é a inicial de CMK e COGIT e também a forma de uma interface: é o que <strong>construímos</strong>. Juntas, viram a frase da marca sem precisar de texto.</p>
+        <div class="equation" aria-label="Moldura mais cursor é igual ao símbolo CMKCOGIT">
+          <div class="eq"><svg viewBox="0 0 64 64" aria-hidden="true"><path d="M52 8H24A16 16 0 0 0 8 24V40A16 16 0 0 0 24 56H52V46H24A6 6 0 0 1 18 40V24A6 6 0 0 1 24 18H52Z" fill="#F1F4FA"/></svg><small>Moldura · Interface · Construir</small></div>
+          <span class="op" aria-hidden="true">+</span>
+          <div class="eq"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="27" y="17" width="10" height="30" fill="#4DA8FF"><animate attributeName="opacity" values="1;1;0;0" dur="1.1s" repeatCount="indefinite"/></rect></svg><small>Cursor · Ideia · Pensar</small></div>
+          <span class="op" aria-hidden="true">=</span>
+          <div class="eq"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="15" fill="#1A2440"/><g transform="translate(10.2 9) scale(.72)"><path d="M52 8H24A16 16 0 0 0 8 24V40A16 16 0 0 0 24 56H52V46H24A6 6 0 0 1 18 40V24A6 6 0 0 1 24 18H52Z" fill="#F1F4FA"/><rect x="32" y="23" width="9" height="18" fill="#4DA8FF"/></g></svg><small>CMKCOGIT</small></div>
+        </div>
+        <table class="traits">
+          <caption class="bb-num" style="caption-side:top;padding:0 0 12px">Personalidade</caption>
+          <thead><tr><th scope="col">Somos</th><th scope="col">Não somos</th></tr></thead>
+          <tbody>
+            <tr><td>Estratégicos: pensamos antes</td><td>Apressados, “só faço o site”</td></tr>
+            <tr><td>Ousados no visual</td><td>Exagerados ou confusos</td></tr>
+            <tr><td>Claros e diretos</td><td>Técnicos demais, cheios de jargão</td></tr>
+            <tr><td>Parceiros que evoluem junto</td><td>Fornecedores de entrega única</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LOGO -->
+    <section class="bb-sec" id="logo" aria-labelledby="t-logo">
+      <div class="bb-wrap">
+        <span class="bb-num">02 · Logo</span>
+        <h2 id="t-logo">Assinatura de cartaz.</h2>
+        <p class="lead">O wordmark <strong>cmkcogit</strong> usa a Anybody no eixo de largura máximo, vetorizada. “cmk” é a base, “cogit” é o destaque. A versão horizontal é a principal; o símbolo sozinho funciona como ícone, avatar e favicon.</p>
+        <div class="bb-grid g2" style="margin-top:40px">
+          <div class="tile t-ink logo-stage"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="Logo horizontal para fundo escuro" width="600" height="68"><span class="cap">Horizontal · fundo escuro (principal)</span></div>
+          <div class="tile t-paper logo-stage"><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="Logo horizontal para fundo claro" width="600" height="68"><span class="cap">Horizontal · fundo claro</span></div>
+          <div class="tile t-ink logo-stage"><img src="../assets/brand/logo/cmkcogit-stacked-dark.svg" alt="Logo empilhado" width="300" height="160" style="max-width:60%"><span class="cap">Empilhado</span></div>
+          <div class="tile t-eletrico logo-stage"><img src="../assets/brand/logo/cmkcogit-horizontal-mono-black.svg" alt="Logo monocromático preto sobre Elétrico" width="600" height="68"><span class="cap">Monocromático · sobre Elétrico</span></div>
+          <div class="tile t-cobalto logo-stage"><img src="../assets/brand/logo/cmkcogit-horizontal-mono-white.svg" alt="Logo monocromático branco sobre Cobalto" width="600" height="68"><span class="cap">Monocromático · sobre Cobalto</span></div>
+          <div class="tile t-ink logo-stage" style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;align-items:center">
+            <img src="../assets/brand/logo/cmkcogit-app-ink.svg" alt="Ícone de app Tinta" width="96" height="96" style="width:96px">
+            <img src="../assets/brand/logo/cmkcogit-app-eletrico.svg" alt="Ícone de app Elétrico" width="96" height="96" style="width:96px">
+            <img src="../assets/brand/logo/cmkcogit-app-cobalto.svg" alt="Ícone de app Cobalto" width="96" height="96" style="width:96px">
+            <span class="cap" style="width:100%;text-align:center">Símbolo · ícone de app</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bb-sec light" aria-labelledby="t-constr">
+      <div class="bb-wrap">
+        <span class="bb-num">02.1 · Construção e uso</span>
+        <h2 id="t-constr">Grade de 64, sem exceção.</h2>
+        <div class="bb-grid g2" style="margin-top:32px">
+          <div class="construct">
+            <svg viewBox="-4 -4 72 72" role="img" aria-labelledby="t-grid"><title id="t-grid">Construção do símbolo em grade de 64 unidades</title>
+              <defs><pattern id="g8" width="4" height="4" patternUnits="userSpaceOnUse"><path d="M4 0H0V4" fill="none" stroke="rgba(10, 15, 30,.08)" stroke-width=".2"/></pattern></defs>
+              <rect width="64" height="64" fill="url(#g8)"/>
+              <rect width="64" height="64" fill="none" stroke="rgba(10, 15, 30,.25)" stroke-width=".3"/>
+              <path d="M52 8H24A16 16 0 0 0 8 24V40A16 16 0 0 0 24 56H52V46H24A6 6 0 0 1 18 40V24A6 6 0 0 1 24 18H52Z" fill="#0A0F1E" fill-opacity=".92"/>
+              <rect x="32" y="23" width="9" height="18" fill="#2D4FFF"/>
+              <circle cx="24" cy="24" r="16" fill="none" stroke="#FF5B37" stroke-width=".35" stroke-dasharray="1 1"/>
+              <circle cx="24" cy="24" r="6" fill="none" stroke="#FF5B37" stroke-width=".35" stroke-dasharray="1 1"/>
+              <path d="M0 8H64M0 56H64M0 18H64M0 46H64M8 0V64M18 0V64M52 0V64" stroke="#2442E0" stroke-width=".25"/>
+              <text x="54" y="13" font-size="2.6" fill="#2442E0" font-family="monospace">10</text>
+              <text x="34" y="21.5" font-size="2.6" fill="#2442E0" font-family="monospace">9×18</text>
+              <text x="1" y="27" font-size="2.6" fill="#FF5B37" font-family="monospace">r16</text>
+            </svg>
+          </div>
+          <div style="display:grid;gap:28px;align-content:start">
+            <div>
+              <h3>Área de proteção</h3>
+              <p class="lead" style="margin:0 0 14px">Ao redor do logo, deixe livre ao menos a <strong>altura do cursor</strong> (x).</p>
+              <div class="clear"><div class="box"><span class="lbl" style="top:14px;left:50%;transform:translateX(-50%)">x</span><span class="lbl" style="left:16px;top:50%;transform:translateY(-50%)">x</span><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="Logo com área de proteção" width="494" height="56"></div></div>
+            </div>
+            <div>
+              <h3>Tamanhos mínimos</h3>
+              <div class="min-sizes">
+                <figure><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="" width="120" height="14" style="width:120px;height:auto"><figcaption>Horizontal · 120 px / 30 mm</figcaption></figure>
+                <figure><img src="../assets/brand/logo/cmkcogit-symbol-light.svg" alt="" width="24" height="24"><figcaption>Símbolo · 24 px / 6 mm</figcaption></figure>
+                <figure><img src="../favicon.svg" alt="" width="16" height="16"><figcaption>Favicon · 16 px</figcaption></figure>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h3 style="margin-top:56px">Não faça</h3>
+        <div class="bb-grid g3" style="margin-top:16px">
+          <div class="dont"><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="" width="300" height="34" style="transform:scaleX(.6)"><p>Distorcer ou comprimir</p></div>
+          <div class="dont"><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="" width="300" height="34" style="transform:rotate(-12deg)"><p>Girar ou inclinar</p></div>
+          <div class="dont" style="background:#4DA8FF"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="300" height="34"><p style="color:#0A0F1E">Usar a versão clara sobre Elétrico</p></div>
+          <div class="dont"><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="" width="300" height="34" style="filter:hue-rotate(140deg) saturate(3)"><p>Trocar as cores da marca</p></div>
+          <div class="dont"><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="" width="300" height="34" style="filter:drop-shadow(4px 6px 0 #FF5B37) blur(.4px)"><p>Aplicar sombras ou efeitos</p></div>
+          <div class="dont" style="background:url(../assets/images/og-cmkcogit-2026.png) center/cover"><img src="../assets/brand/logo/cmkcogit-horizontal-light.svg" alt="" width="300" height="34"><p style="color:#F1F4FA">Usar sobre fundo sem contraste</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CORES -->
+    <section class="bb-sec" id="cores" aria-labelledby="t-cores">
+      <div class="bb-wrap">
+        <span class="bb-num">03 · Cores</span>
+        <h2 id="t-cores">Tinta, Papel e azul elétrico.</h2>
+        <p class="lead">O azul da COGIT continua sendo a marca, agora em três tons: um preto azulado profundo, um azul elétrico e o cobalto. O <strong>Elétrico</strong> é a cor da ação: todo botão principal, todo destaque. O <strong>Cobalto</strong> é o azul institucional, para botões e destaques em fundo claro. Toque num cartão para copiar o HEX.</p>
+        <div class="bb-grid g3" style="margin-top:36px">
+          <button type="button" class="sw" data-hex="#0A0F1E"><div class="chip" style="background:#0A0F1E;color:#F1F4FA;border-bottom:1px solid rgba(241, 244, 250,.1)">Tinta</div><div class="info"><strong>#0A0F1E</strong>RGB 10 15 30 · CMYK 90 75 45 85<br>Fundos, texto sobre claro</div></button>
+          <button type="button" class="sw" data-hex="#F1F4FA"><div class="chip" style="background:#F1F4FA;color:#0A0F1E">Papel</div><div class="info"><strong>#F1F4FA</strong>RGB 241 244 250 · CMYK 4 2 0 0<br>Fundo claro, texto sobre escuro</div></button>
+          <button type="button" class="sw" data-hex="#4DA8FF"><div class="chip" style="background:#4DA8FF;color:#0A0F1E">Elétrico</div><div class="info"><strong>#4DA8FF</strong>RGB 77 168 255 · CMYK 65 25 0 0 · Pantone 2915 C ≈<br>Ação, destaque, cursor</div></button>
+          <button type="button" class="sw" data-hex="#2D4FFF"><div class="chip" style="background:#2D4FFF;color:#fff">Cobalto</div><div class="info"><strong>#2D4FFF</strong>RGB 45 79 255 · CMYK 85 65 0 0 · Pantone 2728 C ≈<br>Destaque e botões em claro (texto: #2442E0)</div></button>
+          <button type="button" class="sw" data-hex="#FF5B37"><div class="chip" style="background:#FF5B37;color:#0A0F1E">Brasa</div><div class="info"><strong>#FF5B37</strong>RGB 255 91 55 · CMYK 0 75 80 0<br>Alertas e detalhes pontuais</div></button>
+          <button type="button" class="sw" data-hex="#121A2E"><div class="chip" style="background:#121A2E;color:#A9B4CC">Grafite</div><div class="info"><strong>#121A2E</strong>RGB 18 26 46<br>Cartões e superfícies sobre Tinta</div></button>
+        </div>
+        <div class="ratio" role="img" aria-label="Proporção de uso: Tinta 60%, Papel 25%, Elétrico 10%, Cobalto 5%">
+          <span style="flex:60;background:#0A0F1E;color:#F1F4FA">Tinta 60%</span><span style="flex:25;background:#F1F4FA;color:#0A0F1E">Papel 25%</span><span style="flex:10;background:#4DA8FF;color:#0A0F1E">10%</span><span style="flex:5;background:#2D4FFF;color:#fff">5%</span>
+        </div>
+        <div class="pairs" aria-label="Pares de contraste aprovados">
+          <div class="pair" style="background:#4DA8FF;color:#0A0F1E">Tinta / Elétrico <small>7,6:1 AAA</small></div>
+          <div class="pair" style="background:#0A0F1E;color:#F1F4FA;border:1px solid rgba(241, 244, 250,.15)">Papel / Tinta <small>17,3:1 AAA</small></div>
+          <div class="pair" style="background:#2D4FFF;color:#fff">Branco / Cobalto <small>5,7:1 AA</small></div>
+          <div class="pair" style="background:#F1F4FA;color:#2442E0">Cobalto texto / Papel <small>6,5:1 AA</small></div>
+          <div class="pair" style="background:#121A2E;color:#A9B4CC;border:1px solid rgba(241, 244, 250,.15)">Apoio / Grafite <small>8,3:1 AAA</small></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TIPOGRAFIA -->
+    <section class="bb-sec" id="tipografia" aria-labelledby="t-tipo">
+      <div class="bb-wrap">
+        <span class="bb-num">04 · Tipografia</span>
+        <h2 id="t-tipo">Uma fonte que se mexe.</h2>
+        <p class="lead"><strong>Anybody</strong> é variável em largura (50–150) e peso (100–900). É isso que permite títulos que se expandem com a rolagem: tipografia cinética, nossa assinatura de movimento. <strong>Geist</strong> cuida da leitura e <strong>Geist Mono</strong> dos rótulos, que lembram código. As três são livres (SIL OFL) e servidas localmente.</p>
+        <p class="specimen" id="specimen" aria-live="polite">Aa cogit</p>
+        <div class="tester">
+          <label for="t-text">Texto <input type="text" id="t-text" value="Aa cogit" maxlength="40" style="grid-column:2 / 4"></label>
+          <label for="t-wdth">Largura <input type="range" id="t-wdth" min="50" max="150" value="125"><output id="o-wdth" for="t-wdth">125</output></label>
+          <label for="t-wght">Peso <input type="range" id="t-wght" min="100" max="900" value="800"><output id="o-wght" for="t-wght">800</output></label>
+        </div>
+        <div class="bb-grid g3" style="margin-top:32px">
+          <div class="tile"><span class="bb-num">Display</span><p style="font:800 2.6rem/1 var(--font-display);font-stretch:130%;letter-spacing:-.04em;margin:14px 0">Anybody</p><p class="glyphs">ABCDEFGHIJKLM<br>abcdefghijklm<br>0123456789 ãçé?!</p><span class="cap">Títulos h1–h3, logo, números</span></div>
+          <div class="tile"><span class="bb-num">Texto</span><p style="font:600 2.6rem/1 var(--font-ui);letter-spacing:-.03em;margin:14px 0">Geist</p><p style="font-size:1.05rem;line-height:1.6;color:var(--muted)">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p><span class="cap">Parágrafos, interface, botões</span></div>
+          <div class="tile"><span class="bb-num">Código</span><p style="font:500 2.2rem/1 var(--font-code);margin:14px 0">Geist Mono</p><p style="font:400 .95rem/1.7 var(--font-code);color:var(--muted)">▮ PENSAR → ESTRUTURAR → CONSTRUIR<br>R$ 350 · 12 soluções · v2026</p><span class="cap">Rótulos, dados, metadados</span></div>
+        </div>
+        <div class="scale" style="margin-top:40px">
+          <div><small>Hero · 68–92 px</small><span style="font:800 clamp(2rem,1rem+3vw,4rem)/1 var(--font-display);font-stretch:125%;letter-spacing:-.04em">Pensamos antes</span></div>
+          <div><small>Seção · 32–64 px</small><span style="font:800 clamp(1.6rem,1rem+2vw,2.8rem)/1 var(--font-display);font-stretch:125%;letter-spacing:-.035em">Comece pelo problema</span></div>
+          <div><small>Card · 18–24 px</small><span style="font:750 1.4rem/1.1 var(--font-display);font-stretch:112%">Atrair e converter</span></div>
+          <div><small>Texto · 16–18 px</small><span style="font-size:1.05rem;color:var(--muted)">Modelos prontos para sair rápido ou projetos sob medida.</span></div>
+          <div><small>Rótulo · 12–13 px</small><span style="font:500 .78rem var(--font-code);letter-spacing:.08em;text-transform:uppercase;color:var(--eletrico)">▮ Soluções</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MOVIMENTO -->
+    <section class="bb-sec" id="movimento" aria-labelledby="t-mov">
+      <div class="bb-wrap">
+        <span class="bb-num">05 · Movimento</span>
+        <h2 id="t-mov">A marca nunca fica parada.</h2>
+        <p class="lead">Seis gestos formam a linguagem de movimento. Todos são desligados quando o visitante pede movimento reduzido no sistema.</p>
+        <div class="bb-grid g3" style="margin-top:36px">
+          <div class="tile motion-card"><div class="demo-draw"><svg viewBox="0 0 64 64" aria-hidden="true"><path class="f" d="M52 13H24A11 11 0 0 0 13 24V40A11 11 0 0 0 24 51H52" fill="none" stroke="#F1F4FA" stroke-width="10" pathLength="1"/><rect x="32" y="23" width="9" height="18" fill="#4DA8FF"/></svg></div><span class="cap">Desenhar · 900 ms · (.7,0,.2,1)</span></div>
+          <div class="tile motion-card"><div class="demo-type" aria-hidden="true">cmkcogit</div><span class="cap">Digitar · steps(8) · 800 ms</span></div>
+          <div class="tile motion-card"><div class="demo-blink" aria-hidden="true"></div><span class="cap">Piscar · steps(1) · 1,1 s</span></div>
+          <div class="tile motion-card"><div class="demo-mask" aria-hidden="true"><span>Subir</span> <span style="animation-delay:.08s">por</span> <span style="animation-delay:.16s">máscara</span></div><span class="cap">Máscara · 900 ms + 45 ms/palavra</span></div>
+          <div class="tile motion-card"><div class="demo-stretch" aria-hidden="true">expandir</div><span class="cap">Cinético · eixo wdth na rolagem</span></div>
+          <div class="tile motion-card" style="padding-inline:0"><div class="demo-marquee" aria-hidden="true"><div><span>sites ▮ sistemas ▮ automações ▮ identidade ▮ plataformas ▮</span><span>sites ▮ sistemas ▮ automações ▮ identidade ▮ plataformas ▮</span></div></div><span class="cap" style="padding-inline:24px">Faixa · acelera com o scroll</span></div>
+        </div>
+        <pre class="tokens" style="margin-top:32px" aria-label="Tokens de design em CSS"><b>:root</b> {
+  --cmk-ink: #0A0F1E;   --cmk-paper: #F1F4FA;   --cmk-eletrico: #4DA8FF;
+  --cmk-cobalto: #2D4FFF; --cmk-cobalto-ink: #2442E0; --cmk-brasa: #FF5B37;
+  --font-display: 'Anybody';  <span>/* wdth 50–150 · wght 100–900 */</span>
+  --font-ui: 'Geist';         --font-code: 'Geist Mono';
+  --cmk-ease: cubic-bezier(.22, 1, .36, 1);
+  --cmk-ease-snap: cubic-bezier(.7, 0, .2, 1);
+  --radius-xl: 20px; --radius-2xl: 28px; <span>/* botões: pílula 999px */</span>
+}  <span>/* arquivo completo: css/rebrand.css */</span></pre>
+      </div>
+    </section>
+
+    <!-- APLICAÇÕES -->
+    <section class="bb-sec light" id="aplicacoes" aria-labelledby="t-apl">
+      <div class="bb-wrap">
+        <span class="bb-num">06 · Aplicações</span>
+        <h2 id="t-apl">A marca no mundo.</h2>
+        <p class="lead">Mockups de referência para papelaria, digital e redes. Todos são feitos com os mesmos tokens do site.</p>
+
+        <h3 style="margin-top:48px">Cartão de visita</h3>
+        <div class="mock-row cards">
+          <div class="scene s-paper" style="min-height:340px"><div class="bcard front"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="260" height="30"></div></div>
+          <div class="scene s-ink" style="min-height:340px"><div class="bcard back"><div class="row"><div><strong>Seu Nome</strong><span>FUNDADOR · ESTRATÉGIA &amp; PRODUTO</span></div><div class="cur"></div></div><div class="row"><ul><li>contato@cmkcogit.com.br</li><li>(17) 98156-8889</li><li>cmkcogit.com.br</li></ul><img src="../assets/brand/logo/cmkcogit-symbol-light.svg" alt="" width="34" height="34"></div></div></div>
+        </div>
+
+        <h3 style="margin-top:48px">Site e celular</h3>
+        <div class="mock-row devices">
+          <div class="scene s-paper">
+            <div class="browser">
+              <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="tab"><img src="../favicon.svg" alt="">CMKCOGIT</span><span class="url">cmkcogit.com.br</span></div>
+              <div class="mini-site"><div class="top"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="124" height="14"><b>Fale sobre seu projeto</b></div><div class="h">Sua empresa tem um desafio. <em>Nós resolvemos.</em></div><p class="p">Da estratégia ao desenvolvimento: sites, sistemas, automações e produtos digitais sob medida.</p><span class="btn-m">Descobrir minha solução →</span><div class="band">sites institucionais ▮ landing pages ▮ identidade visual ▮ sistemas ▮ automações ▮</div></div>
+            </div>
+          </div>
+          <div class="scene s-cobalto"><div class="phone"><div class="screen"><span class="notch"></span><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="114" height="13"><div class="h">Pensamos antes de <em>construir.</em></div><p class="p">Sites, sistemas e automações que fazem sua empresa avançar.</p><div class="card"><b>R$ 350</b>menor investimento para começar</div><div class="cta">Descobrir minha solução →</div></div></div></div>
+        </div>
+
+        <h3 style="margin-top:48px">Instagram: feed, stories e perfil</h3>
+        <div class="mock-row social">
+          <div class="post p1"><span class="tag">Manifesto</span><div class="h">Todo mundo faz site. Nós pensamos <em>antes.</em></div><div class="foot"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="104" height="12"><span>01/05</span></div></div>
+          <div class="post p2"><span class="tag">O que fazemos</span><div class="list"><span>Sites</span><span>Sistemas</span><span>Automações</span><span>Identidade</span></div><div class="foot"><img src="../assets/brand/logo/cmkcogit-horizontal-mono-black.svg" alt="" width="104" height="12"><span>@cmkcogit</span></div></div>
+          <div class="post p3"><svg class="big" viewBox="0 0 64 64" aria-hidden="true"><path d="M52 8H24A16 16 0 0 0 8 24V40A16 16 0 0 0 24 56H52V46H24A6 6 0 0 1 18 40V24A6 6 0 0 1 24 18H52Z" fill="#fff" fill-opacity=".14"/><rect x="32" y="23" width="9" height="18" fill="#4DA8FF"/></svg><span class="tag">Dica de UX</span><div class="h" style="position:relative">1 CTA por tela. Sempre.</div><div class="foot" style="position:relative"><img src="../assets/brand/logo/cmkcogit-horizontal-mono-white.svg" alt="" width="104" height="12"><span>Salve ↓</span></div></div>
+        </div>
+        <div class="mock-row cards" style="margin-top:24px">
+          <div class="scene s-ink" style="min-height:460px"><div class="story"><div class="bars"><i></i><i></i><i></i></div><div class="h">Seu site está vendendo<em>ou só existindo?</em></div><div class="sticker">Faça o diagnóstico grátis ↗</div><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="120" height="14" style="height:14px;width:auto;align-self:center"></div></div>
+          <div style="display:grid;gap:18px;align-content:center">
+            <div class="profile"><img src="../assets/brand/png/cmkcogit-avatar-1080.png" alt="Avatar CMKCOGIT" width="84" height="84"><div><strong>cmkcogit</strong><span>Pensamos antes de construir. Sites, sistemas e automações sob medida · São José do Rio Preto</span></div></div>
+            <div><div class="tabs-demo"><div><img src="../favicon.svg" alt="">CMKCOGIT · Soluções</div><div class="off">Nova guia</div></div></div>
+            <div class="sig"><table><tr><td class="bar"></td><td style="padding-left:14px"><div class="n">Seu Nome</div><div class="r">Estratégia &amp; Produto · CMKCOGIT</div><div class="c">(17) 98156-8889 · contato@cmkcogit.com.br<br>cmkcogit.com.br</div></td><td><img src="../assets/brand/logo/cmkcogit-symbol-light.svg" alt="" width="40" height="40"></td></tr></table></div>
+          </div>
+        </div>
+
+        <h3 style="margin-top:48px">Apresentação, crachá, camiseta e adesivos</h3>
+        <div class="mock-row cards">
+          <div class="scene s-ink"><div class="slide"><div><span class="bb-num" style="color:#2442E0">Proposta · 2026</span><div class="h">Do problema à <em>solução</em> em 3 etapas.</div></div><div class="nums"><div><b>01</b>Pensar: diagnóstico</div><div><b>02</b>Estruturar: escopo e jornada</div><div><b>03</b>Construir: entrega e evolução</div></div></div></div>
+          <div class="scene s-paper" style="min-height:380px"><div class="badge"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="130" height="15"><div class="av"></div><div><strong>Seu<br>Nome</strong><br><span>Equipe CMKCOGIT</span></div></div></div>
+          <div class="scene s-cobalto shirt" style="min-height:380px"><svg viewBox="0 0 300 320" role="img" aria-label="Camiseta preta com o símbolo"><path d="M95 20 L60 32 L10 75 L40 125 L70 108 L70 305 L230 305 L230 108 L260 125 L290 75 L240 32 L205 20 C195 45 175 55 150 55 C125 55 105 45 95 20 Z" fill="#0A0F1E"/><path d="M95 20 C105 45 125 55 150 55 C175 55 195 45 205 20" fill="none" stroke="#1A2440" stroke-width="5"/><g transform="translate(120 105) scale(.95)"><path d="M52 8H24A16 16 0 0 0 8 24V40A16 16 0 0 0 24 56H52V46H24A6 6 0 0 1 18 40V24A6 6 0 0 1 24 18H52Z" fill="#F1F4FA"/><rect x="32" y="23" width="9" height="18" fill="#4DA8FF"/></g><text x="150" y="215" text-anchor="middle" font-family="Geist Mono, monospace" font-size="9" letter-spacing="2" fill="#A9B4CC">PENSAMOS ANTES DE CONSTRUIR</text></svg></div>
+          <div class="scene s-paper" style="min-height:380px"><div class="stickers"><div class="stk1"><img src="../assets/brand/logo/cmkcogit-symbol-mono-black.svg" alt="" width="64" height="64"></div><div class="stk2"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="" width="190" height="22"></div><div class="stk3">pensar → construir</div><div class="stk4"><img src="../assets/brand/logo/cmkcogit-app-cobalto.svg" alt="" width="96" height="96"></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DOWNLOADS -->
+    <section class="bb-sec" id="downloads" aria-labelledby="t-dl">
+      <div class="bb-wrap">
+        <span class="bb-num">07 · Downloads</span>
+        <h2 id="t-dl">Tudo pronto para usar.</h2>
+        <p class="lead">Use SVG em web e impressão e PNG em redes e documentos. As fontes estão em <code>assets/fonts</code> (licença OFL).</p>
+        <div class="dl" style="margin-top:32px">
+          <a href="../assets/brand/logo/cmkcogit-horizontal-dark.svg" download><span class="th"><img src="../assets/brand/logo/cmkcogit-symbol-dark.svg" alt=""></span><span><strong>Horizontal · escuro</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-horizontal-light.svg" download><span class="th l"><img src="../assets/brand/logo/cmkcogit-symbol-light.svg" alt=""></span><span><strong>Horizontal · claro</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-horizontal-mono-white.svg" download><span class="th"><img src="../assets/brand/logo/cmkcogit-symbol-mono-white.svg" alt=""></span><span><strong>Horizontal · mono branco</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-horizontal-mono-black.svg" download><span class="th l"><img src="../assets/brand/logo/cmkcogit-symbol-mono-black.svg" alt=""></span><span><strong>Horizontal · mono preto</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-stacked-dark.svg" download><span class="th"><img src="../assets/brand/logo/cmkcogit-stacked-dark.svg" alt=""></span><span><strong>Empilhado · escuro</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-stacked-light.svg" download><span class="th l"><img src="../assets/brand/logo/cmkcogit-stacked-light.svg" alt=""></span><span><strong>Empilhado · claro</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-wordmark-dark.svg" download><span class="th"><img src="../assets/brand/logo/cmkcogit-wordmark-dark.svg" alt=""></span><span><strong>Wordmark · escuro</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/logo/cmkcogit-app-ink.svg" download><span class="th"><img src="../assets/brand/logo/cmkcogit-app-ink.svg" alt=""></span><span><strong>Ícone de app · Tinta</strong><small>SVG</small></span></a>
+          <a href="../assets/brand/png/cmkcogit-horizontal-dark-2000.png" download><span class="th"><img src="../assets/brand/logo/cmkcogit-symbol-dark.svg" alt=""></span><span><strong>Horizontal · escuro 2000 px</strong><small>PNG transparente</small></span></a>
+          <a href="../assets/brand/png/cmkcogit-horizontal-light-2000.png" download><span class="th l"><img src="../assets/brand/logo/cmkcogit-symbol-light.svg" alt=""></span><span><strong>Horizontal · claro 2000 px</strong><small>PNG transparente</small></span></a>
+          <a href="../assets/brand/png/cmkcogit-app-ink-1024.png" download><span class="th"><img src="../assets/brand/logo/cmkcogit-app-ink.svg" alt=""></span><span><strong>Ícone de app 1024 px</strong><small>PNG</small></span></a>
+          <a href="../assets/brand/png/cmkcogit-app-eletrico-1024.png" download><span class="th"><img src="../assets/brand/logo/cmkcogit-app-eletrico.svg" alt=""></span><span><strong>Ícone de app Elétrico 1024 px</strong><small>PNG</small></span></a>
+          <a href="../assets/brand/png/cmkcogit-avatar-1080.png" download><span class="th"><img src="../assets/brand/png/cmkcogit-avatar-1080.png" alt=""></span><span><strong>Avatar para redes 1080 px</strong><small>PNG</small></span></a>
+          <a href="../assets/images/og-cmkcogit-2026.png" download><span class="th"><img src="../assets/images/og-cmkcogit-2026.png" alt=""></span><span><strong>Card de compartilhamento</strong><small>PNG 1200×630</small></span></a>
+          <a href="../favicon.svg" download><span class="th"><img src="../favicon.svg" alt=""></span><span><strong>Favicon</strong><small>SVG · ICO em /favicon.ico</small></span></a>
+          <a href="../assets/fonts/anybody-var.woff2" download><span class="th"><span style="font:800 1.3rem var(--font-display);font-stretch:140%">Aa</span></span><span><strong>Anybody variável</strong><small>WOFF2 · OFL</small></span></a>
+          <a href="../assets/fonts/geist-var.woff2" download><span class="th"><span style="font:600 1.3rem var(--font-ui)">Aa</span></span><span><strong>Geist variável</strong><small>WOFF2 · OFL</small></span></a>
+          <a href="../assets/fonts/geist-mono-var.woff2" download><span class="th"><span style="font:500 1.1rem var(--font-code)">Aa</span></span><span><strong>Geist Mono variável</strong><small>WOFF2 · OFL</small></span></a>
+        </div>
+        <div class="bb-foot"><img src="../assets/brand/logo/cmkcogit-horizontal-dark.svg" alt="CMKCOGIT" width="194" height="22"><span>Brand Book 2026 · Estratégia completa em docs/REBRAND-2026.md</span><a href="../index.html" class="btn btn-primary btn-sm">Voltar ao site</a></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/privacy.js"></script>
+  <script>
+  (function () {
+    var sp = document.getElementById('specimen'), tx = document.getElementById('t-text'), wd = document.getElementById('t-wdth'), wg = document.getElementById('t-wght');
+    function up() { sp.textContent = tx.value || 'Aa'; sp.style.setProperty('--wd', wd.value + '%'); sp.style.setProperty('--wg', wg.value); document.getElementById('o-wdth').value = wd.value; document.getElementById('o-wght').value = wg.value; }
+    [tx, wd, wg].forEach(function (el) { el.addEventListener('input', up); }); up();
+    document.querySelectorAll('.sw').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var hex = b.dataset.hex;
+        if (navigator.clipboard) navigator.clipboard.writeText(hex).catch(function () {});
+        b.classList.add('copied'); setTimeout(function () { b.classList.remove('copied'); }, 1400);
+      });
+    });
+    document.getElementById('replay').addEventListener('click', function () {
+      var m = document.getElementById('cover-mark'); var c = m.cloneNode(true); m.replaceWith(c);
+    });
+    var h = document.getElementById('cover-title');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.addEventListener('scroll', function () { var p = Math.min(1, window.scrollY / window.innerHeight); h.style.setProperty('--w', (125 - p * 60) + '%'); }, { passive: true });
+    }
+    if (window.CogitPrivacy && CogitPrivacy.init) CogitPrivacy.init();
+  })();
+  </script>
+</body>
+</html>

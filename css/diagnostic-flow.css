@@ -10,7 +10,7 @@
   --dx-line: rgba(255, 255, 255, 0.11);
   --dx-line-strong: rgba(255, 255, 255, 0.2);
   --dx-accent: #a79bff;
-  --dx-accent-soft: rgba(167, 155, 255, 0.12);
+  --dx-accent-soft: rgba(143, 195, 255, 0.12);
   --dx-primary: #5b4bf0;
   --dx-primary-hover: #6d5ff5;
   --dx-success: #7ee0b0;
@@ -37,7 +37,7 @@
 .dx-steps li.is-done { color: var(--dx-muted); }
 .dx-steps li.is-done .dx-step-n { background: var(--dx-accent-soft); border-color: transparent; color: var(--dx-accent); }
 .dx-steps li.is-current { color: var(--dx-text); }
-.dx-steps li.is-current .dx-step-n { background: var(--dx-accent); border-color: var(--dx-accent); color: #15151E; }
+.dx-steps li.is-current .dx-step-n { background: var(--dx-accent); border-color: var(--dx-accent); color: #121A2E; }
 .dx-title { margin: 0; font-family: var(--font-heading); font-size: clamp(1.45rem, 2.4vw, 1.9rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: var(--dx-text); text-wrap: balance; }
 .dx-title:focus { outline: none; }
 .dx-desc { margin: 0; max-width: 62ch; font-size: 0.975rem; line-height: 1.55; color: var(--dx-muted); }
@@ -69,7 +69,7 @@
 .dx-option-desc { font-size: 0.85rem; line-height: 1.4; color: var(--dx-muted); }
 .dx-option-meta { margin-top: 4px; font-size: 0.78rem; font-weight: 600; color: var(--dx-accent); }
 .dx-option-mark { position: absolute; top: 14px; right: 14px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--dx-line-strong); color: transparent; transition: background-color 160ms ease, border-color 160ms ease; }
-.dx-option:has(input:checked) .dx-option-mark { background: var(--dx-accent); border-color: var(--dx-accent); color: #15151E; }
+.dx-option:has(input:checked) .dx-option-mark { background: var(--dx-accent); border-color: var(--dx-accent); color: #121A2E; }
 .dx-option--row { align-items: center; }
 .dx-option--row .dx-option-mark { top: 50%; margin-top: -10px; }
 
@@ -97,7 +97,7 @@
   display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;
   min-height: 44px; margin: 0 20px 12px; padding: 0 2px;
   background: none; border: 0; color: var(--dx-accent); font: inherit; font-size: 0.9rem; font-weight: 600;
-  text-decoration: underline; text-decoration-color: rgba(167, 155, 255, 0.4); text-underline-offset: 4px; cursor: pointer;
+  text-decoration: underline; text-decoration-color: rgba(143, 195, 255, 0.4); text-underline-offset: 4px; cursor: pointer;
   transition: text-decoration-color 160ms ease, color 160ms ease;
 }
 .dx-link-btn:hover { color: #cdc5ff; text-decoration-color: currentColor; }
@@ -117,7 +117,7 @@
 .dx-field { display: grid; gap: 8px; }
 .dx-textarea { width: 100%; min-height: 120px; padding: 14px 16px; resize: vertical; background: rgba(8, 8, 12, 0.35); border: 1px solid var(--dx-line-strong); border-radius: var(--dx-radius); color: var(--dx-text); font: inherit; font-size: 0.975rem; line-height: 1.5; }
 .dx-textarea::placeholder { color: var(--dx-faint); }
-.dx-textarea:focus { outline: none; border-color: var(--dx-accent); box-shadow: 0 0 0 3px rgba(167, 155, 255, 0.2); }
+.dx-textarea:focus { outline: none; border-color: var(--dx-accent); box-shadow: 0 0 0 3px rgba(143, 195, 255, 0.2); }
 .dx-count { margin: 0; justify-self: end; font-size: 0.78rem; font-variant-numeric: tabular-nums; color: var(--dx-faint); }
 
 /* ---------- Rodapé e botões ---------- */
@@ -204,7 +204,7 @@ dialog.custom-model-dialog.studio:has(.studio-body--objective) { height: auto; }
 .studio-steps li { display: inline-flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--dx-faint); }
 .studio-steps li span { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--dx-line-strong); font-size: 0.72rem; font-weight: 700; }
 .studio-steps li.is-current { color: var(--dx-text); }
-.studio-steps li.is-current span { background: var(--dx-accent); border-color: var(--dx-accent); color: #15151E; }
+.studio-steps li.is-current span { background: var(--dx-accent); border-color: var(--dx-accent); color: #121A2E; }
 .studio-steps li.is-done span { background: var(--dx-accent-soft); border-color: transparent; color: var(--dx-accent); }
 .studio-close { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--dx-line); background: transparent; color: var(--dx-muted); cursor: pointer; }
 .studio-close:hover { background: var(--dx-surface-hover); color: var(--dx-text); }
@@ -223,11 +223,11 @@ dialog.custom-model-dialog.studio:has(.studio-body--objective) { height: auto; }
 .studio-objective-text span { font-size: 0.875rem; line-height: 1.45; color: var(--dx-muted); }
 .studio-objective-text small { margin-top: 4px; font-size: 0.78rem; color: var(--dx-faint); }
 .studio-objective-mark { position: absolute; top: 18px; right: 16px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--dx-line-strong); color: transparent; }
-.studio-objective:has(input:checked) .studio-objective-mark { background: var(--dx-accent); border-color: var(--dx-accent); color: #15151E; }
+.studio-objective:has(input:checked) .studio-objective-mark { background: var(--dx-accent); border-color: var(--dx-accent); color: #121A2E; }
 .studio-context { display: grid; gap: 8px; margin-top: 18px; }
 .studio-context label { font-weight: 600; color: var(--dx-text); }
 .studio-context textarea { width: 100%; min-height: 96px; padding: 12px 14px; background: rgba(8, 8, 12, 0.35); border: 1px solid var(--dx-line-strong); border-radius: var(--dx-radius); color: var(--dx-text); font: inherit; resize: vertical; }
-.studio-context textarea:focus { outline: none; border-color: var(--dx-accent); box-shadow: 0 0 0 3px rgba(167, 155, 255, 0.2); }
+.studio-context textarea:focus { outline: none; border-color: var(--dx-accent); box-shadow: 0 0 0 3px rgba(143, 195, 255, 0.2); }
 .studio-hint { margin: 0; min-height: 1.4em; font-size: 0.85rem; color: var(--dx-success); }
 
 .studio-body--structure { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; align-items: start; }
@@ -241,9 +241,9 @@ dialog.custom-model-dialog.studio:has(.studio-body--objective) { height: auto; }
 .studio-sections { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
 .studio-section { display: grid; grid-template-columns: 32px 1fr auto; align-items: center; gap: 10px; min-height: 52px; padding: 4px 6px 4px 12px; background: var(--dx-surface); border: 1px solid var(--dx-line); border-radius: 10px; }
 .studio-section.is-fixed { background: transparent; border-style: dashed; }
-.studio-section.is-component { border-color: rgba(167, 155, 255, 0.35); }
+.studio-section.is-component { border-color: rgba(143, 195, 255, 0.35); }
 .studio-section.is-new { animation: studio-new 900ms var(--dx-ease); }
-@keyframes studio-new { from { background: rgba(167, 155, 255, 0.28); transform: translateY(-4px); } }
+@keyframes studio-new { from { background: rgba(143, 195, 255, 0.28); transform: translateY(-4px); } }
 .studio-section-n { font-size: 0.75rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--dx-faint); }
 .studio-section-name { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 0.925rem; font-weight: 500; color: var(--dx-text); }
 .studio-badge { padding: 2px 8px; border-radius: 999px; background: var(--dx-accent-soft); color: var(--dx-accent); font-size: 0.7rem; font-weight: 700; }
@@ -264,7 +264,7 @@ dialog.custom-model-dialog.studio:has(.studio-body--objective) { height: auto; }
 .studio-component-text strong { font-size: 0.875rem; font-weight: 600; }
 .studio-component-text span { font-size: 0.775rem; line-height: 1.35; color: var(--dx-muted); }
 .studio-component-state { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--dx-line-strong); color: var(--dx-muted); font-size: 0.62rem; font-weight: 700; text-align: center; line-height: 1; }
-.studio-component.is-on .studio-component-state { background: var(--dx-accent); border-color: var(--dx-accent); color: #15151E; }
+.studio-component.is-on .studio-component-state { background: var(--dx-accent); border-color: var(--dx-accent); color: #121A2E; }
 .studio-component:disabled .studio-component-state { width: auto; border: 0; }
 
 .studio-side { position: sticky; top: 0; display: grid; gap: 14px; }

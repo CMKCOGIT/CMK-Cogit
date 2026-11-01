@@ -14,8 +14,8 @@
   --purple-hover: var(--color-brand-700);
   --purple-light: var(--color-brand-500);
   --lilac: var(--color-brand-300);
-  --lilac-soft:     rgba(167, 155, 255, 0.12);
-  --lilac-bg:       rgba(167, 155, 255, 0.06);
+  --lilac-soft:     rgba(143, 195, 255, 0.12);
+  --lilac-bg:       rgba(143, 195, 255, 0.06);
   --neutral: var(--color-neutral-100);
   --neutral-dark: var(--color-neutral-200);
   --white: var(--color-neutral-0);
@@ -96,13 +96,13 @@
   --radius-full: 9999px;
 
   /* ── Shadows ── */
-  --shadow-sm:    0 1px 3px rgba(12, 12, 18, 0.06);
-  --shadow-md:    0 4px 12px rgba(12, 12, 18, 0.08);
-  --shadow-lg:    0 8px 30px rgba(12, 12, 18, 0.10);
-  --shadow-xl:    0 16px 50px rgba(12, 12, 18, 0.12);
-  --shadow-card:  0 2px 8px rgba(12, 12, 18, 0.05);
-  --shadow-card-hover: 0 8px 30px rgba(106, 75, 255, 0.10);
-  --shadow-purple: 0 4px 20px rgba(106, 75, 255, 0.25);
+  --shadow-sm:    0 1px 3px rgba(10, 15, 30, 0.06);
+  --shadow-md:    0 4px 12px rgba(10, 15, 30, 0.08);
+  --shadow-lg:    0 8px 30px rgba(10, 15, 30, 0.10);
+  --shadow-xl:    0 16px 50px rgba(10, 15, 30, 0.12);
+  --shadow-card:  0 2px 8px rgba(10, 15, 30, 0.05);
+  --shadow-card-hover: 0 8px 30px rgba(45, 79, 255, 0.10);
+  --shadow-purple: 0 4px 20px rgba(45, 79, 255, 0.25);
 
   /* ── Transitions ── */
   --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);

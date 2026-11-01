@@ -20,33 +20,33 @@ const fontCss = `@font-face{font-family:Any;src:url(file://${root}/assets/fonts/
 @font-face{font-family:Geist;src:url(file://${root}/assets/fonts/geist-var.woff2);font-weight:100 900}
 @font-face{font-family:GMono;src:url(file://${root}/assets/fonts/geist-mono-var.woff2);font-weight:100 900}`;
 const og = () => `<!doctype html><html><head><style>${fontCss}
-body{margin:0;width:1200px;height:630px;background:#0C0C12;color:#F2EFE6;font-family:Geist;position:relative;overflow:hidden}
-.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(242,239,230,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(242,239,230,.06) 1px,transparent 1px);background-size:60px 60px}
+body{margin:0;width:1200px;height:630px;background:#0A0F1E;color:#F1F4FA;font-family:Geist;position:relative;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(241, 244, 250,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(241, 244, 250,.06) 1px,transparent 1px);background-size:60px 60px}
 .big{position:absolute;right:-380px;top:-45px;width:720px;height:720px}
 .in{position:absolute;left:72px;top:64px;right:72px;bottom:64px;display:flex;flex-direction:column;justify-content:space-between}
 img{height:64px;width:auto;align-self:flex-start}
 h1{font-family:Any;font-stretch:125%;font-weight:850;font-size:84px;position:relative;line-height:.92;letter-spacing:-.03em;margin:0}
-h1 em{font-style:normal;color:#C8FF2E}
-.tag{font:500 20px GMono;letter-spacing:.06em;color:rgba(242,239,230,.75)}
-</style></head><body><div class="grid"></div><svg class="big" viewBox="0 0 64 64"><path d="${C}" fill="#6A4BFF"/><rect x="32" y="23" width="9" height="18" fill="#C8FF2E"/></svg>
+h1 em{font-style:normal;color:#4DA8FF}
+.tag{font:500 20px GMono;letter-spacing:.06em;color:rgba(241, 244, 250,.75)}
+</style></head><body><div class="grid"></div><svg class="big" viewBox="0 0 64 64"><path d="${C}" fill="#2D4FFF"/><rect x="32" y="23" width="9" height="18" fill="#4DA8FF"/></svg>
 <div class="in"><img src="file://${root}/assets/brand/logo/cmkcogit-horizontal-dark.svg">
 <h1>Pensamos antes<br>de <em>construir.</em></h1>
 <div class="tag">[ SITES · SISTEMAS · AUTOMAÇÕES · PRODUTOS DIGITAIS ]</div></div></body></html>`;
 
 const jobs = [
-  ['assets/images/icon-192.png', 192, 192, fullBleed('#0C0C12', '#F2EFE6', '#C8FF2E')],
-  ['assets/images/icon-512.png', 512, 512, fullBleed('#0C0C12', '#F2EFE6', '#C8FF2E')],
-  ['apple-touch-icon.png', 180, 180, fullBleed('#0C0C12', '#F2EFE6', '#C8FF2E', 0.66)],
+  ['assets/images/icon-192.png', 192, 192, fullBleed('#0A0F1E', '#F1F4FA', '#4DA8FF')],
+  ['assets/images/icon-512.png', 512, 512, fullBleed('#0A0F1E', '#F1F4FA', '#4DA8FF')],
+  ['apple-touch-icon.png', 180, 180, fullBleed('#0A0F1E', '#F1F4FA', '#4DA8FF', 0.66)],
   ['assets/images/cmk-symbol.png', 192, 192, read('assets/brand/logo/cmkcogit-symbol-dark.svg')],
   ['assets/images/logo-white.png', 1024, 0, read('assets/brand/logo/cmkcogit-horizontal-dark.svg')],
   ['assets/brand/png/favicon-16.png', 16, 16, read('favicon.svg')],
   ['assets/brand/png/favicon-32.png', 32, 32, read('favicon.svg')],
   ['assets/brand/png/favicon-48.png', 48, 48, read('favicon.svg')],
   ['assets/brand/png/cmkcogit-app-ink-1024.png', 1024, 1024, read('assets/brand/logo/cmkcogit-app-ink.svg')],
-  ['assets/brand/png/cmkcogit-app-volt-1024.png', 1024, 1024, read('assets/brand/logo/cmkcogit-app-volt.svg')],
+  ['assets/brand/png/cmkcogit-app-eletrico-1024.png', 1024, 1024, read('assets/brand/logo/cmkcogit-app-eletrico.svg')],
   ['assets/brand/png/cmkcogit-horizontal-dark-2000.png', 2000, 0, read('assets/brand/logo/cmkcogit-horizontal-dark.svg')],
   ['assets/brand/png/cmkcogit-horizontal-light-2000.png', 2000, 0, read('assets/brand/logo/cmkcogit-horizontal-light.svg')],
-  ['assets/brand/png/cmkcogit-avatar-1080.png', 1080, 1080, fullBleed('#0C0C12', '#F2EFE6', '#C8FF2E', 0.5)],
+  ['assets/brand/png/cmkcogit-avatar-1080.png', 1080, 1080, fullBleed('#0A0F1E', '#F1F4FA', '#4DA8FF', 0.5)],
   ['assets/images/og-cmkcogit-2026.png', 1200, 630, null, og()],
 ];
 

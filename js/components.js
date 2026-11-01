@@ -774,6 +774,10 @@ function renderHeroInteractive() {
               </div>
             </div>
           </fieldset>
+          <div class="dx-plans-step" data-dx-plans ${state.objective === 'modelos-prontos' ? '' : 'hidden'}>
+            ${renderDxPlans(prontoPrice)}
+            <p class="dx-plan-hint">Vitalício: pagamento único, no seu domínio. Mensal e anual: site em seunome.cmkcogit.com.br, sem valor de entrada.</p>
+          </div>
         </div>
         ${renderDxFooter('Voltar', 'Continuar', !state.objective)}
       </div>`;
@@ -791,9 +795,15 @@ function renderHeroInteractive() {
       transitionTo(renderStep3, 'next');
     }, { project: state.customProject });
 
+    const plansBox = container.querySelector('[data-dx-plans]');
+    container.querySelectorAll('input[name="dx-plan"]').forEach(input => input.addEventListener('change', () => {
+      state.plan = input.value;
+      if (typeof trackEvent === 'function') trackEvent('hero_plan_selected', input.value);
+    }));
     container.querySelectorAll('input[name="dx-format"]').forEach(input => {
       input.addEventListener('change', () => {
         state.objective = input.value;
+        if (plansBox) plansBox.hidden = input.value !== 'modelos-prontos';
         syncNext();
         revealNextAction(next);
         if (typeof trackEvent === 'function') trackEvent('hero_model_selected', input.value);

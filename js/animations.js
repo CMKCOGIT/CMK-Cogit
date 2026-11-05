@@ -20,7 +20,7 @@
   var lenis = null;
 
   var REVEAL_SEL = [
-    '.reveal', '.reveal-up', '.reveal-left', '.reveal-right', '.reveal-scale', '.reveal-fade', '[data-reveal]', '[data-r]',
+    '.reveal', '.reveal-up', '.reveal-left', '.reveal-right', '.reveal-scale', '.reveal-fade', '[data-reveal]', '[data-r]', '[data-about-reveal]',
     '.section-header', '.solution-hero .container > *', '.faq-item', '.cmk-catalog-item', '.footer-column', '.footer-brand'
   ].join(',');
   var GROUP_SEL = '[data-stagger], [class*="-grid"]:not(.hero-bg-grid):not(.brand-intro-grid), [class*="-list"]:not(.mobile-nav-list):not(.footer-links), .rows, .cmk-plan-grid';
@@ -98,12 +98,12 @@
   function bidir(targets, trigger, opts) {
     opts = opts || {};
     var d = opts.distance || (window.innerWidth < 768 ? 16 : 24);
-    var st = opts.stagger || 0;
+    var st = opts.stagger || 0, dl = opts.delay || 0;
     gsap.set(targets, { autoAlpha: 0, y: d });
     addTrigger(ScrollTrigger.create({
       trigger: trigger, start: opts.start || 'top 88%', end: 'bottom 6%',
-      onEnter: function () { gsap.to(targets, { autoAlpha: 1, y: 0, duration: 0.7, stagger: st, ease: EASE, overwrite: true }); },
-      onEnterBack: function () { gsap.fromTo(targets, { autoAlpha: 0, y: -d }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: st, ease: EASE, overwrite: true }); },
+      onEnter: function () { gsap.to(targets, { autoAlpha: 1, y: 0, duration: 0.7, delay: dl, stagger: st, ease: EASE, overwrite: true }); },
+      onEnterBack: function () { gsap.fromTo(targets, { autoAlpha: 0, y: -d }, { autoAlpha: 1, y: 0, duration: 0.7, delay: dl, stagger: st, ease: EASE, overwrite: true }); },
       onLeave: function () { gsap.set(targets, { autoAlpha: 0, y: -d }); },
       onLeaveBack: function () { gsap.set(targets, { autoAlpha: 0, y: d }); }
     }));
@@ -117,7 +117,9 @@
       var kids = Array.prototype.slice.call(g.children).filter(function (k) { return !done.has(k) && k.offsetParent !== null; });
       if (!kids.length) return;
       kids.forEach(function (k) { done.add(k); k.querySelectorAll('*').forEach(function (x) { done.add(x); }); });
-      bidir(kids, g, { stagger: window.innerWidth < 768 ? 0.05 : 0.07, start: 'top 86%' });
+      // um gatilho por item (um grupo alto não some inteiro quando o topo sai da tela)
+      var step = window.innerWidth < 768 ? 0.05 : 0.07;
+      kids.forEach(function (k, i) { if (below(k)) bidir(k, k, { delay: (i % 4) * step, start: 'top 90%' }); });
     });
     document.querySelectorAll(REVEAL_SEL).forEach(function (el) {
       if (done.has(el) || el.closest('header, .mobile-menu, dialog, .hero-interactive-container, .demo-dx') || !below(el)) return;
@@ -223,18 +225,28 @@
     window.COGIT_LENIS = lenis;
   }
 
+  /* Trava: ao parar de rolar, nada visível na tela continua escondido */
+  function sweep() {
+    document.querySelectorAll('main *').forEach(function (el) {
+      if (!el.style || el.style.visibility !== 'hidden' || gsap.isTweening(el)) return;
+      var r = el.getBoundingClientRect();
+      if (r.height && r.top < window.innerHeight - 20 && r.bottom > 20) gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.3, overwrite: true });
+    });
+    document.querySelectorAll('.t-line > span').forEach(function (w) {
+      if (gsap.isTweening(w) || gsap.getProperty(w, 'yPercent') === 0) return;
+      var r = w.parentNode.getBoundingClientRect();
+      if (r.top < window.innerHeight - 20 && r.bottom > 20) gsap.to(w, { yPercent: 0, duration: 0.3, overwrite: true });
+    });
+  }
   function failsafe() {
-    setTimeout(function () {
-      document.querySelectorAll('main *').forEach(function (el) {
-        if (!el.style || el.style.visibility !== 'hidden') return;
-        var r = el.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0) gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.3 });
-      });
-      document.querySelectorAll('.t-line > span').forEach(function (w) {
-        var r = w.getBoundingClientRect();
-        if (r.top < window.innerHeight && r.bottom > 0 && gsap.getProperty(w, 'yPercent') !== 0) gsap.to(w, { yPercent: 0, duration: 0.3 });
-      });
-    }, 2000);
+    var t = null;
+    var schedule = function () { clearTimeout(t); t = setTimeout(sweep, 900); };
+    setTimeout(sweep, 2000);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule);
+    var refresh = function () { ScrollTrigger.refresh(); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(refresh);
+    setTimeout(refresh, 1500);
   }
 
   function initAnimations() {

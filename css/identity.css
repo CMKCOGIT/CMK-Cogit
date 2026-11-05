@@ -319,3 +319,15 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .section-header p, .section-header h2 { margin-left: 0 !important; margin-right: 0 !important; }
 .hx-link { text-decoration: underline !important; }
 .dx-steps [aria-current="step"] .dx-step-n, .dx-steps .is-current .dx-step-n { color: #fff !important; background: var(--navy) !important; border-color: var(--navy) !important; }
+/* Sobre: a revelação antiga dá lugar ao movimento novo (js/animations.js) */
+.page-about-v2.about-motion-ready [data-about-reveal] { opacity: 1 !important; transform: none !important; transition: none !important; }
+/* Estúdio sob medida e menu mobile em tema claro */
+#custom-model-dialog, #custom-model-dialog .studio-head, #custom-model-dialog .studio-body { background: var(--paper) !important; color: var(--ink) !important; }
+#custom-model-dialog .studio-title, #custom-model-dialog h2, #custom-model-dialog h3, #custom-model-dialog h4 { color: var(--ink) !important; }
+#custom-model-dialog .studio-head p, #custom-model-dialog [class*="desc"], #custom-model-dialog [class*="lead"] { color: var(--muted) !important; }
+#custom-model-dialog .studio-foot { background: var(--white) !important; border-top: 1px solid var(--line) !important; }
+#custom-model-dialog .studio-foot .btn:not(.btn-primary), #custom-model-dialog .studio-foot button:not(.btn-primary):not([class*="primary"]) { background: transparent !important; color: var(--ink) !important; border: 1px solid var(--ink) !important; }
+.mobile-menu-header { background: var(--paper) !important; }
+.mobile-menu-close { background: transparent !important; border: 1px solid var(--ink) !important; border-radius: 2px !important; color: var(--ink) !important; }
+.mobile-nav-arrow, .mobile-accordion-icon { color: var(--navy) !important; }
+#custom-model-dialog p:not(.btn *) { color: var(--muted) !important; }

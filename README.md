@@ -1,5 +1,19 @@
 # COGIT — site revisado
 
+## Identidade visual 2026 (branch `feat/atualizacao-estrutura-visual`)
+
+Redesign visual sem mudança de conteúdo ou funcionalidade:
+
+- **Logo** COGIT em vetor: `assets/images/logo-cogit.svg` (tinta), `logo-cogit-branco.svg`, `icone-cogit*.svg`, `favicon.svg` (versão para tamanhos pequenos, troca de cor no modo escuro), `favicon.ico`, `icon-192/512.png`, `apple-touch-icon.png`.
+- **Fontes**: somente Clash Display (títulos, números) e Satoshi (texto, interface), WOFF2 locais em `assets/fonts` (licença em `assets/fonts/LICENCA-FONTES.txt`).
+- **Cores**: grafite `#121314`, papel `#F3F3F1`, cinza `#E6E6E2` e Marinho `#1A2C52` (destaque). Tokens em `css/tokens.css`.
+- **Camada visual**: `css/identity.css`, carregada por último em todas as páginas. Raio 2 px, fios de 1 px, sem sombra, sem vidro e sem degradê.
+- **Ritmo de seções e títulos**: `python3 tools/identidade-secoes.py` aplica `tone-paper | tone-grey | tone-white | tone-ink | tone-navy` às seções de `<main>` e o destaque de cor (`.t-tone`) em H1/H2. Não altera textos; pode rodar de novo (idempotente).
+- **Home**: estrutura nova em `index.html` + `css/home-v2.css` + `js/home-v2.js` (diagnóstico em janela, demonstração animada, projetos, carrossel de modelos, sob medida).
+- **Movimento**: `js/animations.js` com GSAP + ScrollTrigger + Lenis em `assets/vendor` (locais). Revelações nos dois sentidos, corte a 45° nas faixas Marinho, contagem, parallax; sem JavaScript ou com movimento reduzido, tudo aparece parado. Troca de página com View Transitions.
+- **Header**: menu completo a partir de 1024 px; abaixo disso, botão Menu.
+
+
 Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em HTML, CSS e JavaScript, sem dependências de produção ou etapa de build.
 
 ## O que mudou
@@ -8,7 +22,7 @@ Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em H
 - Seleção consistente, contraste, foco de teclado, botões e espaçamentos revisados.
 - Layouts preparados para larguras a partir de 300 px; correções em grids, animações laterais, metodologia, menu, rodapé e formulários.
 - Consentimento com aceitar, recusar, configurar e revogar cookies opcionais. Autorização de contato separada e desmarcada inicialmente.
-- Fontes Inter e Manrope locais, sem conexão com Google Fonts durante a navegação.
+- Fontes locais (hoje Clash Display e Satoshi), sem conexão com serviços externos durante a navegação.
 - Dados de formulário sem gravação em sessionStorage ou console. Texto livre protegido contra interpretação como HTML.
 - Contato pelo WhatsApp com mensagem preparada após autorização. A confirmação de recebimento que existia sem envio foi corrigida.
 - Página de contato transformada em uma central de conversa, com WhatsApp, e-mail, formulário breve e dúvidas gerais, sem repetir o configurador.
@@ -64,9 +78,9 @@ Ficam em `css/variables.css` e substituem números soltos espalhados pelas folha
 
 ### Fontes e ícones
 
-- `assets/fonts/cogit-font-*.woff2` (Inter e Manrope) são subconjuntos em WOFF2 com latim básico, Latin-1 e Latin Extended-A, mais os sinais tipográficos usados nas páginas. As fontes completas estão no histórico do Git (`cogit-font-*.ttf`, até o commit `5e8f7cb`). Para incluir outro alfabeto, gere de novo a partir delas com `pyftsubset` (fonttools).
+- `assets/fonts/clash-display-*.woff2` e `satoshi-*.woff2` (Fontshare). As antigas Inter e Manrope estão no histórico do Git.
 - `css/bootstrap-icons.css` e `css/fonts/bootstrap-icons.woff2/.woff` contêm só os ícones usados no site. Para usar um ícone novo, copie a regra `.bi-nome::before` da versão completa (Bootstrap Icons 1.11.3, também no histórico até `5e8f7cb`) e gere a fonte de novo com os códigos das regras presentes.
-- `assets/images/cmk-symbol.png` é o símbolo em 192 px de altura usado como ícone da aba e no menu móvel. O original em alta resolução continua em `assets/images/cmk.png`.
+- O ícone da aba e do menu móvel agora é `favicon.svg` / `assets/images/icone-cogit.svg`. Os PNGs antigos (`cmk.png`, `cmk-symbol.png`, `logo-white*.png`) ficam só como referência.
 
 ## Configurações existentes
 

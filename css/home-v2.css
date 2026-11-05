@@ -219,3 +219,67 @@
 .dx-modal .hero-interactive-container { width: 100% !important; max-width: none !important; min-height: 0 !important; margin: 0 !important; border: 0 !important; background: transparent !important; padding: 0 !important; }
 @media (max-width: 760px) { .dx-modal { width: 100vw; height: 100svh; border: 0 !important; } }
 .dx-modal { position: fixed !important; inset: 0 !important; margin: auto !important; }
+
+/* =====================================================================
+   Primeira tela v2 (referência Wix): título no topo, descrição, chamada
+   principal larga e a secundária embaixo; a demonstração vem logo abaixo,
+   maior, cortada pela dobra de propósito. Fundo da home contínuo, em degradê.
+   ===================================================================== */
+.hx { min-height: 0; display: block; padding-top: calc(var(--header-h) + clamp(40px, 7vh, 88px)); }
+.hx-top { max-width: 1320px; margin: 0 auto; padding-inline: max(16px, env(safe-area-inset-left, 0px)); display: grid; justify-items: center; text-align: center; gap: clamp(16px, 2.4vh, 26px); }
+.hx-motto { justify-content: center; font-size: clamp(15px, 1.25vw, 19px); letter-spacing: .02em; }
+.hx-motto i { width: 32px; height: 1.5px; }
+.hx h1 { font-size: clamp(46px, 7.2vw, 124px) !important; line-height: .95 !important; text-align: center; max-width: 16ch !important; text-wrap: balance; }
+.hx-lead { text-align: center; max-width: 56ch; font-size: clamp(17px, 1.4vw, 21px); }
+.hx-stack { display: grid; justify-items: center; gap: 14px; margin-top: 4px; }
+.hx-main { min-width: min(340px, 86vw); padding-inline: 36px !important; min-height: 58px !important; font-size: 16px !important; }
+.hx-sec { font: 700 15px var(--text); color: var(--ink); text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 5px; padding: 8px 4px; transition: text-underline-offset .25s var(--ease-c); }
+.hx-sec:hover { text-underline-offset: 8px; color: var(--navy); }
+.hx-sec span { display: inline-block; transition: transform .3s var(--ease-c); }
+.hx-sec:hover span { transform: translateX(3px); }
+.hx-meta { text-align: center; }
+.hx-demo { max-width: 1200px; margin: clamp(40px, 6vh, 72px) auto 0; padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+@media (min-width: 900px) { .hx-top, .hx-demo { padding-inline: 40px; } }
+.hx-aud { margin-top: clamp(56px, 8vw, 104px); border-top-color: rgba(18, 19, 20, .12); }
+
+/* demonstração maior */
+.hx .demo-dx { height: clamp(520px, 62vw, 680px); min-height: 0; border-color: var(--ink); }
+.hx .dd-top { padding: 14px 20px; font-size: 14px; }
+.hx .dd-segs { padding-inline: 20px; }
+.hx .dd-rail { padding: 14px 20px 0; font-size: 13px; }
+.hx .dd-st { inset: 28px 20px; gap: 16px; }
+.hx .dd-st h4 { font-size: clamp(22px, 2.4vw, 32px); }
+.hx .dd-opts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.hx .dd-opt { padding: 14px 16px; font-size: 15px; }
+.hx .dd-sum-nm { font-size: clamp(28px, 3.2vw, 44px); }
+.hx .dd-sum dd { font-size: clamp(20px, 1.8vw, 26px); }
+.dd-expand { display: inline-flex; align-items: center; gap: 8px; margin-left: 16px; border: 1px solid var(--line-s); background: var(--white); color: var(--ink); font: 700 13px var(--text); padding: 7px 10px; border-radius: 2px; cursor: pointer; }
+.dd-expand:hover { border-color: var(--ink); }
+.dd-expand svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.dd-top .dd-cnt { margin-left: auto; }
+/* expandida: ocupa a tela */
+.demo-dx.is-expanded { position: fixed; inset: max(16px, env(safe-area-inset-top, 0px)) 16px 16px; height: auto !important; z-index: 1200; }
+.dd-veil { position: fixed; inset: 0; background: rgba(18, 19, 20, .62); z-index: 1190; }
+.demo-dx.is-expanded .dd-st { inset: clamp(28px, 4vw, 56px) clamp(20px, 4vw, 64px); }
+.demo-dx.is-expanded .dd-st h4 { font-size: clamp(26px, 3vw, 44px); }
+.demo-dx.is-expanded .dd-opt { padding: 18px 20px; font-size: 17px; }
+@media (max-width: 600px) { .dd-expand span { display: none; } .hx .demo-dx { height: 540px; } .hx .dd-opts { grid-template-columns: 1fr; } }
+
+/* fundo contínuo da home: sem quebra entre seções claras; a cor aparece aos poucos */
+.home-v2 { background: linear-gradient(180deg,
+  #F3F3F1 0, #F3F3F1 320px, #EEF0F2 720px, #E6EAF1 1150px, #DDE3EE 1600px, #E4E8F0 2300px, #E9ECF1 3200px, #E6E9EF 4600px, #E2E6EE 6000px, #DCE2EC 100%) !important; }
+.home-v2 > .tone-paper, .home-v2 > .tone-grey, .home-v2 > .tone-white, .home-v2 > .hx { background: transparent !important; }
+.home-v2 .hm .car-slide, .home-v2 .hsm-band, .home-v2 .hsm-vis { background-color: var(--white); }
+.home-v2 .hsm-band { background: rgba(255, 255, 255, .55); }
+/* seções escuras entram e saem em degradê, sem corte seco */
+.home-v2 > .tone-ink { background: linear-gradient(180deg, rgba(18, 19, 20, 0) 0, var(--ink) 220px, var(--ink) calc(100% - 220px), rgba(18, 19, 20, 0) 100%) !important; padding-block: clamp(180px, 18vw, 260px) !important; }
+.home-v2 > .tone-navy { background: linear-gradient(180deg, rgba(26, 44, 82, 0) 0, var(--navy) 240px) !important; padding-top: clamp(200px, 20vw, 280px) !important; }
+.home-v2 > .tone-navy .cta-final-content, .home-v2 > .tone-ink .hw-grid { position: relative; }
+/* o id herdava o estilo do botão do hero escuro antigo */
+.hx #cta-hero-contact.hx-sec { background: transparent !important; color: var(--ink) !important; border: 0 !important; min-height: 0 !important; padding: 8px 4px !important; font: 700 15px var(--text) !important; }
+.hx #cta-hero-contact.hx-sec:hover { color: var(--navy) !important; }
+/* transições de seção escura um pouco mais curtas */
+.home-v2 > .tone-ink { background: linear-gradient(180deg, rgba(18, 19, 20, 0) 0, var(--ink) 160px, var(--ink) calc(100% - 160px), rgba(18, 19, 20, 0) 100%) !important; padding-block: clamp(150px, 15vw, 210px) !important; }
+.dd-cnt { white-space: nowrap; }
+@media (max-width: 600px) { .hx .dd-top b { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; } .hx .dd-top { gap: 8px; padding: 12px 14px; } .dd-expand { margin-left: 8px; } }
+@media (max-width: 600px) { .dd-sub { display: none; } }

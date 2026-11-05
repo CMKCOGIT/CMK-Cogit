@@ -199,22 +199,21 @@
   </nav>
 
   <main id="main-content" role="main" class="home-v2">
-    <!-- 01 — HERO: lema, título, chamada e o diagnóstico em movimento -->
-    <section class="hx tone-paper" id="hero" aria-labelledby="hero-titulo">
-      <div class="hx-grid">
-        <div class="hx-l">
-          <p class="hx-motto"><i aria-hidden="true"></i>Pensamos antes de construir</p>
-          <h1 id="hero-titulo">Tecnologia que <span class="t-tone">sai do papel.</span></h1>
-          <p class="hx-lead">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
-          <div class="hx-ctas">
-            <button type="button" class="btn btn-primary btn-lg" id="cta-hero-start" data-open-diagnostico>Monte sua solução <span><i class="bi bi-arrow-right"></i></span></button>
-            <a href="contato.html" class="hx-link" id="cta-hero-contact">Falar com especialista</a>
-          </div>
-          <p class="hx-meta">Menos de 1 minuto <span aria-hidden="true">·</span> Sem cadastro <span aria-hidden="true">·</span> Resultado imediato</p>
+    <!-- 01 — HERO: título no topo, descrição, chamadas e o diagnóstico em movimento logo abaixo -->
+    <section class="hx" id="hero" aria-labelledby="hero-titulo">
+      <div class="hx-top">
+        <p class="hx-motto"><i aria-hidden="true"></i>Pensamos antes de construir<i aria-hidden="true"></i></p>
+        <h1 id="hero-titulo">Tecnologia que <span class="t-tone">sai do papel.</span></h1>
+        <p class="hx-lead">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
+        <div class="hx-stack">
+          <button type="button" class="btn btn-primary btn-lg hx-main" id="cta-hero-start" data-open-diagnostico>Monte sua solução <span><i class="bi bi-arrow-right"></i></span></button>
+          <a href="contato.html" class="hx-sec" id="cta-hero-contact">Falar com especialista <span aria-hidden="true">→</span></a>
         </div>
-        <div class="hx-r">
+        <p class="hx-meta">Menos de 1 minuto <span aria-hidden="true">·</span> Sem cadastro <span aria-hidden="true">·</span> Resultado imediato</p>
+      </div>
+      <div class="hx-demo">
           <div class="demo-dx" id="demo-dx" role="region" aria-label="Demonstração animada do diagnóstico COGIT">
-            <div class="dd-top"><b>COGIT Diagnostic · em movimento</b><span class="dd-cnt" id="dd-cnt">01 / 08</span></div>
+            <div class="dd-top"><b>COGIT Diagnostic<span class="dd-sub"> · em movimento</span></b><span class="dd-cnt" id="dd-cnt">01 / 08</span><button type="button" class="dd-expand" id="dd-expand" aria-pressed="false" aria-label="Expandir demonstração"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 2h4v4M6 14H2v-4M14 2L9 7M2 14l5-5"/></svg><span>Expandir</span></button></div>
             <div class="dd-segs" id="dd-segs" aria-hidden="true"></div>
             <div class="dd-rail" id="dd-rail" aria-hidden="true"><span>Solução</span><span>Formato</span><span>Contexto</span><span>Resumo</span></div>
             <div class="dd-stage" id="dd-stage" aria-hidden="true"></div>
@@ -226,7 +225,6 @@
             </div>
             <div class="dd-cursor" id="dd-cursor" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M2 1.5l13 7-6 1.4-2.6 5.6z" fill="#121314" stroke="#fff" stroke-width="1"/></svg></div>
           </div>
-        </div>
       </div>
       <div class="hx-aud"><div class="hx-aud-in"><span>Para</span><span>PMEs</span><span>Profissionais autônomos</span><span>Startups</span><span>Projetos de impacto</span></div></div>
     </section>

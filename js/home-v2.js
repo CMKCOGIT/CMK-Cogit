@@ -115,6 +115,20 @@
     O('mvp-svc', 'MVP', 'Valide sua ideia com uma primeira versão funcional.', 3990, ['Tirar minha ideia do papel', 'Criar um MVP funcional', 'Validar meu conceito', 'Testar uma nova solução']),
     O('plataforma-svc', 'Plataforma', 'Conecte usuários, serviços e oportunidades.', 4990, ['Criar uma plataforma escalável', 'Transformar minha ideia em produto', 'Criar um sistema por assinatura', 'Validar modelo de negócio'])
   ];
+  /* Expandir: a demonstração ocupa a tela; Esc ou o mesmo botão fecham */
+  var expBtn = $('#dd-expand'), veil = null;
+  function setExpanded(on) {
+    demo.classList.toggle('is-expanded', on);
+    expBtn.setAttribute('aria-pressed', String(on));
+    expBtn.setAttribute('aria-label', on ? 'Fechar demonstração expandida' : 'Expandir demonstração');
+    expBtn.querySelector('span').textContent = on ? 'Fechar' : 'Expandir';
+    document.body.classList.toggle('no-scroll', on);
+    if (on) { veil = document.createElement('div'); veil.className = 'dd-veil'; veil.addEventListener('click', function () { setExpanded(false); }); document.body.appendChild(veil); expBtn.focus(); }
+    else if (veil) { veil.remove(); veil = null; }
+    if (typeof play === 'function') setTimeout(play, 60);
+  }
+  if (expBtn) expBtn.addEventListener('click', function () { setExpanded(!demo.classList.contains('is-expanded')); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && demo.classList.contains('is-expanded')) setExpanded(false); });
   var stage = $('#dd-stage'), curEl = $('#dd-cursor'), segs = $('#dd-segs');
   var idx = 0, timers = [], paused = RM, visible = true;
   segs.style.gridTemplateColumns = 'repeat(' + DM.length + ',1fr)';

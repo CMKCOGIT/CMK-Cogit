@@ -36,14 +36,23 @@ export function gerar() {
   return '/*! CMKCOGIT site — gerado por tools/build-css.mjs a partir de css/style.css. Não edite. */\n' + minificar(expandir(ENTRADA));
 }
 
+// Folhas carregadas por último (identidade 2026): versão compacta ao lado da origem.
+const AVULSAS = ['identity.css', 'home-v2.css'];
+export function gerarAvulsa(nome) {
+  return '/*! COGIT — gerado por tools/build-css.mjs a partir de css/' + nome + '. Não edite. */\n' + minificar(fs.readFileSync(path.join(dirCss, nome), 'utf8'));
+}
+
 if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname)) {
-  const css = gerar();
-  if (process.argv.includes('--check')) {
-    const atual = fs.existsSync(SAIDA) ? fs.readFileSync(SAIDA, 'utf8') : '';
-    if (atual !== css) { console.error('css/site.min.css desatualizado: rode node tools/build-css.mjs'); process.exit(1); }
-    console.log('css/site.min.css em dia');
-  } else {
-    fs.writeFileSync(SAIDA, css);
-    console.log('css/site.min.css', (css.length / 1024).toFixed(1) + ' KB');
+  const saidas = [[SAIDA, gerar()], ...AVULSAS.map((n) => [path.join(dirCss, n.replace(/\.css$/, '.min.css')), gerarAvulsa(n)])];
+  for (const [arquivo, css] of saidas) {
+    const nome = 'css/' + path.basename(arquivo);
+    if (process.argv.includes('--check')) {
+      const atual = fs.existsSync(arquivo) ? fs.readFileSync(arquivo, 'utf8') : '';
+      if (atual !== css) { console.error(nome + ' desatualizado: rode node tools/build-css.mjs'); process.exit(1); }
+      console.log(nome + ' em dia');
+    } else {
+      fs.writeFileSync(arquivo, css);
+      console.log(nome, (css.length / 1024).toFixed(1) + ' KB');
+    }
   }
 }

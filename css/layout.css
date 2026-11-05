@@ -14,10 +14,6 @@
   padding-right: var(--gutter);
 }
 
-.container-wide {
-  max-width: var(--container-wide);
-}
-
 .container-narrow {
   max-width: var(--container-narrow);
 }
@@ -33,24 +29,6 @@
 .section-lg {
   padding-top: var(--space-32);
   padding-bottom: var(--space-32);
-}
-
-.section-dark {
-  background-color: var(--ink);
-  color: var(--text-on-dark);
-}
-
-.section-dark h1,
-.section-dark h2,
-.section-dark h3,
-.section-dark h4,
-.section-dark h5,
-.section-dark h6 {
-  color: var(--white);
-}
-
-.section-dark p {
-  color: var(--text-on-dark-secondary);
 }
 
 .section-neutral {

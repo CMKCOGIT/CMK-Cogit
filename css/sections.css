@@ -16,43 +16,6 @@
   padding-top: var(--header-h);
 }
 
-.hero-inner {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  text-align: left;
-  position: relative;
-  min-height: 850px;
-  padding: var(--space-20) 0 var(--space-10) 0;
-  gap: var(--space-12);
-}
-
-.hero-content {
-  position: relative;
-  z-index: 10;
-  width: 42%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.hero-content .hero-subtitle {
-  margin-bottom: 0 !important;
-  margin-inline: 0; /* hero alinhado à esquerda: o parágrafo não centraliza */
-}
-
-.hero-content .hero-ctas {
-  margin-top: 1.25rem !important;
-  margin-bottom: 0 !important;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start !important;
-  gap: var(--space-3);
-  flex-wrap: wrap;
-}
-
 #cta-hero-contact {
   display: inline-flex;
   align-items: center;
@@ -196,28 +159,6 @@
 /* ── Step 3 Summary Box Components ── */
 
 /* ── Hero Discovery Footer ── */
-
-.btn-hero-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #CBD5E1;
-  padding: 11px 20px;
-  border-radius: var(--radius-full);
-  font-size: 13.5px;
-  font-weight: var(--fw-medium);
-  cursor: pointer;
-  transition: all 180ms ease;
-  font-family: var(--font-heading);
-}
-
-.btn-hero-back:hover {
-  border-color: rgba(155, 140, 255, 0.5);
-  color: #FFFFFF;
-  background: rgba(42, 62, 107, 0.12);
-}
 
 .btn-hero-montar {
   display: inline-flex;
@@ -692,53 +633,6 @@
 
 /* ── Resultado: Diagnóstico Consultivo ── */
 
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 6px 16px;
-  background: rgba(18, 19, 20, 0.4);
-  border: 1px solid rgba(26, 44, 82, 0.4);
-  border-radius: var(--radius-full);
-  font-size: 11px;
-  font-weight: var(--fw-semibold);
-  color: var(--white);
-  margin-bottom: var(--space-6);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.hero-badge-icon {
-  color: var(--purple);
-}
-
-.hero-positioning-triad {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--font-heading);
-  font-size: 12px;
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--lilac);
-  margin-bottom: var(--space-4);
-}
-
-.triad-item {
-  color: #E2E8F0;
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.14em;
-  font-size: 11px;
-}
-
-.triad-divider {
-  color: var(--purple);
-  font-size: 11px;
-  line-height: 1;
-  opacity: 0.8;
-}
-
 .hero h1 {
   /* Mesmo tamanho dos trechos do título (definidos no HTML), para a linha não herdar outra altura */
   font-size: clamp(2rem, 3.3vw, 3.4rem);
@@ -750,48 +644,6 @@
   letter-spacing: -0.028em;
 }
 
-.hero-title-main {
-  font-size: clamp(38px, 4vw + 1rem, 72px);
-  line-height: var(--leading-tight);
-}
-
-.hero-title-highlight {
-  font-size: clamp(40px, 5vw + 1rem, 78px);
-  color: var(--purple);
-  display: block;
-  line-height: var(--leading-none);
-}
-
-@media (min-width: 1441px) {
-  .hero-title-main {
-    font-size: clamp(72px, 5vw, 84px);
-  }
-  .hero-title-highlight {
-    font-size: clamp(78px, 5.5vw, 90px);
-  }
-}
-
-.hero-title-connector {
-  color: var(--white);
-}
-
-.hero-subtitle {
-  font-family: var(--font-body);
-  font-size: clamp(var(--text-base), 1.5vw, var(--text-lg));
-  color: var(--text-on-dark-secondary);
-  line-height: var(--leading-relaxed);
-  max-width: 760px;
-  margin: 0 auto var(--space-8);
-}
-
-.hero-ctas {
-  display: flex;
-  gap: var(--space-4);
-  margin-bottom: 0;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-}
-
 /* Hero Visual Background */
 
 /* SVG connector lines overlay */
@@ -801,35 +653,6 @@
 /* ── Service Cards ── */
 
 /* ── Initial Animations ── */
-.hero-animate-1,
-.hero-animate-2,
-.hero-animate-3,
-.hero-animate-4,
-.hero-animate-5 {
-  opacity: 0;
-  transform: translateY(15px);
-  animation: heroFadeUp 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.hero-animate-1 {
-  animation-delay: 100ms;
-}
-
-.hero-animate-2 {
-  animation-delay: 200ms;
-}
-
-.hero-animate-3 {
-  animation-delay: 300ms;
-}
-
-.hero-animate-4 {
-  animation-delay: 400ms;
-}
-
-.hero-animate-5 {
-  animation-delay: 500ms;
-}
 
 @keyframes heroFadeUp {
   0% {
@@ -2599,28 +2422,6 @@ body.no-scroll .mobile-fixed-cta {
    ══════════════════════════════════════ */
 
 /* ── Nav Actions ── */
-
-.diag-btn-prev {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--text-secondary);
-  background: none;
-  border: 1px solid rgba(18, 19, 20, 0.12);
-  border-radius: var(--radius-full);
-  padding: 10px 20px;
-  font-family: var(--font-heading);
-  font-size: var(--text-sm);
-  font-weight: var(--fw-semibold);
-  cursor: pointer;
-  transition: all 200ms ease;
-}
-
-.diag-btn-prev:hover {
-  border-color: var(--purple);
-  color: var(--purple);
-  background: var(--lilac-soft);
-}
 
 /* ══════════════════════════════════════
    RIGHT PANEL — Summary / Resumo lateral

@@ -43,7 +43,7 @@ main, section[id] { scroll-margin-top: calc(var(--header-h-compact) + 1.5rem); }
   outline: 3px solid var(--cogit-config-focus); outline-offset: 4px; box-shadow: none;
 }
 
-.btn-hero-montar, .btn-hero-back { min-height: 48px; white-space: normal; max-width: 100%; }
+.btn-hero-montar { min-height: 48px; white-space: normal; max-width: 100%; }
 
 .cfg-addon-select { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; min-height: 48px; color: var(--cogit-config-text); }
 
@@ -58,9 +58,7 @@ dialog .hero-modal-content { max-width: 100%; width: 100%; max-height: none; bac
 .hero-modal-info li { align-items: flex-start; }
 
 /* Shared layout repairs; auto grids must be allowed to shrink below 300px. */
-.solution-cards-grid,
-.start-features-grid,
-.start-plans-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+
 .mobile-menu { max-width: 100%; max-height: 100dvh; overflow-y: auto; overscroll-behavior: contain; }
 .mobile-menu:not(.is-open) { visibility: hidden; }
 .mobile-menu.is-open { visibility: visible; }
@@ -236,8 +234,8 @@ body:has(.cookie-banner) :is(.mobile-fixed-cta, .whatsapp-float) { visibility: h
 @media (max-width: 992px) {
   
   
-  .hero-inner { min-height: auto; }
-  .hero-content, #hero-interactive-container { width: 100%; }
+  
+  #hero-interactive-container { width: 100%; }
   .cookie-banner { bottom: 16px; left: 16px; right: 16px; max-width: 580px; padding: 20px; }
   .cookie-banner-inner { flex-direction: column; align-items: stretch; gap: 16px; }
   .cookie-copy { flex: 1 1 auto; width: 100%; }
@@ -305,13 +303,11 @@ body:has(.cookie-banner) :is(.mobile-fixed-cta, .whatsapp-float) { visibility: h
 
 /* Content remains readable when scripts are unavailable. */
 html:not(.animations-ready) :is(.reveal, .reveal-up, .reveal-left, .reveal-right, .reveal-scale, .reveal-fade, [class*="hero-animate-"]) { opacity: 1; transform: none; visibility: visible; }
-html:not(.animations-ready) #brand-intro { display: none; }
+
 #hero-interactive-container .privacy-label a { color: var(--cogit-config-focus); }
 .cookie-dialog :focus-visible { outline: 3px solid #B9C7E6; outline-offset: 3px; }
 .hero-model-dialog :is(h3,h4,p,li) { color: var(--cogit-config-text); }
 .hero-model-dialog .hero-modal-preview-container { min-height: 120px; }
-
-.hero .hero-title-highlight { color: var(--lilac); }
 
 :root { --leading-none: 1; --text-md: 1rem; --purple-dark: #13213E; }
 .process-wrapper { grid-template-columns: minmax(0, .45fr) minmax(0, .55fr); }
@@ -1554,10 +1550,6 @@ html:not(.animations-ready) #brand-intro { display: none; }
 
 /* Título do hero como UM bloco de texto (linhas por <br>): o navegador mede o
    h1 inteiro como maior elemento visível (LCP) em vez de cada linha separada. */
-.hero h1 > .hero-title-main,
-.hero h1 > .hero-title-highlight { display: inline; }
-.hero h1 .quebra-celular { display: none; }
-@media (max-width: 599.98px) { .hero h1 .quebra-celular { display: inline; } }
 
 /* Banner de privacidade compacto no celular: ocupava ~40% da tela (3 botões
    empilhados). Texto inalterado; Rejeitar e Aceitar lado a lado, com o MESMO

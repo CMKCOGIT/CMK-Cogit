@@ -156,7 +156,6 @@
   flex-shrink: 0;
 }
 
-.section-dark .section-label,
 .solution-hero .section-label,
 .cta-final .section-label {
   color: var(--lilac);

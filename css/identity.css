@@ -16,6 +16,9 @@
   --text: 'Satoshi', 'Satoshi Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --ease-c: cubic-bezier(.22, 1, .36, 1);
   --header-h: 64px; --header-h-compact: 64px;
+  /* largura do site: mais larga, sem encostar nas laterais */
+  --site-max: 1600px; --site-pad: clamp(20px, 4.2vw, 80px);
+  --container-max: var(--site-max); --container: var(--site-max); --container-wide: var(--site-max);
   /* apelidos antigos (variables.css) apontando para a identidade nova */
   --purple: var(--navy); --purple-hover: var(--navy-hover); --purple-light: #2A3E6B; --lilac: var(--sky);
   --lilac-soft: rgba(142, 166, 216, .14); --lilac-bg: rgba(26, 44, 82, .06);
@@ -159,8 +162,7 @@ section[class*="hero"].tone-ink, .solution-hero.tone-ink { padding-top: calc(var
 .header { background: var(--paper) !important; border-bottom: 1px solid transparent !important; height: var(--header-h) !important; transition: transform .45s var(--ease-c), border-color .3s, background-color .3s !important; color: var(--ink); }
 .header.is-scrolled { border-bottom-color: var(--line) !important; }
 .header.is-hidden { transform: translateY(-100%); }
-.header-inner { height: var(--header-h) !important; max-width: 1320px !important; padding-inline: max(16px, env(safe-area-inset-left, 0px)) !important; gap: 20px !important; }
-@media (min-width: 900px) { .header-inner { padding-inline: 40px !important; } }
+.header-inner { height: var(--header-h) !important; max-width: var(--site-max) !important; padding-inline: max(var(--site-pad), env(safe-area-inset-left, 0px)) !important; gap: 20px !important; }
 .header .logo-img { height: 26px !important; width: auto !important; }
 .nav { gap: 18px !important; }
 .nav-link, .nav-dropdown > .nav-link { font-family: var(--text) !important; font-weight: 500 !important; font-size: 14.5px !important; color: var(--ink) !important; padding: 6px 0 !important; background: none !important; position: relative; white-space: nowrap; }
@@ -331,3 +333,7 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .mobile-menu-close { background: transparent !important; border: 1px solid var(--ink) !important; border-radius: 2px !important; color: var(--ink) !important; }
 .mobile-nav-arrow, .mobile-accordion-icon { color: var(--navy) !important; }
 #custom-model-dialog p:not(.btn *) { color: var(--muted) !important; }
+
+/* ── Largura única do site (todas as páginas) ── */
+.container:not(.container-narrow), .container-wide { max-width: var(--site-max) !important; padding-left: max(var(--site-pad), env(safe-area-inset-left, 0px)) !important; padding-right: max(var(--site-pad), env(safe-area-inset-right, 0px)) !important; }
+.footer .container { max-width: var(--site-max) !important; }

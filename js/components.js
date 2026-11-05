@@ -1063,7 +1063,7 @@ const MODEL_PREVIEW_DATA = {
     description: 'Para empresas que precisam transmitir solidez e explicar serviços com clareza: painel institucional, serviços em abas, método em linha do tempo, casos, dúvidas e pedido de proposta.',
     audience: ['Pequenas e médias empresas', 'Escritórios e consultorias', 'Clínicas e prestadores de serviço', 'Negócios locais'],
     features: ['Composição sóbria, sem visual genérico', 'Serviços em abas acessíveis por teclado', 'Formulário de proposta com validação e LGPD', 'SEO técnico e dados estruturados', 'Responsivo e rápido no celular', 'Cores, fontes e conteúdo trocados sem refazer o layout'],
-    previewImg: 'assets/videos/templates/institucional-poster.jpg',
+    previewImg: 'assets/videos/templates/institucional-poster.webp',
     video: 'assets/videos/templates/institucional.mp4',
     liveUrl: 'templates/institucional/'
   },
@@ -1074,7 +1074,7 @@ const MODEL_PREVIEW_DATA = {
     description: 'Uma narrativa de conversão: do problema do público à solução em cenas, provas, etapas, objeções respondidas e um formulário curto no final.',
     audience: ['Campanhas e anúncios', 'Lançamento de serviços', 'Captação de leads', 'Produtos digitais'],
     features: ['Fluxo persuasivo sem gatilhos artificiais', 'Seção de solução com tela que acompanha o texto', 'CTA fixo no celular e formulário com validação', 'SEO técnico e dados estruturados', 'Carregamento leve, sem bibliotecas', 'Cores, fontes e conteúdo trocados sem refazer o layout'],
-    previewImg: 'assets/videos/templates/landing-poster.jpg',
+    previewImg: 'assets/videos/templates/landing-poster.webp',
     video: 'assets/videos/templates/landing.mp4',
     liveUrl: 'templates/landing/'
   },
@@ -1085,7 +1085,7 @@ const MODEL_PREVIEW_DATA = {
     description: 'Projetos apresentados como em uma revista: composições diferentes para cada trabalho, contexto e entrega, competências, serviços, processo e contato.',
     audience: ['Designers e fotógrafos', 'Arquitetos e engenheiros', 'Consultores e especialistas', 'Estúdios e freelancers'],
     features: ['Projetos em composição editorial', 'Imagens otimizadas em AVIF e WebP', 'Processo em cartões sobrepostos', 'SEO técnico e dados estruturados', 'Formulário de projeto com validação', 'Cores, fontes e conteúdo trocados sem refazer o layout'],
-    previewImg: 'assets/videos/templates/portfolio-poster.jpg',
+    previewImg: 'assets/videos/templates/portfolio-poster.webp',
     video: 'assets/videos/templates/portfolio.mp4',
     liveUrl: 'templates/portfolio/'
   }

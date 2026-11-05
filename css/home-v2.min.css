@@ -290,3 +290,11 @@ background: linear-gradient(180deg, #22365F 0%, #1A2C52 60%) !important; padding
 .home-v2 .curtain > #cta-final .cta-final-content { will-change: transform; }
 .home-v2 > .curtain { position: relative; }
 .home-v2 .curtain > #cta-final .section-label { color: var(--navy-muted) !important; }
+.hs-row::before { background: var(--white) !important; }
+.hs-row { transition: padding-left .35s var(--ease-c); }
+.hs-row h3 { transition: color .3s var(--ease-c), transform .35s var(--ease-c); }
+.hs-row:hover h3, .hs-row:focus-visible h3 { color: var(--navy) !important; transform: translateX(6px); }
+.hs-row .hs-svc li { transition: border-color .3s var(--ease-c), background-color .3s var(--ease-c); }
+.hs-row:hover .hs-svc li { border-color: var(--navy); background: var(--navy-soft); }
+.hs-row:hover .hs-go { transform: translate(4px, -4px); }
+@media (hover: none) { .hs-row:hover h3 { transform: none; } }

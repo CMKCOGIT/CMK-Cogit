@@ -307,6 +307,8 @@ function renderHeroInteractive() {
   }
 
   function focusDiagnosticViewport() {
+    const dialogBody = container.closest('.dx-modal-body');
+    if (dialogBody) { dialogBody.scrollTop = 0; return; }
     const header = document.querySelector('.header, header');
     const headerHeight = header ? header.offsetHeight : 0;
     const targetTop = Math.max(0, container.getBoundingClientRect().top + window.scrollY - headerHeight - 12);
@@ -314,7 +316,7 @@ function renderHeroInteractive() {
   }
 
   function revealNextAction(action) {
-    if (!action || window.innerWidth > 680) return;
+    if (!action || window.innerWidth > 680 || container.closest('dialog')) return;
     window.requestAnimationFrame(() => {
       const rect = action.getBoundingClientRect();
       const safeBottom = window.innerHeight - 18;
@@ -507,7 +509,7 @@ function renderHeroInteractive() {
         if (!burst) return;
         burst.innerHTML = '';
 
-        const colors = ['#a79bff','#c4b5fd','#818cf8','#f0abfc','#ffffff','#7dd3fc','#fbbf24','#34d399'];
+        const colors = ['#8EA6D8','#B9C7E6','#818cf8','#f0abfc','#ffffff','#7dd3fc','#fbbf24','#34d399'];
         const count  = 24;
 
         // Partículas radiantes
@@ -551,7 +553,7 @@ function renderHeroInteractive() {
             'width:10px',
             'height:10px',
             'border-radius:50%',
-            'border:2px solid rgba(167,155,255,0.85)',
+            'border:2px solid rgba(142, 166, 216,0.85)',
             'pointer-events:none'
           ].join(';');
           burst.appendChild(ring);
@@ -563,7 +565,7 @@ function renderHeroInteractive() {
 
         // Bolinha: pop de vitória e fade out suave (SEM fill: forwards para não travar opacidade)
         const popAnim = ball.animate([
-          { transform: 'translate(-50%,-50%) scale(1)',   background: '#a79bff', opacity: 1 },
+          { transform: 'translate(-50%,-50%) scale(1)',   background: '#8EA6D8', opacity: 1 },
           { transform: 'translate(-50%,-50%) scale(2.6)', background: '#ffffff', opacity: 1, offset: 0.26 },
           { transform: 'translate(-50%,-50%) scale(0.2)', background: '#ffffff', opacity: 0 }
         ], { duration: 520, easing: 'ease-out' });
@@ -1743,7 +1745,7 @@ function updateHomeDynamicRecommendations(flowId) {
 
   if (flowId === 'automatizar-processo') {
     container.innerHTML = `
-      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(74, 61, 219, 0.4);">
+      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(26, 44, 82, 0.4);">
         <span class="dynamic-rec-card-tag" style="background: var(--purple); color: #fff;">RECOMENDADO</span>
         <h3>Automação de Processos</h3>
         <p>Elimine tarefas repetitivas, conecte planilhas e integre fluxos operacionais com WhatsApp e e-mails.</p>
@@ -1767,7 +1769,7 @@ function updateHomeDynamicRecommendations(flowId) {
     `;
   } else if (flowId === 'vender-online') {
     container.innerHTML = `
-      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(74, 61, 219, 0.4);">
+      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(26, 44, 82, 0.4);">
         <span class="dynamic-rec-card-tag" style="background: var(--purple); color: #fff;">RECOMENDADO</span>
         <h3>Site Institucional</h3>
         <p>Estrutura profissional com múltiplas páginas para transmitir credibilidade e autoridade da sua marca.</p>
@@ -1791,7 +1793,7 @@ function updateHomeDynamicRecommendations(flowId) {
     `;
   } else if (flowId === 'sistema-operacao') {
     container.innerHTML = `
-      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(74, 61, 219, 0.4);">
+      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(26, 44, 82, 0.4);">
         <span class="dynamic-rec-card-tag" style="background: var(--purple); color: #fff;">RECOMENDADO</span>
         <h3>Sistema Personalizado</h3>
         <p>Software desenvolvido sob medida para as regras operacionais da sua empresa.</p>
@@ -1815,7 +1817,7 @@ function updateHomeDynamicRecommendations(flowId) {
     `;
   } else if (flowId === 'ideia-papel') {
     container.innerHTML = `
-      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(74, 61, 219, 0.4);">
+      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(26, 44, 82, 0.4);">
         <span class="dynamic-rec-card-tag" style="background: var(--purple); color: #fff;">RECOMENDADO</span>
         <h3>MVP Funcional</h3>
         <p>Primeira versão do produto digital para validação rápida de hipóteses e atração dos primeiros usuários.</p>
@@ -1839,7 +1841,7 @@ function updateHomeDynamicRecommendations(flowId) {
     `;
   } else if (flowId === 'ainda-nao-sei') {
     container.innerHTML = `
-      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(74, 61, 219, 0.4);">
+      <div class="dynamic-rec-card reveal reveal-delay-1" style="border-color: rgba(26, 44, 82, 0.4);">
         <span class="dynamic-rec-card-tag" style="background: var(--purple); color: #fff;">DIAGNÓSTICO</span>
         <h3>Análise e Diagnóstico Técnico</h3>
         <p>Ajudamos a identificar os principais gargalos e oportunidades digitais para o momento atual da sua empresa.</p>

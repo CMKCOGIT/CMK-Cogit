@@ -1,63 +1,13 @@
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-1.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-2.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-3.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-4.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-5.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-6.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-7.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-8.woff2) format('woff2');
-}
-@font-face {
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url(../assets/fonts/cogit-font-9.woff2) format('woff2');
-}
+/* COGIT — fontes da identidade (somente duas famílias).
+   Clash Display: logo, títulos, números. Satoshi: texto, interface, botões.
+   Arquivos WOFF2 locais (Fontshare / Indian Type Foundry, licença ITF Free Font License,
+   uso comercial permitido). Nada é carregado de servidores externos. */
+@font-face{font-family:'Clash Display';font-style:normal;font-weight:300;font-display:swap;src:url(../assets/fonts/clash-display-300.woff2) format('woff2')}
+@font-face{font-family:'Clash Display';font-style:normal;font-weight:500;font-display:swap;src:url(../assets/fonts/clash-display-500.woff2) format('woff2')}
+@font-face{font-family:'Clash Display';font-style:normal;font-weight:600;font-display:swap;src:url(../assets/fonts/clash-display-600.woff2) format('woff2')}
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:400;font-display:swap;src:url(../assets/fonts/satoshi-400.woff2) format('woff2')}
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:500;font-display:swap;src:url(../assets/fonts/satoshi-500.woff2) format('woff2')}
+@font-face{font-family:'Satoshi';font-style:normal;font-weight:700;font-display:swap;src:url(../assets/fonts/satoshi-700.woff2) format('woff2')}
+/* Fallbacks com métricas ajustadas para a troca de fonte não deslocar o layout */
+@font-face{font-family:'Clash Display Fallback';src:local('Arial');size-adjust:104%;ascent-override:92%;descent-override:22%;line-gap-override:0%}
+@font-face{font-family:'Satoshi Fallback';src:local('Arial');size-adjust:98%;ascent-override:100%;descent-override:24%;line-gap-override:0%}

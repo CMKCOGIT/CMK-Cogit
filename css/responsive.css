@@ -6,6 +6,33 @@
 /* ── Laptop (≤1200px) ── */
 
 @media (max-width: 1200px) {
+  .hero h1 {
+    font-size: clamp(2rem, 4.5vw, 3rem);
+  }
+
+  .hero-inner {
+    gap: var(--space-10);
+  }
+
+  .footer-top {
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  .impact-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .challenge-grid {
+    gap: var(--space-4);
+  }
+
+  /* Configurator */
+  
+  }
+
+/* ── Header: menu completo no desktop (≥1024px); botão Menu abaixo disso ── */
+@media (max-width: 1023.98px) {
   /* Header */
   .nav {
     display: none;
@@ -38,30 +65,7 @@
     display: flex;
   }
 
-  .hero h1 {
-    font-size: clamp(2rem, 4.5vw, 3rem);
-  }
-
-  .hero-inner {
-    gap: var(--space-10);
-  }
-
-  .footer-top {
-    grid-template-columns: 1.2fr 1fr 1fr;
-    gap: var(--space-8);
-  }
-
-  .impact-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .challenge-grid {
-    gap: var(--space-4);
-  }
-
-  /* Configurator */
-  
-  }
+}
 
 /* ── Tablet (≤992px) ── */
 
@@ -453,7 +457,7 @@
   
   .service-card {
     padding: 20px 16px;
-    border-radius: 14px;
+    border-radius: 2px;
   }
 
   .service-card-title,
@@ -484,7 +488,7 @@
 
   .challenge-card {
     padding: 18px 16px;
-    border-radius: 14px;
+    border-radius: 2px;
   }
 
   .challenge-card-title {
@@ -508,7 +512,7 @@
 
   .pricing-card {
     padding: 22px 18px;
-    border-radius: 16px;
+    border-radius: 2px;
   }
 
   .pricing-card-header h3 {
@@ -531,7 +535,7 @@
     grid-template-columns: 36px 1fr;
     gap: 12px;
     padding: 14px 12px;
-    border-radius: 12px;
+    border-radius: 2px;
     margin-bottom: 8px;
   }
 
@@ -554,7 +558,7 @@
   /* Configurator */
   .cfg-main {
     padding: 16px 12px;
-    border-radius: 14px;
+    border-radius: 2px;
   }
 
   .cfg-step-title {

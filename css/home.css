@@ -175,7 +175,7 @@
   text-decoration: none;
   transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
 }
-.home-frente:hover { transform: translateY(-3px); border-color: rgba(74, 61, 219, 0.35); box-shadow: var(--shadow-3), 0 0 0 1px rgba(74, 61, 219, 0.06); }
+.home-frente:hover { transform: translateY(-3px); border-color: rgba(26, 44, 82, 0.35); box-shadow: var(--shadow-3), 0 0 0 1px rgba(26, 44, 82, 0.06); }
 .home-frente:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 3px; }
 .home-frente-icone {
   display: inline-grid;

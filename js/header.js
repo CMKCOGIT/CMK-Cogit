@@ -66,7 +66,7 @@ function initHeader() {
   }
 
   window.CogitHeader = {close: closeMobileMenu};
-  window.matchMedia('(min-width: 1201px)').addEventListener('change', event => { if (event.matches) closeMobileMenu(false); });
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', event => { if (event.matches) closeMobileMenu(false); });
   if (menuToggle && mobileMenu) {
     menuToggle.addEventListener('click', () => {
       if (mobileMenu.classList.contains('is-open')) {

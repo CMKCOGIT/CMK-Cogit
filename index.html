@@ -5,11 +5,12 @@
   <script>document.documentElement.classList.add('js');try{var r=document.referrer,n=(performance.getEntriesByType('navigation')[0]||{}).type;if((r&&new URL(r).origin===location.origin)||n==='reload'||n==='back_forward')document.documentElement.classList.add('intro-vista')}catch(e){}</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.ico" sizes="48x48">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#0F1B33">
+  <meta name="theme-color" content="#121314">
   
   <!-- SEO -->
   <title>Desenvolvimento de Software e Soluções Digitais | CMKCOGIT</title>
@@ -39,9 +40,11 @@
   <!-- Fonts -->
 
   <!-- Styles -->
-  <link rel="preload" href="assets/fonts/cogit-font-5.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/cogit-font-6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/clash-display-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/site.min.css">
+  <link rel="stylesheet" href="css/identity.css">
+  <link rel="stylesheet" href="css/home-v2.css">
 
   <!-- Schema.org - Organization -->
   <script type="application/ld+json">
@@ -53,7 +56,7 @@
     "areaServed": "BR",
     "alternateName": "COGIT",
     "url": "https://cmkcogit.com.br",
-    "logo": "https://cmkcogit.com.br/assets/images/logo-white.png",
+    "logo": "https://cmkcogit.com.br/assets/images/logo-cogit.svg",
     "email": "contato@cmkcogit.com.br",
     "telephone": "+55-17-98156-8889",
     "description": "Desenvolvimento de software e soluções digitais sob medida. Sites, sistemas, SaaS, automações e produtos digitais para empresas.",
@@ -76,36 +79,12 @@
 
 
   <!-- ═══════════════════════════════════════
-       00 — BRAND INTRO / ABERTURA DA MARCA
-       ═══════════════════════════════════════ -->
-  <div id="brand-intro" class="brand-intro" aria-hidden="true">
-    <div class="brand-intro-grid"></div>
-    <div class="brand-intro-glow"></div>
-    <div class="brand-intro-center">
-      <div class="brand-intro-logo-wrap">
-        <img src="assets/images/logo-white.png" alt="CMKCOGIT" class="brand-intro-logo" width="360" height="74">
-        <div class="brand-intro-shimmer"></div>
-      </div>
-      <div class="brand-intro-slogan-wrap">
-        <div class="brand-intro-slogan">Pensamos antes de Construir</div>
-        <div class="brand-intro-triad">
-          <span>Pensar</span>
-          <span class="triad-dot">•</span>
-          <span>Estruturar</span>
-          <span class="triad-dot">•</span>
-          <span>Construir</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════
        HEADER
        ═══════════════════════════════════════ -->
   <header class="header" id="header" role="banner">
     <div class="header-inner">
-      <a href="index.html" class="logo" aria-label="CMKCOGIT - Página inicial">
-        <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img" width="512" height="115">
+      <a href="index.html" class="logo" aria-label="COGIT, página inicial">
+        <img src="assets/images/logo-cogit.svg" alt="COGIT" class="logo-img" width="142" height="40">
       </a>
 
       <nav class="nav" role="navigation" aria-label="Menu principal">
@@ -158,8 +137,8 @@
   <nav class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menu mobile">
     <!-- Header: CMK Symbol + Close Button -->
     <div class="mobile-menu-header">
-      <a href="index.html" class="mobile-menu-brand" aria-label="CMKCOGIT - Página inicial">
-        <img src="assets/images/cmk-symbol.png" alt="Símbolo CMK" class="mobile-menu-symbol" width="213" height="192">
+      <a href="index.html" class="mobile-menu-brand" aria-label="COGIT, página inicial">
+        <img src="assets/images/icone-cogit.svg" alt="COGIT" class="mobile-menu-symbol" width="40" height="40">
       </a>
       <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fechar menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -219,248 +198,194 @@
     </div>
   </nav>
 
-  <main id="main-content" role="main">
-    <!-- ═══════════════════════════════════════
-         01 — HERO (2 COLUNAS / DESCOBERTA INTERATIVA)
-         ═══════════════════════════════════════ -->
-    <section class="hero" id="hero" aria-label="Apresentação da COGIT">
-      <div class="hero-bg-grid" aria-hidden="true" data-parallax="0.12"></div>
-      <div class="hero-bg-gradient" aria-hidden="true" data-parallax="0.06"></div>
-
-      <div class="container container-wide">
-        <div class="hero-inner">
-
-          <!-- FRONT CONTENT (LEFT: 40-45%) -->
-          <div class="hero-content">
-            <div class="hero-badge hero-animate-1">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hero-badge-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-              PENSAMOS ANTES DE CONSTRUIR
-            </div>
-            
-            <div class="hero-positioning-triad hero-animate-2">
-              <span class="triad-item">PENSAR</span>
-              <span class="triad-divider">•</span>
-              <span class="triad-item">ESTRUTURAR</span>
-              <span class="triad-divider">•</span>
-              <span class="triad-item">CONSTRUIR</span>
-            </div>
-            
-            <h1 class="hero-animate-3">
-              <span class="hero-title-main" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15;">Sua empresa tem um desafio.</span><br>
-              <span class="hero-title-highlight" style="font-size: clamp(2rem, 3.3vw, 3.4rem); line-height: 1.15;"><span class="hero-title-connector">Nós estruturamos</span><br class="quebra-celular"> a tecnologia<br class="quebra-celular"> para resolver.</span>
-            </h1>
-
-            <p class="hero-subtitle hero-animate-4" style="margin-top: var(--space-6); margin-bottom: 0; font-size: var(--text-lg); max-width: 95%;">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
-
-            <div class="hero-ctas hero-animate-5">
-              <button type="button" class="btn btn-primary btn-lg" id="cta-hero-start" onclick="if(window.heroStartDiagnosis){ window.heroStartDiagnosis(); }">
-                Descobrir minha solução <span><i class="bi bi-arrow-right"></i></span>
-              </button>
-              <a href="contato.html" class="btn btn-secondary btn-lg" id="cta-hero-contact">
-                Falar com especialista
-              </a>
-            </div>
+  <main id="main-content" role="main" class="home-v2">
+    <!-- 01 — HERO: lema, título, chamada e o diagnóstico em movimento -->
+    <section class="hx tone-paper" id="hero" aria-labelledby="hero-titulo">
+      <div class="hx-grid">
+        <div class="hx-l">
+          <p class="hx-motto"><i aria-hidden="true"></i>Pensamos antes de construir</p>
+          <h1 id="hero-titulo">Tecnologia que <span class="t-tone">sai do papel.</span></h1>
+          <p class="hx-lead">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
+          <div class="hx-ctas">
+            <button type="button" class="btn btn-primary btn-lg" id="cta-hero-start" data-open-diagnostico>Monte sua solução <span><i class="bi bi-arrow-right"></i></span></button>
+            <a href="contato.html" class="hx-link" id="cta-hero-contact">Falar com especialista</a>
           </div>
-
-          <!-- INTERACTIVE DISCOVERY BLOCK (RIGHT: 55-60%) -->
-          <div class="hero-interactive-container hero-discovery-container hero-animate-5" id="hero-interactive-container">
-            <!-- Rendered by js/components.js -->
+          <p class="hx-meta">Menos de 1 minuto <span aria-hidden="true">·</span> Sem cadastro <span aria-hidden="true">·</span> Resultado imediato</p>
+        </div>
+        <div class="hx-r">
+          <div class="demo-dx" id="demo-dx" role="region" aria-label="Demonstração animada do diagnóstico COGIT">
+            <div class="dd-top"><b>COGIT Diagnostic · em movimento</b><span class="dd-cnt" id="dd-cnt">01 / 08</span></div>
+            <div class="dd-segs" id="dd-segs" aria-hidden="true"></div>
+            <div class="dd-rail" id="dd-rail" aria-hidden="true"><span>Solução</span><span>Formato</span><span>Contexto</span><span>Resumo</span></div>
+            <div class="dd-stage" id="dd-stage" aria-hidden="true"></div>
+            <div class="dd-bot">
+              <div class="dd-nm" id="dd-nm"></div>
+              <button type="button" class="dd-btn" id="dd-prev" aria-label="Solução anterior"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg></button>
+              <button type="button" class="dd-btn" id="dd-pause" aria-label="Pausar demonstração"><svg viewBox="0 0 16 16" aria-hidden="true" id="dd-pause-ic"><path d="M5 3v10M11 3v10"/></svg></button>
+              <button type="button" class="dd-btn" id="dd-next" aria-label="Próxima solução"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button>
+            </div>
+            <div class="dd-cursor" id="dd-cursor" aria-hidden="true"><svg viewBox="0 0 18 18"><path d="M2 1.5l13 7-6 1.4-2.6 5.6z" fill="#121314" stroke="#fff" stroke-width="1"/></svg></div>
           </div>
+        </div>
+      </div>
+      <div class="hx-aud"><div class="hx-aud-in"><span>Para</span><span>PMEs</span><span>Profissionais autônomos</span><span>Startups</span><span>Projetos de impacto</span></div></div>
+    </section>
 
+    <!-- 02 — PROJETOS: lista com prévia fixa -->
+    <section class="section tone-paper hp" id="cases" aria-labelledby="projetos-titulo">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">PROJETOS</span>
+          <h2 id="projetos-titulo">Problemas reais. <span class="t-tone">Soluções construídas.</span></h2>
+          <p class="text-body-lg">Veja como transformamos necessidades de negócios em tecnologia sob medida e resultados concretos.</p>
+        </div>
+        <div class="pj">
+          <div class="pj-list" id="pj-list">
+            <article class="pj-it is-on" data-img="0">
+              <div class="pj-meta"><span class="pj-no">01</span><span class="pj-sec">Educação · plataforma web</span></div>
+              <h3>WaveType</h3>
+              <div class="pj-more"><p>Plataforma de digitação para escolas e estudantes. Professores criam turmas e acompanham a evolução de cada aluno; quem treina sozinho começa sem cadastro.</p>
+                <div class="pj-links"><a class="hx-link" href="sobre.html#projetos">Ver o projeto</a><a class="hx-link" href="https://www.wavetype.com.br/" target="_blank" rel="noopener noreferrer">wavetype.com.br ↗</a></div></div>
+              <img class="pj-img-m" src="assets/images/projetos/wavetype.webp" alt="Página inicial da WaveType" width="1200" height="717" loading="lazy">
+            </article>
+            <article class="pj-it" data-img="1">
+              <div class="pj-meta"><span class="pj-no">02</span><span class="pj-sec">Comércio · marketplace</span></div>
+              <h3>Artenós</h3>
+              <div class="pj-more"><p>Marketplace de artesanato com lojas aprovadas, frete calculado por loja, pagamento por Pix ou cartão e conversa direta com quem fez a peça.</p>
+                <div class="pj-links"><a class="hx-link" href="sobre.html#projetos">Ver o projeto</a><a class="hx-link" href="https://artenos.cmkcogit.com.br/" target="_blank" rel="noopener noreferrer">artenos.cmkcogit.com.br ↗</a></div></div>
+              <img class="pj-img-m" src="assets/images/projetos/artenos.webp" alt="Página inicial da Artenós" width="1200" height="642" loading="lazy">
+            </article>
+            <article class="pj-it" data-img="2">
+              <div class="pj-meta"><span class="pj-no">03</span><span class="pj-sec">Saúde · site profissional</span></div>
+              <h3>Nutri.Kevin</h3>
+              <div class="pj-more"><p>Site do nutricionista Kevin Lincoln, organizado em torno do acompanhamento de três meses e de um pedido de contato claro.</p>
+                <div class="pj-links"><a class="hx-link" href="sobre.html#projetos">Ver o projeto</a><a class="hx-link" href="https://www.kevinlincoln.com.br/" target="_blank" rel="noopener noreferrer">kevinlincoln.com.br ↗</a></div></div>
+              <img class="pj-img-m" src="assets/images/projetos/nutri-kevin.webp" alt="Site do nutricionista Kevin Lincoln" width="1200" height="717" loading="lazy">
+            </article>
+          </div>
+          <div class="pj-prev">
+            <a class="pj-frame" id="pj-frame" href="sobre.html#projetos" aria-label="Ver todos os projetos">
+              <img class="is-on" src="assets/images/projetos/wavetype.webp" alt="" width="1200" height="717" loading="lazy">
+              <img src="assets/images/projetos/artenos.webp" alt="" width="1200" height="642" loading="lazy">
+              <img src="assets/images/projetos/nutri-kevin.webp" alt="" width="1200" height="717" loading="lazy">
+              <span class="pj-cur" aria-hidden="true">Ver o projeto ↗</span>
+            </a>
+            <div class="pj-cap"><span id="pj-cap">01 · WaveType</span><a class="hx-link" href="sobre.html#projetos">Ver todos os projetos</a></div>
+          </div>
         </div>
       </div>
     </section>
 
-
-    <!-- ═══════════════════════════════════════
-         02b — NÚMEROS DO CATÁLOGO (contagem animada; valores vêm de js/data.js)
-         ═══════════════════════════════════════ -->
-    <section class="home-numeros" aria-label="A CMKCOGIT em números">
-      <div class="container">
-        <ul class="home-numeros-lista" role="list">
-          <li class="home-numero" data-reveal data-reveal-delay="0">
-            <div class="home-numero-topo">
-              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#solucoes"></use></svg></span>
-              <span class="home-numero-rotulo">Catálogo</span>
-              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-1" aria-label="O que significa: soluções no catálogo">
-                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
-              </button>
-            </div>
-            <strong class="home-numero-valor"><span data-counter="12" data-numero="solucoes">12</span></strong>
-            <span class="home-numero-desc">soluções no catálogo</span>
-            <div class="home-numero-balao" id="numero-info-1" role="note" hidden>
-              <p>Serviços com escopo e investimento definidos: de consultoria e landing pages a sistemas, automações e MVPs. Dá para combinar mais de um em “Monte sua solução”.</p>
-            </div>
-          </li>
-          <li class="home-numero" data-reveal data-reveal-delay="80">
-            <div class="home-numero-topo">
-              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#operacao"></use></svg></span>
-              <span class="home-numero-rotulo">Frentes</span>
-              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-2" aria-label="O que significa: frentes de atuação">
-                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
-              </button>
-            </div>
-            <strong class="home-numero-valor"><span data-counter="4" data-numero="frentes">4</span></strong>
-            <span class="home-numero-desc">frentes de atuação</span>
-            <div class="home-numero-balao" id="numero-info-2" role="note" hidden>
-              <p>Organizamos as soluções pelo objetivo do seu negócio: atrair e converter clientes, ganhar eficiência, organizar a operação ou criar algo novo.</p>
-            </div>
-          </li>
-          <li class="home-numero" data-reveal data-reveal-delay="160">
-            <div class="home-numero-topo">
-              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#visao-cards"></use></svg></span>
-              <span class="home-numero-rotulo">Modelos prontos</span>
-              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-3" aria-label="O que significa: modelos prontos para começar">
-                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
-              </button>
-            </div>
-            <strong class="home-numero-valor"><span data-counter="3">3</span></strong>
-            <span class="home-numero-desc">modelos prontos para começar</span>
-            <div class="home-numero-balao" id="numero-info-3" role="note" hidden>
-              <p>Landing Page, Portfólio e Site com estrutura já desenvolvida. Você envia textos, imagens e identidade visual, e o site fica pronto mais rápido e com investimento menor.</p>
-            </div>
-          </li>
-          <li class="home-numero" data-reveal data-reveal-delay="240">
-            <div class="home-numero-topo">
-              <span class="home-numero-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#valor"></use></svg></span>
-              <span class="home-numero-rotulo">Investimento</span>
-              <button type="button" class="home-numero-info" aria-expanded="false" aria-controls="numero-info-4" aria-label="O que significa: menor investimento para começar">
-                <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#info"></use></svg>
-              </button>
-            </div>
-            <strong class="home-numero-valor"><small>R$</small> <span data-counter="350" data-numero="minimo">350</span></strong>
-            <span class="home-numero-desc">menor investimento para começar</span>
-            <div class="home-numero-balao" id="numero-info-4" role="note" hidden>
-              <p data-numero-explica="minimo">Valor inicial do serviço “Consultoria e Planejamento Digital”, o ponto de partida mais acessível. Sites com modelo pronto começam em R$ 500.</p>
-            </div>
-          </li>
-        </ul>
+    <!-- 03 — COMO FUNCIONA: título fixo e etapas -->
+    <section class="section tone-ink hw" id="how-it-works" aria-labelledby="como-titulo">
+      <div class="container hw-grid">
+        <div class="hw-stick">
+          <span class="section-label">COMO FUNCIONA</span>
+          <h2 id="como-titulo">Você não precisa chegar <span class="t-tone">com a tecnologia definida.</span></h2>
+          <p class="text-body-lg">Ajudamos a estruturar o melhor caminho desde o primeiro diagnóstico até a evolução da solução.</p>
+          <div class="hw-big"><b data-count="3">3</b><span>meses de suporte gratuito em todos os projetos</span></div>
+          <a href="como-trabalhamos.html" class="btn btn-secondary">Conheça como trabalhamos <span><i class="bi bi-arrow-right"></i></span></a>
+        </div>
+        <div class="hw-steps">
+          <div class="home-process-card hw-step"><div class="home-process-num" aria-hidden="true">01</div><h3>Conte o desafio</h3><p>Compreendemos o problema, a rotina da sua equipe, os objetivos e o contexto do seu negócio.</p></div>
+          <div class="home-process-card hw-step"><div class="home-process-num" aria-hidden="true">02</div><h3>Estruturamos a solução</h3><p>Definimos escopo, prioridades, arquitetura e desenhamos a melhor abordagem antes de escrever qualquer código.</p></div>
+          <div class="home-process-card hw-step"><div class="home-process-num" aria-hidden="true">03</div><h3>Construímos e evoluímos</h3><p>Desenvolvemos a tecnologia com rigor técnico, acompanhamos o uso real e evoluímos com base em dados.</p></div>
+        </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════
-         02c — SOLUÇÕES (4 frentes; serviços e "a partir de" vêm de js/data.js)
-         ═══════════════════════════════════════ -->
-    <section class="section home-frentes" id="solucoes" aria-labelledby="frentes-titulo">
+    <!-- 04 — SOLUÇÕES: 4 frentes (serviços e "a partir de" vêm de js/data.js via home.js) -->
+    <section class="section tone-paper hs" id="solucoes" aria-labelledby="frentes-titulo">
       <div class="container">
-        <div class="section-header" data-reveal>
+        <div class="section-header">
           <span class="section-label">SOLUÇÕES</span>
-          <h2 id="frentes-titulo">Comece pelo que sua empresa precisa resolver.</h2>
+          <h2 id="frentes-titulo">Comece pelo que sua empresa <span class="t-tone">precisa resolver.</span></h2>
           <p class="text-body-lg">Modelos prontos para sair rápido ou projetos sob medida para o que é único no seu negócio.</p>
         </div>
-        <div class="home-frentes-grade">
-          <div class="home-frente-celula" data-reveal data-reveal-delay="0">
-          <a class="home-frente" href="solucoes/index.html#presenca-digital" data-frente="atrair-converter">
-            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#atrair"></use></svg></span>
-            <h3>Atrair e converter</h3>
-            <p>Para empresas que precisam melhorar presença, posicionamento e geração de oportunidades.</p>
-            <ul class="home-frente-servicos" data-servicos></ul>
-            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
-          </a>
+        <div class="hs-rows" data-stagger>
+          <a class="hs-row" href="solucoes/index.html#presenca-digital" data-frente="atrair-converter"><h3><small>Para empresas que precisam melhorar presença, posicionamento e geração de oportunidades.</small>Atrair e converter</h3><ul class="hs-svc" data-servicos></ul><span class="hs-pr" data-a-partir></span><span class="hs-go" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 14L14 6M7 6h7v7"/></svg></span></a>
+          <a class="hs-row" href="solucoes/index.html#automacoes" data-frente="ganhar-eficiencia"><h3><small>Para reduzir tarefas manuais, conectar ferramentas e melhorar processos.</small>Ganhar eficiência</h3><ul class="hs-svc" data-servicos></ul><span class="hs-pr" data-a-partir></span><span class="hs-go" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 14L14 6M7 6h7v7"/></svg></span></a>
+          <a class="hs-row" href="solucoes/index.html#sistemas" data-frente="organizar-operacao"><h3><small>Centralize processos e estruture informações.</small>Organizar a operação</h3><ul class="hs-svc" data-servicos></ul><span class="hs-pr" data-a-partir></span><span class="hs-go" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 14L14 6M7 6h7v7"/></svg></span></a>
+          <a class="hs-row" href="solucoes/index.html#produtos-digitais" data-frente="criar-novo"><h3><small>Transforme ideias em negócios e produtos digitais.</small>Criar algo novo</h3><ul class="hs-svc" data-servicos></ul><span class="hs-pr" data-a-partir></span><span class="hs-go" aria-hidden="true"><svg viewBox="0 0 20 20"><path d="M6 14L14 6M7 6h7v7"/></svg></span></a>
+        </div>
+        <div class="hs-foot"><button type="button" class="btn btn-primary" data-open-diagnostico>Monte sua solução <span><i class="bi bi-arrow-right"></i></span></button><a class="hx-link" href="solucoes/index.html">Ver todas as soluções e investimentos</a></div>
+      </div>
+    </section>
+
+    <!-- 05 — MODELOS PRONTOS: carrossel com vídeo e demonstração ao vivo -->
+    <section class="section tone-grey hm" id="modelos" aria-labelledby="modelos-titulo">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-label">MODELOS PRONTOS</span>
+          <h2 id="modelos-titulo">Coloque sua presença digital no ar <span class="t-tone">em poucos dias.</span></h2>
+          <p class="text-body-lg">Landing Page, Portfólio e Site com estrutura já desenvolvida. Você envia textos, imagens e identidade visual, e o site fica pronto mais rápido e com investimento menor.</p>
+        </div>
+        <div class="car" id="car">
+          <div class="car-track" id="car-track" tabindex="0" role="region" aria-roledescription="carrossel" aria-label="Modelos prontos">
+            <article class="car-slide" data-model="portfolio" aria-roledescription="slide" aria-label="1 de 3">
+              <div class="im"><img src="assets/videos/templates/portfolio-poster.jpg" alt="Prévia do modelo Portfólio Profissional" width="1920" height="1080"><button type="button" class="car-play" data-video="portfolio"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2l9 5-9 5z"/></svg>Ver vídeo</button></div>
+              <div class="tx"><span class="car-n">01 / 03</span><h3>Portfólio Profissional</h3><p>Projetos apresentados como em uma revista: composições diferentes para cada trabalho, contexto e entrega, competências, serviços, processo e contato.</p>
+                <dl><div><dt>Modelo pronto</dt><dd data-price="portfolio"></dd></div><div><dt>Prazo</dt><dd data-prazo="portfolio"></dd></div><div><dt>Plano mensal</dt><dd data-mensal></dd></div><div><dt>Sob medida</dt><dd data-custom="portfolio"></dd></div></dl>
+                <div class="car-acts"><button type="button" class="btn btn-primary btn-sm" data-video="portfolio">Ver vídeo</button><a class="btn btn-secondary btn-sm" href="templates/portfolio/" target="_blank" rel="noopener">Ver ao vivo ↗</a><a class="hx-link" href="solucoes/modelos-prontos.html">Detalhes do modelo</a></div></div>
+            </article>
+            <article class="car-slide" data-model="site-institucional" aria-roledescription="slide" aria-label="2 de 3">
+              <div class="im"><img src="assets/videos/templates/institucional-poster.jpg" alt="Prévia do modelo Site Institucional Essencial" width="1920" height="1080" loading="lazy"><button type="button" class="car-play" data-video="site-institucional"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2l9 5-9 5z"/></svg>Ver vídeo</button></div>
+              <div class="tx"><span class="car-n">02 / 03</span><h3>Site Institucional Essencial</h3><p>Para empresas que precisam transmitir solidez e explicar serviços com clareza: painel institucional, serviços em abas, método em linha do tempo, casos, dúvidas e pedido de proposta.</p>
+                <dl><div><dt>Modelo pronto</dt><dd data-price="site-institucional"></dd></div><div><dt>Prazo</dt><dd data-prazo="site-institucional"></dd></div><div><dt>Plano mensal</dt><dd data-mensal></dd></div><div><dt>Sob medida</dt><dd data-custom="site-institucional"></dd></div></dl>
+                <div class="car-acts"><button type="button" class="btn btn-primary btn-sm" data-video="site-institucional">Ver vídeo</button><a class="btn btn-secondary btn-sm" href="templates/institucional/" target="_blank" rel="noopener">Ver ao vivo ↗</a><a class="hx-link" href="solucoes/modelos-prontos.html">Detalhes do modelo</a></div></div>
+            </article>
+            <article class="car-slide" data-model="landing-page" aria-roledescription="slide" aria-label="3 de 3">
+              <div class="im"><img src="assets/videos/templates/landing-poster.jpg" alt="Prévia do modelo Landing Page Essencial" width="1920" height="1080" loading="lazy"><button type="button" class="car-play" data-video="landing-page"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2l9 5-9 5z"/></svg>Ver vídeo</button></div>
+              <div class="tx"><span class="car-n">03 / 03</span><h3>Landing Page Essencial</h3><p>Uma narrativa de conversão: do problema do público à solução em cenas, provas, etapas, objeções respondidas e um formulário curto no final.</p>
+                <dl><div><dt>Modelo pronto</dt><dd data-price="landing-page"></dd></div><div><dt>Prazo</dt><dd data-prazo="landing-page"></dd></div><div><dt>Plano mensal</dt><dd data-mensal></dd></div><div><dt>Sob medida</dt><dd data-custom="landing-page"></dd></div></dl>
+                <div class="car-acts"><button type="button" class="btn btn-primary btn-sm" data-video="landing-page">Ver vídeo</button><a class="btn btn-secondary btn-sm" href="templates/landing/" target="_blank" rel="noopener">Ver ao vivo ↗</a><a class="hx-link" href="solucoes/modelos-prontos.html">Detalhes do modelo</a></div></div>
+            </article>
           </div>
-          <div class="home-frente-celula" data-reveal data-reveal-delay="80">
-          <a class="home-frente" href="solucoes/index.html#automacoes" data-frente="ganhar-eficiencia">
-            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#eficiencia"></use></svg></span>
-            <h3>Ganhar eficiência</h3>
-            <p>Para reduzir tarefas manuais, conectar ferramentas e melhorar processos.</p>
-            <ul class="home-frente-servicos" data-servicos></ul>
-            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
-          </a>
+          <div class="car-nav"><div class="car-dots" id="car-dots"></div><span class="car-cnt" id="car-cnt">1 / 3</span>
+            <button type="button" class="dd-btn" id="car-prev" aria-label="Modelo anterior"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg></button>
+            <button type="button" class="dd-btn" id="car-next" aria-label="Próximo modelo"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg></button></div>
+        </div>
+        <div class="hm-plans" id="hm-plans"></div>
+      </div>
+    </section>
+
+    <!-- 06 — MODELOS SOB MEDIDA: chamada para o estúdio -->
+    <section class="section tone-white hsm" id="sob-medida" aria-labelledby="sob-medida-titulo">
+      <div class="container">
+        <div class="hsm-band">
+          <div class="hsm-tx">
+            <span class="section-label">MODELOS SOB MEDIDA</span>
+            <h2 id="sob-medida-titulo">Estrutura e visual <span class="t-tone">personalizados.</span></h2>
+            <p>Presença digital desenvolvida do zero, com estrutura e experiência pensadas especificamente para o seu negócio. Escolha o objetivo, veja a estrutura recomendada e acrescente o que precisa.</p>
+            <div class="hsm-prices" id="hsm-prices"></div>
+            <div class="hx-ctas"><button type="button" class="btn btn-primary" onclick="if(window.openCustomModelModal){ window.openCustomModelModal(); }">Estruturar projeto sob medida <span><i class="bi bi-arrow-right"></i></span></button><a class="hx-link" href="solucoes/modelos-sob-medida.html">Conhecer os modelos sob medida</a></div>
           </div>
-          <div class="home-frente-celula" data-reveal data-reveal-delay="160">
-          <a class="home-frente" href="solucoes/index.html#sistemas" data-frente="organizar-operacao">
-            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#operacao"></use></svg></span>
-            <h3>Organizar a operação</h3>
-            <p>Centralize processos e estruture informações.</p>
-            <ul class="home-frente-servicos" data-servicos></ul>
-            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
-          </a>
-          </div>
-          <div class="home-frente-celula" data-reveal data-reveal-delay="240">
-          <a class="home-frente" href="solucoes/index.html#produtos-digitais" data-frente="criar-novo">
-            <span class="home-frente-icone" aria-hidden="true"><svg class="i"><use href="assets/icons/bi.svg#criar"></use></svg></span>
-            <h3>Criar algo novo</h3>
-            <p>Transforme ideias em negócios e produtos digitais.</p>
-            <ul class="home-frente-servicos" data-servicos></ul>
-            <span class="home-frente-rodape"><span data-a-partir></span><span class="home-frente-ver">Ver soluções <svg class="i" aria-hidden="true"><use href="assets/icons/bi.svg#avancar"></use></svg></span></span>
-          </a>
+          <div class="hsm-vis" aria-hidden="true">
+            <div class="blk"><b>01</b>Abertura institucional<span>obrigatória</span></div>
+            <div class="blk"><b>02</b>Sobre a empresa<span>recomendada</span></div>
+            <div class="blk"><b>03</b>Serviços<span>recomendada</span></div>
+            <div class="blk"><b>04</b>Depoimentos<span>acrescentada</span></div>
+            <div class="blk add">+ Galeria, agendamento, mapa, perguntas frequentes…</div>
+            <div class="blk"><b>05</b>Contato e localização<span>obrigatória</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════
-         03 — PROJETOS / PROVAS (CURTO)
-         ═══════════════════════════════════════ -->
-    <section class="section section-neutral" id="cases" aria-label="Projetos">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-label">PROJETOS</span>
-          <h2>Problemas reais. Soluções construídas.</h2>
-          <p class="text-body-lg" style="max-width: 650px;">
-            Veja como transformamos necessidades de negócios em tecnologia sob medida e resultados concretos.
-          </p>
-        </div>
-
-        <div class="cases-grid" id="cases-grid">
-          <!-- Rendered by components.js -->
-        </div>
-
-        <div style="text-align: center; margin-top: var(--space-10);" class="reveal">
-          <a href="sobre.html#projetos" class="btn btn-secondary-dark">Ver todos os projetos <span><i class="bi bi-arrow-right"></i></span></a>
-        </div>
+    <!-- 07 — DÚVIDAS (faqData) -->
+    <section class="section tone-paper hf" id="duvidas" aria-labelledby="duvidas-titulo">
+      <div class="container hf-grid">
+        <div><span class="section-label">DÚVIDAS FREQUENTES</span><h2 id="duvidas-titulo">Antes de <span class="t-tone">começar.</span></h2><p class="text-body-lg">Mais respostas na <a class="hx-link" href="ajuda.html">página de Ajuda</a>.</p></div>
+        <div class="faq-list" id="faq-list"></div>
       </div>
     </section>
 
-    <!-- ═══════════════════════════════════════
-         04 — COMO FUNCIONA (3 ETAPAS)
-         ═══════════════════════════════════════ -->
-    <section class="section" id="how-it-works" aria-label="Como funciona">
+    <!-- 08 — CTA FINAL -->
+    <section class="section section-lg cta-final tone-navy" id="cta-final" aria-label="Entre em contato">
       <div class="container">
-        <div class="section-header center reveal">
-          <span class="section-label" style="justify-content: center;">COMO FUNCIONA</span>
-          <h2>Você não precisa chegar com a tecnologia definida.</h2>
-          <p class="text-body-lg" style="max-width: 650px; margin-left: auto; margin-right: auto;">
-            Ajudamos a estruturar o melhor caminho desde o primeiro diagnóstico até a evolução da solução.
-          </p>
-        </div>
-
-        <div class="home-process-grid">
-          <div class="home-process-card reveal reveal-delay-1">
-            <div class="home-process-num" aria-hidden="true">01</div>
-            <h3>Conte o desafio</h3>
-            <p>Compreendemos o problema, a rotina da sua equipe, os objetivos e o contexto do seu negócio.</p>
-          </div>
-
-          <div class="home-process-card reveal reveal-delay-2">
-            <div class="home-process-num" aria-hidden="true">02</div>
-            <h3>Estruturamos a solução</h3>
-            <p>Definimos escopo, prioridades, arquitetura e desenhamos a melhor abordagem antes de escrever qualquer código.</p>
-          </div>
-
-          <div class="home-process-card reveal reveal-delay-3">
-            <div class="home-process-num" aria-hidden="true">03</div>
-            <h3>Construímos e evoluímos</h3>
-            <p>Desenvolvemos a tecnologia com rigor técnico, acompanhamos o uso real e evoluímos com base em dados.</p>
-          </div>
-        </div>
-
-        <div style="text-align: center; margin-top: var(--space-10);" class="reveal">
-          <a href="como-trabalhamos.html" class="btn btn-secondary-dark">Conheça como trabalhamos <span><i class="bi bi-arrow-right"></i></span></a>
-        </div>
-      </div>
-    </section>
-
-
-
-    <!-- ═══════════════════════════════════════
-         06 — CTA FINAL
-         ═══════════════════════════════════════ -->
-    <section class="section section-lg cta-final" id="cta-final" aria-label="Entre em contato">
-      <div class="container">
-        <div class="cta-final-content reveal">
-          <span class="section-label" style="justify-content: center;">PENSAMOS ANTES DE CONSTRUIR</span>
-          <h2>Tem algo que sua empresa precisa resolver?</h2>
+        <div class="cta-final-content">
+          <span class="section-label">PENSAMOS ANTES DE CONSTRUIR</span>
+          <h2>Tem algo que sua empresa <span class="t-tone">precisa resolver?</span></h2>
           <p>Conte o problema. Nós ajudamos a pensar, estruturar e construir a solução ideal para o seu momento.</p>
           <div class="cta-final-buttons">
             <a href="contato.html" class="btn btn-primary btn-lg" id="cta-final-contact">Falar sobre meu projeto <i class="bi bi-arrow-right"></i></a>
@@ -472,19 +397,28 @@
   <noscript><p class="container form-notice">Ative o JavaScript para usar os diagnósticos e o menu interativo. Para falar com a equipe, <a href="https://wa.me/5517981568889" rel="noopener noreferrer">abra o WhatsApp</a> ou escreva para <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>.</p></noscript>
   </main>
 
+  <!-- Diagnóstico COGIT em janela (mesmo fluxo, renderizado por js/components.js) -->
+  <dialog class="dx-modal" id="dx-modal" aria-labelledby="dx-modal-titulo">
+    <div class="dx-modal-head"><b id="dx-modal-titulo">Monte sua solução</b><span>COGIT Diagnostic</span><button type="button" class="dx-modal-x" data-close-diagnostico aria-label="Fechar diagnóstico"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+    <div class="dx-modal-body">
+      <div class="hero-interactive-container hero-discovery-container" id="hero-interactive-container">
+        <!-- Rendered by js/components.js -->
+      </div>
+    </div>
+  </dialog>
+
   <!-- ═══════════════════════════════════════
        FOOTER
        ═══════════════════════════════════════ -->
   <footer class="footer" id="footer" role="contentinfo">
     <div class="container">
       <div class="footer-top">
-
         <div class="footer-brand">
-          <a href="index.html" class="logo" aria-label="CMKCOGIT" style="display: flex; align-items: center;">
-            <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img" width="512" height="115">
+          <a href="index.html" class="logo" aria-label="COGIT, página inicial">
+            <img src="assets/images/logo-cogit-branco.svg" alt="COGIT" class="logo-img" width="142" height="40">
           </a>
-          <p class="footer-tagline" style="font-size: var(--text-lg); margin-top: var(--space-4);">Pensamos antes de construir.</p>
-          <p class="footer-sub-tagline" style="font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.1em; margin-bottom: var(--space-4); text-transform: uppercase;">Pensar. Estruturar. Construir.</p>
+          <p class="footer-tagline">Pensamos antes de construir.</p>
+          <p class="footer-sub-tagline">Pensar. Estruturar. Construir.</p>
           <p class="footer-description">Tecnologia, estratégia e inovação para transformar problemas e ideias em soluções digitais que funcionam.</p>
           <div class="footer-social" id="footer-social">
             <!-- Rendered by components.js -->
@@ -494,38 +428,45 @@
         <div class="footer-column">
           <h2>Soluções &amp; investimentos</h2>
           <div class="footer-links">
-            <a href="solucoes/modelos-prontos.html">Modelos Prontos</a>
-            <a href="solucoes/modelos-sob-medida.html">Modelos Sob Medida</a>
-            <a href="solucoes/landing-pages.html">Landing Pages</a>
-            <a href="solucoes/sites-institucionais.html">Sites Institucionais</a>
-            <a href="solucoes/sistemas-personalizados.html">Sistemas Personalizados</a>
-            <a href="solucoes/saas-e-produtos-digitais.html">SaaS e MVPs</a>
-            <a href="solucoes/automacoes-e-integracoes.html">Automação e Integração</a>
-            <a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas e Outras</a>
-            <a href="solucoes/index.html">Soluções &amp; investimentos</a>
+            <a href="solucoes/modelos-prontos.html">Modelos prontos</a>
+            <a href="solucoes/modelos-sob-medida.html">Modelos sob medida</a>
+            <a href="solucoes/sites-institucionais.html">Sites institucionais</a>
+            <a href="solucoes/landing-pages.html">Landing pages</a>
+            <a href="solucoes/sites-e-landing-pages.html">Sites e landing pages</a>
+            <a href="solucoes/sistemas-personalizados.html">Sistemas de gestão e CRM</a>
+            <a href="solucoes/automacoes-e-integracoes.html">Automações e integrações</a>
+            <a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas web</a>
+            <a href="solucoes/saas-e-produtos-digitais.html">MVP e produto digital</a>
+            <a href="solucoes/index.html">Todas as soluções &amp; investimentos</a>
           </div>
         </div>
 
         <div class="footer-column">
           <h2>Empresa</h2>
           <div class="footer-links">
-            <a href="sobre.html">Sobre &amp; projetos</a>
-            <a href="como-trabalhamos.html">Como trabalhamos</a>
+            <a href="index.html">Início</a>
             <a href="monte-sua-solucao.html">Monte sua solução</a>
-            <a href="ajuda.html">Dúvidas frequentes</a>
+            <a href="como-trabalhamos.html">Como trabalhamos</a>
+            <a href="sobre.html">Sobre &amp; projetos</a>
+            <a href="sobre.html#projetos">Projetos</a>
+            <a href="ajuda.html">Ajuda e dúvidas frequentes</a>
+            <a href="contato.html">Contato</a>
           </div>
         </div>
 
         <div class="footer-column">
-          <h2>Contato</h2>
+          <h2>Plataforma</h2>
           <div class="footer-links">
-            <a href="contato.html">Fale conosco</a>
-            <a href="monte-sua-solucao.html">Montar projeto</a>
+            <a href="https://app.cmkcogit.com.br/" target="_blank" rel="noopener noreferrer">Minha área</a>
+            <a href="https://app.cmkcogit.com.br/" target="_blank" rel="noopener noreferrer">Área do cliente</a>
+          </div>
+          <h2 class="footer-subhead">Contato</h2>
+          <div class="footer-links">
             <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer">(17) 98156-8889</a>
             <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>
+            <span class="footer-city">São José do Rio Preto, SP</span>
           </div>
         </div>
-
       </div>
 
       <div class="footer-bottom">
@@ -596,10 +537,14 @@
   <script src="js/handoff.js"></script>
   <script src="js/components.js"></script>
   <script src="js/configurator.js"></script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
   <script src="js/animations.js"></script>
   <script src="js/header.js"></script>
   <script src="js/main.js"></script>
   <script src="js/home.js"></script>
+  <script src="js/home-v2.js"></script>
 
 </body>
 </html>

@@ -15,8 +15,8 @@
 }
 
 #hero-interactive-container[data-step]:not([data-step="0"]) {
-  border-color: rgba(167, 155, 255, 0.48);
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.36), 0 0 32px rgba(109, 93, 245, 0.17);
+  border-color: rgba(142, 166, 216, 0.48);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.36), 0 0 32px rgba(42, 62, 107, 0.17);
 }
 
 .hero-step-wrapper {
@@ -89,7 +89,7 @@
   font-weight: var(--fw-bold);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(167, 155, 255, 0.4);
+  color: rgba(142, 166, 216, 0.4);
   transition: color 0.35s ease;
   text-align: center;
   overflow: hidden;
@@ -105,15 +105,15 @@
 
 .hip-label--active {
   color: #d8d3ff;
-  text-shadow: 0 0 12px rgba(167, 155, 255, 0.5);
+  text-shadow: 0 0 12px rgba(142, 166, 216, 0.5);
 }
 
 .hip-label--done {
-  color: rgba(167, 155, 255, 0.65);
+  color: rgba(142, 166, 216, 0.65);
 }
 
 .hip-label--idle {
-  color: rgba(167, 155, 255, 0.25);
+  color: rgba(142, 166, 216, 0.25);
 }
 
 /* Trilho da bolinha — ocupa as 3 colunas */
@@ -131,9 +131,9 @@
   transform: translateY(-50%);
   height: 1px;
   background: linear-gradient(90deg,
-    rgba(167,155,255,0.15),
-    rgba(167,155,255,0.6) 50%,
-    rgba(167,155,255,0.15));
+    rgba(142, 166, 216,0.15),
+    rgba(142, 166, 216,0.6) 50%,
+    rgba(142, 166, 216,0.15));
 }
 
 .hip-ball {
@@ -143,8 +143,8 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #a79bff;
-  box-shadow: 0 0 0 4px rgba(167,155,255,0.15), 0 0 20px rgba(167,155,255,0.95);
+  background: #8EA6D8;
+  box-shadow: 0 0 0 4px rgba(142, 166, 216,0.15), 0 0 20px rgba(142, 166, 216,0.95);
   transform: translate(-50%, -50%);
   display: block;
   opacity: 0;

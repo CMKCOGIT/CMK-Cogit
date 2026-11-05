@@ -5,11 +5,12 @@
   <script>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="icon" href="favicon.ico" sizes="48x48">
   <link rel="icon" type="image/png" sizes="192x192" href="assets/images/icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
-  <meta name="theme-color" content="#0F1B33">
+  <meta name="theme-color" content="#121314">
   
   <!-- SEO -->
   <title>Monte sua Solução | Configurador Interativo | CMKCOGIT</title>
@@ -39,10 +40,11 @@
   <!-- Fonts -->
 
   <!-- Styles -->
-  <link rel="preload" href="assets/fonts/cogit-font-5.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/cogit-font-6.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/clash-display-500.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/site.min.css">
   <link rel="stylesheet" href="css/configurator-v2.css">
+  <link rel="stylesheet" href="css/identity.css">
 
   <!-- Schema.org - Organization -->
   <script type="application/ld+json">
@@ -52,7 +54,7 @@
     "name": "CMKCOGIT",
     "alternateName": "COGIT",
     "url": "https://cmkcogit.com.br",
-    "logo": "https://cmkcogit.com.br/assets/images/logo-white.png",
+    "logo": "https://cmkcogit.com.br/assets/images/logo-cogit.svg",
     "email": "contato@cmkcogit.com.br",
     "telephone": "+55-17-98156-8889",
     "description": "Desenvolvimento de software e soluções digitais sob medida. Sites, sistemas, SaaS, automações e produtos digitais para empresas.",
@@ -77,8 +79,8 @@
        ═══════════════════════════════════════ -->
   <header class="header" id="header" role="banner">
     <div class="header-inner">
-      <a href="index.html" class="logo" aria-label="CMKCOGIT - Página inicial">
-        <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img" width="512" height="115">
+      <a href="index.html" class="logo" aria-label="COGIT, página inicial">
+        <img src="assets/images/logo-cogit.svg" alt="COGIT" class="logo-img" width="142" height="40">
       </a>
 
       <nav class="nav" role="navigation" aria-label="Menu principal">
@@ -133,8 +135,8 @@
   <nav class="mobile-menu" id="mobile-menu" role="navigation" aria-label="Menu mobile">
     <!-- Header: CMK Symbol + Close Button -->
     <div class="mobile-menu-header">
-      <a href="index.html" class="mobile-menu-brand" aria-label="CMKCOGIT - Página inicial">
-        <img src="assets/images/cmk-symbol.png" alt="Símbolo CMK" class="mobile-menu-symbol" width="213" height="192">
+      <a href="index.html" class="mobile-menu-brand" aria-label="COGIT, página inicial">
+        <img src="assets/images/icone-cogit.svg" alt="COGIT" class="mobile-menu-symbol" width="40" height="40">
       </a>
       <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Fechar menu">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -196,20 +198,20 @@
 
   <main id="main-content" role="main">
     <!-- Abertura compacta do configurador -->
-    <section class="solution-hero configurator-hero">
+    <section class="tone-ink solution-hero configurator-hero">
       <div class="hero-bg-grid"></div>
       <div class="hero-bg-gradient"></div>
       <div class="container">
         <div class="configurator-hero-copy">
           <span class="section-label">CONFIGURADOR COGIT</span>
-          <h1>Monte a solução ideal para o seu objetivo.</h1>
+          <h1>Monte a solução ideal <span class="t-tone">para o seu objetivo.</span></h1>
           <p>Escolha o que deseja alcançar. Nós mostramos os formatos, complementos e o investimento inicial.</p>
           <span class="configurator-time"><span aria-hidden="true"><i class="bi bi-clock"></i></span> Leva cerca de 2 minutos</span>
         </div>
       </div>
     </section>
 
-    <section class="section configurator-section" id="configurator" aria-label="Monte sua solução">
+    <section class="tone-paper section configurator-section" id="configurator" aria-label="Monte sua solução">
       <div class="container">
         <!-- APP CONTAINER -->
         <div class="configurator-container" id="configurator-app">
@@ -226,13 +228,12 @@
   <footer class="footer" id="footer" role="contentinfo">
     <div class="container">
       <div class="footer-top">
-
         <div class="footer-brand">
-          <a href="index.html" class="logo" aria-label="CMKCOGIT" style="display: flex; align-items: center;">
-            <img src="assets/images/logo-white.png" alt="Logo da CMKCOGIT" class="logo-img" width="512" height="115">
+          <a href="index.html" class="logo" aria-label="COGIT, página inicial">
+            <img src="assets/images/logo-cogit-branco.svg" alt="COGIT" class="logo-img" width="142" height="40">
           </a>
-          <p class="footer-tagline" style="font-size: var(--text-lg); margin-top: var(--space-4);">Pensamos antes de construir.</p>
-          <p class="footer-sub-tagline" style="font-family: var(--font-heading); font-size: 10px; letter-spacing: 0.1em; margin-bottom: var(--space-4); text-transform: uppercase;">Pensar. Estruturar. Construir.</p>
+          <p class="footer-tagline">Pensamos antes de construir.</p>
+          <p class="footer-sub-tagline">Pensar. Estruturar. Construir.</p>
           <p class="footer-description">Tecnologia, estratégia e inovação para transformar problemas e ideias em soluções digitais que funcionam.</p>
           <div class="footer-social" id="footer-social">
             <!-- Rendered by components.js -->
@@ -242,38 +243,45 @@
         <div class="footer-column">
           <h2>Soluções &amp; investimentos</h2>
           <div class="footer-links">
-            <a href="solucoes/modelos-prontos.html">Modelos Prontos</a>
-            <a href="solucoes/modelos-sob-medida.html">Modelos Sob Medida</a>
-            <a href="solucoes/landing-pages.html">Landing Pages</a>
-            <a href="solucoes/sites-institucionais.html">Sites Institucionais</a>
-            <a href="solucoes/sistemas-personalizados.html">Sistemas Personalizados</a>
-            <a href="solucoes/saas-e-produtos-digitais.html">SaaS e MVPs</a>
-            <a href="solucoes/automacoes-e-integracoes.html">Automação e Integração</a>
-            <a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas e Outras</a>
-            <a href="solucoes/index.html">Soluções &amp; investimentos</a>
+            <a href="solucoes/modelos-prontos.html">Modelos prontos</a>
+            <a href="solucoes/modelos-sob-medida.html">Modelos sob medida</a>
+            <a href="solucoes/sites-institucionais.html">Sites institucionais</a>
+            <a href="solucoes/landing-pages.html">Landing pages</a>
+            <a href="solucoes/sites-e-landing-pages.html">Sites e landing pages</a>
+            <a href="solucoes/sistemas-personalizados.html">Sistemas de gestão e CRM</a>
+            <a href="solucoes/automacoes-e-integracoes.html">Automações e integrações</a>
+            <a href="solucoes/plataformas-e-outras-solucoes.html">Plataformas web</a>
+            <a href="solucoes/saas-e-produtos-digitais.html">MVP e produto digital</a>
+            <a href="solucoes/index.html">Todas as soluções &amp; investimentos</a>
           </div>
         </div>
 
         <div class="footer-column">
           <h2>Empresa</h2>
           <div class="footer-links">
-            <a href="sobre.html">Sobre &amp; projetos</a>
-            <a href="como-trabalhamos.html">Como trabalhamos</a>
+            <a href="index.html">Início</a>
             <a href="monte-sua-solucao.html">Monte sua solução</a>
-            <a href="ajuda.html">Dúvidas frequentes</a>
+            <a href="como-trabalhamos.html">Como trabalhamos</a>
+            <a href="sobre.html">Sobre &amp; projetos</a>
+            <a href="sobre.html#projetos">Projetos</a>
+            <a href="ajuda.html">Ajuda e dúvidas frequentes</a>
+            <a href="contato.html">Contato</a>
           </div>
         </div>
 
         <div class="footer-column">
-          <h2>Contato</h2>
+          <h2>Plataforma</h2>
           <div class="footer-links">
-            <a href="contato.html">Fale conosco</a>
-            <a href="monte-sua-solucao.html">Montar projeto</a>
+            <a href="https://app.cmkcogit.com.br/" target="_blank" rel="noopener noreferrer">Minha área</a>
+            <a href="https://app.cmkcogit.com.br/" target="_blank" rel="noopener noreferrer">Área do cliente</a>
+          </div>
+          <h2 class="footer-subhead">Contato</h2>
+          <div class="footer-links">
             <a href="https://wa.me/5517981568889" target="_blank" rel="noopener noreferrer">(17) 98156-8889</a>
             <a href="mailto:contato@cmkcogit.com.br">contato@cmkcogit.com.br</a>
+            <span class="footer-city">São José do Rio Preto, SP</span>
           </div>
         </div>
-
       </div>
 
       <div class="footer-bottom">
@@ -344,6 +352,9 @@
   <script src="js/handoff.js"></script>
   <script src="js/components.js"></script>
   <script src="js/configurator.js"></script>
+  <script src="assets/vendor/gsap.min.js" defer></script>
+  <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="assets/vendor/lenis.min.js" defer></script>
   <script src="js/animations.js"></script>
   <script src="js/header.js"></script>
   <script src="js/main.js"></script>

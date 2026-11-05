@@ -58,7 +58,7 @@
 .btn-primary:hover {
   background-color: var(--purple-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(74, 61, 219, 0.35);
+  box-shadow: 0 6px 24px rgba(26, 44, 82, 0.35);
 }
 
 .btn-primary:active {
@@ -80,7 +80,7 @@
 .btn-secondary-dark {
   background-color: transparent;
   color: var(--ink);
-  border: 1px solid rgba(15, 27, 51, 0.2);
+  border: 1px solid rgba(18, 19, 20, 0.2);
 }
 
 .btn-secondary-dark:hover {

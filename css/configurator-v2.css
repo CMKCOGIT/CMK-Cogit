@@ -5,8 +5,8 @@
   --cfg-soft: #f6f7fb;
   --cfg-line: #e1e4ee;
   --cfg-muted: #626b7f;
-  --cfg-purple: #4a3ddb;
-  --cfg-lilac: #a79bff;
+  --cfg-purple: #1A2C52;
+  --cfg-lilac: #8EA6D8;
   background: var(--cfg-soft);
 }
 
@@ -45,14 +45,14 @@
   width: 1.6rem;
   height: 1.6rem;
   place-items: center;
-  border: 1px solid rgba(167,155,255,.45);
+  border: 1px solid rgba(142, 166, 216,.45);
   border-radius: 50%;
   color: var(--cfg-lilac);
 }
 .page-configurator .configurator-section {
   padding: clamp(1.2rem, 3vw, 2.5rem) 0 clamp(4rem, 8vw, 7rem);
   background:
-    radial-gradient(circle at 4% 8%, rgba(74,61,219,.06), transparent 28rem),
+    radial-gradient(circle at 4% 8%, rgba(26, 44, 82,.06), transparent 28rem),
     var(--cfg-soft);
 }
 .page-configurator .configurator-section > .container {
@@ -70,7 +70,7 @@
   min-width: 0;
   padding: clamp(1rem, 2.7vw, 2.35rem);
   border: 1px solid rgba(16,26,50,.09);
-  border-radius: clamp(1rem, 2vw, 1.6rem);
+  border-radius: 2px;
   background: var(--cfg-surface);
   box-shadow: 0 18px 60px rgba(16,26,50,.07);
 }
@@ -90,7 +90,7 @@
   height: 3px;
   margin: 1rem 1.35rem -1.4rem;
   overflow: hidden;
-  border-radius: 99px;
+  border-radius: 2px;
   background: #e8eaf1;
 }
 .page-configurator .cfg-progress-track span {
@@ -132,7 +132,7 @@
   transform: scale(1.1);
   background: var(--cfg-purple);
   color: #fff;
-  box-shadow: 0 0 0 1px var(--cfg-purple), 0 7px 20px rgba(74,61,219,.24);
+  box-shadow: 0 0 0 1px var(--cfg-purple), 0 7px 20px rgba(26, 44, 82,.24);
 }
 .page-configurator .cfg-progress-list li.is-done > span { background: #211f2c; color: #fff; }
 .page-configurator .cfg-progress-list li.is-active small,
@@ -182,7 +182,7 @@
   overflow: hidden;
   padding: 1rem;
   border: 1px solid var(--cfg-line);
-  border-radius: 1rem;
+  border-radius: 2px;
   background: #fff;
   color: var(--cfg-ink);
   text-align: left;
@@ -206,14 +206,14 @@
 @media (hover:hover) {
   .page-configurator :is(.cfg-objective-card,.cfg-solution-card,.cfg-model-option,.cfg-level-v2):hover {
     transform: translateY(-2px);
-    border-color: rgba(74,61,219,.4);
+    border-color: rgba(26, 44, 82,.4);
     box-shadow: 0 12px 28px rgba(16,26,50,.08);
   }
 }
 .page-configurator :is(.cfg-objective-card,.cfg-solution-card,.cfg-model-option,.cfg-level-v2).is-selected {
-  border-color: rgba(74,61,219,.66);
-  background: linear-gradient(145deg,#fff 45%,rgba(167,155,255,.09));
-  box-shadow: inset 0 0 0 1px rgba(74,61,219,.1), 0 10px 24px rgba(74,61,219,.08);
+  border-color: rgba(26, 44, 82,.66);
+  background: linear-gradient(145deg,#fff 45%,rgba(142, 166, 216,.09));
+  box-shadow: inset 0 0 0 1px rgba(26, 44, 82,.1), 0 10px 24px rgba(26, 44, 82,.08);
 }
 .page-configurator .cfg-choice-icon {
   display: grid;
@@ -221,8 +221,8 @@
   height: 2.75rem;
   flex: 0 0 auto;
   place-items: center;
-  border-radius: .8rem;
-  background: #f1efff;
+  border-radius: 2px;
+  background: #E4E8F0;
   color: var(--cfg-purple);
 }
 .page-configurator .cfg-choice-icon svg { width: 1.35rem; height: 1.35rem; }
@@ -270,7 +270,7 @@
 .page-configurator .cfg-solution-bottom { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .page-configurator .cfg-recommended {
   padding: .35rem .55rem;
-  border-radius: 999px;
+  border-radius: 2px;
   background: #eeecff;
   color: #4034c4;
   font-size: .68rem;
@@ -305,7 +305,7 @@
 .page-configurator .cfg-config-block {
   padding: clamp(1rem,2.3vw,1.5rem);
   border: 1px solid var(--cfg-line);
-  border-radius: 1.1rem;
+  border-radius: 2px;
   background: linear-gradient(180deg,#fff,#fbfbfd);
 }
 .page-configurator .cfg-config-block > header {
@@ -317,7 +317,7 @@
   border-bottom: 1px solid #ebeef3;
 }
 .page-configurator .cfg-config-block > header > div { display: flex; min-width: 0; align-items: center; gap: .65rem; }
-.page-configurator .cfg-config-block > header .cfg-choice-icon { width: 2.15rem; height: 2.15rem; border-radius: .65rem; }
+.page-configurator .cfg-config-block > header .cfg-choice-icon { width: 2.15rem; height: 2.15rem; border-radius: 2px; }
 .page-configurator .cfg-config-block > header h3 { margin: 0; color: var(--cfg-ink); font-size: 1.1rem; }
 .page-configurator .cfg-config-number { color: var(--cfg-purple); font-size: .72rem; font-weight: 900; }
 .page-configurator .cfg-remove-service {
@@ -352,7 +352,7 @@
   gap: .65rem;
   padding: .9rem;
   border: 1px solid var(--cfg-line);
-  border-radius: .85rem;
+  border-radius: 2px;
   background: #fff;
   color: var(--cfg-ink);
   text-align: left;
@@ -383,7 +383,7 @@
 .page-configurator .cfg-model-option > .cfg-model-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
 .page-configurator .cfg-model-chip {
   padding: .22rem .6rem;
-  border-radius: 999px;
+  border-radius: 2px;
   background: #e7f6ee;
   color: #136c3d;
   font-size: .68rem;
@@ -406,7 +406,7 @@
 .page-configurator .cfg-model-facts > span { display: grid; gap: .15rem; min-width: 0; }
 .page-configurator .cfg-model-option .cfg-model-facts small { color: var(--cfg-muted); font-size: .64rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .page-configurator .cfg-model-facts b { color: var(--cfg-ink); font-size: .9rem; font-weight: 800; line-height: 1.3; }
-.page-configurator .cfg-model-option.is-selected .cfg-model-facts { border-top-color: rgba(74,61,219,.16); }
+.page-configurator .cfg-model-option.is-selected .cfg-model-facts { border-top-color: rgba(26, 44, 82,.16); }
 .page-configurator .cfg-format-hint { margin: .8rem 0 0; color: var(--cfg-muted); font-size: .78rem; }
 .page-configurator .cfg-model-action {
   display: flex;
@@ -415,18 +415,18 @@
   margin-top: 1rem;
   padding: .9rem 1rem;
   border: 1px solid var(--cfg-line);
-  border-radius: .9rem;
+  border-radius: 2px;
   background: var(--cfg-soft);
 }
-.page-configurator .cfg-model-action.is-done { border-color: rgba(74,61,219,.28); background: #f7f6ff; }
+.page-configurator .cfg-model-action.is-done { border-color: rgba(26, 44, 82,.28); background: #f7f6ff; }
 .page-configurator .cfg-model-action-icon {
   display: grid;
   width: 2.5rem;
   height: 2.5rem;
   flex: 0 0 auto;
   place-items: center;
-  border: 1px solid rgba(74,61,219,.14);
-  border-radius: .7rem;
+  border: 1px solid rgba(26, 44, 82,.14);
+  border-radius: 2px;
   background: #fff;
   color: var(--cfg-purple);
 }
@@ -447,7 +447,7 @@
   min-height: 44px;
   padding: .6rem 1.15rem;
   border: 1px solid var(--cfg-purple);
-  border-radius: 999px;
+  border-radius: 2px;
   background: #fff;
   color: var(--cfg-purple);
   font: inherit;
@@ -457,8 +457,8 @@
   cursor: pointer;
   transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
 }
-.page-configurator .cfg-model-action-btn:hover { background: var(--cfg-purple); color: #fff; box-shadow: 0 6px 16px rgba(74,61,219,.22); }
-.page-configurator .cfg-model-action-btn:focus-visible { outline: 3px solid rgba(74,61,219,.35); outline-offset: 2px; }
+.page-configurator .cfg-model-action-btn:hover { background: var(--cfg-purple); color: #fff; box-shadow: 0 6px 16px rgba(26, 44, 82,.22); }
+.page-configurator .cfg-model-action-btn:focus-visible { outline: 3px solid rgba(26, 44, 82,.35); outline-offset: 2px; }
 .page-configurator .cfg-level-v2 { overflow: hidden; }
 /* O bloco se adapta à própria largura (com ou sem o resumo lateral), não só à da tela. */
 .page-configurator .cfg-config-block { container-type: inline-size; }
@@ -476,9 +476,9 @@
 .page-configurator .cfg-level-price { color: var(--cfg-purple); font-size: .73rem; font-style: normal; font-weight: 800; }
 .page-configurator .cfg-diagnosis-box {
   padding: 1rem;
-  border: 1px dashed rgba(74,61,219,.35);
-  border-radius: .85rem;
-  background: rgba(74,61,219,.045);
+  border: 1px dashed rgba(26, 44, 82,.35);
+  border-radius: 2px;
+  background: rgba(26, 44, 82,.045);
 }
 .page-configurator .cfg-diagnosis-box span { color: var(--cfg-purple); font-size: .82rem; font-weight: 800; }
 .page-configurator .cfg-diagnosis-box p { margin: .35rem 0 0; color: var(--cfg-muted); font-size: .85rem; line-height: 1.55; }
@@ -495,12 +495,12 @@
   min-width: 0;
   align-items: center;
   border: 1px solid var(--cfg-line);
-  border-radius: .85rem;
+  border-radius: 2px;
   background: #fff;
   transition: border-color 200ms ease, background 200ms ease;
 }
 .page-configurator .cfg-addon-v2 .cfg-check { margin-left: 0; }
-.page-configurator .cfg-addon-v2.is-selected { border-color: rgba(74,61,219,.6); background: #faf9ff; }
+.page-configurator .cfg-addon-v2.is-selected { border-color: rgba(26, 44, 82,.6); background: #faf9ff; }
 .page-configurator .cfg-addon-v2 .cfg-addon-select {
   display: flex;
   min-width: 0;
@@ -524,13 +524,13 @@
   height: 2rem;
   place-items: center;
   border: 1px solid var(--cfg-line);
-  border-radius: .55rem;
+  border-radius: 2px;
   background: #fff;
   color: var(--cfg-ink);
   cursor: pointer;
 }
 .page-configurator .cfg-quantity span { min-width: 1.2rem; text-align: center; font-size: .78rem; font-weight: 800; }
-.page-configurator .cfg-empty-state { padding: 2rem; border: 1px dashed var(--cfg-line); border-radius: 1rem; text-align: center; }
+.page-configurator .cfg-empty-state { padding: 2rem; border: 1px dashed var(--cfg-line); border-radius: 2px; text-align: center; }
 .page-configurator .cfg-empty-state strong { color: var(--cfg-ink); }
 .page-configurator .cfg-empty-state p { margin: .35rem 0 0; color: var(--cfg-muted); }
 
@@ -539,8 +539,8 @@
   position: sticky;
   top: var(--sticky-top);
   overflow: hidden;
-  border: 1px solid rgba(167,155,255,.2);
-  border-radius: 1.4rem;
+  border: 1px solid rgba(142, 166, 216,.2);
+  border-radius: 2px;
   background: #141a2d;
   color: #fff;
   box-shadow: 0 18px 50px rgba(16,26,50,.16);
@@ -550,7 +550,7 @@
   gap: .25rem;
   padding: 1.3rem;
   border-bottom: 1px solid rgba(255,255,255,.09);
-  background: linear-gradient(135deg,rgba(74,61,219,.25),transparent 70%);
+  background: linear-gradient(135deg,rgba(26, 44, 82,.25),transparent 70%);
 }
 .page-configurator .cfg-summary-head span {
   color: var(--cfg-lilac);
@@ -573,10 +573,10 @@
 .page-configurator .cfg-summary-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
 .page-configurator .cfg-summary-tags span {
   padding: .38rem .55rem;
-  border: 1px solid rgba(167,155,255,.22);
-  border-radius: 999px;
-  background: rgba(167,155,255,.08);
-  color: #e4e0ff;
+  border: 1px solid rgba(142, 166, 216,.22);
+  border-radius: 2px;
+  background: rgba(142, 166, 216,.08);
+  color: #D5DCE8;
   font-size: .68rem;
 }
 .page-configurator .cfg-summary-lines { display: grid; gap: .75rem; }
@@ -606,18 +606,18 @@
   gap: .4rem;
   margin-bottom: .8rem;
   padding: clamp(1.15rem,3vw,1.75rem);
-  border-radius: 1rem;
+  border-radius: 2px;
   background: linear-gradient(135deg,#151a2c,#24204b);
   color: #fff;
 }
 .page-configurator .cfg-final-estimate span { color: var(--cfg-lilac); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
 .page-configurator .cfg-final-estimate strong { font-size: clamp(1.45rem,3vw,2.15rem); line-height: 1.1; }
 .page-configurator .cfg-final-estimate p { max-width: 620px; margin: .25rem 0 0; color: rgba(255,255,255,.62); font-size: .76rem; line-height: 1.55; }
-.page-configurator .cfg-next-path { display: flex; align-items: flex-start; gap: .8rem; margin-bottom: 1.4rem; padding: .85rem 1rem; border: 1px solid var(--cfg-line); border-radius: .9rem; }
-.page-configurator .cfg-path-dot { width: .65rem; height: .65rem; flex: 0 0 auto; margin-top: .3rem; border-radius: 50%; background: var(--cfg-purple); box-shadow: 0 0 0 5px rgba(74,61,219,.1); }
+.page-configurator .cfg-next-path { display: flex; align-items: flex-start; gap: .8rem; margin-bottom: 1.4rem; padding: .85rem 1rem; border: 1px solid var(--cfg-line); border-radius: 2px; }
+.page-configurator .cfg-path-dot { width: .65rem; height: .65rem; flex: 0 0 auto; margin-top: .3rem; border-radius: 50%; background: var(--cfg-purple); box-shadow: 0 0 0 5px rgba(26, 44, 82,.1); }
 .page-configurator .cfg-next-path strong { color: var(--cfg-ink); font-size: .83rem; }
 .page-configurator .cfg-next-path p { margin: .18rem 0 0; color: var(--cfg-muted); font-size: .78rem; }
-.page-configurator .cfg-form { padding: clamp(1rem,2.7vw,1.55rem); border: 1px solid var(--cfg-line); border-radius: 1rem; background: #fafafd; }
+.page-configurator .cfg-form { padding: clamp(1rem,2.7vw,1.55rem); border: 1px solid var(--cfg-line); border-radius: 2px; background: #fafafd; }
 .page-configurator .cfg-form-heading { margin-bottom: 1rem; }
 .page-configurator .cfg-form-heading h3 { margin: 0 0 .3rem; color: var(--cfg-ink); font-size: 1.12rem; }
 .page-configurator .cfg-form-heading p { margin: 0; color: var(--cfg-muted); font-size: .78rem; line-height: 1.5; }
@@ -633,7 +633,7 @@
 
 /* Foco e acessibilidade */
 .page-configurator #configurator-app :focus-visible {
-  outline: 3px solid rgba(74,61,219,.3);
+  outline: 3px solid rgba(26, 44, 82,.3);
   outline-offset: 3px;
 }
 .page-configurator .cfg-step-title:focus { outline: none; }
@@ -653,7 +653,7 @@
   .page-configurator .configurator-section { padding-bottom: 6.5rem; }
   .page-configurator .cfg-shell { grid-template-columns: 1fr; }
   /* Resumo depois da etapa: a tarefa vem primeiro e a barra inferior já mostra a estimativa */
-  .page-configurator .cfg-summary-v2 { position: static; border-radius: 1rem; }
+  .page-configurator .cfg-summary-v2 { position: static; border-radius: 2px; }
   .page-configurator .cfg-summary-v2:has(.cfg-summary-empty) { display: none; }
   .page-configurator .cfg-summary-head,
   .page-configurator .cfg-summary-security,
@@ -685,7 +685,7 @@
     min-height: 42px;
     padding: .65rem .85rem;
     border: 0;
-    border-radius: .65rem;
+    border-radius: 2px;
     background: var(--cfg-purple);
     color: #fff;
     font-size: .72rem;
@@ -698,7 +698,7 @@
   .page-configurator .configurator-hero { padding: calc(var(--header-h) + 1.25rem) 0 1.6rem; }
   .page-configurator .configurator-hero h1 { letter-spacing: -.04em; }
   .page-configurator .configurator-time { display: none; }
-  .page-configurator .cfg-main { padding: 1rem; border-radius: 1rem; }
+  .page-configurator .cfg-main { padding: 1rem; border-radius: 2px; }
   .page-configurator .cfg-progress-copy { display: flex; }
   .page-configurator .cfg-progress-track { margin: 0; }
   .page-configurator .cfg-progress-list { display: none; }
@@ -717,7 +717,7 @@
   .page-configurator .cfg-config-block > header h3 { font-size: 1rem; line-height: 1.25; }
   .page-configurator .cfg-config-block > header .cfg-choice-icon { width: 1.9rem; height: 1.9rem; }
   .page-configurator .cfg-remove-service { flex: 0 0 auto; min-height: 40px; }
-  .page-configurator .cfg-config-block { padding: .85rem; border-radius: 1rem; }
+  .page-configurator .cfg-config-block { padding: .85rem; border-radius: 2px; }
   .page-configurator .cfg-config-block > header { margin-bottom: 1rem; padding-bottom: .85rem; }
   .page-configurator .cfg-model-option { padding: .95rem; }
   .page-configurator .cfg-model-action { padding: .85rem; }
@@ -757,21 +757,21 @@ html.js #configurator-app { min-height: 1300px; }
   min-width: 0;
   padding: .95rem 1rem;
   border: 1px solid var(--cfg-line);
-  border-radius: .85rem;
+  border-radius: 2px;
   background: #fff;
   color: var(--cfg-ink);
   text-align: left;
   cursor: pointer;
   transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
 }
-.page-configurator .cfg-plan-option:hover { border-color: rgba(74,61,219,.35); }
+.page-configurator .cfg-plan-option:hover { border-color: rgba(26, 44, 82,.35); }
 .page-configurator .cfg-plan-option.is-selected { border-color: var(--cfg-purple); background: #f7f6ff; box-shadow: 0 0 0 1px var(--cfg-purple) inset; }
 .page-configurator .cfg-plan-option:focus-visible { outline: 2px solid var(--cfg-purple); outline-offset: 2px; }
 .page-configurator .cfg-plan-top { display: flex; align-items: center; gap: .45rem; }
 .page-configurator .cfg-plan-top strong { font-size: .98rem; }
 .page-configurator .cfg-plan-top .cfg-model-radio { margin: 0 0 0 auto; width: 1.1rem; height: 1.1rem; }
 .page-configurator .cfg-plan-option.is-selected .cfg-model-radio { border-color: var(--cfg-purple); background: var(--cfg-purple); }
-.page-configurator .cfg-plan-badge { padding: .1rem .45rem; border-radius: 999px; background: #e3f1e8; color: #1e7a4c; font-size: .68rem; font-weight: 800; }
+.page-configurator .cfg-plan-badge { padding: .1rem .45rem; border-radius: 2px; background: #e3f1e8; color: #1e7a4c; font-size: .68rem; font-weight: 800; }
 .page-configurator .cfg-plan-domain { color: var(--cfg-muted); font-size: .68rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .page-configurator .cfg-plan-price { margin-top: .2rem; color: var(--cfg-ink); font-size: 1.15rem; font-weight: 800; }
 .page-configurator .cfg-plan-price small { color: var(--cfg-muted); font-size: .75rem; font-weight: 600; }

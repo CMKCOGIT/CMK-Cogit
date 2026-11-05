@@ -298,3 +298,6 @@ background: linear-gradient(180deg, #22365F 0%, #1A2C52 60%) !important; padding
 .hs-row:hover .hs-svc li { border-color: var(--navy); background: var(--navy-soft); }
 .hs-row:hover .hs-go { transform: translate(4px, -4px); }
 @media (hover: none) { .hs-row:hover h3 { transform: none; } }
+.car-dots button { overflow: hidden; }
+.car-dots button[aria-current="true"] { background: #BFC1BD; }
+.car-dots button[aria-current="true"]::after { content: ""; position: absolute; inset: 0; background: var(--navy); transform-origin: left; transform: scaleX(var(--p, 1)); }

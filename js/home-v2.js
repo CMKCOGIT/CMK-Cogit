@@ -76,6 +76,41 @@
     tr.addEventListener('scroll', function () { clearTimeout(tr._t); tr._t = setTimeout(upd, 60); }, { passive: true });
     tr.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(cur() + 1); } if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur() - 1); } });
     upd();
+
+    /* Passagem automática: a cada 6 s, volta ao primeiro no fim. Pausa ao passar o mouse, focar ou tocar,
+       fora da tela, com a aba escondida e com uma janela aberta. Com "reduzir movimento" começa desligada. */
+    var autoBtn = $('#car-auto'), DUR = 6000, auto = !RM, hold = false, onScreen = false, timer = null, t0 = 0, left = DUR, raf = 0;
+    function paint(p) {
+      $$('button', dots).forEach(function (b) { b.style.setProperty('--p', b.getAttribute('aria-current') === 'true' ? String(p) : '0'); });
+    }
+    function stop() {
+      clearTimeout(timer); timer = null; cancelAnimationFrame(raf);
+      if (t0) { left = Math.max(0, left - (performance.now() - t0)); t0 = 0; }
+    }
+    function tick() { if (!t0) return; paint(Math.min(1, 1 - Math.max(0, left - (performance.now() - t0)) / DUR)); raf = requestAnimationFrame(tick); }
+    function start() {
+      stop();
+      if (!auto || hold || !onScreen || document.hidden || document.querySelector('dialog[open]')) { paint(auto ? 1 - left / DUR : 1); return; }
+      t0 = performance.now(); raf = requestAnimationFrame(tick);
+      timer = setTimeout(function () { t0 = 0; left = DUR; var i = cur(); go(i >= slides.length - 1 ? 0 : i + 1); setTimeout(start, 700); }, left);
+    }
+    function setAuto(on) {
+      auto = on; left = DUR;
+      autoBtn.setAttribute('aria-pressed', String(on));
+      autoBtn.setAttribute('aria-label', on ? 'Pausar passagem automática' : 'Ativar passagem automática');
+      $('#car-auto-ic').innerHTML = on ? '<path d="M5 3v10M11 3v10"/>' : '<path d="M5 3l8 5-8 5z"/>';
+      start();
+    }
+    autoBtn.addEventListener('click', function () { setAuto(!auto); });
+    var car = $('#car');
+    ['mouseenter', 'focusin', 'touchstart'].forEach(function (ev) { car.addEventListener(ev, function () { hold = true; stop(); }, { passive: true }); });
+    ['mouseleave', 'focusout'].forEach(function (ev) { car.addEventListener(ev, function () { hold = false; start(); }); });
+    car.addEventListener('touchend', function () { setTimeout(function () { hold = false; start(); }, 2500); }, { passive: true });
+    [$('#car-prev'), $('#car-next')].concat($$('button', dots)).forEach(function (b) { b.addEventListener('click', function () { left = DUR; }); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { es.forEach(function (e) { onScreen = e.isIntersecting; if (onScreen) start(); else stop(); }); }, { threshold: 0.35 }).observe(car);
+    document.addEventListener('visibilitychange', function () { if (document.hidden) stop(); else start(); });
+    document.addEventListener('close', function () { setTimeout(start, 50); }, true);
+    setAuto(auto);
   }
 
   /* ── Projetos: lista com prévia fixa ── */

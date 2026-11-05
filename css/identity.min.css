@@ -280,3 +280,18 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 #custom-model-dialog p:not(.btn *) { color: var(--muted) !important; }
 .container:not(.container-narrow), .container-wide { max-width: var(--site-max) !important; padding-left: max(var(--site-pad), env(safe-area-inset-left, 0px)) !important; padding-right: max(var(--site-pad), env(safe-area-inset-right, 0px)) !important; }
 .footer .container { max-width: var(--site-max) !important; }
+#cookie-preferences.cookie-dialog { background: var(--paper) !important; color: var(--ink) !important; border: 1px solid var(--ink) !important; border-radius: 2px !important; padding: clamp(20px, 3vw, 32px) !important; max-width: min(560px, calc(100vw - 32px)) !important; }
+#cookie-preferences .cookie-dialog-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 8px; }
+#cookie-preferences h2 { font-family: var(--display) !important; font-weight: 500 !important; font-size: clamp(22px, 2.2vw, 28px) !important; line-height: 1.1 !important; letter-spacing: -.01em; color: var(--ink) !important; margin: 0 !important; }
+#cookie-preferences strong, #cookie-preferences label { color: var(--ink) !important; font-weight: 700 !important; font-family: var(--text) !important; font-size: 16px !important; }
+#cookie-preferences p { color: var(--muted) !important; font-size: 15px !important; line-height: 1.55 !important; }
+#cookie-preferences .cookie-category { border-color: var(--line) !important; background: transparent !important; }
+#cookie-preferences .cookie-dialog-close { width: 40px; height: 40px; display: grid; place-items: center; background: transparent !important; border: 1px solid var(--ink) !important; border-radius: 2px !important; color: var(--ink) !important; flex: none; }
+#cookie-preferences .cookie-dialog-actions { display: grid; gap: 10px; }
+#cookie-preferences .cookie-action { min-height: 48px; border-radius: 2px !important; font: 700 15px var(--text) !important; cursor: pointer; }
+#cookie-preferences #cookie-save { background: var(--navy) !important; color: #fff !important; border: 1px solid var(--navy) !important; }
+#cookie-preferences #cookie-save:hover { background: var(--navy-hover) !important; }
+#cookie-preferences #cookie-reject-all { background: transparent !important; color: var(--ink) !important; border: 1px solid var(--ink) !important; }
+#cookie-preferences #cookie-reject-all:hover { background: var(--ink) !important; color: var(--paper) !important; }
+#cookie-preferences a { color: var(--navy) !important; text-decoration: underline; text-underline-offset: 4px; }
+#cookie-preferences input[type="checkbox"] { accent-color: var(--navy); width: 20px; height: 20px; }

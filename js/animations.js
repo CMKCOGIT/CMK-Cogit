@@ -73,7 +73,7 @@
 
   function revealTitles() {
     document.querySelectorAll('main h1, main h2, .footer-tagline').forEach(function (h) {
-      if (h.closest('dialog, .hero-interactive-container, [hidden], .faq-answer, .page-legal')) return;
+      if (h.closest('dialog, .hero-interactive-container, [hidden], .faq-answer, .page-legal, .curtain > #cta-final')) return; // na home, a chamada final já entra pela cortina
       splitTitle(h);
       var words = h.querySelectorAll('.t-line > span');
       if (!words.length) return;
@@ -111,7 +111,7 @@
   var tracked = [];
   function revealBlocks() {
     var seen = new Set(), items = [];
-    var skip = function (el) { return el.closest('header, .mobile-menu, dialog, .hero-interactive-container, .demo-dx, .nav, .pj-prev, .hw-stick') || el.matches('h1, h2'); };
+    var skip = function (el) { return el.closest('header, .mobile-menu, dialog, .hero-interactive-container, .demo-dx, .nav, .pj-prev, .hw-stick, .curtain > #cta-final') || el.matches('h1, h2'); };
     document.querySelectorAll(GROUP_SEL).forEach(function (g) {
       if (skip(g) || g.children.length < 2 || g.children.length > 24) return;
       Array.prototype.forEach.call(g.children, function (k) {

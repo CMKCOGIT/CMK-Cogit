@@ -189,3 +189,20 @@
   document.addEventListener('visibilitychange', function () { if (document.hidden) clear(); else if (visible) play(); });
   if (RM) setPause(true); else play();
 })();
+
+/* Cortina: o conteúdo da chamada final sobe um pouco enquanto o painel de dúvidas sai de cima (parallax leve, só posição) */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var faq = document.getElementById('duvidas'), cta = document.getElementById('cta-final');
+  if (!faq || !cta) return;
+  var inner = cta.querySelector('.cta-final-content'), ticking = false;
+  function frame() {
+    ticking = false;
+    var r = faq.getBoundingClientRect(), vh = window.innerHeight, h = cta.offsetHeight;
+    var p = Math.min(1, Math.max(0, (vh - r.bottom) / h)); // 0 = coberta, 1 = revelada
+    inner.style.transform = 'translate3d(0,' + Math.round((1 - p) * 60) + 'px,0)';
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+  window.addEventListener('resize', frame);
+  frame();
+})();

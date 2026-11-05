@@ -317,3 +317,29 @@
 .home-v2 > .tone-navy, .home-v2 > .tone-ink { overflow: visible !important; }
 .home-v2 > .tone-navy::before, .home-v2 > .tone-ink::before, .home-v2 > .tone-ink::after { transform: none !important; top: auto; width: auto !important; border-radius: 0 !important; filter: none !important; animation: none !important; }
 .home-v2 > .tone-ink::after { top: 100% !important; bottom: auto !important; }
+
+/* ── Título em uma linha (padrão Wix), maior; quebra só no celular ── */
+.hx h1 { max-width: none !important; white-space: nowrap; font-size: clamp(40px, 7.6vw, 156px) !important; line-height: .95 !important; letter-spacing: -.035em; }
+@media (max-width: 760px) { .hx h1 { white-space: normal; font-size: clamp(40px, 12vw, 64px) !important; } }
+
+/* ── Rolagem fluida nas faixas com degradê ──
+   "Como funciona" deixa de prender o título (o efeito fixo parecia travar ao rolar)
+   e as faixas com degradê viram camadas próprias, que o navegador só desloca. */
+.home-v2 .hw-stick { position: static !important; }
+.home-v2 > .tone-ink, .home-v2 > .tone-ink::before, .home-v2 > .tone-ink::after { transform: translateZ(0); backface-visibility: hidden; }
+.hx h1 { font-size: clamp(40px, 7.3vw, 116px) !important; }
+@media (max-width: 760px) { .hx h1 { font-size: clamp(40px, 12vw, 64px) !important; } }
+
+/* ── Dúvidas → chamada final: efeito cortina (referência Wix) ──
+   A seção de dúvidas é um painel opaco por cima; a chamada final fica presa
+   embaixo da tela (sticky) e vai aparecendo conforme o painel sobe com a rolagem. */
+.home-v2 { background: linear-gradient(180deg,
+  #F3F3F1 0, #F3F3F1 320px, #EEF0F2 720px, #E6EAF1 1150px, #DDE3EE 1600px, #E4E8F0 2300px, #E9ECF1 3200px, #E6E9EF 4600px, #E2E6EE 6000px, #E2E6EE 100%) !important; }
+.home-v2 .curtain > #duvidas { position: relative; z-index: 2; background: #E2E6EE !important; padding-bottom: clamp(88px, 10vw, 140px) !important; }
+.home-v2 .curtain > #cta-final { position: sticky !important; bottom: 0; z-index: 1; margin-top: 0 !important; overflow: hidden !important;
+  background: linear-gradient(180deg, #22365F 0%, #1A2C52 60%) !important; padding-block: clamp(96px, 11vw, 160px) !important; }
+.home-v2 .curtain > #cta-final::before { display: none !important; content: none !important; }
+.home-v2 .curtain > #cta-final .cta-final-content { will-change: transform; }
+
+.home-v2 > .curtain { position: relative; }
+.home-v2 .curtain > #cta-final .section-label { color: var(--navy-muted) !important; }

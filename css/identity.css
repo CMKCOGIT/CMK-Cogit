@@ -124,6 +124,20 @@ main a:not(.btn):not([class*="card"]):not([class*="nav"]):not([class*="link-card
 }
 .tone-ink [class*="card"]:not([class*="cards"]):not([class*="-card-"]):hover { border-color: var(--paper) !important; }
 .tone-navy [class*="card"]:not([class*="cards"]):not([class*="-card-"]) { background-color: rgba(255, 255, 255, .04) !important; border-color: var(--navy-line) !important; color: var(--paper); }
+/* cards com modificador (--fixed, -featured, -highlight) escapavam da regra acima por conter "-card-":
+   mesma superfície branca, mesmo fio; o destaque é só um fio superior navy de 2 px, igual em todo o site */
+.si-logic-card, .si-solution-card, .service-card, .si-value-drivers {
+  background-color: var(--white) !important; background-image: none !important;
+  border: 1px solid var(--line) !important; box-shadow: none !important; border-radius: 2px !important;
+}
+.si-logic-card:hover, .si-solution-card:hover, .service-card:hover { border-color: var(--ink) !important; transform: none !important; }
+.si-logic-card, .si-solution-card-featured, .service-card-highlight,
+main [style*="border-top: 4px solid"], main [style*="border-top: 3.5px solid"] { border-top: 2px solid var(--navy) !important; }
+.si-solution-card-featured .si-card-number, .si-logic-card .si-logic-num-wrap { background: var(--ink) !important; color: var(--white) !important; }
+.si-logic-card .si-logic-badge { background: var(--navy-soft) !important; color: var(--navy) !important; border: 0 !important; box-shadow: none !important; }
+.si-value-drivers span { background: var(--paper) !important; border: 1px solid var(--line); }
+.tone-white :is(.si-logic-card, .si-solution-card, .service-card, .si-value-drivers) { background-color: var(--paper) !important; }
+.tone-ink :is(.si-logic-card, .si-solution-card, .service-card, .si-value-drivers) { background-color: var(--ink-2) !important; border-color: var(--line-d) !important; color: var(--paper); }
 /* ícones decorativos dentro de cards: saem (o visual vem da tipografia) */
 [class*="card"] [class*="icon"][aria-hidden="true"]:not(svg *), [class*="card"] [class*="icone"][aria-hidden="true"], .home-frente-icone, .home-numero-icone,
 [class*="card-icon"], [class*="-icon-wrap"], .si-card-icon { display: none !important; }
@@ -354,3 +368,33 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 #cookie-preferences #cookie-reject-all:hover { background: var(--ink) !important; color: var(--paper) !important; }
 #cookie-preferences a { color: var(--navy) !important; text-decoration: underline; text-underline-offset: 4px; }
 #cookie-preferences input[type="checkbox"] { accent-color: var(--navy); width: 20px; height: 20px; }
+
+/* ── Campo de partículas dos CTAs finais (js/cta-field.js) ─────────── */
+.has-cta-field { position: relative; isolation: isolate; }
+.has-cta-field > .cta-field {
+  position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 46% 52% at 50% 50%, rgba(0,0,0,.18) 0%, rgba(0,0,0,.55) 55%, #000 100%);
+          mask-image: radial-gradient(ellipse 46% 52% at 50% 50%, rgba(0,0,0,.18) 0%, rgba(0,0,0,.55) 55%, #000 100%);
+  opacity: 0; animation: cta-field-in 1.4s var(--ease-c) .1s forwards;
+}
+.has-cta-field > .container { position: relative; z-index: 1; }
+.has-cta-field .si-cta-decor, .has-cta-field .si-cta-bg-glow, .has-cta-field .si-cta-bg-grid { display: none !important; }
+@keyframes cta-field-in { to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .has-cta-field > .cta-field { animation: none; opacity: .7; } }
+
+/* Palavras dos títulos divididos pelo movimento herdam a cor do pai (título ou .t-tone):
+   regras genéricas de span em seções escuras não podem trocar a cor depois do carregamento */
+:is(h1, h2, h3, h4, .footer-tagline) .t-line, :is(h1, h2, h3, h4, .footer-tagline) .t-line > span { color: inherit !important; -webkit-text-fill-color: currentColor; }
+/* Título principal: espera o movimento montar as palavras (evita aparecer, sumir e subir).
+   Trava: aparece sozinho em 2,5 s se o JavaScript não rodar. */
+.motion-wait main h1 { opacity: 0; animation: motion-failsafe 0s 2.5s forwards; }
+@keyframes motion-failsafe { to { opacity: 1; } }
+
+/* ── Auditoria 2026-11: correções de contraste e área de toque ─────── */
+.skip-link, .skip-link:focus, .skip-link:visited { background: var(--ink) !important; color: var(--paper) !important; text-decoration: none !important; }
+.skip-link:focus-visible { outline: 2px solid var(--sky) !important; outline-offset: 2px; }
+.help-contato .btn-secondary { color: var(--paper) !important; border-color: rgba(243, 243, 241, .55) !important; background: transparent !important; }
+.help-contato .btn-secondary:hover { background: var(--paper) !important; color: var(--navy) !important; border-color: var(--paper) !important; }
+.cfg-progress-list li > span { color: var(--muted) !important; }
+.cfg-progress-list li:is(.is-active, .is-done) > span { color: var(--white) !important; }
+.ch-back-btn, .whatsapp-popup-close { min-width: 40px !important; min-height: 40px !important; display: inline-grid !important; place-items: center; }

@@ -45,6 +45,7 @@
   <link rel="preload" href="assets/fonts/satoshi-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/site.min.css">
   <link rel="stylesheet" href="css/identity.min.css">
+  <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-wait")</script>
   <link rel="stylesheet" href="css/home-v2.min.css">
 
   <!-- Schema.org - Organization -->
@@ -203,8 +204,8 @@
     <!-- 01 — HERO: título no topo, descrição, chamadas e o diagnóstico em movimento logo abaixo -->
     <section class="hx" id="hero" aria-labelledby="hero-titulo">
       <div class="hx-top">
-        <p class="hx-motto"><i aria-hidden="true"></i>Pensamos antes de construir<i aria-hidden="true"></i></p>
-        <h1 id="hero-titulo">Tecnologia que <span class="t-tone">sai do papel.</span></h1>
+        <p class="hx-motto">Pensamos antes de construir.</p>
+        <h1 id="hero-titulo">Tecnologia que<br> <span class="t-tone">sai do papel.</span></h1>
         <p class="hx-lead">Da estratégia ao desenvolvimento, criamos sites, sistemas, automações e produtos digitais sob medida para empresas que precisam evoluir.</p>
         <div class="hx-stack">
           <button type="button" class="btn btn-primary btn-lg hx-main" id="cta-hero-start" data-open-diagnostico>Monte sua solução <span><i class="bi bi-arrow-right"></i></span></button>
@@ -543,6 +544,7 @@
   <script src="assets/vendor/gsap.min.js" defer></script>
   <script src="assets/vendor/ScrollTrigger.min.js" defer></script>
   <script src="js/animations.js"></script>
+  <script src="js/cta-field.js" defer></script>
   <script src="js/header.js"></script>
   <script src="js/main.js"></script>
   <script src="js/home.js"></script>

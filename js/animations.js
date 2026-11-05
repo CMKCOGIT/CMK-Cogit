@@ -246,6 +246,9 @@
   }
 
   function initAnimations() {
+    try { boot(); } finally { document.documentElement.classList.remove('motion-wait'); }
+  }
+  function boot() {
     document.documentElement.classList.add('animations-ready');
     markVisible();
     initHeader();

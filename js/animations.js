@@ -1,7 +1,7 @@
 /* =====================================================================
    COGIT — movimento (identidade 2026)
    Linguagem "construir": o fio desenha, o título sobe por linhas, o conteúdo chega.
-   GSAP + ScrollTrigger (assets/vendor, hospedados no site) e Lenis só no desktop.
+   GSAP + ScrollTrigger (assets/vendor, hospedados no site). Rolagem nativa do navegador.
    Regras:
    · Sem a biblioteca, sem JavaScript ou com "reduzir movimento": tudo aparece, nada se move.
    · Elementos só ganham o estado inicial (escondido) se estiverem abaixo da tela ao carregar
@@ -17,7 +17,6 @@
   var hasG = function () { return !!(window.gsap && window.ScrollTrigger); };
   var EASE = 'expo.out';
   var triggers = [];
-  var lenis = null;
 
   var REVEAL_SEL = [
     '.reveal', '.reveal-up', '.reveal-left', '.reveal-right', '.reveal-scale', '.reveal-fade', '[data-reveal]', '[data-r]', '[data-about-reveal]',
@@ -208,21 +207,12 @@
         if (!t) return;
         e.preventDefault();
         var top = t.getBoundingClientRect().top + window.scrollY - 72;
-        if (lenis) lenis.scrollTo(top, { duration: 1 }); else window.scrollTo({ top: top, behavior: reduced() ? 'auto' : 'smooth' });
+        window.scrollTo({ top: top, behavior: reduced() ? 'auto' : 'smooth' });
         if (window.CogitHeader) window.CogitHeader.close(false);
         if (!t.hasAttribute('tabindex')) t.tabIndex = -1;
         t.focus({ preventScroll: true });
       });
     });
-  }
-
-  function initLenis() {
-    if (reduced() || !window.Lenis || !window.matchMedia('(pointer: fine)').matches) return;
-    lenis = new window.Lenis({ duration: 1.05, smoothWheel: true });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
-    gsap.ticker.lagSmoothing(0);
-    window.COGIT_LENIS = lenis;
   }
 
   /* Trava: ao parar de rolar, nada visível na tela continua escondido */
@@ -257,7 +247,6 @@
     smoothAnchors();
     if (reduced() || !hasG()) return;
     gsap.registerPlugin(ScrollTrigger);
-    initLenis();
     revealTitles();
     revealBlocks();
     wipes();

@@ -10,7 +10,7 @@ Redesign visual sem mudança de conteúdo ou funcionalidade:
 - **Camada visual**: `css/identity.css`, carregada por último em todas as páginas. Raio 2 px, fios de 1 px, sem sombra, sem vidro e sem degradê.
 - **Ritmo de seções e títulos**: `python3 tools/identidade-secoes.py` aplica `tone-paper | tone-grey | tone-white | tone-ink | tone-navy` às seções de `<main>` e o destaque de cor (`.t-tone`) em H1/H2. Não altera textos; pode rodar de novo (idempotente).
 - **Home**: estrutura nova em `index.html` + `css/home-v2.css` + `js/home-v2.js` (diagnóstico em janela, demonstração animada, projetos, carrossel de modelos, sob medida).
-- **Movimento**: `js/animations.js` com GSAP + ScrollTrigger + Lenis em `assets/vendor` (locais). Revelações nos dois sentidos, corte a 45° nas faixas Marinho, contagem, parallax; sem JavaScript ou com movimento reduzido, tudo aparece parado. Troca de página com View Transitions.
+- **Movimento**: `js/animations.js` com GSAP + ScrollTrigger em `assets/vendor` (locais), com a rolagem nativa do navegador. Revelações nos dois sentidos, corte a 45° nas faixas Marinho, contagem, parallax; sem JavaScript ou com movimento reduzido, tudo aparece parado. Troca de página com View Transitions.
 - **Header**: menu completo a partir de 1024 px; abaixo disso, botão Menu.
 
 

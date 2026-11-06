@@ -1,0 +1,53 @@
+/*
+  Marca do cliente: Site Institucional Essencial (demonstração: Arrimo Contabilidade).
+  Personalização por cliente: altere SÓ este arquivo (cores, fontes, cantos).
+  A estrutura (styles.css) é a mesma em todos os modelos prontos.
+  Cores usadas como texto mantêm contraste mínimo de 4,5:1 com o fundo.
+*/
+@font-face { font-family: "Newsreader"; src: url("../fonts/newsreader-latin-opsz-normal.woff2") format("woff2-variations"); font-weight: 200 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2-variations"); font-weight: 100 900; font-style: normal; font-display: swap; }
+@font-face { font-family: "Serif Fallback"; src: local("Georgia"); size-adjust: 96%; }
+@font-face { font-family: "Sans Fallback"; src: local("Arial"); size-adjust: 104%; }
+
+:root {
+  /* Cores da marca */
+  --primary: #123f33;          /* verde institucional: 11:1 com branco */
+  --primary-deep: #0b2a22;
+  --primary-soft: #dfe9e4;
+  --on-primary: #f5f3ee;
+  /* Neutros */
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface-2: #ebe7de;
+  --ink: #17201c;
+  --ink-2: #4c5852;            /* 7:1 */
+  --ink-3: #66716b;            /* 4,6:1 */
+  --line: rgb(23 32 28 / 0.14);
+  --line-strong: rgb(23 32 28 / 0.3);
+  --dark: #123f33;
+  --on-dark: #f5f3ee;
+  --on-dark-2: #b4c4bc;
+  --on-dark-accent: #e0b46a;
+  --error: #a3341f;
+  --ok: #2e6b45;
+  /* Tipografia */
+  --font-head: "Newsreader", "Serif Fallback", Georgia, serif;
+  --font-body: "Public Sans", "Sans Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --head-weight: 500;
+  --head-tracking: -0.015em;
+  --fs-body: 1.0625rem;
+  --fs-lead: 1.125rem;
+  --fs-h1: clamp(2.4rem, 4.6vw, 4rem);
+  --fs-h2: clamp(1.9rem, 3.2vw, 2.8rem);
+  --fs-h3: 1.3rem;
+  /* Ritmo e forma */
+  --max: 1200px;
+  --gutter: clamp(20px, 4vw, 40px);
+  --gap: clamp(16px, 2vw, 24px);
+  --section-y: clamp(64px, 8vw, 112px);
+  --header-h: 76px;
+  --radius-sm: 3px;
+  --radius: 3px;
+  --radius-lg: 4px;
+  --radius-btn: 3px;
+}

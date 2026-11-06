@@ -43,6 +43,7 @@ const plan = {
     { scene: 'icon', w: 512, h: 512, icons: true },
   ],
   landing: [
+    { scene: 'hero', w: 1600, h: 1000, widths: [800, 1600], jpg: 1600 },
     { scene: 'og', w: 1200, h: 630, widths: [], jpg: 1200, jpgName: 'og.jpg' },
     { scene: 'icon', w: 512, h: 512, icons: true },
   ],

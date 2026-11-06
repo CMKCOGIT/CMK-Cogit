@@ -1,28 +1,30 @@
 # Templates comerciais da CMKCOGIT
 
-Três sites estáticos e independentes, vendidos como **Modelos prontos**. A estrutura, a composição e os comportamentos são fixos. A identidade visual e o conteúdo são personalizados para cada cliente.
+Três sites estáticos e independentes, vendidos como **Modelos prontos**. Um modelo pronto tem **estrutura fixa**: as mesmas seções, na mesma ordem, com os mesmos componentes. Por cliente mudam só a marca (`css/tokens.css`), as fotos (`img/`) e os textos. É isso que permite entregar em poucos dias e o cliente saber exatamente o que recebe; o que fugir da estrutura é **sob medida**.
 
-| Pasta | Modelo | Marca de demonstração (fictícia) |
-| --- | --- | --- |
-| `portfolio/` | Portfólio Profissional | Lia Toledo, designer de identidade visual |
-| `institucional/` | Site Institucional Essencial | Arrimo Contabilidade |
-| `landing/` | Landing Page Essencial | Alento, agenda para psicólogos |
+| Pasta | Modelo | Estrutura fixa | Marca de demonstração (fictícia) |
+| --- | --- | --- | --- |
+| `landing/` | Landing Page Essencial | 1 página, 5 seções: topo, benefícios (3), como funciona (3 passos), depoimentos (3 + números), contato (formulário + 3 dúvidas) | Alento, agenda para psicólogos |
+| `portfolio/` | Portfólio Profissional | 1 página: topo, trabalhos (até 6), sobre (foto + números), serviços (até 3), depoimentos (2), contato | Lia Toledo, designer de identidade visual |
+| `institucional/` | Site Institucional Essencial | 4 páginas: Início (serviços, diferenciais, casos, depoimentos, proposta), Sobre, Serviços (até 6 + dúvidas) e Contato | Arrimo Contabilidade |
 
-Cada pasta é a raiz de um site. Não existe etapa de build e nenhuma biblioteca de terceiros é carregada: HTML, um CSS de tokens, um CSS de composição e um JavaScript sem dependências.
+Os três usam **o mesmo** `css/styles.css` e o mesmo `js/main.js` (fontes em `tools/templates/base/`). Só `css/tokens.css` muda de um modelo para outro, e de um cliente para outro.
 
 ```
 <template>/
-  index.html            página principal
-  privacidade.html      política de privacidade (institucional e landing, que coletam dados)
+  index.html            página principal (institucional: + sobre, servicos e contato)
+  privacidade.html      política de privacidade (institucional e landing)
   404.html              página de erro (caminhos absolutos: funciona na raiz do domínio)
-  css/tokens.css        cores, fontes, tamanhos e ritmo: o ponto de personalização
-  css/styles.css        composição das seções (não muda por cliente)
-  js/main.js            menu, revelação ao rolar, formulário, interações
+  css/tokens.css        a marca: cores, fontes, cantos. ÚNICO arquivo de estilo por cliente
+  css/styles.css        estrutura comum aos três modelos (não muda por cliente)
+  js/main.js            menu, revelação ao rolar, formulário, aviso da demonstração (comum)
   fonts/                fontes WOFF2 locais + licenças OFL
-  img/                  imagens AVIF/WebP/JPG, ícones e imagem de compartilhamento
+  img/                  fotos AVIF/WebP/JPG, ícones e imagem de compartilhamento
   site.config.json      domínio, modo, hospedagem e endpoint do formulário
   robots.txt, site.webmanifest, favicon.svg
 ```
+
+As páginas são geradas por `python3 tools/templates/build-models.py` a partir do conteúdo de cada modelo (o dicionário de cada função no arquivo). Depois de gerar, rode `node tools/templates/configure.mjs`.
 
 ## Rodar localmente
 
@@ -39,11 +41,11 @@ O servidor imita uma hospedagem estática: serve cada template na raiz e respond
 
 1. **Identidade:** edite `css/tokens.css` (cores, famílias tipográficas, escala). Os comentários indicam quais cores são usadas como texto e precisam manter contraste mínimo de 4,5:1.
 2. **Fontes:** coloque os WOFF2 em `fonts/`, ajuste os `@font-face` e os `preload` do `<head>`. Mantenha no máximo duas famílias. Para evitar deslocamento de layout, ajuste o `size-adjust` da fonte de reserva quando houver.
-3. **Conteúdo:** textos, contatos e links estão direto no `index.html`. Links de contato usam `data-contact="email|whatsapp|phone|social"`.
-4. **Imagens:** substitua os arquivos em `img/` mantendo nomes e proporções, ou ajuste `srcset`, `width` e `height`. Exporte AVIF e WebP em duas larguras e um JPG de reserva. Fotos de clientes não passam pelo gerador de arte.
+3. **Conteúdo:** troque os textos no conteúdo do modelo em `tools/templates/build-models.py` e gere de novo. Os limites da estrutura valem: mesmo número de seções, cartões, trabalhos e páginas. Links de contato usam `data-contact="email|whatsapp|phone|social"`.
+4. **Imagens:** cada foto ocupa um quadro de proporção fixa (4:3, 4:5 ou 16:10) e é recortada para caber. Substitua os arquivos em `img/` mantendo os nomes. Exporte AVIF e WebP em duas larguras e um JPG de reserva. Fotos de clientes não passam pelo gerador de arte.
 5. **Publicação:** edite `site.config.json` e rode `node tools/templates/configure.mjs <template>`.
 
-O que **não** muda: a ordem e a composição das seções, as classes do `styles.css`, os comportamentos do `main.js`.
+O que **não** muda: a ordem e a composição das seções, a quantidade de itens de cada seção, o `styles.css` e o `main.js`. A barra superior "Modelo pronto" só aparece no modo demonstração.
 
 ## `site.config.json`
 

@@ -203,21 +203,30 @@ for (const name of names) {
     if (await toggle.count()) {
       await toggle.click();
       assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
-      const link = page.locator('nav a[href^="#"]').first();
+      // Página única: links para seções (#). Site com várias páginas: links para as outras páginas.
+      const anchors = page.locator('nav a[href^="#"]');
+      const onePage = (await anchors.count()) > 0;
+      const link = onePage ? anchors.first() : page.locator('nav a:not([aria-current])').first();
       assert.ok(await link.isVisible(), 'links visíveis no menu aberto');
       await page.keyboard.press('Escape');
       assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
       await toggle.click();
-      await link.click();
-      await page.waitForTimeout(900);
-      assert.equal(await toggle.getAttribute('aria-expanded'), 'false', 'menu fecha ao navegar');
-      assert.ok(await page.evaluate(() => scrollY > 200), 'rolou até a seção');
+      if (onePage) {
+        await link.click();
+        await page.waitForTimeout(900);
+        assert.equal(await toggle.getAttribute('aria-expanded'), 'false', 'menu fecha ao navegar');
+        assert.ok(await page.evaluate(() => scrollY > 200), 'rolou até a seção');
+      } else {
+        const href = await link.getAttribute('href');
+        await Promise.all([page.waitForURL((u) => u.pathname.endsWith(href.replace(/^\.\//, ''))), link.click()]);
+        assert.ok(await page.locator('h1').isVisible(), 'abriu a outra página');
+      }
     } else {
       // Landing: CTA principal sempre acessível; o fixo aparece após o hero.
       await page.evaluate(() => window.scrollTo({ top: innerHeight * 2, behavior: 'instant' }));
       await page.waitForTimeout(700);
       assert.ok(await page.locator('[data-sticky-cta].is-visible').count(), 'CTA fixo visível após o hero');
-      await page.locator('#demonstracao').scrollIntoViewIfNeeded();
+      await page.locator('[data-form]').scrollIntoViewIfNeeded();
       await page.waitForTimeout(700);
       assert.equal(await page.locator('[data-sticky-cta].is-visible').count(), 0, 'CTA fixo some perto do formulário');
     }

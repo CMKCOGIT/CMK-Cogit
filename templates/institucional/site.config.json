@@ -5,6 +5,6 @@
   "host": null,
   "allowEmbedFrom": "https://cmkcogit.com.br",
   "formEndpoint": "",
-  "pages": ["index.html", "privacidade.html"],
-  "indexable": ["index.html", "privacidade.html"]
+  "pages": ["index.html", "sobre.html", "servicos.html", "contato.html", "privacidade.html"],
+  "indexable": ["index.html", "sobre.html", "servicos.html", "contato.html", "privacidade.html"]
 }

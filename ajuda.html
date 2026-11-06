@@ -331,25 +331,38 @@
   </nav>
 
   <main id="main-content" role="main">
-    <section class="tone-paper page-help" aria-labelledby="ajuda-titulo">
+    <section class="tone-ink help-hero" aria-labelledby="ajuda-titulo">
       <div class="container">
         <nav class="breadcrumbs" aria-label="Navegação por trilha">
           <a href="/">Início</a>
           <span class="breadcrumbs-separator" aria-hidden="true">›</span>
           <span class="breadcrumbs-current" aria-current="page">Ajuda</span>
         </nav>
+        <div class="help-hero-grid">
+          <header class="help-head">
+            <span class="section-label">AJUDA</span>
+            <h1 id="ajuda-titulo">Dúvidas <span class="t-tone">frequentes.</span></h1>
+            <p>Respostas rápidas sobre modelos, domínio, pagamento e suporte. Não encontrou? <a href="#escrever">Escreva para a equipe</a>.</p>
+          </header>
+          <div class="help-hero-busca">
+            <p class="help-busca">
+              <label for="ajuda-busca">O que você procura?</label>
+              <input type="search" id="ajuda-busca" placeholder="Ex.: domínio, prazo, pagamento" autocomplete="off">
+            </p>
+            <p class="help-busca-vazio" id="ajuda-vazio" role="status" hidden>Nenhuma dúvida encontrada com esse termo. Use o formulário no fim da página e a equipe responde.</p>
+            <nav class="help-temas" aria-label="Temas da ajuda">
+              <a href="#g-servicos">Serviços e prazos</a>
+              <a href="#g-planos">Domínio e código</a>
+              <a href="#g-pagamento">Pagamento</a>
+              <a href="#g-suporte">Suporte e plataforma</a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
 
-        <header class="help-head">
-          <span class="section-label">AJUDA</span>
-          <h1 id="ajuda-titulo">Dúvidas frequentes</h1>
-          <p>Respostas rápidas sobre modelos, domínio, pagamento e suporte. Não encontrou? Escreva para a equipe no fim da página.</p>
-          <p class="help-busca">
-            <label class="sr-only" for="ajuda-busca">Buscar nas dúvidas</label>
-            <input type="search" id="ajuda-busca" placeholder="Buscar: domínio, prazo, pagamento..." autocomplete="off">
-          </p>
-          <p class="help-busca-vazio" id="ajuda-vazio" role="status" hidden>Nenhuma dúvida encontrada com esse termo. Use o formulário abaixo e a equipe responde.</p>
-        </header>
-
+    <section class="tone-paper page-help" aria-label="Perguntas por tema">
+      <div class="container">
         <div class="help-grupos" id="ajuda-lista">
           <section class="help-grupo" aria-labelledby="g-servicos">
             <h2 id="g-servicos">Serviços e prazos</h2>
@@ -427,9 +440,10 @@
             </ul>
           </div>
           <form class="help-form" id="ajuda-form" novalidate>
+            <div class="help-form-linha">
             <p>
               <label for="ajuda-nome">Seu nome</label>
-              <input type="text" id="ajuda-nome" name="nome" autocomplete="name" maxlength="80" required>
+              <input type="text" id="ajuda-nome" name="nome" autocomplete="name" maxlength="80" required placeholder="Como podemos te chamar?">
             </p>
             <p>
               <label for="ajuda-assunto">Assunto</label>
@@ -441,12 +455,14 @@
                 <option>Outro assunto</option>
               </select>
             </p>
+            </div>
             <p>
               <label for="ajuda-mensagem">Sua dúvida</label>
-              <textarea id="ajuda-mensagem" name="mensagem" rows="5" maxlength="1000" required></textarea>
-              <small class="help-contador"><span id="ajuda-contador">0</span>/1000</small>
+              <textarea id="ajuda-mensagem" name="mensagem" rows="5" maxlength="1000" required placeholder="Conte sua dúvida com o máximo de detalhes: qual projeto, o que aconteceu e o que você precisa."></textarea>
+              <small class="help-contador"><span id="ajuda-contador">0</span>/1000 caracteres</small>
             </p>
             <p class="help-erro" id="ajuda-erro" role="alert"></p>
+            <p class="help-nota">A mensagem abre pronta no WhatsApp ou no seu e-mail. A equipe responde em horário comercial.</p>
             <div class="help-acoes">
               <button type="submit" class="btn btn-primary" data-canal="whatsapp">Enviar pelo WhatsApp</button>
               <button type="submit" class="btn btn-secondary help-btn-email" data-canal="email">Enviar por e-mail</button>

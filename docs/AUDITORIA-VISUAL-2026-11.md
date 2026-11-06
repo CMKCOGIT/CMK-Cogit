@@ -41,3 +41,5 @@ Branch `feat/atualizacao-estrutura-visual`. Varredura automatizada de 21 página
   robots.txt e manifesto do site anterior. Adicionado por página (tools/seo.py): Organization + WebSite + WebPage + trilha
   (BreadcrumbList) + serviços com preço (Service/Offer de js/data.js) + perguntas frequentes (FAQPage). Sitemap com as 18 páginas
   indexáveis e data atual; 404, obrigado e redirecionamentos com noindex; títulos e descrições longos encurtados.
+- **Domínio canônico:** a Vercel redireciona `cmkcogit.com.br` → `www.cmkcogit.com.br` (308). Canonical, og:url, sitemap, robots e
+  dados estruturados agora usam `https://www.cmkcogit.com.br` (antes apontavam para o endereço que redireciona).

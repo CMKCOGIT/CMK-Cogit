@@ -9,7 +9,7 @@ Uso: python3 tools/seo.py   (--check só confere se está atualizado)
 import datetime, html, json, pathlib, re, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-BASE = 'https://cmkcogit.com.br'
+BASE = 'https://www.cmkcogit.com.br'
 LASTMOD = '2026-11-06'
 
 DATA = json.loads(subprocess.check_output(['node', '-e', (

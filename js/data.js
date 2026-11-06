@@ -15,7 +15,7 @@ const siteConfig = {
   responseTimeText: 'Após recebermos sua solicitação, entraremos em contato pelo canal informado.',
 
   // Canonical domain
-  canonicalDomain: 'https://cmkcogit.com.br',
+  canonicalDomain: 'https://www.cmkcogit.com.br',
 
   // Company info for schema.org
   companyName: 'CMKCOGIT',

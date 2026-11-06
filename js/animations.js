@@ -20,7 +20,7 @@
 
   var REVEAL_SEL = [
     '.reveal', '.reveal-up', '.reveal-left', '.reveal-right', '.reveal-scale', '.reveal-fade', '[data-reveal]', '[data-r]', '[data-about-reveal]',
-    '.section-header', '.solution-hero .container > *', '.faq-item', '.cmk-catalog-item', '.footer-column', '.footer-brand'
+    '.section-header', '.solution-hero .container > *', '.faq-item'
   ].join(',');
   var GROUP_SEL = '[data-stagger], [class*="-grid"]:not(.hero-bg-grid):not(.brand-intro-grid), [class*="-list"]:not(.mobile-nav-list):not(.footer-links), .rows, .cmk-plan-grid';
 
@@ -72,7 +72,7 @@
   function addTrigger(t) { triggers.push(t); return t; }
 
   function revealTitles() {
-    document.querySelectorAll('main h1, main h2, .footer-tagline').forEach(function (h) {
+    document.querySelectorAll('main h1, main h2').forEach(function (h) {
       if (h.closest('dialog, .hero-interactive-container, [hidden], .faq-answer, .page-legal, .curtain > #cta-final')) return; // na home, a chamada final já entra pela cortina
       splitTitle(h);
       var words = h.querySelectorAll('.t-line > span');
@@ -85,9 +85,9 @@
       if (!below(h)) return;
       gsap.set(words, { yPercent: 110 });
       addTrigger(ScrollTrigger.create({
-        trigger: h, start: 'top 88%', end: 'bottom 8%',
-        onEnter: function () { gsap.to(words, { yPercent: 0, duration: 0.9, stagger: 0.03, ease: EASE, overwrite: true }); },
-        onEnterBack: function () { gsap.fromTo(words, { yPercent: -110 }, { yPercent: 0, duration: 0.9, stagger: 0.03, ease: EASE, overwrite: true }); },
+        trigger: h, start: 'top 97%', end: 'bottom 2%',
+        onEnter: function () { gsap.to(words, { yPercent: 0, duration: 0.7, stagger: 0.025, ease: EASE, overwrite: true }); },
+        onEnterBack: function () { gsap.fromTo(words, { yPercent: -110 }, { yPercent: 0, duration: 0.7, stagger: 0.025, ease: EASE, overwrite: true }); },
         onLeave: function () { gsap.set(words, { yPercent: -110 }); },
         onLeaveBack: function () { gsap.set(words, { yPercent: 110 }); }
       }));
@@ -100,7 +100,7 @@
     var st = opts.stagger || 0, dl = opts.delay || 0;
     gsap.set(targets, { autoAlpha: 0, y: d });
     addTrigger(ScrollTrigger.create({
-      trigger: trigger, start: opts.start || 'top 88%', end: 'bottom 6%',
+      trigger: trigger, start: opts.start || 'top 97%', end: 'bottom 2%',
       onEnter: function () { gsap.to(targets, { autoAlpha: 1, y: 0, duration: 0.7, delay: dl, stagger: st, ease: EASE, overwrite: true }); },
       onEnterBack: function () { gsap.fromTo(targets, { autoAlpha: 0, y: -d }, { autoAlpha: 1, y: 0, duration: 0.7, delay: dl, stagger: st, ease: EASE, overwrite: true }); },
       onLeave: function () { gsap.set(targets, { autoAlpha: 0, y: -d }); },
@@ -111,7 +111,7 @@
   var tracked = [];
   function revealBlocks() {
     var seen = new Set(), items = [];
-    var skip = function (el) { return el.closest('header, .mobile-menu, dialog, .hero-interactive-container, .demo-dx, .nav, .pj-prev, .hw-stick, .curtain > #cta-final') || el.matches('h1, h2'); };
+    var skip = function (el) { return el.closest('header, footer, .footer, .mobile-menu, dialog, .hero-interactive-container, .demo-dx, .nav, .pj-prev, .hw-stick, .curtain > #cta-final') || el.matches('h1, h2'); };
     document.querySelectorAll(GROUP_SEL).forEach(function (g) {
       if (skip(g) || g.children.length < 2 || g.children.length > 24) return;
       Array.prototype.forEach.call(g.children, function (k) {
@@ -127,9 +127,9 @@
     var d = window.innerWidth < 768 ? 16 : 24;
     tracked = items;
     gsap.set(items, { autoAlpha: 0, y: d });
-    var tw = function (b, from) { return gsap.fromTo(b, { autoAlpha: 0, y: from }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.07, ease: EASE, overwrite: true }); };
+    var tw = function (b, from) { return gsap.fromTo(b, { autoAlpha: 0, y: from }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.05, ease: EASE, overwrite: true }); };
     ScrollTrigger.batch(items, {
-      start: 'top 92%', end: 'bottom 4%', interval: 0.08, batchMax: 6,
+      start: 'top 99%', end: 'bottom 1%', interval: 0.04, batchMax: 8,
       onEnter: function (b) { tw(b, d); },
       onEnterBack: function (b) { tw(b, -d); },
       onLeave: function (b) { gsap.set(b, { autoAlpha: 0, y: -d, overwrite: true }); },
@@ -239,10 +239,23 @@
   }
   function failsafe() {
     var t = null;
-    window.addEventListener('scroll', function () { clearTimeout(t); t = setTimeout(sweep, 700); }, { passive: true });
-    setTimeout(sweep, 2000);
-    // fontes mudam a altura dos títulos: recalcula só se a pessoa ainda não começou a rolar
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (window.scrollY < 40) ScrollTrigger.refresh(); });
+    var last = 0;
+    window.addEventListener('scroll', function () {
+      var now = Date.now();
+      if (now - last > 120) { last = now; sweep(); }
+      clearTimeout(t); t = setTimeout(sweep, 150);
+    }, { passive: true });
+    setTimeout(sweep, 600);
+    // imagens, fontes e conteúdo montado por script mudam a altura da página depois do carregamento:
+    // sem recalcular, os gatilhos ficam deslocados e o conteúdo demora a aparecer
+    var rt = null, lastH = document.documentElement.scrollHeight;
+    var recalc = function () { clearTimeout(rt); rt = setTimeout(function () { ScrollTrigger.refresh(); sweep(); }, 180); };
+    window.addEventListener('load', recalc);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(recalc);
+    if (window.ResizeObserver) new ResizeObserver(function () {
+      var h = document.documentElement.scrollHeight;
+      if (Math.abs(h - lastH) > 40) { lastH = h; recalc(); }
+    }).observe(document.body);
   }
 
   function initAnimations() {

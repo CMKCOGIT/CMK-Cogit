@@ -115,7 +115,7 @@ const problemFlowsData = [
     recommendationTitle: 'Automação + Integração',
     recommendationSubtitle: 'Rotinas Inteligentes & Conexão de Ferramentas',
     recommendationText: 'Reduzir tempo em tarefas manuais, eliminar retrabalho e conectar suas ferramentas atuais com estabilidade.',
-    estimateText: 'A partir de R$ 990',
+    estimateText: 'A partir de R$ 890',
     preselect: ['automacao']
   },
   {
@@ -179,29 +179,35 @@ const problemFlowsData = [
 
 // ── Solutions Groups (Hub de Soluções) ──
 const solutionsGroupsData = [
+  // Mesmas frentes e nomes da página Soluções (solucoes/index.html). "items" é o que aparece na lista;
+  // "services" (ids de servicesData) define o menor "a partir de" da frente.
   {
     id: 'atrair-converter',
     title: 'Atrair e converter',
-    description: 'Para empresas que precisam melhorar presença, posicionamento e geração de oportunidades.',
+    description: 'Para comunicar valor, gerar confiança e transformar visitas em oportunidades.',
+    items: ['Landing Page', 'Portfólio digital', 'Site institucional', 'Modelo pronto ou sob medida'],
     services: ['modelos-prontos', 'modelos-sob-medida', 'sites-institucionais', 'landing-pages']
   },
   {
     id: 'ganhar-eficiencia',
     title: 'Ganhar eficiência',
-    description: 'Para reduzir tarefas manuais, conectar ferramentas e melhorar processos.',
-    services: ['automacao', 'outras-solucoes']
+    description: 'Para eliminar tarefas manuais, conectar ferramentas e enxergar a operação com clareza.',
+    items: ['Automação de processos', 'Integrações de sistemas e pagamentos'],
+    services: ['automacao', 'integracoes']
   },
   {
     id: 'organizar-operacao',
-    title: 'Organizar a operação',
-    description: 'Centralize processos e estruture informações.',
+    title: 'Organizar e escalar',
+    description: 'Para centralizar regras, dados e rotinas em uma tecnologia criada para a sua operação.',
+    items: ['Sistema de gestão', 'Plataforma web ou portal'],
     services: ['sistemas-personalizados', 'plataformas']
   },
   {
     id: 'criar-novo',
-    title: 'Criar algo novo',
-    description: 'Transforme ideias em negócios e produtos digitais.',
-    services: ['mvp', 'saas']
+    title: 'Criar e validar',
+    description: 'Para transformar uma ideia em produto digital real, testável e preparado para evoluir.',
+    items: ['MVP', 'Produto digital completo (SaaS)'],
+    services: ['mvp']
   }
 ];
 
@@ -217,14 +223,14 @@ const servicesData = [
   { id:'plataformas', title:'Plataforma Web Personalizada', description:'Ambiente on-line para clientes, parceiros ou membros: login, perfis, permissões e área restrita (portais, áreas de membros, cursos).', icon:'platforms', slug:'plataformas-e-outras-solucoes', tag:'PLATAFORMAS', basePrice:4990, priceType:'startingAt' },
   { id:'sistemas-personalizados', title:'Sistemas de Gestão', description:'Software interno para a sua equipe: cadastros, pedidos, estoque, agenda, financeiro, aprovações e relatórios.', icon:'systems', slug:'sistemas-personalizados', tag:'SISTEMAS', basePrice:2990, priceType:'startingAt' },
   { id:'mvp', title:'MVP e Produto Digital', description:'MVP: primeira versão funcional para testar a ideia com usuários reais. Produto digital: versão completa com assinaturas e painel de gestão.', icon:'mvp', slug:'saas-e-produtos-digitais', tag:'PRODUTO DIGITAL', basePrice:3990, priceType:'startingAt' },
-  { id:'automacao', title:'Automação de Processos Administrativos', description:'Automação de tarefas, atendimentos, leads, vendas, notificações e processos internos. Não inclui um site.', icon:'automation', slug:'automacoes-e-integracoes', tag:'AUTOMAÇÃO', basePrice:990, priceType:'startingAt' },
+  { id:'automacao', title:'Automação de Processos Administrativos', description:'Automação de tarefas, atendimentos, leads, vendas, notificações e processos internos. Não inclui um site.', icon:'automation', slug:'automacoes-e-integracoes', tag:'AUTOMAÇÃO', basePrice:890, priceType:'startingAt' },
   { id:'integracoes', title:'Integrações de Sistemas e Pagamentos', description:'Conexão entre APIs, meios de pagamento, WhatsApp e outros sistemas.', icon:'automation', slug:'automacoes-e-integracoes', tag:'INTEGRAÇÕES', basePrice:990, priceType:'startingAt' }
 ];
 
 // ── Starting Options Data (Valores Base) ──
 const startingOptionsData = {
   presenca: { basePrice: 700, priceType: 'startingAt' },
-  operacao: { basePrice: 990, priceType: 'startingAt' },
+  operacao: { basePrice: 890, priceType: 'startingAt' },
   produto:  { basePrice: 3990, priceType: 'startingAt' }
 };
 
@@ -325,6 +331,18 @@ const presenceModels = {
 };
 
 
+// Combinações (pacotes) da página Soluções: desconto aplicado quando todos os serviços estão na seleção
+// (no Monte sua solução e no texto da página, gerado por tools/precos-solucoes.py).
+// Os de presença valem com o modelo pronto. Valor final arredondado para baixo, de 10 em 10.
+const serviceBundles = [
+  { id: 'presenca-essencial', name: 'Presença Essencial', services: ['identidade-essencial', 'site-institucional'], model: 'modelos-prontos', discount: 10,
+    description: 'Identidade visual essencial + site institucional com modelo pronto.' },
+  { id: 'conversao', name: 'Conversão', services: ['identidade-essencial', 'landing-page', 'automacao'], model: 'modelos-prontos', discount: 10,
+    description: 'Identidade visual essencial + landing page com modelo pronto + automação para tratar os contatos.' },
+  { id: 'operacao-conectada', name: 'Operação Conectada', services: ['sistema', 'integracao'], discount: 10,
+    description: 'Sistema de gestão + integrações de sistemas e pagamentos.' }
+];
+
 const configuratorData = {
   services: [
     {id:'diagnostico',name:'Diagnóstico Inicial',icon:'consulting',description:'Reunião para entender negócio, problema e objetivo.',priceType:'fixed',price:0},
@@ -336,13 +354,13 @@ const configuratorData = {
     {id:'plataforma',name:'Plataforma Web Personalizada',icon:'platforms',description:'Ambiente on-line para clientes, parceiros ou membros, com login, perfis e área restrita.',priceType:'from',price:4990,allowedAddons:['automacao-extra','integracao-externa']},
     {id:'sistema',name:'Sistemas de Gestão',icon:'systems',description:'Software interno para a equipe: cadastros, pedidos, estoque, agenda, financeiro e relatórios.',priceType:'from',price:2990,allowedAddons:['automacao-extra','integracao-externa']},
     {id:'mvp',name:'MVP e Produto Digital',icon:'mvp',description:'Primeira versão funcional para testar a ideia com usuários reais.',priceType:'from',price:3990,allowedAddons:['automacao-extra','integracao-externa']},
-    {id:'automacao',name:'Automação de Processos Administrativos',icon:'automation',description:'Tarefas, atendimento, leads, vendas, notificações e rotinas internas. Sem site incluído.',priceType:'from',price:990,allowedAddons:['integracao-externa']},
+    {id:'automacao',name:'Automação de Processos Administrativos',icon:'automation',description:'Tarefas, atendimento, leads, vendas, notificações e rotinas internas. Sem site incluído.',priceType:'from',price:890,allowedAddons:['integracao-externa']},
     {id:'integracao',name:'Integrações de Sistemas e Pagamentos',icon:'automation',description:'APIs, meios de pagamento, WhatsApp e conexão entre sistemas.',priceType:'from',price:990},
     {id:'manutencao',name:'Suporte Técnico Essencial',icon:'systems',description:'Sob demanda, sem mensalidade: você chama quando precisar de uma correção ou ajuste. Valor por solicitação.',priceType:'from',price:150,billing:'demand'},
     {id:'suporte',name:'Suporte Técnico Contínuo',icon:'systems',description:'Mensalidade fixa: manutenção, correções, pequenos ajustes e acompanhamento contínuo após o 1º mês gratuito.',priceType:'fixed',price:150,billing:'monthly'},
   ],
   addons: [
-    {id:'automacao-extra',name:'Automação de Processos Administrativos',priceType:'from',price:990},
+    {id:'automacao-extra',name:'Automação de Processos Administrativos',priceType:'from',price:890},
     {id:'integracao-externa',name:'Integrações de Sistemas e Pagamentos',priceType:'from',price:990}
   ],
   complexCombinations: []

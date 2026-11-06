@@ -59,9 +59,9 @@
     const servicos = grupo.services.map((id) => porId.get(id)).filter(Boolean);
     const lista = card.querySelector('[data-servicos]');
     lista.innerHTML = '';
-    servicos.forEach((s) => {
+    (grupo.items || servicos.map((s) => s.title)).forEach((nome) => {
       const li = document.createElement('li');
-      li.textContent = s.title;
+      li.textContent = nome;
       lista.appendChild(li);
     });
     const minimo = Math.min(...servicos.map((s) => Number(s.basePrice)).filter((v) => v > 0));

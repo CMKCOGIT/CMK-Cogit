@@ -487,3 +487,32 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .process-step-content h3 { font-size: clamp(22px, 1.6vw + 14px, 30px) !important; line-height: 1.1 !important; margin: 6px 0 8px !important; }
 .process-step-keywords { font: 700 11px/1.4 var(--text) !important; letter-spacing: .12em !important; text-transform: uppercase; color: var(--navy) !important; margin: 0 0 10px !important; transform: none !important; padding: 0 !important; }
 .process-step-desc { font-size: 15px !important; line-height: 1.6 !important; }
+
+/* ── Bloco "Investimento" das páginas de solução (gerado por tools/precos-solucoes.py) ── */
+.price-set { display: grid; gap: 16px; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr)); align-items: stretch; }
+.price-set--1 { --n: 1; max-width: 760px; } .price-set--2 { --n: 2; } .price-set--3 { --n: 3; }
+.price-opt { display: flex; flex-direction: column; background: var(--white); border: 1px solid var(--line); border-radius: 2px; padding: clamp(22px, 2.4vw, 32px); }
+.price-opt h3 { font: 500 clamp(22px, 1.6vw, 28px)/1.1 var(--display) !important; color: var(--ink) !important; margin: 0 0 8px; letter-spacing: -.01em; }
+.price-opt > p { color: var(--muted); font-size: 15px; line-height: 1.55; margin: 0 0 14px; }
+.price-opt ul { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 6px; }
+.price-opt li { position: relative; padding-left: 16px; font-size: 14px; color: var(--ink); line-height: 1.45; }
+.price-opt li::before { content: ""; position: absolute; left: 0; top: .62em; width: 7px; height: 1.5px; background: var(--navy); }
+.price-rows { margin-top: auto; display: grid; }
+.price-row { display: grid; gap: 6px; padding: 16px 0; border-top: 1px solid var(--line); }
+.price-row-top { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.price-row-top span { font: 700 11px/1.2 var(--text); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.price-row-top strong { font: 500 clamp(20px, 1.5vw, 24px)/1 var(--display) !important; color: var(--ink) !important; }
+.price-row small { color: var(--muted); font-size: 13px; }
+.price-row .btn { justify-self: start; margin-top: 6px; }
+.price-extras { margin: 18px 0 0; padding: 14px 16px; border: 1px dashed var(--line-s); color: var(--ink); font-size: 14px; line-height: 1.5; max-width: 760px; }
+.price-foot { margin: 14px 0 0; color: var(--muted); font-size: 13px; }
+@media (max-width: 1023.98px) { .price-set--3 { --n: 1; } }
+@media (max-width: 767.98px) { .price-set--2 { --n: 1; } }
+.si-offer-dual { display: grid; gap: 2px; text-align: right; white-space: nowrap; }
+.si-offer-dual small { font: 400 12px/1 var(--text); color: var(--muted); margin-left: 4px; }
+.combo-grid article { display: flex; flex-direction: column; gap: 10px; }
+.combo-tag { align-self: flex-start; font: 700 11px/1 var(--text); letter-spacing: .12em; text-transform: uppercase; color: var(--navy); background: var(--navy-soft); padding: 6px 8px; }
+.combo-price { display: grid; gap: 4px; margin-top: auto; }
+.combo-price s { color: var(--muted); font-size: 14px; }
+.combo-price strong { font: 500 24px/1 var(--display) !important; color: var(--ink) !important; }
+.combo-grid .btn { align-self: flex-start; }

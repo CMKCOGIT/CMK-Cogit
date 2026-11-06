@@ -31,3 +31,15 @@ Por decisão dos sócios, os planos Vitalício / Mensal (R$ 30) / Anual (R$ 324)
 home, diagnóstico, Monte sua solução, Ajuda e Termos de Uso. Vale só o valor do serviço (pagamento único, no domínio do cliente).
 `readyModelPlans`, `PLANO_MENSAL_PRONTO` e `js/planos.js` foram apagados. O envio para a plataforma mantém o campo `plano`
 sempre como `null`, para não quebrar o app. "Combinações para começar" (somas de serviços) continua em Soluções.
+
+## Coerência das páginas (revisão de novembro)
+- **Fonte única:** `js/data.js`. Os blocos "Investimento" das páginas de solução e as combinações de Soluções são gerados por
+  `python3 tools/precos-solucoes.py`; o `npm run check` falha se alguma página divergir dos dados.
+- **Automação de processos:** a partir de **R$ 890** (antes R$ 990, com faixas básica/intermediária/avançada). Integrações seguem a partir de R$ 990.
+- **Sem faixas "sob análise":** cada serviço tem um valor de partida. Sites: modelo pronto (valor fechado) e sob medida (a partir de);
+  automação e integrações somam-se ao projeto quando precisar.
+- **Frentes (home e Soluções) com os mesmos nomes:** Atrair e converter, Ganhar eficiência, Organizar e escalar, Criar e validar.
+  "Entender a solução" leva a uma página que mostra todos os itens da frente (sistemas mostra sistema de gestão **e** plataforma).
+- **Combinações com 10% de desconto**, aplicado também no Monte sua solução (resumo e envio para a plataforma):
+  Presença Essencial R$ 1.200 → R$ 1.080 · Conversão a partir de R$ 1.990 → R$ 1.790 · Operação Conectada a partir de R$ 3.980 → R$ 3.580.
+  > A plataforma (app) recebe o desconto nas notas da solicitação; o cálculo do app precisa receber a mesma regra.

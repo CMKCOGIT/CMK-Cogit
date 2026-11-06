@@ -96,6 +96,21 @@ const ConfiguratorApp = (() => {
     const customItems = state.selectedServices.filter(entry => entry.priceType === 'analysis' || entry.priceType === 'custom').length;
     return combination || customModel || customItems >= 2;
   }
+  // Combinação ativa: todos os serviços do pacote selecionados (presença com o formato do pacote).
+  // Fica com a de maior desconto quando mais de uma se aplica.
+  const BUNDLES = typeof serviceBundles !== 'undefined' ? serviceBundles : [];
+  function activeBundle() {
+    let best = null;
+    BUNDLES.forEach(bundle => {
+      const entries = bundle.services.map(getEntry);
+      if (entries.some(entry => !entry || entry.price == null || ['analysis', 'custom'].includes(entry.priceType))) return;
+      if (bundle.model && entries.some(entry => isPresence(entry.serviceId) && entry.modelId !== bundle.model)) return;
+      const base = entries.reduce((sum, entry) => sum + Number(entry.price), 0);
+      const value = base - Math.floor(base * (100 - bundle.discount) / 100 / 10) * 10;
+      if (!best || value > best.value) best = { bundle, base, value };
+    });
+    return best;
+  }
   function calculateTotal() {
     state.isComplex = checkComplexity();
     let value = 0;
@@ -110,6 +125,8 @@ const ConfiguratorApp = (() => {
       if (['analysis', 'custom'].includes(entry.priceType)) { hasCustom = true; return; }
       if (entry.price != null) { value += Number(entry.price) * (entry.quantity || 1); if (entry.priceType === 'from') hasFrom = true; }
     });
+    const bundle = activeBundle();
+    if (bundle) value -= bundle.value;
     if (hasCustom && value) return { type: 'partial', value, hasFrom };
     if (hasCustom) return { type: 'custom', value: null };
     if (value) return { type: hasFrom ? 'from' : 'fixed', value };
@@ -358,7 +375,7 @@ const ConfiguratorApp = (() => {
   }
   function renderSummary() {
     const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
-    return '<section class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Todo projeto inclui 1 mês de suporte gratuito. O suporte escolhido começa depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></section>';
+    return '<section class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (activeBundle() ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Combinação</span><div class="cfg-summary-lines"><div><span><strong>' + esc(activeBundle().bundle.name) + '</strong><small>' + activeBundle().bundle.discount + '% de desconto no pacote</small></span><em>− ' + money(activeBundle().value) + '</em></div></div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Todo projeto inclui 1 mês de suporte gratuito. O suporte escolhido começa depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></section>';
   }
   function configurationComplete() {
     return state.selectedServices.every(entry => {
@@ -502,6 +519,8 @@ const ConfiguratorApp = (() => {
     const structures = state.selectedServices.filter(entry => entry.modelId === 'sob-medida' && customStructures[entry.serviceId])
       .map(entry => { const c = customStructures[entry.serviceId]; return `Estrutura sob medida (${c.suggestion}): ${c.sections.join(' > ')}${c.components.length ? `\nComponentes: ${c.components.join(', ')}` : ''}`; });
     const consult = state.selectedServices.filter(entry => entry.consultoria).map(entry => (getService(entry.serviceId) || {}).name || entry.serviceId);
+    const combo = activeBundle();
+    if (combo) structures.unshift(`Combinação ${combo.bundle.name}: ${combo.bundle.discount}% de desconto no pacote (− ${money(combo.value)} sobre ${money(combo.base)}).`);
     if (consult.length) structures.unshift(`Consultoria e planejamento digital solicitada para: ${consult.join(', ')}. Sem custo se o projeto for fechado com a COGIT; ${money(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.`);
     return {
       origem: 'configurador',

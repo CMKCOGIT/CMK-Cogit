@@ -31,7 +31,7 @@ CATS = [
       ('Produto digital completo (SaaS)', 'A partir de R$ 4.990', 'Versão completa e escalável, pronta para vender por assinatura.', ['Assinaturas e cobrança recorrente', 'Painel de gestão e usuários', 'Estrutura para crescer'], M + 'mvp')]) ]),
   ('automacoes', 'Automações e integrações', 'Menos tarefa manual e ferramentas conversando entre si.', [
     (None, [
-      ('Automação de processos', 'A partir de R$ 990', 'Rotinas que rodam sozinhas: atendimento, leads, vendas, notificações e processos internos. Serviço independente, sem site.', ['Mapeamento da rotina', 'Fluxos automáticos e alertas'], M + 'automacao'),
+      ('Automação de processos', 'A partir de R$ 890', 'Rotinas que rodam sozinhas: atendimento, leads, vendas, notificações e processos internos. Serviço independente, sem site.', ['Mapeamento da rotina', 'Fluxos automáticos e alertas'], M + 'automacao'),
       ('Integrações de sistemas e pagamentos', 'A partir de R$ 990', 'Conexão entre APIs, meios de pagamento, WhatsApp e os sistemas que você já usa.', ['APIs e webhooks', 'Pagamentos e WhatsApp'], M + 'integracao')]) ]),
   ('suporte', 'Suporte', 'Todo projeto inclui 1 mês de suporte gratuito. Depois, você escolhe como continuar.', [
     (None, [

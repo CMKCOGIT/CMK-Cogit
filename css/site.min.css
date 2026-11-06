@@ -2986,7 +2986,7 @@ width: 100%;
 padding: var(--space-6);
 text-align: center;
 background: linear-gradient(to top, var(--neutral) 50%, transparent);
-transition: all 800ms ease-out;
+transition: opacity 400ms ease-out, transform 400ms ease-out;
 }
 :where(.js) .visual-conceptual-phrase {
 opacity: 0;

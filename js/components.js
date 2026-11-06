@@ -139,7 +139,7 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
     {
-      id: 'automacao-svc', name: 'Automação', desc: 'Elimine tarefas repetitivas e conecte ferramentas.', priceLabel: 'A partir de R$ 990', challenge: 'automacao',
+      id: 'automacao-svc', name: 'Automação', desc: 'Elimine tarefas repetitivas e conecte ferramentas.', priceLabel: 'A partir de R$ 890', challenge: 'automacao',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><path d="M7 12h3M14 12h3M12 7v3M12 14v3"/></svg>'
     },
     {

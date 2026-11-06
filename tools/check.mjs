@@ -89,13 +89,16 @@ function configuratorTest() {
  return {e,app:vm.runInContext('ConfiguratorApp',e.context),handoff:vm.runInContext('CogitHandoff',e.context)};
 }
 check('Current prices, custom models and compatible extras total correctly',()=>{
- const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');assert.equal(app.calculateTotal().value,600);app.selectSolutionModel('sob-medida','landing-page');assert.equal(app.calculateTotal().value,700);app.toggleAddon('automacao-extra');assert.equal(app.calculateTotal().value,1690);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,500);
+ const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');assert.equal(app.calculateTotal().value,600);app.selectSolutionModel('sob-medida','landing-page');assert.equal(app.calculateTotal().value,700);app.toggleAddon('automacao-extra');assert.equal(app.calculateTotal().value,1590);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,500);
 });
 check('Monthly support is separate from the initial investment',()=>{
  const {app}=configuratorTest();app.toggleService('site-institucional');app.selectSolutionModel('modelos-prontos','site-institucional');app.toggleService('manutencao');assert.equal(app.calculateTotal().value,700);app.toggleService('suporte');assert.equal(app.state.selectedServices.filter(x=>x.billing==='monthly'||x.billing==='demand').length,1);assert.equal(app.calculateTotal().value,700);
 });
 check('The listed combined plan uses the sum of its services',()=>{
- const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,2090);assert.equal(app.calculateTotal().type,'from');
+ const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,1790);assert.equal(app.calculateTotal().type,'from');assert.match(app.buildHandoff().notas,/Combinação Conversão: 10% de desconto/);
+});
+check('Price blocks and combinations in the pages match js/data.js',()=>{
+ const r=spawnSync('python3',['tools/precos-solucoes.py','--check'],{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);
 });
 check('Optional consultancy is free with COGIT and noted for the platform',()=>{
  const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.state.selectedServices[0].consultoria=true;assert.equal(app.calculateTotal().value,600);assert.match(app.buildHandoff().notas,/Consultoria e planejamento digital/);assert.match(app.buildHandoff().notas,/R\$ 350/);

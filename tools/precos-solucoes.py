@@ -105,7 +105,27 @@ def combos():
     return '\n'.join('      ' + l for l in out)
 
 
-EXTRA_BLOCKS = {'solucoes/index.html': ('combos', combos)}
+def combos_home():
+    items = []
+    for bd in DATA['b']:
+        base = sum(SVC[i]['price'] for i in bd['services'])
+        frm = any(SVC[i]['priceType'] == 'from' and not SVC[i].get('isPresencaDigital') for i in bd['services'])
+        final = (base * (100 - bd['discount']) // 100) // 10 * 10
+        pre = 'a partir de ' if frm else ''
+        href = 'monte-sua-solucao.html?services=' + ','.join(bd['services']) + ('&model=' + bd['model'] if bd.get('model') else '')
+        items.append(f'<a class="hc-item" href="{e(href)}"><b>{e(bd["name"])}</b><span>{e(bd["description"])}</span>'
+                     f'<em><s>{brl(base)}</s> {pre}{brl(final)}</em></a>')
+    pct = max(bd['discount'] for bd in DATA['b'])
+    return '\n'.join('        ' + l for l in [
+        '<div class="hc" aria-labelledby="hc-titulo">',
+        f'  <div class="hc-head"><span class="hc-tag">{pct}% de desconto</span><h3 id="hc-titulo">Combinações para começar com tudo junto.</h3>'
+        '<p>Serviços que funcionam melhor juntos, por um valor menor que a soma. O desconto já aparece no Monte sua solução.</p>'
+        '<a class="hx-link" href="solucoes/index.html#planos-combinados">Ver todas as combinações ↗</a></div>',
+        '  <div class="hc-list">' + ''.join(items) + '</div>',
+        '</div>'])
+
+
+EXTRA_BLOCKS = {'solucoes/index.html': ('combos', combos), 'index.html': ('combos-home', combos_home)}
 
 check = '--check' in sys.argv
 bad = 0

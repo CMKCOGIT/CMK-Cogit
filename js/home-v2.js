@@ -136,8 +136,8 @@
     P('landing-page', 'Landing Page', 'Transforme campanhas em contatos e vendas.'),
     P('portfolio', 'Portfólio', 'Mostre trabalhos, serviços e resultados.'),
     O('automacao-svc', 'Automação', 'Elimine tarefas repetitivas e conecte ferramentas.', 890, ['Automatizar processos internos', 'Reduzir tarefas manuais', 'Integrar ferramentas existentes', 'Criar fluxos inteligentes']),
-    O('sistema-svc', 'Sistema Web', 'Organize sua operação em um software próprio.', 2990, ['Criar um sistema personalizado', 'Melhorar minha operação', 'Centralizar informações', 'Digitalizar processos']),
-    O('saas-svc', 'Produto Digital', 'Crie um produto digital por assinatura.', 3990, ['Criar uma plataforma escalável', 'Transformar minha ideia em produto', 'Criar um sistema por assinatura', 'Validar modelo de negócio']),
+    O('sistema-svc', 'Sistema de gestão', 'Organize sua operação em um software próprio.', 2990, ['Criar um sistema personalizado', 'Melhorar minha operação', 'Centralizar informações', 'Digitalizar processos']),
+    O('saas-svc', 'Produto digital (SaaS)', 'Crie um produto digital por assinatura.', 4990, ['Criar uma plataforma escalável', 'Transformar minha ideia em produto', 'Criar um sistema por assinatura', 'Validar modelo de negócio']),
     O('mvp-svc', 'MVP', 'Valide sua ideia com uma primeira versão funcional.', 3990, ['Tirar minha ideia do papel', 'Criar um MVP funcional', 'Validar meu conceito', 'Testar uma nova solução']),
     O('plataforma-svc', 'Plataforma', 'Conecte usuários, serviços e oportunidades.', 4990, ['Criar uma plataforma escalável', 'Transformar minha ideia em produto', 'Criar um sistema por assinatura', 'Validar modelo de negócio'])
   ];

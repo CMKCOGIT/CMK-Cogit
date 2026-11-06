@@ -516,3 +516,13 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .combo-price s { color: var(--muted); font-size: 14px; }
 .combo-price strong { font: 500 24px/1 var(--display) !important; color: var(--ink) !important; }
 .combo-grid .btn { align-self: flex-start; }
+
+/* Cards de Soluções: "O que pode incluir" legível e um único botão destacado */
+.si-solution-card .si-details { margin-top: 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 0; }
+.si-solution-card .si-details summary { font: 500 16px/1.2 var(--display) !important; padding: 16px 2px; min-height: 48px; letter-spacing: 0; }
+.si-solution-card .si-details summary::after { font-size: 22px; line-height: 1; }
+.si-solution-card .si-details p { font-size: 15px; line-height: 1.6; padding: 0 2px 16px; margin: 0; color: var(--muted); }
+.si-card-cta { width: 100%; justify-content: center; margin-top: 20px; min-height: 52px; font-size: 16px !important; }
+.si-solution-card { display: flex; flex-direction: column; }
+.si-solution-card .si-card-cta { margin-top: auto; }
+.si-solution-card .si-details + .si-card-cta { margin-top: 20px; }

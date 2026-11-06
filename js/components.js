@@ -143,11 +143,11 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><path d="M7 12h3M14 12h3M12 7v3M12 14v3"/></svg>'
     },
     {
-      id: 'sistema-svc', name: 'Sistema Web', desc: 'Organize sua operação em um software próprio.', priceLabel: 'A partir de R$ 2.990', challenge: 'sistema',
+      id: 'sistema-svc', name: 'Sistema de gestão', desc: 'Organize sua operação em um software próprio.', priceLabel: 'A partir de R$ 2.990', challenge: 'sistema',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M10 6h4M10 17h4M6 10v4M17 10v4"/></svg>'
     },
     {
-      id: 'saas-svc', name: 'Produto Digital', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 4.990', challenge: 'produto',
+      id: 'saas-svc', name: 'Produto digital (SaaS)', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 4.990', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
     },
     {
@@ -246,8 +246,8 @@ function renderHeroInteractive() {
     'automacao-svc:integrar-ferramentas': { solution: 'Integrações via API e Webhooks', desc: 'Conectar ERPs, gateways de pagamento e canais de comunicação em um fluxo único.' },
     'automacao-svc:fluxos-inteligentes': { solution: 'Automações Inteligentes com Notificações', desc: 'Alertas automáticos, disparo de mensagens e relatórios em tempo real para sua equipe.' },
 
-    // Sistema Web
-    'sistema-svc:sistema-personalizado': { solution: 'Sistema Web Sob Medida', desc: 'Software exclusivo desenvolvido para atender exatamente às regras e fluxos do seu negócio.' },
+    // Sistema de gestão
+    'sistema-svc:sistema-personalizado': { solution: 'Sistema de gestão sob medida', desc: 'Software exclusivo desenvolvido para atender exatamente às regras e fluxos do seu negócio.' },
     'sistema-svc:melhorar-operacao': { solution: 'Plataforma de Gestão Operacional', desc: 'Organizar fluxos de trabalho, controle de demandas e histórico de atividades em um ambiente seguro.' },
     'sistema-svc:centralizar-informacoes': { solution: 'Painel Administrativo Centralizado', desc: 'Centralizar dados, dashboards e controles antes dispersos em múltiplos locais.' },
     'sistema-svc:digitalizar-processos': { solution: 'Aplicação Web de Digitalização', desc: 'Substituir planilhas e processos em papel por uma aplicação robusta com permissões e auditoria.' },

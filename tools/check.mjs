@@ -97,6 +97,14 @@ check('Monthly support is separate from the initial investment',()=>{
 check('The listed combined plan uses the sum of its services',()=>{
  const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,1790);assert.equal(app.calculateTotal().type,'from');assert.match(app.buildHandoff().notas,/Combinação Conversão: 10% de desconto/);
 });
+check('Every link to Monte sua solução uses services and formats that exist in the catalog',()=>{
+ const c={};vm.createContext(c);vm.runInContext(read('js/data.js')+';this.ids=configuratorData.services.map(s=>s.id);this.flows=problemFlowsData',c);
+ const walk=d=>fs.readdirSync(path.join(root,d),{withFileTypes:true}).flatMap(e=>['templates','node_modules','.git','assets','tools','docs'].includes(e.name)?[]:e.isDirectory()?walk(path.join(d,e.name)):/\.(html|js)$/.test(e.name)&&!/\.min\./.test(e.name)?[path.join(d,e.name)]:[]);
+ const bad=[];
+ walk('.').forEach(f=>{(read(f).replace(/&amp;/g,'&').match(/monte-sua-solucao\.html\?[^"'\s<>`$]+/g)||[]).forEach(l=>{const q=new URLSearchParams(l.split('?')[1]);(q.get('services')||'').split(',').filter(Boolean).forEach(id=>{if(!c.ids.includes(id))bad.push(f+': '+id)});const m=q.get('model');if(m&&!['modelos-prontos','sob-medida'].includes(m))bad.push(f+': model '+m);});});
+ c.flows.forEach(fl=>[fl].concat(fl.subQuestions||[]).forEach(q=>(q.preselect||[]).forEach(id=>{if(!c.ids.includes(id))bad.push('problemFlowsData '+q.id+': '+id)})));
+ assert.deepEqual(bad,[]);
+});
 check('Price blocks and combinations in the pages match js/data.js',()=>{
  const r=spawnSync('python3',['tools/precos-solucoes.py','--check'],{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);
 });

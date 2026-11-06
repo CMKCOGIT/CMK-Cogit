@@ -125,7 +125,7 @@ const problemFlowsData = [
     icon: 'systems',
     subQuestions: [
       { id: 'gestao-interna', title: 'Controle de processos internos e tarefas', description: 'Esteiras de trabalho e permissões da equipe.', preselect: ['sistema'] },
-      { id: 'portal-clientes', title: 'Área restrita para clientes ou parceiros', description: 'Login seguro, documentos e chamados.', preselect: ['sistema', 'painel-cliente'] },
+      { id: 'portal-clientes', title: 'Área restrita para clientes ou parceiros', description: 'Login seguro, documentos e chamados.', preselect: ['plataforma'] },
       { id: 'substituir-planilhas', title: 'Planilhas que já não suportam mais o volume', description: 'Muitos erros manuais e lentidão na rotina.', preselect: ['sistema'] },
       { id: 'painel-indicadores', title: 'Dashboard de indicadores e relatórios', description: 'Visibilidade gerencial consolidada em tempo real.', preselect: ['sistema'] },
       { id: 'outro-sistema', title: 'Outro software sob medida para a operação', description: 'Regras de negócio específicas da empresa.', preselect: ['sistema'] }

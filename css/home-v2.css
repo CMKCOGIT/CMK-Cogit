@@ -379,3 +379,18 @@
 .hc-item em { grid-column: 2; grid-row: 1 / 3; align-self: center; font: 500 18px/1.2 var(--display); font-style: normal; white-space: nowrap; text-align: right; }
 .hc-item em s { display: block; font: 400 13px/1.2 var(--text); color: var(--navy-muted); }
 @media (max-width: 860px) { .hc { grid-template-columns: 1fr; } .hc-item { grid-template-columns: 1fr; } .hc-item em { grid-column: 1; grid-row: auto; text-align: left; margin-top: 6px; } }
+/* celular: a etapa final da demonstração (com o botão) cabe inteira */
+@media (max-width: 760px) { .home-v2 .demo-dx { height: 476px !important; } }
+/* celular: opções em duas colunas compactas, etiquetas e texto menores; tudo cabe sem cortar */
+@media (max-width: 600px) {
+  .home-v2 .demo-dx { height: 500px !important; }
+  .hx .dd-opts { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 6px !important; }
+  .hx .dd-opt { padding: 9px 10px !important; font-size: 13px !important; }
+  .hx .dd-opt small { font-size: 12px; }
+  .hx .dd-opt:nth-child(n+4) { display: grid !important; }
+  .hx .dd-chips { gap: 6px; }
+  .hx .dd-chip { padding: 5px 8px; font-size: 12px; }
+  .hx .dd-typed { min-height: 52px; padding: 8px 10px; font-size: 13px; }
+  .hx .dd-st { gap: 10px; }
+}
+@media (max-width: 340px) { .home-v2 .demo-dx { height: 540px !important; } }

@@ -20,3 +20,14 @@ Branch `feat/atualizacao-estrutura-visual`. Varredura automatizada de 21 página
 ## Observações (aceitas)
 - Links dentro de parágrafos e o checkbox do formulário ficam abaixo de 24 px de altura — permitido pela exceção de links em linha (WCAG 2.5.8).
 - Os pontos do carrossel têm 3 px visuais, mas a área clicável é de 27 px.
+
+## Rodada 2 — envio para a plataforma, links e celular
+- **Envio para a plataforma:** testados de ponta a ponta 52 caminhos do Monte sua solução (todo link do site com `services=` e
+  todo fluxo `?problem=`) e 14 caminhos do diagnóstico da home (cada solução e cada formato). Todos geram o pacote com ids do
+  catálogo, formato válido e estimativa. Sessões antigas (consultoria, evolução, plano mensal) são limpas sem erro.
+  Corrigidos ids inexistentes: `outras-solucoes`, `painel-cliente`, `saas`. `npm run check` agora barra link com id inválido.
+- **Links e botões:** nenhum link quebrado ou âncora inexistente; "Minha dúvida é outra" (Contato) leva ao formulário da Ajuda.
+- **Celular (320–1024 px):** sem rolagem lateral; textos com no mínimo 12 px; áreas de toque com 44 px (logo, Minha área,
+  voltar, expandir, atalhos, links de projeto, contatos); demonstração da home cabe inteira; rodapé em duas colunas
+  (cerca de 35% mais curto); rodapé do Monte sua solução não fica atrás da barra de estimativa; catálogo com preço abaixo do nome.
+- **Peso:** o script do configurador (45 KB) saiu das páginas que não o usam. Home: ~247 KB comprimidos, sem imagens.

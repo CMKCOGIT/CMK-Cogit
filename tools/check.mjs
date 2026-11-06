@@ -117,7 +117,7 @@ check('Optional consultancy is free with COGIT and noted for the platform',()=>{
 check('Platform handoff carries only IDs/choices, keeps the same ref for the same selection and opens the app',()=>{
  const {app,handoff}=configuratorTest();app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');app.toggleAddon('automacao-extra');
  const cfg=app.buildHandoff();assert.equal(cfg.origem,'configurador');assert.equal(cfg.servicos[0].id,'portfolio');assert.equal(cfg.servicos[0].modelo,'modelos-prontos');assert.equal(cfg.complementos[0].id,'automacao-extra');
- const url=new URL(handoff.link(cfg));assert.equal(url.origin+url.pathname,'https://app.cmkcogit.com.br/continuar.html');assert.equal(url.search,'');
+ const url=new URL(handoff.link(cfg));assert.equal(url.origin+url.pathname,'https://app.cmkcogit.com.br/continuar.html');assert.ok(url.search===''||/^\?volta=/.test(url.search),'only the return page may go in the query');
  const decode=link=>JSON.parse(Buffer.from(new URL(link).hash.replace('#cfg=',''),'base64url').toString('utf8'));
  const payload=decode(url.href);assert.equal(payload.v,1);assert.match(payload.ref,/^[A-Za-z0-9_-]{16,64}$/);assert.ok(!('email'in payload)&&!('whatsapp'in payload));
  assert.equal(decode(handoff.link(cfg)).ref,payload.ref,'same selection, same ref');

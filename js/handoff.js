@@ -62,8 +62,13 @@ window.CogitHandoff = (() => {
     };
   }
 
+  // ?volta= diz à plataforma para qual página do site o botão "Voltar para o site" leva
+  function volta() {
+    try { return /^https?:$/.test(window.location.protocol) ? '?volta=' + encodeURIComponent(window.location.href) : ''; } catch (_) { return ''; }
+  }
+
   function link(cfg) {
-    return APP_URL + '/continuar.html#cfg=' + base64url(JSON.stringify(montar(cfg)));
+    return APP_URL + '/continuar.html' + volta() + '#cfg=' + base64url(JSON.stringify(montar(cfg)));
   }
 
   function irParaPlataforma(cfg) {

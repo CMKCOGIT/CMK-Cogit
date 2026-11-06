@@ -179,3 +179,31 @@ function initHeader() {
     });
   });
 }
+
+/* Links para a plataforma (Minha área / Área do cliente): abrem na mesma aba e levam
+   ?volta=<página atual>, para o "Voltar para o site" do login devolver a pessoa onde ela estava. */
+(function initPortalLinks() {
+  const APP = /^https:\/\/app\.cmkcogit\.com\.br\/?$/;
+  const comVolta = a => {
+    const base = (a.dataset.appHref || (a.dataset.appHref = a.getAttribute('href'))).replace(/\/?$/, '/');
+    a.href = base + '?volta=' + encodeURIComponent(window.location.href);
+  };
+  const preparar = () => {
+    document.querySelectorAll('a[href]').forEach(a => {
+      if (!APP.test(a.dataset.appHref || a.getAttribute('href'))) return;
+      a.removeAttribute('target');
+      a.setAttribute('rel', 'noopener');
+      comVolta(a);
+    });
+  };
+  // atualiza na hora do clique (a página pode ter mudado de âncora depois do carregamento)
+  const noClique = event => {
+    const a = event.target.closest && event.target.closest('a[data-app-href]');
+    if (a) comVolta(a);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', preparar);
+  else preparar();
+  document.addEventListener('pointerdown', noClique, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') noClique(e); }, true);
+  window.addEventListener('hashchange', preparar);
+})();

@@ -46,30 +46,570 @@
   <link rel="stylesheet" href="../css/site.min.css">
   <link rel="stylesheet" href="../css/identity.min.css">
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-wait")</script>
-
-  <!-- Schema.org - Organization -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "CMKCOGIT",
-    "alternateName": "COGIT",
-    "url": "https://cmkcogit.com.br",
-    "logo": "https://cmkcogit.com.br/assets/images/logo-cogit.svg",
-    "email": "contato@cmkcogit.com.br",
-    "telephone": "+55-17-98156-8889",
-    "description": "Desenvolvimento de software e soluções digitais sob medida. Sites, sistemas, SaaS, automações e produtos digitais para empresas.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "São José do Rio Preto",
-      "addressRegion": "SP",
-      "addressCountry": "BR"
+  <script type="application/ld+json" data-seo>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "ProfessionalService"
+      ],
+      "@id": "https://cmkcogit.com.br/#org",
+      "name": "CMKCOGIT",
+      "alternateName": [
+        "COGIT",
+        "CMK COGIT",
+        "CMK Cogit"
+      ],
+      "url": "https://cmkcogit.com.br/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png",
+      "description": "Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.",
+      "slogan": "Pensamos antes de construir.",
+      "email": "contato@cmkcogit.com.br",
+      "telephone": "+55-17-98156-8889",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "São José do Rio Preto",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "priceRange": "R$ 500 - R$ 6.000+",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+55-17-98156-8889",
+          "email": "contato@cmkcogit.com.br",
+          "availableLanguage": [
+            "Portuguese"
+          ],
+          "areaServed": "BR"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/cmkcogit",
+        "https://www.linkedin.com/in/cmkcogit"
+      ]
     },
-    "sameAs": [
-      "https://www.instagram.com/cmkcogit",
-      "https://www.linkedin.com/in/cmkcogit"
-    ]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://cmkcogit.com.br/#website",
+      "url": "https://cmkcogit.com.br/",
+      "name": "CMKCOGIT",
+      "alternateName": "COGIT",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://cmkcogit.com.br/#org"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://cmkcogit.com.br/solucoes/#webpage",
+      "url": "https://cmkcogit.com.br/solucoes/",
+      "name": "Soluções & Investimentos em Tecnologia | CMKCOGIT",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://cmkcogit.com.br/#website"
+      },
+      "about": {
+        "@id": "https://cmkcogit.com.br/#org"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png"
+      },
+      "description": "Sites, Landing Pages, automações, sistemas, MVPs e SaaS com caminhos claros, valores iniciais e desenvolvimento sob medida pela COGIT.",
+      "breadcrumb": {
+        "@id": "https://cmkcogit.com.br/solucoes/#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://cmkcogit.com.br/solucoes/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Início",
+          "item": "https://cmkcogit.com.br/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Soluções & investimentos",
+          "item": "https://cmkcogit.com.br/solucoes/"
+        }
+      ]
+    },
+    {
+      "@type": "OfferCatalog",
+      "name": "Serviços e valores COGIT",
+      "url": "https://cmkcogit.com.br/solucoes/",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Landing Page",
+            "description": "Página para apresentar uma oferta e receber contatos.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": [
+              {
+                "@type": "Offer",
+                "priceCurrency": "BRL",
+                "price": 600,
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@id": "https://cmkcogit.com.br/#org"
+                },
+                "name": "Modelo pronto"
+              },
+              {
+                "@type": "Offer",
+                "priceCurrency": "BRL",
+                "price": 800,
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@id": "https://cmkcogit.com.br/#org"
+                },
+                "priceSpecification": {
+                  "@type": "PriceSpecification",
+                  "minPrice": 800,
+                  "priceCurrency": "BRL"
+                },
+                "name": "Sob medida"
+              }
+            ]
+          },
+          "priceCurrency": "BRL",
+          "price": 600
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Portfólio Digital",
+            "description": "Apresente trabalhos, projetos, serviços e casos.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": [
+              {
+                "@type": "Offer",
+                "priceCurrency": "BRL",
+                "price": 500,
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@id": "https://cmkcogit.com.br/#org"
+                },
+                "name": "Modelo pronto"
+              },
+              {
+                "@type": "Offer",
+                "priceCurrency": "BRL",
+                "price": 700,
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@id": "https://cmkcogit.com.br/#org"
+                },
+                "priceSpecification": {
+                  "@type": "PriceSpecification",
+                  "minPrice": 700,
+                  "priceCurrency": "BRL"
+                },
+                "name": "Sob medida"
+              }
+            ]
+          },
+          "priceCurrency": "BRL",
+          "price": 500
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Site Institucional",
+            "description": "Até 4 páginas no projeto inicial.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": [
+              {
+                "@type": "Offer",
+                "priceCurrency": "BRL",
+                "price": 700,
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@id": "https://cmkcogit.com.br/#org"
+                },
+                "name": "Modelo pronto"
+              },
+              {
+                "@type": "Offer",
+                "priceCurrency": "BRL",
+                "price": 900,
+                "availability": "https://schema.org/InStock",
+                "seller": {
+                  "@id": "https://cmkcogit.com.br/#org"
+                },
+                "priceSpecification": {
+                  "@type": "PriceSpecification",
+                  "minPrice": 900,
+                  "priceCurrency": "BRL"
+                },
+                "name": "Sob medida"
+              }
+            ]
+          },
+          "priceCurrency": "BRL",
+          "price": 700
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Identidade Visual Essencial",
+            "description": "Logo, paleta de cores, tipografia, versões principais e elementos básicos.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 500,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 500
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "E-commerce / Loja Virtual",
+            "description": "Produtos, categorias, carrinho, checkout, pagamentos e pedidos.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 6000,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 6000,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 6000
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Sistemas de Gestão",
+            "description": "Software interno para a equipe: cadastros, pedidos, estoque, agenda, financeiro e relatórios.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 2990,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 2990,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 2990
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Plataforma Web Personalizada",
+            "description": "Ambiente on-line para clientes, parceiros ou membros, com login, perfis e área restrita.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 4990,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 4990,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 4990
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "MVP e Produto Digital",
+            "description": "Primeira versão funcional para testar a ideia com usuários reais.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 3990,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 3990,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 3990
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Automação de Processos Administrativos",
+            "description": "Tarefas, atendimento, leads, vendas, notificações e rotinas internas. Sem site incluído.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 890,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 890,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 890
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Integrações de Sistemas e Pagamentos",
+            "description": "APIs, meios de pagamento, WhatsApp e conexão entre sistemas.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 990,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 990,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 990
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Suporte Técnico Essencial",
+            "description": "Sob demanda, sem mensalidade: você chama quando precisar de uma correção ou ajuste. Valor por solicitação.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 150,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "PriceSpecification",
+                "minPrice": 150,
+                "priceCurrency": "BRL"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 150
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Suporte Técnico Contínuo",
+            "description": "Mensalidade fixa: manutenção, correções, pequenos ajustes e acompanhamento contínuo após o 1º mês gratuito.",
+            "provider": {
+              "@id": "https://cmkcogit.com.br/#org"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Brasil"
+            },
+            "url": "https://cmkcogit.com.br/solucoes/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": 150,
+              "availability": "https://schema.org/InStock",
+              "seller": {
+                "@id": "https://cmkcogit.com.br/#org"
+              },
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": 150,
+                "priceCurrency": "BRL",
+                "unitText": "mês"
+              }
+            }
+          },
+          "priceCurrency": "BRL",
+          "price": 150
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://cmkcogit.com.br/solucoes/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "O valor “a partir de” pode mudar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Ele representa o escopo essencial. Integrações, páginas, perfis e regras adicionais são detalhados na proposta."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso começar com uma versão menor?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Priorizamos o que gera valor primeiro e planejamos a evolução em etapas."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Não sei qual solução escolher. E agora?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Conte o desafio no configurador ou fale com a equipe. A recomendação começa pelo problema, não pela tecnologia."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
 </head>
 <body>

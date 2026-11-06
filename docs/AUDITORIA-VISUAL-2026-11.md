@@ -31,3 +31,13 @@ Branch `feat/atualizacao-estrutura-visual`. Varredura automatizada de 21 página
   voltar, expandir, atalhos, links de projeto, contatos); demonstração da home cabe inteira; rodapé em duas colunas
   (cerca de 35% mais curto); rodapé do Monte sua solução não fica atrás da barra de estimativa; catálogo com preço abaixo do nome.
 - **Peso:** o script do configurador (45 KB) saiu das páginas que não o usam. Home: ~247 KB comprimidos, sem imagens.
+
+## Rodada 3 — cookies e SEO
+- **Cookies:** 10 cenários testados no navegador (primeira visita, aceitar, outras páginas, preferências pelo rodapé e pelo banner,
+  Esc, revogar com limpeza do `_ga`, rejeitar sem nenhuma requisição, armazenamento bloqueado). Melhoria: a escolha também fica
+  num cookie próprio, para ser lembrada quando o navegador bloqueia o localStorage. O ID do Google Analytics (`siteConfig.gaId`)
+  continua vazio, como no site anterior: a análise só passa a funcionar quando o ID GA4 for informado.
+- **SEO:** mantidos títulos, descrições, canonical, Open Graph, Twitter, `google-site-verification`, `googlec66dd12344b2a5f0.html`,
+  robots.txt e manifesto do site anterior. Adicionado por página (tools/seo.py): Organization + WebSite + WebPage + trilha
+  (BreadcrumbList) + serviços com preço (Service/Offer de js/data.js) + perguntas frequentes (FAQPage). Sitemap com as 18 páginas
+  indexáveis e data atual; 404, obrigado e redirecionamentos com noindex; títulos e descrições longos encurtados.

@@ -47,32 +47,163 @@
   <link rel="stylesheet" href="css/identity.min.css">
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-wait")</script>
   <link rel="stylesheet" href="css/home-v2.min.css">
-
-  <!-- Schema.org - Organization -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": ["Organization", "ProfessionalService"],
-    "name": "CMKCOGIT",
-    "image": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png",
-    "areaServed": "BR",
-    "alternateName": "COGIT",
-    "url": "https://cmkcogit.com.br",
-    "logo": "https://cmkcogit.com.br/assets/images/logo-cogit.svg",
-    "email": "contato@cmkcogit.com.br",
-    "telephone": "+55-17-98156-8889",
-    "description": "Desenvolvimento de software e soluções digitais sob medida. Sites, sistemas, SaaS, automações e produtos digitais para empresas.",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "São José do Rio Preto",
-      "addressRegion": "SP",
-      "addressCountry": "BR"
+  <script type="application/ld+json" data-seo>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "ProfessionalService"
+      ],
+      "@id": "https://cmkcogit.com.br/#org",
+      "name": "CMKCOGIT",
+      "alternateName": [
+        "COGIT",
+        "CMK COGIT",
+        "CMK Cogit"
+      ],
+      "url": "https://cmkcogit.com.br/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png",
+      "description": "Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.",
+      "slogan": "Pensamos antes de construir.",
+      "email": "contato@cmkcogit.com.br",
+      "telephone": "+55-17-98156-8889",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "São José do Rio Preto",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "priceRange": "R$ 500 - R$ 6.000+",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+55-17-98156-8889",
+          "email": "contato@cmkcogit.com.br",
+          "availableLanguage": [
+            "Portuguese"
+          ],
+          "areaServed": "BR"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/cmkcogit",
+        "https://www.linkedin.com/in/cmkcogit"
+      ]
     },
-    "sameAs": [
-      "https://www.instagram.com/cmkcogit",
-      "https://www.linkedin.com/in/cmkcogit"
-    ]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://cmkcogit.com.br/#website",
+      "url": "https://cmkcogit.com.br/",
+      "name": "CMKCOGIT",
+      "alternateName": "COGIT",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://cmkcogit.com.br/#org"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://cmkcogit.com.br/#webpage",
+      "url": "https://cmkcogit.com.br/",
+      "name": "Desenvolvimento de Software e Soluções Digitais | CMKCOGIT",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://cmkcogit.com.br/#website"
+      },
+      "about": {
+        "@id": "https://cmkcogit.com.br/#org"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png"
+      },
+      "description": "Tecnologia sob medida para o que sua empresa precisa resolver. Sites, sistemas, SaaS, automações e produtos digitais."
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://cmkcogit.com.br/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quanto custa desenvolver um projeto com a COGIT?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Algumas soluções possuem valores iniciais definidos. Projetos personalizados variam conforme escopo, funcionalidades, integrações e complexidade técnica."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Preciso saber qual tecnologia utilizar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não. Você pode começar explicando o problema, processo ou ideia. A COGIT ajuda a estruturar a solução e definir a tecnologia mais adequada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Vocês desenvolvem projetos personalizados?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Desenvolvemos sistemas, automações, plataformas, SaaS e outras soluções adaptadas às necessidades de cada projeto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso combinar diferentes serviços?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. É possível combinar, por exemplo, site, automação, integrações, dashboards e outras funcionalidades em uma mesma solução."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Existe suporte após a entrega?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Todos os projetos têm 1 mês de suporte gratuito após a entrega. Depois, você escolhe o Suporte Técnico Essencial (sob demanda, a partir de R$ 150 por solicitação) ou o Suporte Técnico Contínuo (R$ 150/mês fixo)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto tempo demora um projeto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O prazo depende da complexidade, escopo e tipo de solução. Projetos mais simples podem ser entregues em semanas, enquanto soluções mais complexas seguem um cronograma definido em conjunto."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Vocês atendem empresas de outras cidades?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Atendemos empresas de diferentes regiões. Todo o processo pode ser conduzido remotamente, desde o diagnóstico até a entrega e acompanhamento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como funciona o \"Monte sua solução\"?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O configurador permite selecionar serviços e funcionalidades para visualizar uma estimativa inicial de investimento. Os valores apresentados são estimativas e não representam proposta comercial definitiva."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
 </head>
 <body>

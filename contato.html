@@ -40,21 +40,168 @@
   <link rel="stylesheet" href="css/contact-page.css">
   <link rel="stylesheet" href="css/identity.min.css">
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-wait")</script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ContactPage",
-    "name": "Contato COGIT",
-    "url": "https://cmkcogit.com.br/contato.html",
-    "mainEntity": {
-      "@type": "Organization",
+  <script type="application/ld+json" data-seo>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "ProfessionalService"
+      ],
+      "@id": "https://cmkcogit.com.br/#org",
       "name": "CMKCOGIT",
-      "url": "https://cmkcogit.com.br",
+      "alternateName": [
+        "COGIT",
+        "CMK COGIT",
+        "CMK Cogit"
+      ],
+      "url": "https://cmkcogit.com.br/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png",
+      "description": "Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.",
+      "slogan": "Pensamos antes de construir.",
       "email": "contato@cmkcogit.com.br",
       "telephone": "+55-17-98156-8889",
-      "address": {"@type": "PostalAddress", "addressLocality": "São José do Rio Preto", "addressRegion": "SP", "addressCountry": "BR"}
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "São José do Rio Preto",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "priceRange": "R$ 500 - R$ 6.000+",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+55-17-98156-8889",
+          "email": "contato@cmkcogit.com.br",
+          "availableLanguage": [
+            "Portuguese"
+          ],
+          "areaServed": "BR"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/cmkcogit",
+        "https://www.linkedin.com/in/cmkcogit"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://cmkcogit.com.br/#website",
+      "url": "https://cmkcogit.com.br/",
+      "name": "CMKCOGIT",
+      "alternateName": "COGIT",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://cmkcogit.com.br/#org"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://cmkcogit.com.br/contato.html#webpage",
+      "url": "https://cmkcogit.com.br/contato.html",
+      "name": "Contato | Converse com a COGIT",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://cmkcogit.com.br/#website"
+      },
+      "about": {
+        "@id": "https://cmkcogit.com.br/#org"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png"
+      },
+      "description": "Converse com a COGIT sobre seu desafio, ideia ou projeto digital. Fale diretamente pelo WhatsApp, e-mail ou envie uma mensagem breve.",
+      "breadcrumb": {
+        "@id": "https://cmkcogit.com.br/contato.html#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://cmkcogit.com.br/contato.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Início",
+          "item": "https://cmkcogit.com.br/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Contato",
+          "item": "https://cmkcogit.com.br/contato.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://cmkcogit.com.br/contato.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Preciso saber exatamente qual solução quero?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não. Você pode chegar apenas com um problema, uma ideia ou um objetivo. A COGIT ajuda a entender o cenário e estruturar a solução adequada antes do desenvolvimento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qual é a diferença entre esta página e “Monte sua solução”?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aqui o foco é conversar diretamente e tirar dúvidas. No configurador, você combina serviços, objetivos e recursos para receber uma estimativa inicial mais estruturada."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "A COGIT atende pequenas empresas e profissionais autônomos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. A solução é dimensionada conforme o momento, a prioridade e a realidade de cada negócio — de uma presença digital inicial a plataformas e sistemas mais complexos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como funciona a primeira conversa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Começamos entendendo o problema, o contexto e o resultado esperado. Depois indicamos o próximo passo mais coerente, sem compromisso de contratação."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto custa e quanto tempo leva um projeto?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O investimento e o prazo dependem do escopo e da complexidade. Você pode consultar faixas iniciais em Soluções & investimentos ou montar uma estimativa no configurador."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "A COGIT também evolui projetos que já existem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. Podemos avaliar uma operação, site, automação, sistema ou produto digital existente e estruturar melhorias de experiência, desempenho e evolução técnica."
+          }
+        }
+      ]
     }
-  }
+  ]
+}
   </script>
 </head>
 

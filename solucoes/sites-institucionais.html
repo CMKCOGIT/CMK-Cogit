@@ -46,25 +46,160 @@
   <link rel="stylesheet" href="../css/site.min.css">
   <link rel="stylesheet" href="../css/identity.min.css">
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-wait")</script>
-
-  <!-- Schema.org - Organization -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    "name": "Sites Institucionais Profissionais",
-    "description": "Desenvolvimento de sites institucionais corporativos focados em autoridade, posicionamento de marca e captação de clientes.",
-    "brand": {
-      "@type": "Brand",
-      "name": "COGIT"
+  <script type="application/ld+json" data-seo>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "ProfessionalService"
+      ],
+      "@id": "https://cmkcogit.com.br/#org",
+      "name": "CMKCOGIT",
+      "alternateName": [
+        "COGIT",
+        "CMK COGIT",
+        "CMK Cogit"
+      ],
+      "url": "https://cmkcogit.com.br/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "image": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png",
+      "description": "Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.",
+      "slogan": "Pensamos antes de construir.",
+      "email": "contato@cmkcogit.com.br",
+      "telephone": "+55-17-98156-8889",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "São José do Rio Preto",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "priceRange": "R$ 500 - R$ 6.000+",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+55-17-98156-8889",
+          "email": "contato@cmkcogit.com.br",
+          "availableLanguage": [
+            "Portuguese"
+          ],
+          "areaServed": "BR"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/cmkcogit",
+        "https://www.linkedin.com/in/cmkcogit"
+      ]
     },
-    "offers": {
-      "@type": "AggregateOffer",
-      "priceCurrency": "BRL",
-      "lowPrice": "700",
-      "highPrice": "900"
+    {
+      "@type": "WebSite",
+      "@id": "https://cmkcogit.com.br/#website",
+      "url": "https://cmkcogit.com.br/",
+      "name": "CMKCOGIT",
+      "alternateName": "COGIT",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://cmkcogit.com.br/#org"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://cmkcogit.com.br/solucoes/sites-institucionais.html#webpage",
+      "url": "https://cmkcogit.com.br/solucoes/sites-institucionais.html",
+      "name": "Sites Institucionais Profissionais | CMKCOGIT",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://cmkcogit.com.br/#website"
+      },
+      "about": {
+        "@id": "https://cmkcogit.com.br/#org"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png"
+      },
+      "description": "Sites institucionais para empresas que precisam transmitir autoridade, valorizar seus serviços e gerar confiança perante o mercado.",
+      "breadcrumb": {
+        "@id": "https://cmkcogit.com.br/solucoes/sites-institucionais.html#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://cmkcogit.com.br/solucoes/sites-institucionais.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Início",
+          "item": "https://cmkcogit.com.br/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Soluções & investimentos",
+          "item": "https://cmkcogit.com.br/solucoes/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Sites institucionais",
+          "item": "https://cmkcogit.com.br/solucoes/sites-institucionais.html"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "name": "Site Institucional",
+      "description": "Até 4 páginas no projeto inicial.",
+      "provider": {
+        "@id": "https://cmkcogit.com.br/#org"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "url": "https://cmkcogit.com.br/solucoes/sites-institucionais.html",
+      "offers": [
+        {
+          "@type": "Offer",
+          "priceCurrency": "BRL",
+          "price": 700,
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@id": "https://cmkcogit.com.br/#org"
+          },
+          "name": "Modelo pronto"
+        },
+        {
+          "@type": "Offer",
+          "priceCurrency": "BRL",
+          "price": 900,
+          "availability": "https://schema.org/InStock",
+          "seller": {
+            "@id": "https://cmkcogit.com.br/#org"
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "minPrice": 900,
+            "priceCurrency": "BRL"
+          },
+          "name": "Sob medida"
+        }
+      ]
     }
-  }
+  ]
+}
   </script>
 </head>
 <body>

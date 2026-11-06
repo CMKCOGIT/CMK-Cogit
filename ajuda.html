@@ -38,27 +38,176 @@
   <link rel="preload" href="assets/fonts/satoshi-700.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="css/site.min.css">
   <link rel="stylesheet" href="css/identity.min.css">
-
-  <!-- Schema.org - BreadcrumbList -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Início",
-        "item": "https://cmkcogit.com.br"
+  <script type="application/ld+json" data-seo>
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "ProfessionalService"
+      ],
+      "@id": "https://cmkcogit.com.br/#org",
+      "name": "CMKCOGIT",
+      "alternateName": [
+        "COGIT",
+        "CMK COGIT",
+        "CMK Cogit"
+      ],
+      "url": "https://cmkcogit.com.br/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/icon-512.png",
+        "width": 512,
+        "height": 512
       },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": "Ajuda",
-        "item": "https://cmkcogit.com.br/ajuda.html"
+      "image": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png",
+      "description": "Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.",
+      "slogan": "Pensamos antes de construir.",
+      "email": "contato@cmkcogit.com.br",
+      "telephone": "+55-17-98156-8889",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "São José do Rio Preto",
+        "addressRegion": "SP",
+        "addressCountry": "BR"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "Brasil"
+      },
+      "priceRange": "R$ 500 - R$ 6.000+",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+55-17-98156-8889",
+          "email": "contato@cmkcogit.com.br",
+          "availableLanguage": [
+            "Portuguese"
+          ],
+          "areaServed": "BR"
+        }
+      ],
+      "sameAs": [
+        "https://www.instagram.com/cmkcogit",
+        "https://www.linkedin.com/in/cmkcogit"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://cmkcogit.com.br/#website",
+      "url": "https://cmkcogit.com.br/",
+      "name": "CMKCOGIT",
+      "alternateName": "COGIT",
+      "inLanguage": "pt-BR",
+      "publisher": {
+        "@id": "https://cmkcogit.com.br/#org"
       }
-    ]
-  }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://cmkcogit.com.br/ajuda.html#webpage",
+      "url": "https://cmkcogit.com.br/ajuda.html",
+      "name": "Ajuda e dúvidas frequentes | CMKCOGIT",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://cmkcogit.com.br/#website"
+      },
+      "about": {
+        "@id": "https://cmkcogit.com.br/#org"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://cmkcogit.com.br/assets/images/og-cmkcogit-2026.png"
+      },
+      "description": "Dúvidas frequentes da CMKCOGIT sobre modelos prontos, domínio, pagamento e suporte, e um canal direto para falar com a equipe.",
+      "breadcrumb": {
+        "@id": "https://cmkcogit.com.br/ajuda.html#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://cmkcogit.com.br/ajuda.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Início",
+          "item": "https://cmkcogit.com.br/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Ajuda e dúvidas frequentes",
+          "item": "https://cmkcogit.com.br/ajuda.html"
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://cmkcogit.com.br/ajuda.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Qual a diferença entre modelo pronto e sob medida?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No modelo pronto a estrutura e o design já estão desenvolvidos: você envia textos, imagens, logotipo e informações e nós aplicamos ao modelo. É mais rápido e mais barato. No sob medida , estrutura, visual e funcionalidades são desenhados para o seu negócio, e o escopo é validado pela equipe antes do pagamento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O domínio é meu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim. O site é publicado no seu domínio (ex.: suaempresa.com.br), registrado em seu nome; os custos de registro e renovação do domínio são seus."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O código-fonte do site é meu?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No sob medida, sim: após a quitação, o site e o código-fonte passam a ser seus. No modelo pronto o código do modelo é da CMKCOGIT e não é entregue; você usa o site publicado e continua dono dos seus textos, imagens e marca."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como faço o pagamento?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Pela plataforma, com Pix, cartão de crédito ou boleto, no ambiente seguro do Mercado Pago. Itens com preço fechado vão direto para pagamento; projetos sob medida são liberados depois da validação da equipe."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Por que vocês pedem CPF ou CNPJ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Para identificar quem contrata, emitir contrato e nota fiscal e processar o pagamento. Só você e a equipe veem esse dado, e na tela ele aparece mascarado. Veja a Política de Privacidade ."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Tem suporte depois da entrega?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Todo projeto inclui 1 mês de suporte gratuito para correções e pequenos ajustes. Depois disso, você pode escolher o Suporte Técnico Essencial (sob demanda, a partir de R$ 150 por solicitação) ou o Suporte Técnico Contínuo (R$ 150/mês fixo) em Monte sua solução ."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O que é a \"Minha área\"?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "É a plataforma do cliente, em app.cmkcogit.com.br . Lá ficam suas solicitações, pagamentos, o andamento de cada projeto, os arquivos e as notificações."
+          }
+        }
+      ]
+    }
+  ]
+}
   </script>
 </head>
 

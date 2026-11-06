@@ -11,9 +11,28 @@ window.CogitPrivacy = (() => {
   let expiryTimer;
   let returnFocus = null;
 
+  // A escolha fica no localStorage; um cookie próprio (só a escolha, sem identificador) serve de reserva
+  // quando o navegador bloqueia o armazenamento local (alguns modos privados).
+  function readCookie() {
+    try {
+      const raw = document.cookie.split('; ').find(c => c.startsWith(KEY + '='));
+      return raw ? decodeURIComponent(raw.slice(KEY.length + 1)) : null;
+    } catch (_) { return null; }
+  }
+  function writeCookie(value) {
+    try {
+      document.cookie = KEY + '=' + encodeURIComponent(value) + '; Max-Age=' + Math.floor(MAX_AGE / 1000) +
+        '; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    } catch (_) {}
+  }
+  function stored() {
+    let value = null;
+    try { value = localStorage.getItem(KEY); } catch (_) {}
+    return value || readCookie();
+  }
   function read() {
     try {
-      const value = JSON.parse(localStorage.getItem(KEY));
+      const value = JSON.parse(stored());
       if (value && value.version === VERSION && typeof value.analytics === 'boolean' &&
           Number.isFinite(value.decidedAt) && Number.isFinite(value.expiresAt) &&
           value.decidedAt <= Date.now() && value.expiresAt > Date.now() &&
@@ -49,6 +68,7 @@ window.CogitPrivacy = (() => {
     const now = Date.now();
     choice = { version: VERSION, necessary: true, analytics: analytics === true, decidedAt: now, expiresAt: now + MAX_AGE };
     try { localStorage.setItem(KEY, JSON.stringify(choice)); } catch (_) {}
+    writeCookie(JSON.stringify(choice));
     document.getElementById('cookie-banner')?.remove();
     closeSettings();
     armExpiry();

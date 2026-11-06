@@ -60,7 +60,7 @@ function environment(saved=null,blocked=false){
  }
  const document={currentScript:{src:'https://local.test/js/privacy.js'},body:new Node('body'),head:new Node('head'),activeElement:null,visibilityState:'visible',
   addEventListener(k,fn){(handlers['doc:'+k]??=[]).push(fn);},getElementById:id=>nodes.get(id)||null,querySelector:()=>null,querySelectorAll:()=>[],createElement:tag=>new Node(tag)};
- Object.defineProperty(document,'cookie',{get:()=>cookies.length?'':'_ga=test; _ga_TEST=state; other=keep',set:v=>cookies.push(v)});
+ Object.defineProperty(document,'cookie',{get:()=>cookies.some(c=>/^_ga=;.*Max-Age=0/.test(c))?'':'_ga=test; _ga_TEST=state; other=keep',set:v=>cookies.push(v)});
  class Clock extends Date{static now(){return clock;}}
  const context={document,URL,URLSearchParams,Date:Clock,CustomEvent:class{constructor(type,options){this.type=type;this.detail=options.detail;}},setTimeout:()=>1,clearTimeout:()=>{},console,
   localStorage:{getItem:key=>{if(blocked)throw Error('blocked');return storage.get(key)??null;},setItem:(key,value)=>{if(blocked)throw Error('blocked');storage.set(key,value);},removeItem:key=>storage.delete(key)},sessionStorage:{removeItem:()=>{}},
@@ -104,6 +104,9 @@ check('Every link to Monte sua solução uses services and formats that exist in
  walk('.').forEach(f=>{(read(f).replace(/&amp;/g,'&').match(/monte-sua-solucao\.html\?[^"'\s<>`$]+/g)||[]).forEach(l=>{const q=new URLSearchParams(l.split('?')[1]);(q.get('services')||'').split(',').filter(Boolean).forEach(id=>{if(!c.ids.includes(id))bad.push(f+': '+id)});const m=q.get('model');if(m&&!['modelos-prontos','sob-medida'].includes(m))bad.push(f+': model '+m);});});
  c.flows.forEach(fl=>[fl].concat(fl.subQuestions||[]).forEach(q=>(q.preselect||[]).forEach(id=>{if(!c.ids.includes(id))bad.push('problemFlowsData '+q.id+': '+id)})));
  assert.deepEqual(bad,[]);
+});
+check('Structured data and sitemap are up to date (tools/seo.py)',()=>{
+ const r=spawnSync('python3',['tools/seo.py','--check'],{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);
 });
 check('Price blocks and combinations in the pages match js/data.js',()=>{
  const r=spawnSync('python3',['tools/precos-solucoes.py','--check'],{cwd:root,encoding:'utf8'});assert.equal(r.status,0,r.stdout+r.stderr);

@@ -12,10 +12,10 @@ CATS = [
   ('sites', 'Sites e páginas', 'Presença on-line para apresentar, convencer e receber contatos. Cada tipo tem modelo pronto ou sob medida.', [
     ('Landing Page', [
       ('Modelo pronto', 'R$ 600', 'Página única com estrutura já testada. Você envia identidade visual, textos e imagens; a estrutura do modelo permanece igual.', ['Pagamento único', 'Entrega em 5 a 8 dias úteis'], M + 'landing-page&model=modelos-prontos'),
-      ('Sob medida', 'A partir de R$ 700', 'Estrutura, seções e experiência feitas para a sua oferta e o seu público.', ['Seções e componentes à sua escolha', 'Escopo confirmado na proposta'], M + 'landing-page&model=sob-medida')]),
+      ('Sob medida', 'A partir de R$ 800', 'Estrutura, seções e experiência feitas para a sua oferta e o seu público.', ['Seções e componentes à sua escolha', 'Escopo confirmado na proposta'], M + 'landing-page&model=sob-medida')]),
     ('Portfólio digital', [
       ('Modelo pronto', 'R$ 500', 'Portfólio com estrutura fixa para mostrar trabalhos, serviços e resultados com a sua identidade.', ['Pagamento único', 'Entrega em 5 a 7 dias úteis'], M + 'portfolio&model=modelos-prontos'),
-      ('Sob medida', 'A partir de R$ 800', 'Galerias, apresentação e experiência personalizadas para o seu trabalho.', ['Estrutura desenhada para você', 'Escopo confirmado na proposta'], M + 'portfolio&model=sob-medida')]),
+      ('Sob medida', 'A partir de R$ 700', 'Galerias, apresentação e experiência personalizadas para o seu trabalho.', ['Estrutura desenhada para você', 'Escopo confirmado na proposta'], M + 'portfolio&model=sob-medida')]),
     ('Site institucional', [
       ('Modelo pronto', 'R$ 700', 'Site com estrutura predefinida de até 4 páginas para apresentar empresa, serviços e diferenciais.', ['Até 4 páginas no projeto base', 'Entrega em 7 a 12 dias úteis'], M + 'site-institucional&model=modelos-prontos'),
       ('Sob medida', 'A partir de R$ 900', 'Até 4 páginas iniciais com estrutura e design personalizados.', ['Páginas e seções sob medida', 'Escopo confirmado na proposta'], M + 'site-institucional&model=sob-medida')]) ]),

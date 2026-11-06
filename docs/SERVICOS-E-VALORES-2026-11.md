@@ -12,6 +12,7 @@ Fonte dos preços: `js/data.js` (`configuratorData`). O catálogo de `solucoes/i
 |---|---|---|
 | Suporte gratuito | 3 meses | 1 mês |
 | Landing Page (modelo pronto) | R$ 500 | R$ 600 |
+| Sob medida: portfólio / landing page | a partir de R$ 800 / R$ 700 | a partir de R$ 700 / R$ 800 |
 | Portfólio (modelo pronto) | R$ 600 | R$ 500 |
 | E-commerce / loja virtual | a partir de R$ 2.990 | a partir de R$ 6.000 |
 | Consultoria e planejamento digital | serviço de R$ 350 | opcional em qualquer solução no Monte sua solução: sem custo fechando com a COGIT; R$ 350 se for desenvolver com outra empresa |

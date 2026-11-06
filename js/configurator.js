@@ -166,7 +166,7 @@ const ConfiguratorApp = (() => {
     lastRenderedStep = state.currentStep;
   }
   function renderRestoredNote() {
-    return state.restored ? '<p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-arrow-counterclockwise"></i></span> Retomamos a solução que você começou neste navegador. <button class="cfg-text-action" type="button" id="cfg-restart">Começar do zero</button></p>' : '';
+    return state.restored ? '<p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-arrow-counterclockwise"></i></span><span class="cfg-note-text">Retomamos a solução que você começou neste navegador.</span><button class="cfg-text-action" type="button" id="cfg-restart"><i class="bi bi-x-lg" aria-hidden="true"></i> Começar do zero</button></p>' : '';
   }
   // Guarda só a seleção (sem textos livres) por 7 dias neste navegador.
   function saveSession() {

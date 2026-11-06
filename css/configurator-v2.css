@@ -258,6 +258,37 @@
   line-height: 1.5;
 }
 .page-configurator .cfg-inline-note > span { color: var(--cfg-purple); font-weight: 800; }
+/* aviso de solução retomada: faixa única, texto à esquerda e ação à direita (em telas estreitas, a ação desce) */
+.page-configurator .cfg-inline-note:has(#cfg-restart) {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .55rem .75rem;
+  padding: .7rem .75rem .7rem 1rem;
+  border: 1px solid var(--cfg-line, #e3e5ea);
+  border-left: 2px solid var(--cfg-purple);
+  border-radius: 2px;
+  background: var(--cfg-soft, #f7f7f5);
+}
+.page-configurator .cfg-inline-note:has(#cfg-restart) { margin-bottom: 1.25rem; }
+.page-configurator .cfg-inline-note:has(#cfg-restart) > span { display: inline-flex; }
+.page-configurator .cfg-inline-note > .cfg-note-text { color: var(--cfg-muted); font-weight: 500; }
+.page-configurator .cfg-inline-note .cfg-text-action {
+  margin: 0;
+  padding: .45rem .8rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-size: .8rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: background-color .2s ease, color .2s ease;
+}
+.page-configurator .cfg-inline-note .cfg-text-action:hover,
+.page-configurator .cfg-inline-note .cfg-text-action:focus-visible { background: var(--cfg-purple); color: #fff; }
+@media (max-width: 560px) {
+  .page-configurator .cfg-inline-note .cfg-text-action { grid-column: 2; justify-self: start; }
+  .page-configurator .cfg-inline-note:has(#cfg-restart) > span:first-child { align-self: start; margin-top: .2rem; }
+}
 
 /* Soluções */
 .page-configurator .cfg-solution-card {

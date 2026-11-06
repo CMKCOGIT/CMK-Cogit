@@ -167,9 +167,7 @@ section[class*="hero"].tone-ink, .solution-hero.tone-ink { padding-top: calc(var
 .section-header h2 { max-width: 24ch; }
 .section-header.center { text-align: left !important; margin-left: 0 !important; }
 .section-header.center > * { margin-left: 0 !important; margin-right: auto !important; }
-.section-header { max-width: none !important; border-top: 1px solid currentColor; padding-top: 24px; margin-bottom: clamp(40px, 5vw, 64px) !important; }
-.tone-ink .section-header, .tone-navy .section-header { border-top-color: var(--line-d); }
-.tone-navy .section-header { border-top-color: var(--navy-line); }
+.section-header { max-width: none !important; border-top: 0 !important; padding-top: 0; margin-bottom: clamp(40px, 5vw, 64px) !important; }
 .section-header p { max-width: 52ch !important; }
 
 /* ── Header ───────────────────────────────────────────────────────── */
@@ -323,7 +321,7 @@ html.js [class*="hero-animate-"] { opacity: 1 !important; transform: none !impor
 .help-contato a:not(.btn) { color: var(--sky) !important; }
 .help-contato .btn-primary { background: var(--paper) !important; color: var(--navy) !important; border-color: var(--paper) !important; }
 /* Sem degradês decorativos em lugar nenhum (imagens reais continuam) */
-body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-image"])) { background-image: none !important; }
+body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-image"]):not(.wf-art)) { background-image: none !important; }
 [class*="whatsapp"]:not(.whatsapp-float):not(.whatsapp-popup), .contact-channel, [class*="channel-card"] { background-color: var(--navy) !important; color: #fff !important; border-color: var(--navy) !important; }
 @media (max-width: 1023.98px) {
   .header .header-cta { display: none !important; }
@@ -466,3 +464,19 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .svc-type-name { text-decoration: underline; text-decoration-color: rgba(142, 166, 216, .55); text-decoration-thickness: 1px; text-underline-offset: 5px; transition: text-decoration-color .25s var(--ease-c), text-underline-offset .25s var(--ease-c); }
 .svc-type:hover .svc-type-name, .svc-type.is-open .svc-type-name { text-decoration-color: var(--sky); text-underline-offset: 7px; }
 .svc-cat-head { grid-template-columns: 28px 1fr; }
+
+/* ── Fundos que eram só gradiente: cor sólida no lugar (a regra global acima remove gradientes) ──
+   Conferir com: python3 tools/fundos-gradiente.py */
+.page-configurator .cfg-final-estimate { background-color: var(--navy) !important; color: var(--paper) !important; }
+.page-configurator .cfg-final-estimate span { color: var(--navy-muted) !important; }
+.page-configurator .cfg-final-estimate strong { color: var(--white) !important; }
+.page-configurator .cfg-final-estimate p { color: rgba(243, 243, 241, .78) !important; }
+.page-configurator .cfg-progress-track span { background-color: var(--navy) !important; }
+/* miniaturas do estúdio: desenhadas com gradientes, ficam fora da remoção; tons na paleta nova */
+.wf-art { --g: #E6E6E2; --d: #C9CCD2; }
+.wf--media .wf-art { background: radial-gradient(circle at 50% 50%, #F3F3F1 0 9px, transparent 10px), linear-gradient(135deg, #121314, #1A2C52); }
+.wf--map .wf-art { background: radial-gradient(circle at 70% 45%, #1A2C52 0 5px, transparent 6px), repeating-linear-gradient(35deg, #ECECE8 0 10px, #E0E1DD 10px 12px); }
+.studio-browser-bar { background: var(--grey) !important; }
+.studio-browser-bar i { background: #BFC1BD !important; }
+/* título recebe foco por script ao trocar de etapa (leitor de tela); sem contorno visual */
+.cfg-step-title:focus:not(:focus-visible), .cfg-step-title[tabindex="-1"]:focus { outline: none !important; box-shadow: none !important; }

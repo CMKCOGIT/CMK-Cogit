@@ -166,8 +166,7 @@ const ConfiguratorApp = (() => {
       const service = getService(entry.serviceId);
       const modelId = isPresence(service.id) && ['modelos-prontos', 'sob-medida'].includes(entry.modelId) ? entry.modelId : null;
       const custom = modelId === 'sob-medida';
-      const restoredEntry = { consultoria: !!entry.consultoria, serviceId: service.id, modelId, planId: null, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
-      if (modelId === 'modelos-prontos') applyPlan(restoredEntry, getPlan(entry.planId) ? entry.planId : 'vitalicio');
+      const restoredEntry = { consultoria: !!entry.consultoria, serviceId: service.id, modelId, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
       return restoredEntry;
     });
     const allowed = allowedAddons();
@@ -239,41 +238,6 @@ const ConfiguratorApp = (() => {
   function levelPrice(level) {
     return ['analysis', 'custom'].includes(level.priceType) || level.price == null ? 'Sob análise' : (level.priceType === 'from' ? 'A partir de ' : '') + money(level.price);
   }
-  // Planos do modelo pronto (js/data.js): vitalício no domínio do cliente, mensal ou anual no endereço CMKCOGIT.
-  const PLANS = typeof readyModelPlans !== 'undefined' ? readyModelPlans : [];
-  function getPlan(id) { return PLANS.find(plan => plan.id === id) || null; }
-  function planSuffix(entry) {
-    const plan = entry.modelId === 'modelos-prontos' ? getPlan(entry.planId) : null;
-    return plan && plan.billing === 'monthly' ? '/mês' : plan && plan.billing === 'yearly' ? '/ano' : '';
-  }
-  function applyPlan(entry, planId) {
-    const service = getService(entry.serviceId);
-    const plan = getPlan(planId);
-    entry.planId = plan ? plan.id : null;
-    if (!service) return;
-    if (plan && plan.price != null) { entry.price = plan.price; entry.priceType = 'fixed'; }
-    else { entry.price = service.price; entry.priceType = service.priceType; }
-  }
-  function renderPlans(entry, service) {
-    if (!PLANS.length) return '';
-    const labelId = 'cfg-plan-' + service.id;
-    return '<div class="cfg-control-group"><span class="cfg-control-label" id="' + labelId + '">Plano</span><div class="cfg-plan-toggle" role="group" aria-labelledby="' + labelId + '">' + PLANS.map(plan => {
-      const selected = entry.planId === plan.id;
-      const price = plan.price == null ? money(service.price) + '<small> pagamento único</small>' : money(plan.price) + '<small>' + (plan.billing === 'yearly' ? '/ano' : '/mês') + '</small>';
-      return '<button type="button" class="cfg-plan-option' + (selected ? ' is-selected' : '') + '" data-plan-service="' + service.id + '" data-plan-id="' + plan.id + '" aria-pressed="' + selected + '">'
-        + '<span class="cfg-plan-top"><strong>' + plan.name + '</strong>' + (plan.discount ? '<span class="cfg-plan-badge">−' + plan.discount + '%</span>' : '') + '<span class="cfg-model-radio" aria-hidden="true"></span></span>'
-        + '<span class="cfg-plan-domain">' + plan.domain + '</span>'
-        + '<span class="cfg-plan-price">' + price + '</span>'
-        + '<small class="cfg-plan-desc">' + plan.description + '</small></button>';
-    }).join('') + '</div></div>';
-  }
-  function selectPlan(serviceId, planId) {
-    const entry = getEntry(serviceId);
-    if (!entry || entry.modelId !== 'modelos-prontos' || !getPlan(planId)) return;
-    applyPlan(entry, planId);
-    track('configurator_plan', serviceId + ':' + planId);
-    render();
-  }
   // Cada formato mostra o que muda na decisão (preço e prazo) no próprio cartão, como no diagnóstico.
   function renderModel(entry, service, modelId) {
     const selected = entry.modelId === modelId;
@@ -284,8 +248,7 @@ const ConfiguratorApp = (() => {
     const description = pronto
       ? (info.pronto ? info.pronto + ': estrutura' : 'Estrutura') + ' já testada. Aplicamos sua marca, seus textos e suas imagens.'
       : 'Você escolhe seções e componentes, como vídeo, galeria e depoimentos. O layout é desenhado para o seu negócio.';
-    const monthly = PLANS.find(plan => plan.billing === 'monthly');
-    const price = pronto ? money(service.price) + (monthly ? ' ou ' + money(monthly.price) + '/mês' : '') : 'a partir de ' + money(service.customPrice);
+    const price = pronto ? money(service.price) : 'a partir de ' + money(service.customPrice);
     const prazo = pronto ? (info.prazo || 'definido no escopo') : 'definido no escopo';
     return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '">'
       + '<span class="cfg-model-top"><span class="cfg-model-chip' + (pronto ? '' : ' is-alt') + '">' + chip + '</span><span class="cfg-model-radio" aria-hidden="true"></span></span>'
@@ -334,7 +297,6 @@ const ConfiguratorApp = (() => {
     if (isPresence(service.id)) {
       const labelId = 'cfg-format-' + service.id;
       controls += '<div class="cfg-control-group"><span class="cfg-control-label" id="' + labelId + '">Formato</span><div class="cfg-model-toggle" role="group" aria-labelledby="' + labelId + '">' + renderModel(entry, service, 'modelos-prontos') + renderModel(entry, service, 'sob-medida') + '</div>' + renderModelAction(entry) + '</div>';
-      if (entry.modelId === 'modelos-prontos') controls += renderPlans(entry, service);
     }
     const showLevels = service.hasLevels && (!isPresence(service.id) || entry.modelId === 'modelos-prontos');
     if (showLevels) {
@@ -374,18 +336,17 @@ const ConfiguratorApp = (() => {
     const howItWorks = needsValidation
       ? 'Na plataforma você entra ou cria sua conta e a solicitação vai para a validação técnica. Quando a equipe confirmar escopo e valor, o pagamento é liberado lá mesmo.'
       : 'O preço já está fechado. Na plataforma você entra ou cria sua conta, confere o resumo e paga com Pix, cartão ou boleto pelo Mercado Pago.';
-    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 1 mês de suporte gratuito; planos de suporte escolhidos começam depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
+    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 1 mês de suporte gratuito; o suporte escolhido começa depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
   }
   function entryPrice(entry) {
     if (['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
-    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + planSuffix(entry) + billingSuffix(entry.billing);
+    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + billingSuffix(entry.billing);
   }
   function summaryService(entry) {
     const service = getService(entry.serviceId);
     if (!service) return '';
     const detail = [];
     if (entry.modelId) detail.push(entry.modelId === 'modelos-prontos' ? 'Modelo pronto' : 'Sob medida');
-    if (entry.modelId === 'modelos-prontos' && getPlan(entry.planId)) detail.push('Plano ' + getPlan(entry.planId).name.toLowerCase());
     if (entry.levelName) detail.push(entry.levelName);
     if (entry.consultoria) detail.push('Com consultoria (sem custo fechando com a COGIT)');
     return '<div><span><strong>' + service.name + '</strong><small>' + (detail.length ? detail.join(' · ') : isSupport(entry.billing) ? 'Após o 1º mês gratuito' : 'A configurar') + '</small></span><em>' + entryPrice(entry) + '</em></div>';
@@ -432,7 +393,6 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('[data-service-id]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.serviceId)));
     containerEl.querySelectorAll('[data-remove-service]').forEach(button => button.addEventListener('click', () => toggleService(button.dataset.removeService)));
     containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click', () => selectSolutionModel(button.dataset.modelId, button.dataset.modelService)));
-    containerEl.querySelectorAll('[data-plan-service]').forEach(button => button.addEventListener('click', () => selectPlan(button.dataset.planService, button.dataset.planId)));
     containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => openModelAction(button.dataset.previewService)));
     containerEl.querySelectorAll('[data-consult-service]').forEach(button => button.addEventListener('click', () => toggleConsultoria(button.dataset.consultService)));
     containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click', () => selectLevel(button.dataset.levelService, button.dataset.levelId)));
@@ -461,7 +421,7 @@ const ConfiguratorApp = (() => {
       const service = getService(id);
       if (!service) return;
       if (isSupport(service.billing)) state.selectedServices = state.selectedServices.filter(entry => !isSupport(entry.billing));
-      state.selectedServices.push({ serviceId: id, modelId: null, planId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
+      state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
       track('configurator_select', id);
     }
     const allowed = allowedAddons();
@@ -475,11 +435,9 @@ const ConfiguratorApp = (() => {
       entry.modelId = modelId;
       entry.levelId = null;
       entry.levelName = null;
-      entry.planId = null;
       if (modelId === 'sob-medida') { entry.price = service.customPrice; entry.priceType = 'from'; }
       else if (!service.hasLevels) { entry.price = service.price; entry.priceType = service.priceType; entry.billing = service.billing || null; }
       else { entry.price = null; entry.priceType = null; }
-      if (modelId === 'modelos-prontos' && !service.hasLevels) applyPlan(entry, 'vitalicio');
     });
     track('configurator_model', (serviceId || 'presence') + ':' + modelId);
     render();
@@ -550,7 +508,7 @@ const ConfiguratorApp = (() => {
       objetivos: state.selectedObjectives.slice(),
       servicos: state.selectedServices.map(entry => {
         const service = getService(entry.serviceId);
-        return { id: entry.serviceId, modelo: entry.modelId || null, plano: entry.modelId === 'modelos-prontos' ? (entry.planId || 'vitalicio') : null, nome: service ? service.name : entry.serviceId };
+        return { id: entry.serviceId, modelo: entry.modelId || null, plano: null, nome: service ? service.name : entry.serviceId };
       }),
       complementos: state.selectedAddons.map(entry => ({ id: entry.addonId, qtd: entry.quantity || 1, nome: entry.name })),
       notas: structures.concat(notes ? notes.value.trim() : (state.formData['cfg-notes'] || '')).filter(Boolean).join('\n'),
@@ -583,7 +541,7 @@ const ConfiguratorApp = (() => {
     state.selectedServices = [];
     Array.from(new Set(servicesArray)).forEach(id => {
       const service = getService(id);
-      if (service) state.selectedServices.push({ serviceId: id, modelId: null, planId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
+      if (service) state.selectedServices.push({ serviceId: id, modelId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
     });
     state.currentStep = state.selectedServices.length ? 3 : 1;
     render();
@@ -604,11 +562,6 @@ const ConfiguratorApp = (() => {
       preselectAndScroll(services.split(',').map(item => item.trim()).filter(Boolean));
       const model = params.get('model');
       if (['modelos-prontos', 'sob-medida'].includes(model) && state.selectedServices.some(entry => isPresence(entry.serviceId))) selectSolutionModel(model);
-      const plan = params.get('plan');
-      if (model === 'modelos-prontos' && getPlan(plan)) {
-        state.selectedServices.filter(entry => entry.modelId === 'modelos-prontos').forEach(entry => applyPlan(entry, plan));
-        render();
-      }
       return;
     }
     restoreSession();

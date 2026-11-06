@@ -10,7 +10,6 @@
   var brl = function (n) { return 'R$ ' + Number(n).toLocaleString('pt-BR'); };
   var svc = function (id) { return (typeof configuratorData !== 'undefined' && configuratorData.services || []).find(function (s) { return s.id === id; }) || {}; };
   var prazo = function (id) { return (typeof presenceModels !== 'undefined' && presenceModels[id] && presenceModels[id].prazo) || ''; };
-  var mensal = (typeof PLANO_MENSAL_PRONTO !== 'undefined') ? PLANO_MENSAL_PRONTO : 30;
 
   /* ── Diagnóstico em janela ── */
   var dlg = $('#dx-modal');
@@ -35,14 +34,6 @@
   $$('[data-price]').forEach(function (el) { var s = svc(el.dataset.price); if (s.price) el.textContent = brl(s.price); });
   $$('[data-custom]').forEach(function (el) { var s = svc(el.dataset.custom); if (s.customPrice) el.textContent = 'a partir de ' + brl(s.customPrice); });
   $$('[data-prazo]').forEach(function (el) { el.textContent = prazo(el.dataset.prazo); });
-  $$('[data-mensal]').forEach(function (el) { el.textContent = brl(mensal) + '/mês'; });
-  var plans = $('#hm-plans');
-  if (plans && typeof readyModelPlans !== 'undefined') {
-    plans.innerHTML = readyModelPlans.map(function (p) {
-      var price = p.billing === 'monthly' ? brl(p.price) + '/mês' : p.billing === 'yearly' ? brl(p.price) + '/ano' : 'pagamento único';
-      return '<div><b>' + p.name + ' · ' + price + '</b><span>' + p.description + '</span></div>';
-    }).join('');
-  }
   var smp = $('#hsm-prices');
   if (smp) smp.innerHTML = [['landing-page', 'Landing page'], ['portfolio', 'Portfólio'], ['site-institucional', 'Site institucional']].map(function (x) {
     var s = svc(x[0]); return s.customPrice ? '<span>' + x[1] + ' <b>a partir de ' + brl(s.customPrice) + '</b></span>' : '';
@@ -185,7 +176,7 @@
     stage.innerHTML =
       '<div class="dd-st" data-s="0"><p class="dd-q">Etapa 1 · Qual solução você procura?</p><h4>' + (isP ? 'Presença digital' : 'Operação e produto') + '</h4><div class="dd-opts">' + grp.map(function (x) { return '<div class="dd-opt" data-id="' + x.id + '"><b>' + x.name + '</b><small>A partir de ' + brl(x.price) + '</small></div>'; }).join('') + '</div></div>' +
       '<div class="dd-st" data-s="1"><p class="dd-q">Etapa 2 · ' + (isP ? 'Como prefere começar?' : 'Qual é o objetivo principal?') + '</p><h4>' + s.name + '</h4><div class="dd-opts">' +
-        (isP ? opt('Modelo pronto', brl(s.price) + ' · ' + s.prazo, 'a') + opt('Sob medida', 'A partir de ' + brl(s.custom)) + opt('Vitalício', 'Pagamento único, seu domínio', 'b') + opt('Mensal', brl(mensal) + '/mês')
+        (isP ? opt('Modelo pronto', brl(s.price) + ' · ' + s.prazo, 'a') + opt('Sob medida', 'A partir de ' + brl(s.custom))
              : s.obj.map(function (o, i) { return opt(o, '', i === 0 ? 'a' : ''); }).join('')) + '</div></div>' +
       '<div class="dd-st" data-s="2"><p class="dd-q">Etapa 3 · Conte um pouco do seu contexto</p><h4>Contexto</h4><div class="dd-chips">' + t.map(function (x) { return '<span class="dd-chip"' + (pick.indexOf(x) > -1 ? ' data-pick' : '') + '>' + x + '</span>'; }).join('') + '</div><div class="dd-typed" id="dd-typed"></div></div>' +
       '<div class="dd-st" data-s="3"><p class="dd-q">Etapa 4 · Sua recomendação</p><div class="dd-sum"><div class="dd-sum-nm">' + (isP ? s.pronto : s.name) + '</div><dl><div><dt>Investimento</dt><dd>' + (isP ? brl(s.price) : 'a partir de ' + brl(s.price)) + '</dd></div><div><dt>Prazo</dt><dd>' + (isP ? s.prazo : 'definido no escopo') + '</dd></div></dl><span class="dd-go">Continuar na plataforma ↗</span><p class="dd-ps">Você revisa tudo antes de qualquer pagamento.</p></div></div>';
@@ -204,7 +195,6 @@
     at(500, function () { moveTo($('.dd-st[data-s="0"] .dd-opt[data-id="' + s.id + '"]', stage), true); });
     at(2300, function () { rail(1, sc.isP); show(1); });
     at(2800, function () { moveTo($('.dd-st[data-s="1"] .dd-opt[data-k="a"]', stage), true); });
-    if (sc.isP) at(3700, function () { moveTo($('.dd-st[data-s="1"] .dd-opt[data-k="b"]', stage), true); });
     at(4900, function () { rail(2, sc.isP); show(2); });
     at(5300, function () { var c = $$('.dd-st[data-s="2"] .dd-chip[data-pick]', stage); moveTo(c[0], true); at(800, function () { moveTo(c[1], true); }); });
     at(7000, function () { var el = $('#dd-typed'), t = sc.txt, i = 0; (function ty() { if (i <= t.length) { el.textContent = t.slice(0, i); i += 2; at(28, ty); } })(); });

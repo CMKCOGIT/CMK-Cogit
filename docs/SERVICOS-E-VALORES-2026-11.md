@@ -25,3 +25,9 @@ Fonte dos preços: `js/data.js` (`configuratorData`). O catálogo de `solucoes/i
 - **Plataforma web personalizada (a partir de R$ 4.990):** ambiente on-line para pessoas de fora da empresa (clientes, parceiros, membros), com login, perfis, área restrita e painel administrativo — portais, áreas de membros, cursos.
 - **MVP (a partir de R$ 3.990):** primeira versão funcional com o fluxo principal, para testar a ideia com usuários reais.
 - **Produto digital completo / SaaS (a partir de R$ 4.990):** versão escalável com planos, cobrança recorrente e painel de gestão. Usa o mesmo piso da plataforma web, sem criar um valor novo.
+
+## Planos do modelo pronto (removidos)
+Por decisão dos sócios, os planos Vitalício / Mensal (R$ 30) / Anual (R$ 324) saíram de todas as telas: modelos prontos,
+home, diagnóstico, Monte sua solução, Ajuda e Termos de Uso. Vale só o valor do serviço (pagamento único, no domínio do cliente).
+`readyModelPlans`, `PLANO_MENSAL_PRONTO` e `js/planos.js` foram apagados. O envio para a plataforma mantém o campo `plano`
+sempre como `null`, para não quebrar o app. "Combinações para começar" (somas de serviços) continua em Soluções.

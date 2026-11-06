@@ -231,7 +231,7 @@ function renderHeroInteractive() {
     // SaaS
     'saas-svc:plataforma-escalavel': { solution: 'Plataforma SaaS Escalável', desc: 'Arquitetura moderna em nuvem preparada para crescimento contínuo e alto volume de acessos.' },
     'saas-svc:ideia-em-produto': { solution: 'Produto Digital SaaS', desc: 'Estruturação completa de produto digital, do back-end robusto à experiência do usuário.' },
-    'saas-svc:sistema-assinatura': { solution: 'Plataforma com Gestão de Assinaturas', desc: 'Controle automatizado de planos, cobranças recorrentes e liberação de acessos.' },
+    'saas-svc:sistema-assinatura': { solution: 'Plataforma com Gestão de Assinaturas', desc: 'Controle automatizado de assinaturas, cobranças recorrentes e liberação de acessos.' },
     'saas-svc:validar-modelo': { solution: 'SaaS Beta / Validação Comercial', desc: 'Primeira versão do produto digital para testar monetização e métricas de retenção.' },
 
     // Plataforma
@@ -292,8 +292,7 @@ function renderHeroInteractive() {
     objective: null,
     context: '',
     contextTags: [],
-    customProject: null,
-    plan: 'vitalicio' // plano do modelo pronto (js/data.js: readyModelPlans)
+    customProject: null
   };
 
   const heroSection = container.closest('.hero');
@@ -752,7 +751,7 @@ function renderHeroInteractive() {
                   <span class="dx-format-name">Modelo pronto</span>
                   <span class="dx-format-desc">${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.</span>
                   <span class="dx-facts">
-                    <span><small>Investimento</small><strong>${brl(prontoPrice)}${dxPlan('mensal') ? ` ou ${brl(dxPlan('mensal').price)}/mês` : ''}</strong></span>
+                    <span><small>Investimento</small><strong>${brl(prontoPrice)}</strong></span>
                     <span><small>Prazo</small><strong>${info.prazo}</strong></span>
                   </span>
                 </label>
@@ -776,10 +775,6 @@ function renderHeroInteractive() {
               </div>
             </div>
           </fieldset>
-          <div class="dx-plans-step" data-dx-plans ${state.objective === 'modelos-prontos' ? '' : 'hidden'}>
-            ${renderDxPlans(prontoPrice)}
-            <p class="dx-plan-hint">Vitalício: pagamento único, no seu domínio. Mensal e anual: site em seunome.cmkcogit.com.br, sem valor de entrada.</p>
-          </div>
         </div>
         ${renderDxFooter('Voltar', 'Continuar', !state.objective)}
       </div>`;
@@ -797,15 +792,9 @@ function renderHeroInteractive() {
       transitionTo(renderStep3, 'next');
     }, { project: state.customProject });
 
-    const plansBox = container.querySelector('[data-dx-plans]');
-    container.querySelectorAll('input[name="dx-plan"]').forEach(input => input.addEventListener('change', () => {
-      state.plan = input.value;
-      if (typeof trackEvent === 'function') trackEvent('hero_plan_selected', input.value);
-    }));
     container.querySelectorAll('input[name="dx-format"]').forEach(input => {
       input.addEventListener('change', () => {
         state.objective = input.value;
-        if (plansBox) plansBox.hidden = input.value !== 'modelos-prontos';
         syncNext();
         revealNextAction(next);
         if (typeof trackEvent === 'function') trackEvent('hero_model_selected', input.value);
@@ -874,19 +863,6 @@ function renderHeroInteractive() {
     });
   }
 
-  // Planos do modelo pronto: vitalício (domínio do cliente) ou mensal/anual (endereço CMKCOGIT)
-  const DX_PLANS = typeof readyModelPlans !== 'undefined' ? readyModelPlans : [];
-  function dxPlan(id) { return DX_PLANS.find(p => p.id === id) || null; }
-  function renderDxPlans(basePrice) {
-    if (!DX_PLANS.length) return '';
-    return `<fieldset class="dx-plans"><legend class="dx-kicker">Plano</legend>${DX_PLANS.map(p => {
-      const price = p.price == null ? brl(basePrice) : brl(p.price) + (p.billing === 'yearly' ? '/ano' : '/mês');
-      return `<label class="dx-plan"><input type="radio" name="dx-plan" value="${p.id}" ${state.plan === p.id ? 'checked' : ''}>
-        <span class="dx-plan-name">${p.name}${p.discount ? ` <em>−${p.discount}%</em>` : ''}</span>
-        <span class="dx-plan-price">${price}</span>
-        <span class="dx-plan-domain">${p.domain}</span></label>`;
-    }).join('')}</fieldset>`;
-  }
 
   // ── RESULTADO: resumo editável e próximos passos ──
   function renderResult() {
@@ -904,7 +880,7 @@ function renderHeroInteractive() {
     const catalogService = catalogIds[state.selectedService] || state.selectedService || 'diagnostico';
     const configuratorService = state.selectedService === 'outro-svc' ? '' : catalogService;
     const configuratorLink = configuratorService
-      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '') + (model === 'modelos-prontos' ? `&plan=${state.plan}` : '')
+      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
       : 'monte-sua-solucao.html';
 
     const headline = model === 'modelos-prontos' ? PRESENCE_MODELS[state.selectedService].pronto
@@ -917,12 +893,8 @@ function renderHeroInteractive() {
     let price, priceNote, prazo;
     if (model) {
       const value = presencePrice(state.selectedService, model);
-      const plan = model === 'modelos-prontos' ? dxPlan(state.plan) : null;
-      price = model === 'sob-medida' ? `a partir de ${brl(value)}`
-        : plan && plan.price != null ? brl(plan.price) + (plan.billing === 'yearly' ? '/ano' : '/mês') : brl(value);
-      priceNote = model === 'sob-medida' ? 'O valor final é confirmado depois da validação do escopo.'
-        : plan && plan.price != null ? `Site em seunome.cmkcogit.com.br. ${plan.billing === 'yearly' ? 'Pago uma vez por ano, com 10% de desconto.' : 'Sem valor de entrada; cancele quando quiser.'}`
-        : 'Pagamento único, com o site no seu domínio.';
+      price = model === 'sob-medida' ? `a partir de ${brl(value)}` : brl(value);
+      priceNote = model === 'sob-medida' ? 'O valor final é confirmado depois da validação do escopo.' : 'Pagamento único, com o site no seu domínio.';
       prazo = model === 'sob-medida' ? 'Definido na validação do escopo' : PRESENCE_MODELS[state.selectedService].prazo;
     } else {
       price = selectedSvc ? selectedSvc.priceLabel : 'Sob consulta';
@@ -934,7 +906,7 @@ function renderHeroInteractive() {
       : ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'A equipe revisa o escopo e confirma valor e prazo.', 'Com tudo aprovado, o pagamento é liberado na própria plataforma.'];
 
     const previewData = typeof MODEL_PREVIEW_DATA !== 'undefined' ? MODEL_PREVIEW_DATA[state.selectedService] : null;
-    const formatLabel = model === 'modelos-prontos' ? 'Modelo pronto' + (dxPlan(state.plan) ? ' · plano ' + dxPlan(state.plan).name.toLowerCase() : '') : model === 'sob-medida' ? 'Sob medida' : (objData ? objData.label : '—');
+    const formatLabel = model === 'modelos-prontos' ? 'Modelo pronto' : model === 'sob-medida' ? 'Sob medida' : (objData ? objData.label : '—');
     const contextText = (state.context || '').trim();
 
     container.innerHTML = `
@@ -972,7 +944,6 @@ function renderHeroInteractive() {
 
           <section class="dx-aside" aria-labelledby="dx-invest-title">
             <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
-            ${model === 'modelos-prontos' ? renderDxPlans(presencePrice(state.selectedService, 'modelos-prontos')) : ''}
             <p class="dx-price">${price}</p>
             <p class="dx-price-note">${priceNote}</p>
             <dl class="dx-aside-facts"><div><dt>Prazo</dt><dd>${prazo}</dd></div></dl>
@@ -1003,12 +974,6 @@ function renderHeroInteractive() {
     }));
     const previewBtn = container.querySelector('[data-dx-action="preview"]');
     if (previewBtn) previewBtn.addEventListener('click', () => showModelPreview(selectedSvc));
-    container.querySelectorAll('input[name="dx-plan"]').forEach(input => input.addEventListener('change', () => {
-      state.plan = input.value;
-      if (typeof trackEvent === 'function') trackEvent('hero_plan_selected', input.value);
-      renderResult();
-      container.querySelector(`input[name="dx-plan"][value="${input.value}"]`)?.focus();
-    }));
 
     const platformBtn = document.getElementById('hero-btn-plataforma');
     platformBtn.addEventListener('click', () => {
@@ -1023,7 +988,7 @@ function renderHeroInteractive() {
       ].filter(Boolean).join('\n');
       CogitHandoff.irParaPlataforma({
         origem: 'diagnostico',
-        servicos: [{ id: catalogService, modelo: model || null, plano: model === 'modelos-prontos' ? state.plan : null, nome: svcName }],
+        servicos: [{ id: catalogService, modelo: model || null, plano: null, nome: svcName }],
         complementos: [],
         notas: notes,
         diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : formatLabel, direcao: headline },
@@ -1032,7 +997,7 @@ function renderHeroInteractive() {
     });
 
     document.getElementById('hero-btn-restart').addEventListener('click', () => {
-      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, plan: 'vitalicio' });
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null });
       transitionTo(renderStep0, 'back');
     });
   }
@@ -1320,7 +1285,7 @@ const CUSTOM_COMPONENTS = [
   { id: 'cases', label: 'Cases', desc: 'Projetos com contexto e resultado', kind: 'split', price: 0, icon: '<path d="M4 4h16v16H4z"/><path d="M4 10h16M10 10v10"/>' },
   { id: 'numeros', label: 'Números e resultados', desc: 'Indicadores com fonte real', kind: 'stats', price: 0, icon: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>' },
   { id: 'processo', label: 'Como funciona', desc: 'Etapas do atendimento', kind: 'steps', price: 0, icon: '<circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><path d="M7 12h3M14 12h3"/>' },
-  { id: 'precos', label: 'Planos e preços', desc: 'Tabela comparativa de planos', kind: 'cards', price: 0, icon: '<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
+  { id: 'precos', label: 'Preços', desc: 'Tabela comparativa de preços', kind: 'cards', price: 0, icon: '<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>' },
   { id: 'antesdepois', label: 'Antes e depois', desc: 'Comparação com controle deslizante', kind: 'split', price: 0, icon: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M12 4v16"/>' },
   { id: 'equipe', label: 'Equipe', desc: 'Pessoas, cargos e fotos', kind: 'people', price: 0, icon: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14a5 5 0 0 1 5 5"/>' },
   { id: 'parceiros', label: 'Clientes e parceiros', desc: 'Faixa de logotipos', kind: 'logos', price: 0, icon: '<rect x="2" y="9" width="5" height="6" rx="1"/><rect x="9.5" y="9" width="5" height="6" rx="1"/><rect x="17" y="9" width="5" height="6" rx="1"/>' },

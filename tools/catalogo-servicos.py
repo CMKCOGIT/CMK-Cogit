@@ -11,10 +11,10 @@ CATS = [
     (None, [('Identidade visual essencial', 'R$ 500', 'Criação da identidade visual da marca, pronta para usar no digital e no impresso.', ['Logo e versões principais', 'Paleta de cores e tipografia', 'Elementos básicos de aplicação'], M + 'identidade-essencial')]) ]),
   ('sites', 'Sites e páginas', 'Presença on-line para apresentar, convencer e receber contatos. Cada tipo tem modelo pronto ou sob medida.', [
     ('Landing Page', [
-      ('Modelo pronto', 'R$ 600', 'Página única com estrutura já testada. Você envia identidade visual, textos e imagens; a estrutura do modelo permanece igual.', ['Pagamento único ou plano mensal', 'Entrega em 5 a 8 dias úteis'], M + 'landing-page&model=modelos-prontos'),
+      ('Modelo pronto', 'R$ 600', 'Página única com estrutura já testada. Você envia identidade visual, textos e imagens; a estrutura do modelo permanece igual.', ['Pagamento único', 'Entrega em 5 a 8 dias úteis'], M + 'landing-page&model=modelos-prontos'),
       ('Sob medida', 'A partir de R$ 700', 'Estrutura, seções e experiência feitas para a sua oferta e o seu público.', ['Seções e componentes à sua escolha', 'Escopo confirmado na proposta'], M + 'landing-page&model=sob-medida')]),
     ('Portfólio digital', [
-      ('Modelo pronto', 'R$ 500', 'Portfólio com estrutura fixa para mostrar trabalhos, serviços e resultados com a sua identidade.', ['Pagamento único ou plano mensal', 'Entrega em 5 a 7 dias úteis'], M + 'portfolio&model=modelos-prontos'),
+      ('Modelo pronto', 'R$ 500', 'Portfólio com estrutura fixa para mostrar trabalhos, serviços e resultados com a sua identidade.', ['Pagamento único', 'Entrega em 5 a 7 dias úteis'], M + 'portfolio&model=modelos-prontos'),
       ('Sob medida', 'A partir de R$ 800', 'Galerias, apresentação e experiência personalizadas para o seu trabalho.', ['Estrutura desenhada para você', 'Escopo confirmado na proposta'], M + 'portfolio&model=sob-medida')]),
     ('Site institucional', [
       ('Modelo pronto', 'R$ 700', 'Site com estrutura predefinida de até 4 páginas para apresentar empresa, serviços e diferenciais.', ['Até 4 páginas no projeto base', 'Entrega em 7 a 12 dias úteis'], M + 'site-institucional&model=modelos-prontos'),
@@ -28,7 +28,7 @@ CATS = [
   ('produto', 'Produto digital', 'Para transformar uma ideia em produto: validar primeiro e crescer depois.', [
     (None, [
       ('MVP', 'A partir de R$ 3.990', 'Primeira versão funcional do produto, com o fluxo principal, para testar a ideia com usuários reais antes de investir mais.', ['Fluxo principal e login', 'Painel básico de gestão', 'Métricas para validar'], M + 'mvp'),
-      ('Produto digital completo (SaaS)', 'A partir de R$ 4.990', 'Versão completa e escalável, pronta para vender por assinatura.', ['Planos e cobrança recorrente', 'Painel de gestão e usuários', 'Estrutura para crescer'], M + 'mvp')]) ]),
+      ('Produto digital completo (SaaS)', 'A partir de R$ 4.990', 'Versão completa e escalável, pronta para vender por assinatura.', ['Assinaturas e cobrança recorrente', 'Painel de gestão e usuários', 'Estrutura para crescer'], M + 'mvp')]) ]),
   ('automacoes', 'Automações e integrações', 'Menos tarefa manual e ferramentas conversando entre si.', [
     (None, [
       ('Automação de processos', 'A partir de R$ 990', 'Rotinas que rodam sozinhas: atendimento, leads, vendas, notificações e processos internos. Serviço independente, sem site.', ['Mapeamento da rotina', 'Fluxos automáticos e alertas'], M + 'automacao'),

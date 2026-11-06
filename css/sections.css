@@ -2794,16 +2794,4 @@ html.js .process-steps-container { min-height: 900px; }
 }
 
 /* ── Modelos prontos: planos vitalício, mensal e anual ── */
-.planos-alternativa { display: block; margin-top: 2px; color: var(--text-secondary); font-size: 0.78rem; }
-.planos-grade { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-5); margin: var(--space-10) 0 0; padding: 0; list-style: none; }
-.plano-card { display: flex; flex-direction: column; gap: var(--space-2); padding: var(--space-6); border: 1px solid var(--color-border, rgba(18, 19, 20, 0.12)); border-radius: var(--radius-xl); background: #fff; }
-.plano-card-destaque { border-color: var(--purple); box-shadow: 0 0 0 1px var(--purple) inset; }
-.plano-dominio { display: flex; align-items: center; gap: var(--space-2); color: var(--text-tertiary, #5f6b7f); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
-.plano-dominio b { padding: 1px 8px; border-radius: 2px; background: #e3f1e8; color: #1e7a4c; letter-spacing: 0.02em; }
-.plano-card h3 { margin: 0; color: var(--ink); font-size: var(--text-xl); }
-.plano-preco { margin: 0 0 var(--space-2); color: var(--text-secondary); font-size: var(--text-sm); }
-.plano-preco strong { color: var(--ink); font-size: var(--text-2xl); font-weight: 800; }
-.plano-card ul { margin: 0; padding: var(--space-3) 0 0 var(--space-4); border-top: 1px solid var(--color-neutral-200, #e8eaf0); color: var(--text-secondary); font-size: var(--text-sm); line-height: 1.6; list-style: disc; }
-.planos-nota { margin-top: var(--space-6); color: var(--text-secondary); font-size: var(--text-sm); text-align: center; }
-.planos-nota a { color: var(--purple); font-weight: 600; }
-@media (max-width: 860px) { .planos-grade { grid-template-columns: 1fr; } }
+

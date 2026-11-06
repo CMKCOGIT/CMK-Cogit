@@ -47,7 +47,30 @@ const ConfiguratorApp = (() => {
   }
   function serviceHint(service) {
     const price = minimum(service);
-    return price == null ? 'Diagnóstico inicial' : price === 0 ? 'Gratuito' : (service.priceType === 'fixed' ? '' : 'A partir de ') + money(price) + (service.billing === 'monthly' ? '/mês após 3 meses grátis' : '');
+    return price == null ? 'Diagnóstico inicial' : price === 0 ? 'Gratuito' : (service.priceType === 'fixed' ? '' : 'A partir de ') + money(price) + billingSuffix(service.billing);
+  }
+  function billingSuffix(billing) {
+    return billing === 'monthly' ? '/mês após o 1º mês grátis' : billing === 'demand' ? ' por solicitação' : '';
+  }
+  const isSupport = billing => billing === 'monthly' || billing === 'demand';
+  // Consultoria e planejamento digital: opcional em qualquer solução. Sem custo quando o projeto
+  // é fechado com a COGIT; R$ 350 se a pessoa levar o planejamento para outra empresa.
+  const CONSULTORIA_PRECO = 350;
+  function renderConsultoria(entry, service) {
+    const on = !!entry.consultoria;
+    return '<div class="cfg-control-group cfg-consult"><button type="button" class="cfg-consult-toggle' + (on ? ' is-selected' : '') + '" data-consult-service="' + service.id + '" aria-pressed="' + on + '">'
+      + '<span class="cfg-check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>'
+      + '<span class="cfg-consult-copy"><strong>Incluir consultoria e planejamento digital</strong>'
+      + '<small>Opcional. Mapeamos negócio, processos e prioridades antes de construir ' + esc(service.name.toLowerCase()) + '.</small></span>'
+      + '<span class="cfg-consult-price"><b>Sem custo</b><small>fechando com a COGIT</small></span></button>'
+      + '<p class="cfg-consult-note">Se você decidir desenvolver com outra empresa, a consultoria é cobrada à parte: ' + money(CONSULTORIA_PRECO) + '.</p></div>';
+  }
+  function toggleConsultoria(serviceId) {
+    const entry = getEntry(serviceId);
+    if (!entry) return;
+    entry.consultoria = !entry.consultoria;
+    track('configurator_consultoria', serviceId + ':' + (entry.consultoria ? 'on' : 'off'));
+    render();
   }
   function recommendedIds() {
     const ids = [];
@@ -80,7 +103,7 @@ const ConfiguratorApp = (() => {
     let hasCustom = false;
     state.selectedServices.forEach(entry => {
       if (['analysis', 'custom'].includes(entry.priceType)) { hasCustom = true; return; }
-      if (entry.billing === 'monthly') return;
+      if (isSupport(entry.billing)) return;
       if (entry.price != null) { value += Number(entry.price); if (entry.priceType === 'from') hasFrom = true; }
     });
     state.selectedAddons.forEach(entry => {
@@ -143,7 +166,7 @@ const ConfiguratorApp = (() => {
       const service = getService(entry.serviceId);
       const modelId = isPresence(service.id) && ['modelos-prontos', 'sob-medida'].includes(entry.modelId) ? entry.modelId : null;
       const custom = modelId === 'sob-medida';
-      const restoredEntry = { serviceId: service.id, modelId, planId: null, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
+      const restoredEntry = { consultoria: !!entry.consultoria, serviceId: service.id, modelId, planId: null, levelId: null, levelName: null, price: custom ? service.customPrice : service.price, priceType: custom ? 'from' : service.priceType, billing: service.billing || null };
       if (modelId === 'modelos-prontos') applyPlan(restoredEntry, getPlan(entry.planId) ? entry.planId : 'vitalicio');
       return restoredEntry;
     });
@@ -319,9 +342,12 @@ const ConfiguratorApp = (() => {
         const selected = entry.levelId === level.id;
         return '<button type="button" class="cfg-level-v2 ' + (selected ? 'is-selected' : '') + '" data-level-service="' + service.id + '" data-level-id="' + level.id + '" aria-pressed="' + selected + '"><span><strong>' + level.name + '</strong><small>' + level.description + '</small></span><span class="cfg-level-price">' + levelPrice(level) + '</span></button>';
       }).join('') + '</div></div>';
+    } else if (isSupport(service.billing)) {
+      controls += '<div class="cfg-diagnosis-box"><span>Começa depois do 1º mês gratuito</span><p>' + esc(service.description) + '</p></div>';
     } else if (!service.hasLevels && !isPresence(service.id)) {
       controls += '<div class="cfg-diagnosis-box"><span>Diagnóstico orientado</span><p>A COGIT valida regras, integrações e prioridades antes de confirmar escopo e investimento.</p></div>';
     }
+    if (service.id !== 'diagnostico' && !isSupport(service.billing)) controls += renderConsultoria(entry, service);
     return '<article class="cfg-config-block" style="--cfg-index:' + index + '"><header><span class="cfg-config-number">' + String(index + 1).padStart(2, '0') + '</span><div>' + icon(service.icon) + '<h3>' + service.name + '</h3></div><button type="button" class="cfg-remove-service" data-remove-service="' + service.id + '" aria-label="Remover ' + esc(service.name) + '">Remover</button></header>' + controls + '</article>';
   }
   function renderFormats() {
@@ -348,11 +374,11 @@ const ConfiguratorApp = (() => {
     const howItWorks = needsValidation
       ? 'Na plataforma você entra ou cria sua conta e a solicitação vai para a validação técnica. Quando a equipe confirmar escopo e valor, o pagamento é liberado lá mesmo.'
       : 'O preço já está fechado. Na plataforma você entra ou cria sua conta, confere o resumo e paga com Pix, cartão ou boleto pelo Mercado Pago.';
-    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 3 meses de suporte grátis; planos mensais escolhidos começam depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
+    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 1 mês de suporte gratuito; planos de suporte escolhidos começam depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
   }
   function entryPrice(entry) {
     if (['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
-    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + planSuffix(entry) + (entry.billing === 'monthly' ? '/mês após 3 meses grátis' : '');
+    return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + planSuffix(entry) + billingSuffix(entry.billing);
   }
   function summaryService(entry) {
     const service = getService(entry.serviceId);
@@ -361,7 +387,8 @@ const ConfiguratorApp = (() => {
     if (entry.modelId) detail.push(entry.modelId === 'modelos-prontos' ? 'Modelo pronto' : 'Sob medida');
     if (entry.modelId === 'modelos-prontos' && getPlan(entry.planId)) detail.push('Plano ' + getPlan(entry.planId).name.toLowerCase());
     if (entry.levelName) detail.push(entry.levelName);
-    return '<div><span><strong>' + service.name + '</strong><small>' + (detail.length ? detail.join(' · ') : 'A configurar') + '</small></span><em>' + entryPrice(entry) + '</em></div>';
+    if (entry.consultoria) detail.push('Com consultoria (sem custo fechando com a COGIT)');
+    return '<div><span><strong>' + service.name + '</strong><small>' + (detail.length ? detail.join(' · ') : isSupport(entry.billing) ? 'Após o 1º mês gratuito' : 'A configurar') + '</small></span><em>' + entryPrice(entry) + '</em></div>';
   }
   function summaryAddon(entry) {
     const quantity = entry.quantity && entry.quantity > 1 ? ' × ' + entry.quantity : '';
@@ -370,7 +397,7 @@ const ConfiguratorApp = (() => {
   }
   function renderSummary() {
     const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
-    return '<section class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Todo projeto inclui 3 meses de suporte grátis. Planos mensais selecionados começam depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></section>';
+    return '<section class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Todo projeto inclui 1 mês de suporte gratuito. O suporte escolhido começa depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></section>';
   }
   function configurationComplete() {
     return state.selectedServices.every(entry => {
@@ -407,6 +434,7 @@ const ConfiguratorApp = (() => {
     containerEl.querySelectorAll('[data-model-service]').forEach(button => button.addEventListener('click', () => selectSolutionModel(button.dataset.modelId, button.dataset.modelService)));
     containerEl.querySelectorAll('[data-plan-service]').forEach(button => button.addEventListener('click', () => selectPlan(button.dataset.planService, button.dataset.planId)));
     containerEl.querySelectorAll('[data-preview-service]').forEach(button => button.addEventListener('click', () => openModelAction(button.dataset.previewService)));
+    containerEl.querySelectorAll('[data-consult-service]').forEach(button => button.addEventListener('click', () => toggleConsultoria(button.dataset.consultService)));
     containerEl.querySelectorAll('[data-level-service]').forEach(button => button.addEventListener('click', () => selectLevel(button.dataset.levelService, button.dataset.levelId)));
     containerEl.querySelectorAll('.cfg-addon-select').forEach(button => button.addEventListener('click', () => toggleAddon(button.dataset.addonId)));
     containerEl.querySelectorAll('[data-addon-action]').forEach(button => button.addEventListener('click', () => updateAddonQuantity(button.dataset.addonId, button.dataset.addonAction)));
@@ -432,7 +460,7 @@ const ConfiguratorApp = (() => {
     } else {
       const service = getService(id);
       if (!service) return;
-      if (service.billing === 'monthly') state.selectedServices = state.selectedServices.filter(entry => entry.billing !== 'monthly');
+      if (isSupport(service.billing)) state.selectedServices = state.selectedServices.filter(entry => !isSupport(entry.billing));
       state.selectedServices.push({ serviceId: id, modelId: null, planId: null, levelId: null, levelName: null, price: service.hasLevels ? null : service.price, priceType: service.hasLevels ? null : service.priceType, billing: service.billing || null });
       track('configurator_select', id);
     }
@@ -515,6 +543,8 @@ const ConfiguratorApp = (() => {
     const notes = document.getElementById('cfg-notes');
     const structures = state.selectedServices.filter(entry => entry.modelId === 'sob-medida' && customStructures[entry.serviceId])
       .map(entry => { const c = customStructures[entry.serviceId]; return `Estrutura sob medida (${c.suggestion}): ${c.sections.join(' > ')}${c.components.length ? `\nComponentes: ${c.components.join(', ')}` : ''}`; });
+    const consult = state.selectedServices.filter(entry => entry.consultoria).map(entry => (getService(entry.serviceId) || {}).name || entry.serviceId);
+    if (consult.length) structures.unshift(`Consultoria e planejamento digital solicitada para: ${consult.join(', ')}. Sem custo se o projeto for fechado com a COGIT; ${money(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.`);
     return {
       origem: 'configurador',
       objetivos: state.selectedObjectives.slice(),

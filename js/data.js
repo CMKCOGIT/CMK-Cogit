@@ -168,7 +168,7 @@ const problemFlowsData = [
       { id: 'criar-novo', title: 'Quero criar algo novo ou lançar um produto', description: 'Nova oportunidade de negócio no mercado.', preselect: ['mvp'] },
       { id: 'outro-diagnostico', title: 'Outro desafio específico da empresa', description: 'Conversar diretamente com a equipe técnica.', preselect: ['site-institucional'] }
     ],
-    recommendations: ['consultoria', 'outras-solucoes'],
+    recommendations: ['outras-solucoes'],
     recommendationTitle: 'Diagnóstico Sob Medida',
     recommendationSubtitle: 'Análise Consultiva Inicial',
     recommendationText: 'O melhor caminho é conversarmos sobre o seu cenário atual para desenhar a estrutura técnica mais eficiente.',
@@ -208,18 +208,17 @@ const solutionsGroupsData = [
 
 // ── Services Data (Nova ordem) ──
 const servicesData = [
-  { id:'consultoria', title:'Consultoria e Planejamento Digital', description:'Mapeamento do negócio, processos, gargalos e planejamento da solução.', icon:'consulting', slug:'index', tag:'ESTRATÉGIA', basePrice:350, priceType:'fixed' },
-  { id:'identidade-visual', title:'Identidade Visual', description:'Versão essencial ou completa para comunicar sua marca.', icon:'websites', slug:'index', tag:'MARCA', basePrice:500, priceType:'startingAt' },
+  { id:'identidade-visual', title:'Identidade Visual Essencial', description:'Logo, paleta de cores, tipografia e versões principais para comunicar sua marca.', icon:'websites', slug:'index', tag:'IDENTIDADE (DESIGN)', basePrice:500, priceType:'fixed' },
   { id:'modelos-prontos', title:'Modelos Prontos', description:'Três formatos: Landing Page, Portfólio e Site. Você envia identidade visual, textos, imagens e informações; a estrutura do modelo permanece a mesma.', icon:'websites', slug:'modelos-prontos', tag:'ESTRUTURA PRONTA', basePrice:500, priceType:'startingAt' },
   { id:'modelos-sob-medida', title:'Modelos Sob Medida', description:'Landing Page, Portfólio ou Site com estrutura, seções, visual e experiência personalizados.', icon:'websites', slug:'modelos-sob-medida', tag:'PERSONALIZADO', basePrice:700, priceType:'startingAt' },
   { id:'sites-institucionais', title:'Sites Institucionais', description:'Modelo pronto com até 4 páginas ou projeto sob medida.', icon:'websites', slug:'sites-institucionais', tag:'PRESENÇA', basePrice:700, priceType:'startingAt' },
-  { id:'landing-pages', title:'Landing Pages', description:'Modelo pronto por R$ 500 ou projeto sob medida a partir de R$ 700.', icon:'landing', slug:'landing-pages', tag:'CONVERSÃO', basePrice:500, priceType:'startingAt' },
-  { id:'loja-virtual', title:'E-commerce / Loja Virtual', description:'Produtos, categorias, carrinho, checkout, pagamentos e gestão básica de pedidos.', icon:'websites', slug:'index', tag:'COMÉRCIO DIGITAL', basePrice:2990, priceType:'startingAt' },
-  { id:'plataformas', title:'Plataforma Web Personalizada', description:'Solução digital completa conforme o modelo de negócio.', icon:'platforms', slug:'plataformas-e-outras-solucoes', tag:'PLATAFORMAS', basePrice:4990, priceType:'startingAt' },
-  { id:'sistemas-personalizados', title:'Sistemas de Gestão e CRM', description:'Gestão de clientes, leads, vendas, pedidos, propostas, contratos, processos e indicadores.', icon:'systems', slug:'sistemas-personalizados', tag:'SISTEMAS', basePrice:2990, priceType:'startingAt' },
-  { id:'mvp', title:'MVP e Produto Digital', description:'Primeira versão funcional para validar uma ideia no mercado.', icon:'mvp', slug:'saas-e-produtos-digitais', tag:'PRODUTO DIGITAL', basePrice:3990, priceType:'startingAt' },
+  { id:'landing-pages', title:'Landing Pages', description:'Modelo pronto por R$ 600 ou projeto sob medida a partir de R$ 700.', icon:'landing', slug:'landing-pages', tag:'CONVERSÃO', basePrice:600, priceType:'startingAt' },
+  { id:'loja-virtual', title:'E-commerce / Loja Virtual', description:'Produtos, categorias, carrinho, checkout, pagamentos e gestão básica de pedidos.', icon:'websites', slug:'index', tag:'LOJA VIRTUAL', basePrice:6000, priceType:'startingAt' },
+  { id:'plataformas', title:'Plataforma Web Personalizada', description:'Ambiente on-line para clientes, parceiros ou membros: login, perfis, permissões e área restrita (portais, áreas de membros, cursos).', icon:'platforms', slug:'plataformas-e-outras-solucoes', tag:'PLATAFORMAS', basePrice:4990, priceType:'startingAt' },
+  { id:'sistemas-personalizados', title:'Sistemas de Gestão', description:'Software interno para a sua equipe: cadastros, pedidos, estoque, agenda, financeiro, aprovações e relatórios.', icon:'systems', slug:'sistemas-personalizados', tag:'SISTEMAS', basePrice:2990, priceType:'startingAt' },
+  { id:'mvp', title:'MVP e Produto Digital', description:'MVP: primeira versão funcional para testar a ideia com usuários reais. Produto digital: versão completa com assinaturas e painel de gestão.', icon:'mvp', slug:'saas-e-produtos-digitais', tag:'PRODUTO DIGITAL', basePrice:3990, priceType:'startingAt' },
   { id:'automacao', title:'Automação de Processos Administrativos', description:'Automação de tarefas, atendimentos, leads, vendas, notificações e processos internos. Não inclui um site.', icon:'automation', slug:'automacoes-e-integracoes', tag:'AUTOMAÇÃO', basePrice:990, priceType:'startingAt' },
-  { id:'integracoes', title:'Integrações de Sistemas e Pagamentos', description:'Conexão entre APIs, meios de pagamento, WhatsApp, CRM e outros sistemas.', icon:'automation', slug:'automacoes-e-integracoes', tag:'INTEGRAÇÕES', basePrice:990, priceType:'startingAt' }
+  { id:'integracoes', title:'Integrações de Sistemas e Pagamentos', description:'Conexão entre APIs, meios de pagamento, WhatsApp e outros sistemas.', icon:'automation', slug:'automacoes-e-integracoes', tag:'INTEGRAÇÕES', basePrice:990, priceType:'startingAt' }
 ];
 
 // ── Starting Options Data (Valores Base) ──
@@ -340,21 +339,18 @@ const readyModelPlans = [
 const configuratorData = {
   services: [
     {id:'diagnostico',name:'Diagnóstico Inicial',icon:'consulting',description:'Reunião para entender negócio, problema e objetivo.',priceType:'fixed',price:0},
-    {id:'consultoria',name:'Consultoria e Planejamento Digital',icon:'consulting',description:'Mapeamento do negócio, processos, gargalos e planejamento da solução.',priceType:'fixed',price:350},
-    {id:'identidade-essencial',name:'Identidade Visual Essencial',icon:'websites',description:'Logo, paleta, tipografia, versões principais e elementos básicos.',priceType:'fixed',price:500},
-    {id:'identidade-completa',name:'Identidade Visual Completa',icon:'websites',description:'Marca aprofundada, variações, aplicações e elementos gráficos.',priceType:'fixed',price:990},
-    {id:'landing-page',name:'Landing Page',icon:'landing',isPresencaDigital:true,price:500,priceType:'fixed',customPrice:700,description:'Página para apresentar uma oferta e receber contatos.',allowedAddons:['automacao-extra','integracao-externa']},
-    {id:'portfolio',name:'Portfólio Digital',icon:'landing',isPresencaDigital:true,price:600,priceType:'fixed',customPrice:800,description:'Apresente trabalhos, projetos, serviços e casos.',allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'identidade-essencial',name:'Identidade Visual Essencial',icon:'websites',description:'Logo, paleta de cores, tipografia, versões principais e elementos básicos.',priceType:'fixed',price:500},
+    {id:'landing-page',name:'Landing Page',icon:'landing',isPresencaDigital:true,price:600,priceType:'fixed',customPrice:700,description:'Página para apresentar uma oferta e receber contatos.',allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'portfolio',name:'Portfólio Digital',icon:'landing',isPresencaDigital:true,price:500,priceType:'fixed',customPrice:800,description:'Apresente trabalhos, projetos, serviços e casos.',allowedAddons:['automacao-extra','integracao-externa']},
     {id:'site-institucional',name:'Site Institucional',icon:'websites',isPresencaDigital:true,price:700,priceType:'fixed',customPrice:900,description:'Até 4 páginas no projeto inicial.',allowedAddons:['automacao-extra','integracao-externa']},
-    {id:'loja-virtual',name:'E-commerce / Loja Virtual',icon:'websites',description:'Produtos, categorias, carrinho, checkout, pagamentos e pedidos.',priceType:'from',price:2990,allowedAddons:['automacao-extra','integracao-externa']},
-    {id:'plataforma',name:'Plataforma Web Personalizada',icon:'platforms',description:'Solução completa para o modelo de negócio.',priceType:'from',price:4990,allowedAddons:['automacao-extra','integracao-externa']},
-    {id:'sistema',name:'Sistemas de Gestão e CRM',icon:'systems',description:'Gestão de clientes, vendas, pedidos, propostas, contratos e indicadores.',priceType:'from',price:2990,allowedAddons:['automacao-extra','integracao-externa']},
-    {id:'mvp',name:'MVP e Produto Digital',icon:'mvp',description:'Primeira versão funcional para validação.',priceType:'from',price:3990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'loja-virtual',name:'E-commerce / Loja Virtual',icon:'websites',description:'Produtos, categorias, carrinho, checkout, pagamentos e pedidos.',priceType:'from',price:6000,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'plataforma',name:'Plataforma Web Personalizada',icon:'platforms',description:'Ambiente on-line para clientes, parceiros ou membros, com login, perfis e área restrita.',priceType:'from',price:4990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'sistema',name:'Sistemas de Gestão',icon:'systems',description:'Software interno para a equipe: cadastros, pedidos, estoque, agenda, financeiro e relatórios.',priceType:'from',price:2990,allowedAddons:['automacao-extra','integracao-externa']},
+    {id:'mvp',name:'MVP e Produto Digital',icon:'mvp',description:'Primeira versão funcional para testar a ideia com usuários reais.',priceType:'from',price:3990,allowedAddons:['automacao-extra','integracao-externa']},
     {id:'automacao',name:'Automação de Processos Administrativos',icon:'automation',description:'Tarefas, atendimento, leads, vendas, notificações e rotinas internas. Sem site incluído.',priceType:'from',price:990,allowedAddons:['integracao-externa']},
-    {id:'integracao',name:'Integrações de Sistemas e Pagamentos',icon:'automation',description:'APIs, meios de pagamento, WhatsApp, CRM e conexão entre sistemas.',priceType:'from',price:990},
-    {id:'manutencao',name:'Manutenção Essencial',icon:'systems',description:'Atualizações, manutenção preventiva e pequenas correções após 3 meses gratuitos.',priceType:'fixed',price:149,billing:'monthly'},
-    {id:'suporte',name:'Suporte Técnico Contínuo',icon:'systems',description:'Suporte, pequenas alterações, correções e acompanhamento após 3 meses gratuitos.',priceType:'fixed',price:299,billing:'monthly'},
-    {id:'evolucao',name:'Evolução Contínua',icon:'systems',description:'Manutenção, suporte e desenvolvimento periódico após 3 meses gratuitos.',priceType:'from',price:690,billing:'monthly'}
+    {id:'integracao',name:'Integrações de Sistemas e Pagamentos',icon:'automation',description:'APIs, meios de pagamento, WhatsApp e conexão entre sistemas.',priceType:'from',price:990},
+    {id:'manutencao',name:'Suporte Técnico Essencial',icon:'systems',description:'Sob demanda, sem mensalidade: você chama quando precisar de uma correção ou ajuste. Valor por solicitação.',priceType:'from',price:150,billing:'demand'},
+    {id:'suporte',name:'Suporte Técnico Contínuo',icon:'systems',description:'Mensalidade fixa: manutenção, correções, pequenos ajustes e acompanhamento contínuo após o 1º mês gratuito.',priceType:'fixed',price:150,billing:'monthly'},
   ],
   addons: [
     {id:'automacao-extra',name:'Automação de Processos Administrativos',priceType:'from',price:990},
@@ -514,7 +510,7 @@ const faqData = [
   },
   {
     question: 'Existe suporte após a entrega?',
-    answer: 'Sim. Todos os projetos têm 3 meses de suporte grátis. Depois, você pode escolher manutenção a R$ 149/mês, suporte contínuo a R$ 299/mês ou evolução contínua a partir de R$ 690/mês.'
+    answer: 'Sim. Todos os projetos têm 1 mês de suporte gratuito após a entrega. Depois, você escolhe o Suporte Técnico Essencial (sob demanda, a partir de R$ 150 por solicitação) ou o Suporte Técnico Contínuo (R$ 150/mês fixo).'
   },
   {
     question: 'Quanto tempo demora um projeto?',

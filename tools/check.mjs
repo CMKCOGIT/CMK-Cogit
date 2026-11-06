@@ -89,13 +89,16 @@ function configuratorTest() {
  return {e,app:vm.runInContext('ConfiguratorApp',e.context),handoff:vm.runInContext('CogitHandoff',e.context)};
 }
 check('Current prices, custom models and compatible extras total correctly',()=>{
- const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');assert.equal(app.calculateTotal().value,500);app.selectSolutionModel('sob-medida','landing-page');assert.equal(app.calculateTotal().value,700);app.toggleAddon('automacao-extra');assert.equal(app.calculateTotal().value,1690);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,600);
+ const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');assert.equal(app.calculateTotal().value,600);app.selectSolutionModel('sob-medida','landing-page');assert.equal(app.calculateTotal().value,700);app.toggleAddon('automacao-extra');assert.equal(app.calculateTotal().value,1690);app.toggleService('landing-page');assert.equal(app.state.selectedAddons.length,0);app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');assert.equal(app.calculateTotal().value,500);
 });
 check('Monthly support is separate from the initial investment',()=>{
- const {app}=configuratorTest();app.toggleService('site-institucional');app.selectSolutionModel('modelos-prontos','site-institucional');app.toggleService('manutencao');assert.equal(app.calculateTotal().value,700);app.toggleService('suporte');assert.equal(app.state.selectedServices.filter(x=>x.billing==='monthly').length,1);assert.equal(app.calculateTotal().value,700);
+ const {app}=configuratorTest();app.toggleService('site-institucional');app.selectSolutionModel('modelos-prontos','site-institucional');app.toggleService('manutencao');assert.equal(app.calculateTotal().value,700);app.toggleService('suporte');assert.equal(app.state.selectedServices.filter(x=>x.billing==='monthly'||x.billing==='demand').length,1);assert.equal(app.calculateTotal().value,700);
 });
 check('The listed combined plan uses the sum of its services',()=>{
- const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,1990);assert.equal(app.calculateTotal().type,'from');
+ const {app}=configuratorTest();app.toggleService('identidade-essencial');app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.toggleService('automacao');assert.equal(app.calculateTotal().value,2090);assert.equal(app.calculateTotal().type,'from');
+});
+check('Optional consultancy is free with COGIT and noted for the platform',()=>{
+ const {app}=configuratorTest();app.toggleService('landing-page');app.selectSolutionModel('modelos-prontos','landing-page');app.state.selectedServices[0].consultoria=true;assert.equal(app.calculateTotal().value,600);assert.match(app.buildHandoff().notas,/Consultoria e planejamento digital/);assert.match(app.buildHandoff().notas,/R\$ 350/);
 });
 check('Platform handoff carries only IDs/choices, keeps the same ref for the same selection and opens the app',()=>{
  const {app,handoff}=configuratorTest();app.toggleService('portfolio');app.selectSolutionModel('modelos-prontos','portfolio');app.toggleAddon('automacao-extra');

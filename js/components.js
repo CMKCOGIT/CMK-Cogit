@@ -131,11 +131,11 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>'
     },
     {
-      id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'A partir de R$ 500', challenge: 'presenca',
+      id: 'landing-page', name: 'Landing Page', desc: 'Transforme campanhas em contatos e vendas.', priceLabel: 'A partir de R$ 600', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
     {
-      id: 'portfolio', name: 'Portfólio', desc: 'Mostre trabalhos, serviços e resultados.', priceLabel: 'A partir de R$ 600', challenge: 'presenca',
+      id: 'portfolio', name: 'Portfólio', desc: 'Mostre trabalhos, serviços e resultados.', priceLabel: 'A partir de R$ 500', challenge: 'presenca',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><path d="M9 13l3 3 5-5"/></svg>'
     },
     {
@@ -147,7 +147,7 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M10 6h4M10 17h4M6 10v4M17 10v4"/></svg>'
     },
     {
-      id: 'saas-svc', name: 'Produto Digital', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 3.990', challenge: 'produto',
+      id: 'saas-svc', name: 'Produto Digital', desc: 'Crie um produto digital por assinatura.', priceLabel: 'A partir de R$ 4.990', challenge: 'produto',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>'
     },
     {
@@ -243,7 +243,7 @@ function renderHeroInteractive() {
     // Automação
     'automacao-svc:automatizar-processos': { solution: 'Automação de Processos Internos', desc: 'Eliminar gargalos operacionais e tarefas manuais recorrentes entre ferramentas.' },
     'automacao-svc:reduzir-tarefas': { solution: 'Fluxos Automatizados de Produtividade', desc: 'Liberar tempo da equipe substituindo atividades manuais por integrações inteligentes.' },
-    'automacao-svc:integrar-ferramentas': { solution: 'Integrações via API e Webhooks', desc: 'Conectar CRMs, ERPs, gateways de pagamento e canais de comunicação em um fluxo único.' },
+    'automacao-svc:integrar-ferramentas': { solution: 'Integrações via API e Webhooks', desc: 'Conectar ERPs, gateways de pagamento e canais de comunicação em um fluxo único.' },
     'automacao-svc:fluxos-inteligentes': { solution: 'Automações Inteligentes com Notificações', desc: 'Alertas automáticos, disparo de mensagens e relatórios em tempo real para sua equipe.' },
 
     // Sistema Web
@@ -1755,7 +1755,7 @@ function updateHomeDynamicRecommendations(flowId) {
       <div class="dynamic-rec-card reveal reveal-delay-2">
         <span class="dynamic-rec-card-tag">CONEXÃO TÉCNICA</span>
         <h3>Integrações com APIs</h3>
-        <p>Sincronização contínua de dados entre CRMs, sistemas legados, gateways e ferramentas de terceiros.</p>
+        <p>Sincronização contínua de dados entre sistemas legados, gateways e ferramentas de terceiros.</p>
         <div class="dynamic-rec-card-why"><strong>Por que recomendamos:</strong> Garante que as ferramentas que você já usa trabalhem integradas.</div>
         <a href="solucoes/automacoes-e-integracoes.html" class="dynamic-rec-card-cta">Entender essa solução <span><i class="bi bi-arrow-right"></i></span></a>
       </div>

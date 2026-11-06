@@ -259,7 +259,7 @@
 .hx-lead { font-size: clamp(16px, min(1.35vw, 2.3vh), 21px); }
 .hx .demo-dx { height: clamp(420px, min(46vw, 70vh), 640px); }
 @media (max-height: 800px) and (min-width: 1024px) { .hx-meta { display: none; } .hx-motto { font-size: 15px; } }
-.home-v2 { --fade: clamp(280px, 34vw, 520px); }
+.home-v2 { --fade: clamp(120px, 13vw, 210px); }
 .home-v2 > .tone-ink, .home-v2 > .tone-navy { position: relative; isolation: auto; padding-block: clamp(88px, 9vw, 132px) !important; margin-top: var(--fade); }
 .home-v2 > .tone-ink { background: var(--ink) !important; }
 .home-v2 > .tone-navy { background: var(--navy) !important; }
@@ -306,3 +306,7 @@ background: linear-gradient(180deg, #22365F 0%, #1A2C52 60%) !important; padding
 .hx-motto i { display: none !important; }
 @media (max-width: 760px) { .hx h1 { font-size: clamp(42px, 13vw, 72px) !important; } .hx-motto { font-size: 17px !important; } }
 @media (max-height: 800px) and (min-width: 1024px) { .hx-motto { font-size: 18px !important; } }
+.home-v2 > section:has(+ .tone-ink) { padding-bottom: clamp(32px, 3vw, 48px) !important; }
+.home-v2 > .tone-ink { padding-block: clamp(56px, 5.5vw, 88px) !important; }
+.home-v2 > .tone-ink + section { padding-top: clamp(32px, 3vw, 48px) !important; }
+.home-v2 .hw-step { min-height: 0 !important; }

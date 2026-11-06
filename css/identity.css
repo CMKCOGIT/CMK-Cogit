@@ -480,3 +480,10 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .studio-browser-bar i { background: #BFC1BD !important; }
 /* título recebe foco por script ao trocar de etapa (leitor de tela); sem contorno visual */
 .cfg-step-title:focus:not(:focus-visible), .cfg-step-title[tabindex="-1"]:focus { outline: none !important; box-shadow: none !important; }
+
+/* Como trabalhamos: o ícone da etapa é ocultado pela identidade; o texto ocupa a linha inteira */
+.process-step { grid-template-columns: minmax(0, 1fr) !important; }
+.process-step-content { width: auto !important; min-width: 0; }
+.process-step-content h3 { font-size: clamp(22px, 1.6vw + 14px, 30px) !important; line-height: 1.1 !important; margin: 6px 0 8px !important; }
+.process-step-keywords { font: 700 11px/1.4 var(--text) !important; letter-spacing: .12em !important; text-transform: uppercase; color: var(--navy) !important; margin: 0 0 10px !important; transform: none !important; padding: 0 !important; }
+.process-step-desc { font-size: 15px !important; line-height: 1.6 !important; }

@@ -22,7 +22,7 @@ ORG = {
     '@type': ['Organization', 'ProfessionalService'], '@id': BASE + '/#org',
     'name': 'CMKCOGIT', 'alternateName': ['COGIT', 'CMK COGIT', 'CMK Cogit'], 'url': BASE + '/',
     'logo': {'@type': 'ImageObject', 'url': BASE + '/assets/images/icon-512.png', 'width': 512, 'height': 512},
-    'image': BASE + '/assets/images/og-cmkcogit-2026.png',
+    'image': BASE + '/assets/images/og-cmkcogit-icone.png',
     'description': 'Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.',
     'slogan': 'Pensamos antes de construir.',
     'email': 'contato@cmkcogit.com.br', 'telephone': '+55-17-98156-8889',
@@ -128,7 +128,7 @@ def graph(rel, src):
     if rel != 'index.html': crumbs.append({'@type': 'ListItem', 'position': len(crumbs) + 1, 'name': name, 'item': u})
     page = {'@type': 'WebPage', '@id': u + '#webpage', 'url': u, 'name': title, 'inLanguage': 'pt-BR',
             'isPartOf': {'@id': BASE + '/#website'}, 'about': {'@id': BASE + '/#org'},
-            'primaryImageOfPage': {'@type': 'ImageObject', 'url': BASE + '/assets/images/og-cmkcogit-2026.png'}}
+            'primaryImageOfPage': {'@type': 'ImageObject', 'url': BASE + '/assets/images/og-cmkcogit-icone.png'}}
     if desc: page['description'] = text(desc.group(1))
     if len(crumbs) > 1: page['breadcrumb'] = {'@id': u + '#breadcrumb'}
     items = [ORG, SITE, page]

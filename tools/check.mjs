@@ -29,9 +29,9 @@ check('Mobile menus expose the solutions hub and main pages',()=>{
   assert.match(source,/class="[^"]*mobile-accordion-trigger[^"]*"[^>]*aria-expanded="false"/);
  }
 });
-check('Sharing uses the current logo card and stray pricing banners are gone',()=>{
- const png=fs.readFileSync(path.join(root,'assets/images/og-cmkcogit-2026.png'));assert.equal(png.readUInt32BE(16),1200);assert.equal(png.readUInt32BE(20),630);
- for(const file of html){const source=fs.readFileSync(file,'utf8');if(source.includes('property="og:image"'))assert.match(source,/og-cmkcogit-2026\.png/);
+check('Sharing uses the square brand icon (small preview card) and stray pricing banners are gone',()=>{
+ const png=fs.readFileSync(path.join(root,'assets/images/og-cmkcogit-icone.png'));assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),600);
+ for(const file of html){const source=fs.readFileSync(file,'utf8');if(source.includes('property="og:image"')){assert.match(source,/og-cmkcogit-icone\.png/);assert.match(source,/og:image:width" content="600"/);assert.match(source,/twitter:card" content="summary"/);}
   assert.doesNotMatch(source,/Consulte a <a href="index\.html#tabela-de-valores">tabela atual de serviços e valores/);
  }
 });

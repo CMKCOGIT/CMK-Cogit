@@ -1180,9 +1180,9 @@ const MODEL_PREVIEW_DATA = {
     name: 'Landing Page Corporativa',
     tagLabel: 'LANDING PAGE',
     category: 'Landing page · Formal',
-    description: 'Página única de visual sóbrio para escritórios e empresas tradicionais: credenciais, o escritório, 6 áreas de atuação, equipe, diferenciais, depoimentos, dúvidas frequentes e contato com formulário. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
-    audience: ['Escritórios de advocacia', 'Contabilidade e consultorias', 'Clínicas e consultórios', 'Empresas B2B'],
-    features: ['10 seções, com opção de ocultar as que não usar', 'Equipe com foto, cargo, resumo e LinkedIn', 'Dúvidas frequentes e formulário com LGPD', '6 espaços de imagem com upload e enquadramento', '8 paletas prontas ou suas cores em HEX', 'Responsivo em computador, tablet e celular'],
+    description: 'Página institucional completa, de visual sóbrio: apresentação, sobre a empresa (missão, visão e valores), serviços e soluções, diferenciais, metodologia, projetos, indicadores, depoimentos e parceiros, perguntas frequentes e contato. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Empresas de engenharia e indústria', 'Consultorias e escritórios', 'Empresas B2B', 'Prestadores de serviço técnico'],
+    features: ['12 seções, com opção de ocultar as que não usar', 'Metodologia em 6 etapas e projetos com resultados', 'Indicadores, depoimentos com nota e logotipos de parceiros', '9 espaços de imagem com upload e enquadramento', 'Formulário com LGPD, política de privacidade e termos de uso', 'Responsivo em computador, tablet e celular'],
     previewImg: 'assets/videos/templates/landing-formal-poster.webp',
     liveUrl: 'templates/landing-formal/?personalizar'
   }

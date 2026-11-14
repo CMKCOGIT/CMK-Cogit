@@ -1063,14 +1063,25 @@ const MODEL_PREVIEW_DATA = {
     features: ['8 seções, com opção de ocultar as que não usar', '8 paletas prontas ou suas cores em HEX', '6 espaços de imagem com upload e enquadramento', 'Todos os textos, botões e links editáveis', 'Responsivo em computador, tablet e celular', 'Exporta o site pronto ou envia para publicarmos'],
     previewImg: 'assets/videos/templates/landing-profissional-poster.webp',
     liveUrl: 'templates/landing-profissional/?personalizar'
+  },
+  'landing-page-basica': {
+    name: 'Landing Page Básica',
+    tagLabel: 'LANDING PAGE',
+    category: 'Landing page · Básico',
+    description: 'Página única com início, serviços, sobre nós, diferenciais, depoimentos e portfólio, contato com formulário e rodapé. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Prestadores de serviço', 'Negócios locais', 'Autônomos e MEIs', 'Primeiro site da empresa'],
+    features: ['7 seções, com opção de ocultar as que não usar', 'Formulário de contato com validação e LGPD', '4 espaços de imagem com upload e enquadramento', '8 paletas prontas ou suas cores em HEX', 'Todos os textos, botões e links editáveis', 'Responsivo em computador, tablet e celular'],
+    previewImg: 'assets/videos/templates/landing-basica-poster.webp',
+    liveUrl: 'templates/landing-basica/?personalizar'
   }
 };
 
 // Níveis de modelo pronto por serviço (básico, intermediário e formal), mostrados como
-// seletor no topo do modal de prévia. Serviço sem entrada aqui segue com um único modelo.
+// seletor no topo do modal de prévia. Abrir a prévia pelo id do serviço mostra o primeiro nível.
+// Serviço sem entrada aqui segue com um único modelo.
 const MODEL_TIERS = {
   'landing-page': [
-    { id: 'landing-page', label: 'Básico' },
+    { id: 'landing-page-basica', label: 'Básico' },
     { id: 'landing-page-profissional', label: 'Intermediário' },
     { label: 'Formal', soon: true }
   ]
@@ -1100,17 +1111,19 @@ function openModelPreviewModal(modelId, title, options = {}) {
   }
 
   // Resolve data for the service
-  const data = MODEL_PREVIEW_DATA[finalId] || MODEL_PREVIEW_DATA['landing-page'];
+  if (!MODEL_PREVIEW_DATA[finalId]) finalId = 'landing-page';
+  if (MODEL_TIERS[finalId]) finalId = MODEL_TIERS[finalId][0].id; // serviço com níveis: abre no primeiro
+  const data = MODEL_PREVIEW_DATA[finalId];
 
   const existing = document.getElementById('hero-model-preview-modal');
   if (existing) existing.remove();
 
   const returnFocus = options.returnFocus || document.activeElement;
 
-  const tiers = modelTiersFor(MODEL_PREVIEW_DATA[finalId] ? finalId : 'landing-page');
+  const tiers = modelTiersFor(finalId);
   const tiersNav = tiers ? `<div class="hero-modal-tiers" role="group" aria-label="Nível do modelo">${tiers.map((t) => t.soon
     ? `<button type="button" class="hero-modal-tier" disabled>${t.label}<small>Em breve</small></button>`
-    : `<button type="button" class="hero-modal-tier" data-tier="${t.id}" aria-pressed="${t.id === (MODEL_PREVIEW_DATA[finalId] ? finalId : 'landing-page')}">${t.label}</button>`).join('')}</div>` : '';
+    : `<button type="button" class="hero-modal-tier" data-tier="${t.id}" aria-pressed="${t.id === finalId}">${t.label}</button>`).join('')}</div>` : '';
 
   // Build audience pills
   const audiencePills = data.audience.map(a => `<li class="hero-modal-audience-pill">${a}</li>`).join('');

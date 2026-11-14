@@ -1,11 +1,17 @@
-/* Landing Page Profissional: painel "Personalizar".
+/* Modelos prontos de landing page CMKCOGIT: painel "Personalizar" (o mesmo em todos os níveis).
+   Fonte única: tools/templates/base/landing-editor.js. Cada modelo recebe uma cópia idêntica em js/editor.js.
+   O modelo se identifica na tag <script data-lp-editor data-model="..." data-model-name="...">.
    Cores, textos, imagens, seções e links, com prévia imediata na própria página.
    Textos, cores e links ficam no localStorage; as imagens, no IndexedDB do navegador.
    "Baixar site pronto" gera o index.html final, sem este painel, com tudo aplicado.
    "Exportar configuração" gera um .json para a equipe CMKCOGIT publicar. */
 (function () {
   'use strict';
-  var KEY = 'cmk-lp-profissional:v1';
+  var SCRIPT = document.querySelector('script[data-lp-editor]') || { dataset: {} };
+  var MODEL = SCRIPT.dataset.model || 'landing';
+  var MODEL_NAME = SCRIPT.dataset.modelName || 'Landing Page';
+  var STORE = SCRIPT.dataset.store || ('cmk-' + MODEL);
+  var KEY = STORE + ':v1';
   var LP = window.LP || {};
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -69,7 +75,7 @@
     if (dbp) return dbp;
     dbp = new Promise(function (res, rej) {
       try {
-        var r = indexedDB.open('cmk-lp-profissional', 1);
+        var r = indexedDB.open(STORE, 1);
         r.onupgradeneeded = function () { r.result.createObjectStore('images'); };
         r.onsuccess = function () { res(r.result); };
         r.onerror = function () { rej(r.error); };
@@ -101,15 +107,15 @@
   function link(k) { return k in state.links ? state.links[k] : defaults.links[k]; }
   function applyTexts(onlyKey) {
     $$(onlyKey ? '[data-k="' + onlyKey + '"]' : '[data-k]').forEach(function (el) { el.textContent = text(el.dataset.k); });
-    if (onlyKey === 'brand.name' || !onlyKey) { var m = $('[data-brand-mark]'); if (m) m.textContent = (text('brand.name') || ' ').trim().charAt(0).toUpperCase(); }
+    if (onlyKey === 'brand.name' || !onlyKey) { $$('[data-brand-mark]').forEach(function (m) { m.textContent = (text('brand.name') || ' ').trim().charAt(0).toUpperCase(); }); }
     if (LP.syncInitials) LP.syncInitials();
   }
   function applyLinks() {
     $$('[data-href]').forEach(function (el) {
       var v = (link(el.dataset.href) || '').trim();
       var box = el.parentElement && el.parentElement.tagName === 'LI' && el.parentElement.children.length === 1 ? el.parentElement : el;
-      if (v) { el.setAttribute('href', v); box.hidden = false; el.hidden = false; }
-      else { el.setAttribute('href', '#'); box.hidden = true; }
+      if (v) { el.setAttribute('href', v); box.hidden = false; el.hidden = false; box.removeAttribute('data-lpe-off'); }
+      else { el.setAttribute('href', '#'); box.hidden = true; box.setAttribute('data-lpe-off', ''); }
       var external = /^https?:/i.test(v) && !/^#/.test(v);
       if (external) { el.target = '_blank'; el.rel = 'noopener'; } else { el.removeAttribute('target'); el.removeAttribute('rel'); }
     });
@@ -118,7 +124,10 @@
     $$('[data-section]').forEach(function (s) {
       var off = state.hidden.indexOf(s.dataset.section) !== -1;
       if (off) s.setAttribute('data-hidden-section', ''); else s.removeAttribute('data-hidden-section');
-      if (s.id) $$('.nav a[href="#' + s.id + '"]').forEach(function (a) { a.hidden = off; });
+      if (s.id) $$('.nav a[href="#' + s.id + '"], [data-nav-links] a[href="#' + s.id + '"]').forEach(function (a) {
+        var box = a.parentElement && a.parentElement.tagName === 'LI' ? a.parentElement : a;
+        box.hidden = off; if (off) box.setAttribute('data-lpe-off', ''); else box.removeAttribute('data-lpe-off');
+      });
     });
   }
   function applyImage(n) {
@@ -350,7 +359,7 @@
         row.appendChild(lab); row.appendChild(out); row.appendChild(inp); adj.appendChild(row); row.dataset.k = r[0]; row.dataset.def = r[4];
       });
       var aid = id('a'); var al = el('label', '', 'Descrição da imagem (acessibilidade)'); al.htmlFor = aid;
-      var alt = el('input', 'alt'); alt.type = 'text'; alt.id = aid; alt.placeholder = 'Ex.: Nutricionista atendendo uma paciente';
+      var alt = el('input', 'alt'); alt.type = 'text'; alt.id = aid; alt.placeholder = 'Ex.: Equipe atendendo um cliente';
       alt.addEventListener('input', function () { state.images[n] = state.images[n] || { x: 50, y: 50, zoom: 100 }; state.images[n].alt = alt.value; applyImage(n); save(); });
       var center = el('button', 'btn-text', 'Centralizar enquadramento'); center.type = 'button';
       center.addEventListener('click', function () { var d = state.images[n]; if (!d) return; d.x = 50; d.y = 50; d.zoom = 100; applyImage(n); save(); refreshImageCard(n); });
@@ -399,7 +408,7 @@
   // Links e contato
   function buildLinks() {
     var p = panes.links; p.innerHTML = '';
-    p.appendChild(el('p', 'hint', 'WhatsApp: https://wa.me/55 + DDD + número (só números). E-mail: mailto:voce@empresa.com. Telefone: tel:+5511900000000. Seções da página: #sobre, #servicos, #diferenciais, #depoimentos, #contato. Deixe um link vazio para ocultar o botão ou a rede social.'));
+    p.appendChild(el('p', 'hint', 'WhatsApp: https://wa.me/55 + DDD + número (só números). E-mail: mailto:voce@empresa.com. Telefone: tel:+5511900000000. Seções da página: ' + $$('[data-section][id]').map(function (s) { return '#' + s.id; }).join(', ') + '. Deixe um link vazio para ocultar o botão ou a rede social.'));
     var groups = {}, order = [], seen = {};
     $$('[data-href]').forEach(function (node) {
       var k = node.dataset.href; if (seen[k]) return; seen[k] = 1;
@@ -458,7 +467,7 @@
   }
   function slug() { return (text('brand.name') || 'landing-page').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'landing-page'; }
   function exportJson() {
-    var data = { modelo: 'landing-profissional', versao: 1, geradoEm: new Date().toISOString(), cores: colors(), textos: {}, links: {}, secoesOcultas: state.hidden.slice(), imagens: {} };
+    var data = { modelo: MODEL, versao: 1, geradoEm: new Date().toISOString(), cores: colors(), textos: {}, links: {}, secoesOcultas: state.hidden.slice(), imagens: {} };
     Object.keys(defaults.texts).forEach(function (k) { data.textos[k] = text(k); });
     Object.keys(defaults.links).forEach(function (k) { data.links[k] = link(k); });
     Object.keys(state.images).forEach(function (k) { var d = state.images[k]; if (d && d.src) data.imagens[k] = { src: d.src, x: d.x, y: d.y, zoom: d.zoom, alt: d.alt || '' }; });
@@ -470,7 +479,7 @@
     fr.onload = function () {
       try {
         var d = JSON.parse(fr.result);
-        if (d.modelo !== 'landing-profissional') throw new Error('Este arquivo não é de uma Landing Page Profissional.');
+        if (d.modelo !== MODEL) throw new Error('Este arquivo não é de uma ' + MODEL_NAME + '.');
         var c = {}; COLOR_FIELDS.forEach(function (f) { var v = normHex(d.cores && d.cores[f[0]]); if (v) c[f[0]] = v; });
         var t = {}; Object.keys(d.textos || {}).forEach(function (k) { if (k in defaults.texts && typeof d.textos[k] === 'string') t[k] = d.textos[k]; });
         var l = {}; Object.keys(d.links || {}).forEach(function (k) { if (k in defaults.links && typeof d.links[k] === 'string' && !/^\s*javascript:/i.test(d.links[k])) l[k] = d.links[k]; });
@@ -483,7 +492,7 @@
         state = { colors: c, texts: t, links: l, hidden: Array.isArray(d.secoesOcultas) ? d.secoesOcultas.filter(function (s) { return typeof s === 'string'; }) : [], images: imgs };
         ['logo'].concat(slotIds()).forEach(function (n) { if (!imgs[n]) putImg(String(n), null); });
         save(); applyAll(); buildAll(); toast('Configuração importada.');
-      } catch (e) { toast(e.message && e.message.indexOf('Landing') !== -1 ? e.message : 'Arquivo inválido.'); }
+      } catch (e) { toast(e.message && e.message.indexOf(MODEL_NAME) !== -1 ? e.message : 'Arquivo inválido.'); }
     };
     fr.readAsText(file);
   }
@@ -494,7 +503,7 @@
     var doc = document.documentElement.cloneNode(true);
     $$('[data-lp-editor]', doc).forEach(function (n) { n.remove(); });
     $$('.slot-ph, .demo-note', doc).forEach(function (n) { n.remove(); });
-    $$('[hidden]', doc).forEach(function (n) { if (!n.closest('[data-logo]') && !n.matches('[data-logo]')) n.remove(); });
+    $$('[data-lpe-off]', doc).forEach(function (n) { n.remove(); });
     $$('[data-hidden-section]', doc).forEach(function (n) { n.remove(); });
     $$('.reveal, .is-in, .is-scrolled, .is-open, .lpe-target', doc).forEach(function (n) { n.classList.remove('reveal', 'is-in', 'is-scrolled', 'is-open', 'lpe-target'); });
     $$('[class=""]', doc).forEach(function (n) { n.removeAttribute('class'); });

@@ -6,6 +6,7 @@ Três sites estáticos e independentes, vendidos como **Modelos prontos**. Um mo
 | --- | --- | --- | --- |
 | `landing/` | Landing Page Essencial | 1 página, 5 seções: topo, benefícios (3), como funciona (3 passos), depoimentos (3 + números), contato (formulário + 3 dúvidas) | Alento, agenda para psicólogos |
 | `portfolio/` | Portfólio Profissional | 1 página: topo, trabalhos (até 6), sobre (foto + números), serviços (até 3), depoimentos (2), contato | Lia Toledo, designer de identidade visual |
+| `landing-basica/` | Landing Page Básica (nível básico) | 1 página, 7 seções: início, serviços (3 com ícone e características), sobre nós (missão, visão e valores), diferenciais (4), depoimentos (2 + nota) e portfólio (2 fotos), contato (formulário + WhatsApp, e-mail, telefone e redes) e rodapé. Tem o painel **Personalizar** (ver abaixo) | Ponto Firme Reformas |
 | `landing-profissional/` | Landing Page Profissional (nível intermediário) | 1 página, 8 seções: cabeçalho, banner, sobre, serviços (3 com foto), diferenciais (4), depoimentos (3 + foto), chamada para ação e rodapé. Tem o painel **Personalizar** (ver abaixo) | Florescer Nutrição, nutricionista |
 | `institucional/` | Site Institucional Essencial | 4 páginas: Início (serviços, diferenciais, casos, depoimentos, proposta), Sobre, Serviços (até 6 + dúvidas) e Contato | Arrimo Contabilidade |
 
@@ -27,16 +28,25 @@ Os três usam **o mesmo** `css/styles.css` e o mesmo `js/main.js` (fontes em `to
 
 As páginas são geradas por `python3 tools/templates/build-models.py` a partir do conteúdo de cada modelo (o dicionário de cada função no arquivo). Depois de gerar, rode `node tools/templates/configure.mjs`.
 
-## Landing Page Profissional e o painel "Personalizar"
+## Landing pages por nível e o painel "Personalizar"
 
-O `landing-profissional/` é o nível **intermediário** de Landing Page. O nível **básico** é a Landing Page Essencial, e o **formal** ainda está em preparação. No site, o modal de prévia mostra esses níveis em `MODEL_TIERS`, em `js/components.js`. Esse modelo não usa o `styles.css` e o `main.js` comuns: tem `css/styles.css`, `js/site.js` e `js/editor.js` próprios. Assim, os outros três modelos continuam iguais.
+A Landing Page tem três níveis de modelo pronto: **básico** (`landing-basica/`), **intermediário** (`landing-profissional/`) e **formal** (em preparação). No site, o modal de prévia mostra esses níveis em `MODEL_TIERS`, em `js/components.js`. Abrir a prévia pelo serviço `landing-page` mostra o básico. A Landing Page Essencial (`landing/`) continua no repositório, mas não aparece no seletor.
+
+Esses modelos não usam o `styles.css` e o `main.js` comuns. Cada um tem o próprio `css/styles.css`, que define o visual do nível. O script do site e o painel são **iguais em todos os níveis**:
+
+| Fonte única | Cópia em cada modelo | O que faz |
+| --- | --- | --- |
+| `tools/templates/base/landing-site.js` | `js/site.js` | Menu, revelação ao rolar, espaços de imagem, ano do rodapé e formulário. Com `data-endpoint`, envia por POST; sem ele, abre o WhatsApp ou o e-mail do site com a mensagem pronta. |
+| `tools/templates/base/landing-editor.js` | `js/editor.js` | O painel **Personalizar**. |
+
+Edite só a fonte e rode `node tools/templates/sync-landing.mjs`. O `npm run check` falha se alguma cópia ficar diferente. Cada modelo se identifica na tag `<script data-lp-editor data-model="..." data-model-name="...">`, e o painel monta os campos a partir dos atributos do HTML. Um modelo novo só precisa do próprio HTML e CSS.
 
 O botão **Personalizar** abre o painel (`?personalizar` na URL abre direto no computador). Ele permite:
 
 - **Cores:** 8 paletas ou 6 cores em HEX (principal, secundária, destaque, fundo, títulos e textos). Todo o CSS deriva dessas 6 cores, e a cor do texto sobre botões é calculada pelo contraste.
 - **Textos:** todo elemento com `data-k` vira um campo. Com o painel aberto, clicar num texto da página leva ao campo dele.
-- **Imagens:** 6 espaços `data-img` (IMAGEM 1 a 6) e o logotipo. Cada um aceita upload, substituição, remoção, posição horizontal e vertical, zoom e texto alternativo. As fotos são reduzidas no navegador para no máximo 1800 px, em WebP.
-- **Seções:** ocultar Sobre, Serviços, Diferenciais, Depoimentos e Chamada para ação. O item do menu some junto.
+- **Imagens:** os espaços `data-img` (básico: IMAGEM 1 a 4; intermediário: IMAGEM 1 a 6) e o logotipo. Cada um aceita upload, substituição, remoção, posição horizontal e vertical, zoom e texto alternativo. As fotos são reduzidas no navegador para no máximo 1800 px, em WebP.
+- **Seções:** ocultar qualquer seção, exceto o início e o rodapé. Os itens do menu e do rodapé somem junto.
 - **Links:** todo `data-href`. Link vazio oculta o botão ou a rede social.
 - **Publicar:** exporta um `.json` com toda a configuração, para a equipe publicar, ou baixa o `index.html` final, sem o painel, sem os avisos de demonstração e com as imagens embutidas. Esse arquivo substitui o `index.html` da pasta. Depois rode `configure.mjs` normalmente.
 

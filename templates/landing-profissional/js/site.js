@@ -1,4 +1,5 @@
-/* Landing Page Profissional: comportamento do site publicado. Sem dependências.
+/* Modelos prontos de landing page CMKCOGIT: comportamento do site publicado. Sem dependências.
+   Fonte única: tools/templates/base/landing-site.js (cópia idêntica em cada modelo, em js/site.js).
    Menu do celular, cabeçalho ao rolar, revelação das seções e espaços de imagem. */
 (function () {
   'use strict';
@@ -46,6 +47,9 @@
   }
   syncInitials();
 
+  // Ano atual no rodapé.
+  document.querySelectorAll('[data-year]').forEach(function (el) { el.textContent = String(new Date().getFullYear()); });
+
   // Menu do celular.
   var btn = document.querySelector('[data-menu-btn]');
   var nav = document.querySelector('[data-nav]');
@@ -69,12 +73,53 @@
   // Revelação ao rolar (desligada para quem prefere menos movimento).
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce && 'IntersectionObserver' in window) {
-    var targets = document.querySelectorAll('.section-head, .about-copy, .slot-about, .card, .benefit, .quote, .testimonials-side, .cta-box');
+    var targets = document.querySelectorAll('.section-head, .about-copy, .slot-about, .card, .benefit, .quote, .testimonials-side, .cta-box, .work, [data-reveal]');
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
     targets.forEach(function (t) { t.classList.add('reveal'); io.observe(t); });
   }
+
+  // Formulário de contato (quando o modelo tem um). Com data-endpoint (gravado pelo configure.mjs),
+  // envia JSON por POST; sem ele, abre o WhatsApp do rodapé com a mensagem pronta ou, sem WhatsApp, o e-mail.
+  document.querySelectorAll('form[data-form]').forEach(function (form) {
+    var status = form.querySelector('[data-form-status]');
+    var say = function (msg, ok) { if (!status) return; status.textContent = msg; status.hidden = false; status.classList.toggle('is-ok', !!ok); };
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) {
+        var bad = form.querySelector(':invalid'); if (bad) bad.focus();
+        say('Confira os campos destacados antes de enviar.'); form.classList.add('was-validated');
+        return;
+      }
+      var data = {}; new FormData(form).forEach(function (v, k) { data[k] = String(v).trim(); });
+      var text = 'Olá! Sou ' + (data.nome || '') + (data.email ? ' (' + data.email + ')' : '') + '.\n\n' + (data.mensagem || '');
+      var wa = document.querySelector('[data-href="contact.whatsapp"]');
+      var mail = document.querySelector('[data-href="contact.email"]');
+      var waHref = wa && !wa.closest('[hidden]') ? wa.getAttribute('href') : '';
+      var mailHref = mail && !mail.closest('[hidden]') ? mail.getAttribute('href') : '';
+      if (root.getAttribute('data-mode') === 'demo') {
+        say('Demonstração: no site publicado, esta mensagem é enviada ' + (form.dataset.endpoint ? 'para o seu sistema de contatos.' : waHref ? 'pelo WhatsApp.' : 'por e-mail.'), true);
+        return;
+      }
+      var btn = form.querySelector('[type="submit"]');
+      if (form.dataset.endpoint) {
+        if (btn) btn.disabled = true;
+        fetch(form.dataset.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(data) })
+          .then(function (r) { if (!r.ok) throw new Error(); form.reset(); say('Mensagem enviada! Responderemos em breve.', true); })
+          .catch(function () { say('Não foi possível enviar agora. Tente de novo ou use o WhatsApp.'); })
+          .then(function () { if (btn) btn.disabled = false; });
+      } else if (/wa\.me\/\d+/.test(waHref)) {
+        window.open(waHref.split('?')[0] + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+        say('Abrimos o WhatsApp com a sua mensagem pronta.', true);
+      } else if (/^mailto:/.test(mailHref)) {
+        location.href = mailHref.split('?')[0] + '?subject=' + encodeURIComponent('Contato pelo site') + '&body=' + encodeURIComponent(text);
+        say('Abrimos o seu e-mail com a mensagem pronta.', true);
+      } else {
+        say('Configure um WhatsApp ou e-mail de contato para receber as mensagens.');
+      }
+    });
+  });
 
   window.LP = { renderSlot: renderSlot, syncInitials: syncInitials, root: root };
 })();

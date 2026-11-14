@@ -6893,6 +6893,9 @@ dialog.custom-model-dialog.studio { width: 100%; height: 100dvh; max-height: 100
 @media (prefers-reduced-motion: reduce) {
 .studio-section.is-new { animation: none; }
 }
+.dx-personalize-status { margin: 14px 0 0; padding: 12px 14px; border-radius: 2px; background: var(--dx-accent-soft); color: var(--dx-text); font-size: .9rem; line-height: 1.5; }
+.dx-personalize-status.is-ok { background: rgba(126, 224, 176, 0.12); color: var(--dx-success); font-weight: 600; }
+.dx-pending { color: #b4570f; font-weight: 700; }
 .i { width: 1em; height: 1em; flex: none; fill: currentColor; vertical-align: -0.125em; }
 html.animations-ready [data-reveal] {
 opacity: 0;

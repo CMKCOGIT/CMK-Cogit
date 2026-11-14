@@ -353,3 +353,8 @@ dialog.custom-model-dialog.studio:has(.studio-body--objective) { height: auto; }
 
 /* Resultado: plano do modelo pronto (vitalício / mensal / anual) */
 
+
+/* Personalização do modelo (etapa Modelo e resumo) */
+.dx-personalize-status { margin: 14px 0 0; padding: 12px 14px; border-radius: 2px; background: var(--dx-accent-soft); color: var(--dx-text); font-size: .9rem; line-height: 1.5; }
+.dx-personalize-status.is-ok { background: rgba(126, 224, 176, 0.12); color: var(--dx-success); font-weight: 600; }
+.dx-pending { color: #b4570f; font-weight: 700; }

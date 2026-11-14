@@ -214,7 +214,7 @@
       '<div class="body"></div>' +
     '</aside><div class="toast" role="status" aria-live="polite"></div>';
   var fab = $('.fab', sh), panel = $('.panel', sh), tabsEl = $('.tabs', sh), body = $('.body', sh), toastEl = $('.toast', sh);
-  var TABS = [['cores', 'Cores'], ['textos', 'Textos'], ['imagens', 'Imagens'], ['secoes', 'Seções'], ['links', 'Links'], ['publicar', 'Enviar']];
+  var TABS = [['cores', 'Cores'], ['textos', 'Textos'], ['imagens', 'Imagens'], ['secoes', 'Seções'], ['links', 'Links'], ['publicar', /[?&]origem=diagnostico\b/.test(location.search) ? 'Concluir' : 'Enviar']];
   var panes = {};
   TABS.forEach(function (t, i) {
     var b = document.createElement('button');
@@ -465,8 +465,20 @@
   // O cliente NÃO baixa o site: envia a personalização para a plataforma, a equipe revisa,
   // ajusta o que for preciso e manda o orçamento; depois do pagamento, entrega o site publicado.
   var TEAM = /[?&]equipe\b/.test(location.search);
+  // Aberto pelo "Monte sua solução" (etapa Modelo): ao concluir, a personalização volta para o
+  // diagnóstico, que a envia à plataforma junto com o resumo. Mesma origem do site.
+  var DIAG = /[?&]origem=diagnostico\b/.test(location.search) && !!window.opener;
   function buildPublish() {
     var p = panes.publicar; p.innerHTML = '';
+    if (DIAG) {
+      p.appendChild(el('h3', '', 'Terminou? Volte ao seu resumo'));
+      p.appendChild(el('p', 'hint', 'Quando o site estiver do seu jeito, conclua a personalização. Ela volta para o “Monte sua solução”, onde você revisa o resumo e envia tudo para a CMKCOGIT.'));
+      var bd = el('button', 'btn-wide primary', 'Concluir personalização'); bd.type = 'button';
+      bd.addEventListener('click', function () { returnToDiagnostic(bd); });
+      p.appendChild(bd);
+      var sd = el('p', 'send-status'); sd.id = 'send-status'; sd.setAttribute('role', 'status'); sd.hidden = true; p.appendChild(sd);
+      return;
+    }
     p.appendChild(el('h3', '', 'Terminou? Envie para a CMKCOGIT'));
     p.appendChild(el('p', 'hint', 'Suas alterações ficam salvas neste navegador enquanto você edita. Quando terminar, envie o site para a nossa equipe:'));
     var steps = el('ol', 'steps');
@@ -513,6 +525,24 @@
   }
   function randomRef() { var a = new Uint8Array(18); crypto.getRandomValues(a); var s = ''; a.forEach(function (b) { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
   function sendStatus(msg, ok) { var s = $('#send-status', sh); if (!s) return; s.textContent = msg; s.hidden = !msg; s.classList.toggle('ok', !!ok); }
+  function returnToDiagnostic(btn) {
+    var opener = window.opener;
+    if (!opener || opener.closed) { sendStatus('A aba do “Monte sua solução” foi fechada. Abra o diagnóstico de novo e clique em “Personalizar modelo”: suas alterações continuam salvas.'); return; }
+    var data = buildConfigData();
+    btn.disabled = true;
+    var done = false;
+    function onMsg(e) {
+      if (e.origin !== location.origin || e.source !== opener || !e.data || e.data.type !== 'cmk:diagnostico:recebida') return;
+      done = true; window.removeEventListener('message', onMsg); btn.disabled = false;
+      sendStatus('Pronto! Sua personalização foi para o resumo. Volte à aba do “Monte sua solução” para continuar.', true);
+      try { opener.focus(); } catch (err) { /* */ }
+      setTimeout(function () { try { window.close(); } catch (err) { /* */ } }, 1200);
+    }
+    window.addEventListener('message', onMsg);
+    opener.postMessage({ type: 'cmk:diagnostico:personalizacao', variante: SCRIPT.dataset.variant || '', modelo: MODEL, nome: text('brand.name') || '', dados: data }, location.origin);
+    setTimeout(function () { if (!done) { window.removeEventListener('message', onMsg); btn.disabled = false; sendStatus('Não conseguimos falar com a aba do “Monte sua solução”. Ela continua aberta? Tente de novo.'); } }, 6000);
+  }
+
   var sending = null;
   function sendToPlatform(btn) {
     var data = buildConfigData();
@@ -657,7 +687,7 @@
   var pending = ['logo'].concat(slotIds()).filter(function (n) { return state.images[n] && state.images[n].has; });
   Promise.all(pending.map(function (n) { return getImg(String(n)).then(function (src) { if (src) state.images[n].src = src; else state.images[n] = null; }); }))
     .then(function () { ['logo'].concat(slotIds()).forEach(function (n) { applyImage(n); refreshImageCard(n); }); });
-  if (/[?&]personalizar\b/.test(location.search) && window.matchMedia('(min-width: 901px)').matches) setOpen(true);
+  if (/[?&]personalizar\b/.test(location.search) && (DIAG || window.matchMedia('(min-width: 901px)').matches)) setOpen(true);
 
   function PANEL_CSS() {
     return ':host{all:initial;font:400 14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1b1d22;--ac:#2d5bff}' +

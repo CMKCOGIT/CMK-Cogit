@@ -293,7 +293,8 @@ function renderHeroInteractive() {
     context: '',
     contextTags: [],
     customProject: null,
-    variant: null // modelo pronto escolhido quando o serviço tem níveis (MODEL_TIERS)
+    variant: null, // modelo pronto escolhido quando o serviço tem níveis (MODEL_TIERS)
+    personalization: null // { variante, dados, nome }: site personalizado no editor do modelo
   };
 
   const heroSection = container.closest('.hero');
@@ -697,7 +698,7 @@ function renderHeroInteractive() {
     container.querySelectorAll('input[name="dx-service"]').forEach(input => {
       input.addEventListener('change', () => {
         const svc = SERVICES_GRID.find(s => s.id === input.value);
-        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; state.variant = null; }
+        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; }
         state.selectedService = svc.id;
         state.challenge = svc.challenge;
         next.disabled = false;
@@ -887,23 +888,35 @@ function renderHeroInteractive() {
         </div>`;
     };
 
+    const done = () => state.personalization && state.personalization.variante === state.variant;
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead('modelo', 'Qual modelo pronto combina com você?', 'Todos têm sua marca, seus textos e suas imagens aplicados. Abra a demonstração para ver cada um funcionando.')}
+        ${renderDxHead('modelo', 'Qual modelo pronto combina com você?', 'Escolha o modelo e personalize: cores, textos e imagens do seu jeito, com prévia na hora. Depois é só revisar o resumo.')}
         <div class="dx-body">
           <fieldset class="dx-group">
             <legend class="sr-only">Modelo pronto</legend>
             <div class="dx-grid dx-grid--format dx-grid--tiers">${tiers.map(card).join('')}</div>
           </fieldset>
+          <p class="dx-personalize-status" data-dx-pers-status role="status" hidden></p>
         </div>
-        ${renderDxFooter('Voltar', 'Ver meu resumo', !state.variant)}
+        ${renderDxFooter('Voltar', 'Personalizar modelo', !state.variant)}
       </div>`;
 
     const next = container.querySelector('[data-dx="next"]');
+    const nextLabel = container.querySelector('[data-dx-next-label]');
+    const status = container.querySelector('[data-dx-pers-status]');
+    const say = (msg, ok) => { status.textContent = msg || ''; status.hidden = !msg; status.classList.toggle('is-ok', !!ok); };
+    const sync = () => {
+      next.disabled = !state.variant;
+      nextLabel.textContent = done() ? 'Ver meu resumo' : 'Personalizar modelo';
+      if (done()) say('Personalização concluída. Você pode revisar o resumo ou trocar de modelo.', true);
+      else if (!status.dataset.waiting) say('');
+    };
     container.querySelectorAll('input[name="dx-variant"]').forEach(input => {
       input.addEventListener('change', () => {
         state.variant = input.value;
-        next.disabled = false;
+        delete status.dataset.waiting;
+        sync();
         revealNextAction(next);
         if (typeof trackEvent === 'function') trackEvent('hero_variant_selected', input.value);
       });
@@ -919,7 +932,42 @@ function renderHeroInteractive() {
       });
     }));
     container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep2, 'back'));
-    next.addEventListener('click', () => { if (state.variant) transitionTo(renderResult, 'next'); });
+    next.addEventListener('click', () => {
+      if (!state.variant) return;
+      if (done()) { transitionTo(renderResult, 'next'); return; }
+      const opened = openModelEditor(state.variant, () => transitionTo(renderResult, 'next'));
+      if (!opened) { say('O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.'); return; }
+      status.dataset.waiting = '1';
+      say('Personalize o modelo na nova aba. Quando terminar, clique em “Concluir personalização” (aba Concluir do painel) para voltar ao resumo.');
+    });
+    sync();
+  }
+
+  // Abre o editor do modelo (mesma origem do site) e espera a personalização voltar.
+  // Devolve false se o navegador bloqueou a aba.
+  let editorListener = null;
+  function openModelEditor(variant, onDone) {
+    const d = MODEL_PREVIEW_DATA[variant];
+    if (!d) return false;
+    const root = location.pathname.includes('/solucoes/') ? '../' : '';
+    const base = (root + d.liveUrl).split('?')[0];
+    const win = window.open(base + '?personalizar&origem=diagnostico', '_blank');
+    if (!win) return false;
+    if (editorListener) window.removeEventListener('message', editorListener);
+    editorListener = (e) => {
+      const m = e.data;
+      if (e.origin !== location.origin || e.source !== win || !m || m.type !== 'cmk:diagnostico:personalizacao') return;
+      if (m.variante !== variant || !m.dados || typeof m.dados !== 'object') return;
+      state.personalization = { variante: variant, dados: m.dados, nome: String(m.nome || '').slice(0, 120) };
+      state.variant = variant;
+      try { win.postMessage({ type: 'cmk:diagnostico:recebida' }, location.origin); } catch (_) { /* aba fechada */ }
+      window.removeEventListener('message', editorListener); editorListener = null;
+      if (typeof trackEvent === 'function') trackEvent('hero_model_personalized', variant);
+      try { window.focus(); } catch (_) { /* */ }
+      onDone();
+    };
+    window.addEventListener('message', editorListener);
+    return true;
   }
 
   // ── ETAPA 2: contexto (opcional), logo depois da solução ──
@@ -1003,7 +1051,13 @@ function renderHeroInteractive() {
       priceNote = 'Estimativa inicial. A equipe confirma o valor depois de entender o escopo.';
       prazo = 'Definido na validação do escopo';
     }
-    const steps = model === 'modelos-prontos'
+    // Modelo com níveis: o site é personalizado no editor e a equipe revisa antes do orçamento.
+    const needsPers = Boolean(variantData);
+    const pers = needsPers && state.personalization && state.personalization.variante === variantTier.id ? state.personalization : null;
+    if (needsPers) priceNote = 'Valor de referência do modelo. O orçamento final chega depois que revisarmos o seu site.';
+    const steps = needsPers
+      ? ['Envie para a CMKCOGIT e entre ou crie sua conta na plataforma.', 'Revisamos o seu site, fazemos os ajustes necessários e enviamos o orçamento.', 'Com o pagamento aprovado, publicamos e entregamos o site.']
+      : model === 'modelos-prontos'
       ? ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'Pague por Pix, cartão ou boleto.', 'Envie logotipo, textos e imagens para começarmos.']
       : ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'A equipe revisa o escopo e confirma valor e prazo.', 'Com tudo aprovado, o pagamento é liberado na própria plataforma.'];
 
@@ -1024,7 +1078,8 @@ function renderHeroInteractive() {
             <dl class="dx-choices">
               <div><dt>Solução</dt><dd>${svcName}</dd><dd><button type="button" class="dx-edit" data-dx-edit="1">Alterar<span class="sr-only"> solução</span></button></dd></div>
               <div><dt>${isPresence ? 'Formato' : 'Objetivo'}</dt><dd>${formatLabel}</dd><dd><button type="button" class="dx-edit" data-dx-edit="2">Alterar<span class="sr-only"> ${isPresence ? 'formato' : 'objetivo'}</span></button></dd></div>
-              ${variantData ? `<div><dt>Modelo</dt><dd>${esc(variantTier.label)} · ${esc(variantData.name)}</dd><dd><button type="button" class="dx-edit" data-dx-edit="modelo">Alterar<span class="sr-only"> modelo</span></button></dd></div>` : ''}
+              ${variantData ? `<div><dt>Modelo</dt><dd>${esc(variantTier.label)} · ${esc(variantData.name)}</dd><dd><button type="button" class="dx-edit" data-dx-edit="modelo">Alterar<span class="sr-only"> modelo</span></button></dd></div>
+              <div><dt>Personalização</dt><dd>${pers ? 'Concluída' + (pers.nome ? ' · ' + esc(pers.nome) : '') : '<strong class="dx-pending">Pendente</strong>'}</dd><dd><button type="button" class="dx-edit" data-dx-edit="personalizar">${pers ? 'Editar' : 'Personalizar'}<span class="sr-only"> o site</span></button></dd></div>` : ''}
             </dl>
 
             ${project ? `
@@ -1053,7 +1108,8 @@ function renderHeroInteractive() {
             <dl class="dx-aside-facts"><div><dt>Prazo</dt><dd>${prazo}</dd></div></dl>
             <h4 class="dx-kicker">Próximos passos</h4>
             <ol class="dx-next">${steps.map(s => `<li>${s}</li>`).join('')}</ol>
-            <button type="button" class="dx-btn dx-btn--primary dx-btn--block" id="hero-btn-plataforma"><span>Continuar na plataforma</span>${DX_ICON.right}</button>
+            <button type="button" class="dx-btn dx-btn--primary dx-btn--block" id="hero-btn-plataforma"><span>${!needsPers ? 'Continuar na plataforma' : pers ? 'Enviar para a CMKCOGIT' : 'Personalizar modelo'}</span>${DX_ICON.right}</button>
+            <p class="dx-personalize-status" data-dx-send-status role="status" hidden></p>
             <p class="dx-reassure">Você revisa tudo antes de qualquer pagamento.</p>
             <div class="dx-aside-links">
               <a href="${configuratorLink}" id="hero-link-form">Ajustar no configurador</a>
@@ -1074,14 +1130,22 @@ function renderHeroInteractive() {
         }, { project: state.customProject, startAt: 'structure' });
         return;
       }
+      if (target === 'personalizar') {
+        if (!openModelEditor(variantTier.id, () => { renderResult(); CogitUI.focusHeading(container); })) sendStatus('O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.');
+        else sendStatus('Personalize na nova aba e clique em “Concluir personalização” para voltar.');
+        return;
+      }
       transitionTo({ 1: renderStep1, 2: renderStep2, 3: renderStep3, modelo: renderStepModelo }[target], 'back');
     }));
     const previewBtn = container.querySelector('[data-dx-action="preview"]');
     if (previewBtn) previewBtn.addEventListener('click', () => (variantData ? openModelPreviewModal(previewId) : showModelPreview(selectedSvc)));
 
     const platformBtn = document.getElementById('hero-btn-plataforma');
+    const sendStatusEl = container.querySelector('[data-dx-send-status]');
+    function sendStatus(msg, ok) { sendStatusEl.textContent = msg || ''; sendStatusEl.hidden = !msg; sendStatusEl.classList.toggle('is-ok', !!ok); }
     platformBtn.addEventListener('click', () => {
       if (typeof CogitHandoff === 'undefined') return;
+      if (needsPers && !pers) { container.querySelector('[data-dx-edit="personalizar"]').click(); return; }
       platformBtn.disabled = true;
       if (typeof trackEvent === 'function') trackEvent('hero_diagnostic_platform', { service: state.selectedService, challenge: state.challenge, objective: state.objective });
       const notes = [
@@ -1090,18 +1154,23 @@ function renderHeroInteractive() {
         state.contextTags.length ? `Marcado no diagnóstico: ${state.contextTags.join('; ')}` : '',
         contextText
       ].filter(Boolean).join('\n');
-      CogitHandoff.irParaPlataforma({
+      const cfg = {
         origem: 'diagnostico',
         servicos: [{ id: catalogService, modelo: model || null, plano: null, nome: svcName, variante: variantData ? variantTier.id : null }],
         complementos: [],
         notas: notes,
         diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : variantData ? `${formatLabel} · ${variantTier.label}` : formatLabel, direcao: headline },
         estimativa: price
+      };
+      if (!pers) { CogitHandoff.irParaPlataforma(cfg); return; }
+      CogitHandoff.enviarComPersonalizacao(cfg, pers.dados, (estado, msg) => {
+        sendStatus(msg, estado === 'recebido');
+        if (estado !== 'enviando') platformBtn.disabled = false;
       });
     });
 
     document.getElementById('hero-btn-restart').addEventListener('click', () => {
-      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null });
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null, personalization: null });
       transitionTo(renderStep0, 'back');
     });
   }

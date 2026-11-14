@@ -6661,6 +6661,11 @@ cursor: pointer; transition: background-color 160ms ease, border-color 160ms eas
 .dx-facts > span { display: grid; gap: 2px; }
 .dx-facts small { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dx-faint); }
 .dx-facts strong { font-size: 0.95rem; font-weight: 600; color: var(--dx-text); }
+.dx-grid--tiers { grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); }
+.dx-format-links { display: flex; flex-wrap: wrap; gap: 0 4px; margin-top: auto; }
+.dx-format-links .dx-link-btn { margin-right: 8px; }
+.dx-format--soon { border-style: dashed; opacity: .7; }
+.dx-format--soon .dx-format-label { cursor: default; }
 .dx-format-status { display: flex; align-items: center; gap: 8px; margin: 0 20px; padding: 10px 12px; border-radius: 2px; background: rgba(126, 224, 176, 0.08); color: var(--dx-success); font-size: 0.85rem; font-weight: 600; }
 .dx-link-btn {
 display: inline-flex; align-items: center; gap: 8px; align-self: flex-start;

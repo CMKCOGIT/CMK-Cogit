@@ -55,6 +55,9 @@ ul { margin: 0; padding: 0; list-style: none; }
 .wrap { width: min(100% - 2 * var(--gutter), var(--max)); margin-inline: auto; }
 [data-hidden-section] { display: none !important; }
 [data-multi] { white-space: pre-line; }
+/* Textos editados pelo cliente: palavras longas quebram em vez de sair da tela. */
+body { overflow-wrap: break-word; }
+h1, h2, h3, [data-k] { overflow-wrap: anywhere; }
 svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
 .demo-note { margin: 0; padding: 9px var(--gutter); background: var(--c-heading); color: var(--c-bg); font-size: .85rem; text-align: center; }

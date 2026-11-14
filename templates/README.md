@@ -48,7 +48,9 @@ O botão **Personalizar** abre o painel (`?personalizar` na URL abre direto no c
 - **Imagens:** os espaços `data-img` (básico: IMAGEM 1 a 4; intermediário: IMAGEM 1 a 6) e o logotipo. Cada um aceita upload, substituição, remoção, posição horizontal e vertical, zoom e texto alternativo. As fotos são reduzidas no navegador para no máximo 1800 px, em WebP.
 - **Seções:** ocultar qualquer seção, exceto o início e o rodapé. Os itens do menu e do rodapé somem junto.
 - **Links:** todo `data-href`. Link vazio oculta o botão ou a rede social.
-- **Publicar:** exporta um `.json` com toda a configuração, para a equipe publicar, ou baixa o `index.html` final, sem o painel, sem os avisos de demonstração e com as imagens embutidas. Esse arquivo substitui o `index.html` da pasta. Depois rode `configure.mjs` normalmente.
+- **Limites de texto:** cada campo tem um limite proporcional ao texto do modelo, com contador. Um elemento pode fixar o próprio limite com `data-max`. Palavras longas quebram de linha (`overflow-wrap`).
+- **Enviar:** o cliente **não baixa o site**. O botão **Enviar para a CMKCOGIT** abre `app.cmkcogit.com.br/continuar.html` com `#cfg`, que leva o modelo pronto, a `variante` (`data-variant` da tag do editor) e `personalizacao: true`. Os dados vão para a plataforma por `postMessage`. A solicitação entra **em validação**, a equipe revisa, ajusta e envia o orçamento, e depois do pagamento entrega o site. No banco da plataforma, rode `sql/31_personalizacao_modelo.sql`.
+- **Equipe (`?equipe` na URL):** importar ou exportar o `.json` e **Gerar site final (.html)**. O arquivo sai sem o painel, sem os avisos de demonstração e com as imagens embutidas, e substitui o `index.html` da pasta. Depois rode `configure.mjs`. No admin da plataforma, o botão "Baixar personalização (.json)" do pedido traz o arquivo do cliente. O `?equipe` só esconde as ferramentas da interface; o código do modelo é público como em qualquer site estático.
 
 A personalização fica salva no navegador de quem edita: textos e cores no `localStorage`, imagens no IndexedDB.
 

@@ -103,7 +103,25 @@
     if (themeEl) themeEl.textContent = css;
     var meta = $('meta[name="theme-color"]'); if (meta) meta.content = c.bg;
   }
-  function text(k) { return k in state.texts ? state.texts[k] : defaults.texts[k]; }
+  // Limite de cada texto: proporcional ao texto do modelo, para não estourar o layout.
+  // Um elemento pode definir o próprio limite com data-max="120".
+  var limits = {};
+  function limitOf(k) {
+    if (limits[k]) return limits[k];
+    var node = $('[data-k="' + k + '"]');
+    var fixed = node && parseInt(node.getAttribute('data-max'), 10);
+    var base = (defaults.texts[k] || '').length;
+    var max = fixed > 0 ? fixed : base <= 30 ? Math.max(base + 12, Math.round(base * 1.5)) : Math.round(base * 1.35) + 10;
+    limits[k] = Math.min(max, 420);
+    return limits[k];
+  }
+  // Corta no limite e permite no máximo 2 quebras de linha seguidas (e 4 no total).
+  function clampText(k, v) {
+    v = String(v == null ? '' : v).replace(/\n{3,}/g, '\n\n');
+    var lines = v.split('\n'); if (lines.length > 5) v = lines.slice(0, 5).join('\n') + ' ' + lines.slice(5).join(' ');
+    return v.slice(0, limitOf(k));
+  }
+  function text(k) { return k in state.texts ? clampText(k, state.texts[k]) : defaults.texts[k]; }
   function link(k) { return k in state.links ? state.links[k] : defaults.links[k]; }
   function applyTexts(onlyKey) {
     $$(onlyKey ? '[data-k="' + onlyKey + '"]' : '[data-k]').forEach(function (el) { el.textContent = text(el.dataset.k); });
@@ -196,7 +214,7 @@
       '<div class="body"></div>' +
     '</aside><div class="toast" role="status" aria-live="polite"></div>';
   var fab = $('.fab', sh), panel = $('.panel', sh), tabsEl = $('.tabs', sh), body = $('.body', sh), toastEl = $('.toast', sh);
-  var TABS = [['cores', 'Cores'], ['textos', 'Textos'], ['imagens', 'Imagens'], ['secoes', 'Seções'], ['links', 'Links'], ['publicar', 'Publicar']];
+  var TABS = [['cores', 'Cores'], ['textos', 'Textos'], ['imagens', 'Imagens'], ['secoes', 'Seções'], ['links', 'Links'], ['publicar', 'Enviar']];
   var panes = {};
   TABS.forEach(function (t, i) {
     var b = document.createElement('button');
@@ -301,10 +319,22 @@
         var f = el('div', 'field'); f.dataset.key = k;
         var lab = el('label', '', node.dataset.label || k); lab.htmlFor = fid;
         var inp = node.hasAttribute('data-multi') ? el('textarea') : el('input');
+        var max = limitOf(k);
         if (inp.tagName === 'INPUT') inp.type = 'text'; else inp.rows = Math.min(5, Math.max(2, Math.ceil(text(k).length / 42)));
-        inp.id = fid; inp.value = text(k);
-        inp.addEventListener('input', function () { state.texts[k] = inp.value; applyTexts(k); save(); });
-        f.appendChild(lab); f.appendChild(inp);
+        inp.id = fid; inp.maxLength = max; inp.value = text(k);
+        var cnt = el('small', 'count'); cnt.id = fid + '-n'; cnt.setAttribute('aria-live', 'polite'); inp.setAttribute('aria-describedby', cnt.id);
+        var syncCount = function () {
+          var n = inp.value.length;
+          cnt.textContent = n + '/' + max + (n >= max ? ' · limite atingido: resuma o texto para caber no layout' : '');
+          cnt.classList.toggle('full', n >= max);
+        };
+        inp.addEventListener('input', function () {
+          var v = clampText(k, inp.value);
+          if (v !== inp.value) { var pos = inp.selectionStart; inp.value = v; try { inp.setSelectionRange(pos, pos); } catch (e) { /* */ } }
+          state.texts[k] = v; applyTexts(k); save(); syncCount();
+        });
+        syncCount();
+        f.appendChild(lab); f.appendChild(inp); f.appendChild(cnt);
         if (node.closest('[data-section]') && node.closest('[data-section]').dataset.section !== 'footer' && node.closest('[data-section]').dataset.section !== 'hero') f.dataset.section = node.closest('[data-section]').dataset.section;
         det.appendChild(f); textFields[k] = { input: inp, details: det, field: f };
       });
@@ -431,23 +461,24 @@
     p.appendChild(el('p', 'hint', 'Os textos exibidos (número, e-mail, endereço e horário) ficam na aba Textos, em “Rodapé”.'));
   }
 
-  // Salvar e publicar
+  // Enviar (cliente) e ferramentas da equipe (?equipe na URL)
+  // O cliente NÃO baixa o site: envia a personalização para a plataforma, a equipe revisa,
+  // ajusta o que for preciso e manda o orçamento; depois do pagamento, entrega o site publicado.
+  var TEAM = /[?&]equipe\b/.test(location.search);
   function buildPublish() {
     var p = panes.publicar; p.innerHTML = '';
-    p.appendChild(el('h3', '', 'Sua landing page está salva'));
-    p.appendChild(el('p', 'hint', 'Tudo o que você altera fica guardado automaticamente neste navegador. Quando terminar, escolha uma das opções abaixo.'));
-    var b1 = el('button', 'btn-wide primary', 'Enviar para a CMKCOGIT publicar (.json)'); b1.type = 'button';
-    b1.addEventListener('click', function () { exportJson(); });
+    p.appendChild(el('h3', '', 'Terminou? Envie para a CMKCOGIT'));
+    p.appendChild(el('p', 'hint', 'Suas alterações ficam salvas neste navegador enquanto você edita. Quando terminar, envie o site para a nossa equipe:'));
+    var steps = el('ol', 'steps');
+    ['Revisamos o seu site e fazemos os ajustes necessários.', 'Enviamos o orçamento na plataforma CMKCOGIT.', 'Com o pagamento aprovado, publicamos e entregamos o site para você.']
+      .forEach(function (t) { steps.appendChild(el('li', '', t)); });
+    p.appendChild(steps);
+    var b1 = el('button', 'btn-wide primary', 'Enviar para a CMKCOGIT'); b1.type = 'button';
+    b1.addEventListener('click', function () { sendToPlatform(b1); });
     p.appendChild(b1);
-    p.appendChild(el('p', 'hint', 'Gera um arquivo com suas cores, textos, links e imagens. Envie para a nossa equipe, que publica no seu domínio.'));
-    var b2 = el('button', 'btn-wide', 'Baixar site pronto (.html)'); b2.type = 'button';
-    b2.addEventListener('click', function () { exportHtml(); });
-    p.appendChild(b2);
-    p.appendChild(el('p', 'hint', 'Página final, sem este painel e sem os avisos de demonstração. Substitua o index.html da pasta do modelo e publique.'));
+    var st = el('p', 'send-status'); st.id = 'send-status'; st.setAttribute('role', 'status'); st.hidden = true; p.appendChild(st);
+    p.appendChild(el('p', 'hint', 'Abre a plataforma em uma nova aba para você entrar ou criar sua conta. Use o mesmo navegador até concluir o envio.'));
     p.appendChild(el('h3', '', 'Outras opções'));
-    var file = el('input'); file.type = 'file'; file.accept = 'application/json,.json'; file.className = 'sr-only'; file.tabIndex = -1; file.setAttribute('aria-hidden', 'true');
-    file.addEventListener('change', function () { if (file.files[0]) importJson(file.files[0]); file.value = ''; });
-    var b3 = el('button', 'btn-wide', 'Importar configuração (.json)'); b3.type = 'button'; b3.addEventListener('click', function () { file.click(); });
     var b4 = el('button', 'btn-wide danger', 'Restaurar o modelo original'); b4.type = 'button';
     b4.addEventListener('click', function () {
       if (!confirm('Apagar todas as personalizações (cores, textos, imagens e links) deste navegador?')) return;
@@ -456,7 +487,66 @@
       ['logo'].concat(slotIds()).forEach(function (n) { putImg(String(n), null); });
       applyAll(); buildAll(); toast('Modelo original restaurado.');
     });
-    p.appendChild(b3); p.appendChild(file); p.appendChild(b4);
+    p.appendChild(b4);
+    if (!TEAM) return;
+    // Equipe CMKCOGIT: importar o arquivo baixado na plataforma, revisar e gerar o site final.
+    p.appendChild(el('h3', '', 'Equipe CMKCOGIT'));
+    var file = el('input'); file.type = 'file'; file.accept = 'application/json,.json'; file.className = 'sr-only'; file.tabIndex = -1; file.setAttribute('aria-hidden', 'true');
+    file.addEventListener('change', function () { if (file.files[0]) importJson(file.files[0]); file.value = ''; });
+    var b3 = el('button', 'btn-wide', 'Importar configuração (.json)'); b3.type = 'button'; b3.addEventListener('click', function () { file.click(); });
+    var b5 = el('button', 'btn-wide', 'Exportar configuração (.json)'); b5.type = 'button'; b5.addEventListener('click', function () { exportJson(); });
+    var b2 = el('button', 'btn-wide', 'Gerar site final (.html)'); b2.type = 'button'; b2.addEventListener('click', function () { exportHtml(); });
+    p.appendChild(b3); p.appendChild(file); p.appendChild(b5); p.appendChild(b2);
+    p.appendChild(el('p', 'hint', 'O site final sai sem este painel e sem os avisos de demonstração. Substitua o index.html da pasta do modelo e rode o configure.mjs.'));
+  }
+
+  // ── Envio para a plataforma (app.cmkcogit.com.br) ──
+  // Abre continuar.html com #cfg (modelo pronto + variante + personalizacao) e entrega os
+  // dados por postMessage quando a aba da plataforma avisa que está pronta.
+  var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var APP = SCRIPT.dataset.app || (LOCAL ? 'http://localhost:3000' : 'https://app.cmkcogit.com.br');
+  var APP_ORIGIN = (function () { try { return new URL(APP).origin; } catch (e) { return ''; } })();
+  function b64url(s) {
+    var bytes = new TextEncoder().encode(s), bin = '';
+    bytes.forEach(function (b) { bin += String.fromCharCode(b); });
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+  function randomRef() { var a = new Uint8Array(18); crypto.getRandomValues(a); var s = ''; a.forEach(function (b) { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+  function sendStatus(msg, ok) { var s = $('#send-status', sh); if (!s) return; s.textContent = msg; s.hidden = !msg; s.classList.toggle('ok', !!ok); }
+  var sending = null;
+  function sendToPlatform(btn) {
+    var data = buildConfigData();
+    var size = JSON.stringify(data).length;
+    if (size > 14 * 1024 * 1024) { sendStatus('As imagens estão grandes demais para enviar de uma vez. Remova ou troque alguma imagem e tente de novo.'); return; }
+    var ref = randomRef();
+    var cfg = {
+      v: 1, ref: ref, origem: 'configurador', objetivos: [], complementos: [],
+      servicos: [{ id: SCRIPT.dataset.service || 'landing-page', modelo: 'modelos-prontos', plano: null, nome: MODEL_NAME, variante: SCRIPT.dataset.variant || '' }],
+      notas: 'Personalização enviada pelo editor do modelo ' + MODEL_NAME + ' (' + (text('brand.name') || '') + ').',
+      diagnostico: null, estimativa: '', personalizacao: true
+    };
+    var back = location.origin + location.pathname;
+    var url = APP + '/continuar.html?volta=' + encodeURIComponent(back) + '#cfg=' + b64url(JSON.stringify(cfg));
+    var win = window.open(url, '_blank');
+    if (!win) { sendStatus('O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.'); return; }
+    btn.disabled = true;
+    sendStatus('Abrindo a plataforma e enviando o seu site…');
+    if (sending) sending.stop();
+    var timer = setTimeout(function () { stop(); btn.disabled = false; sendStatus('Não conseguimos falar com a plataforma. Verifique se a nova aba abriu e clique em "Enviar" de novo.'); }, 30000);
+    function onMsg(e) {
+      if (e.origin !== APP_ORIGIN || e.source !== win || !e.data || e.data.ref !== ref) return;
+      if (e.data.type === 'cmk:personalizacao:pronto') win.postMessage({ type: 'cmk:personalizacao', ref: ref, dados: data }, APP_ORIGIN);
+      else if (e.data.type === 'cmk:personalizacao:recebida') {
+        stop(); btn.disabled = false;
+        sendStatus('Enviado! Continue na aba da plataforma: entre ou crie sua conta para concluir. Nossa equipe revisa e envia o orçamento por lá.', true);
+        toast('Site enviado para a CMKCOGIT.');
+      } else if (e.data.type === 'cmk:personalizacao:erro') {
+        stop(); btn.disabled = false; sendStatus('A plataforma não aceitou o envio. Tente de novo ou fale com a gente pelo WhatsApp.');
+      }
+    }
+    function stop() { clearTimeout(timer); window.removeEventListener('message', onMsg); sending = null; }
+    window.addEventListener('message', onMsg);
+    sending = { stop: stop };
   }
 
   function download(name, content, type) {
@@ -466,12 +556,15 @@
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 4000);
   }
   function slug() { return (text('brand.name') || 'landing-page').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'landing-page'; }
-  function exportJson() {
-    var data = { modelo: MODEL, versao: 1, geradoEm: new Date().toISOString(), cores: colors(), textos: {}, links: {}, secoesOcultas: state.hidden.slice(), imagens: {} };
+  function buildConfigData() {
+    var data = { modelo: MODEL, variante: SCRIPT.dataset.variant || '', versao: 1, geradoEm: new Date().toISOString(), cores: colors(), textos: {}, links: {}, secoesOcultas: state.hidden.slice(), imagens: {} };
     Object.keys(defaults.texts).forEach(function (k) { data.textos[k] = text(k); });
     Object.keys(defaults.links).forEach(function (k) { data.links[k] = link(k); });
     Object.keys(state.images).forEach(function (k) { var d = state.images[k]; if (d && d.src) data.imagens[k] = { src: d.src, x: d.x, y: d.y, zoom: d.zoom, alt: d.alt || '' }; });
-    download(slug() + '-configuracao.json', JSON.stringify(data, null, 2), 'application/json');
+    return data;
+  }
+  function exportJson() {
+    download(slug() + '-configuracao.json', JSON.stringify(buildConfigData(), null, 2), 'application/json');
     toast('Configuração exportada.');
   }
   function importJson(file) {
@@ -603,6 +696,10 @@
       '.field label{font-size:12.5px;font-weight:600;color:#3b404b}' +
       '.field input,.field textarea{width:100%;min-height:42px;padding:9px 11px;border:1px solid #d5d8de;border-radius:9px;background:#fff;resize:vertical}' +
       '.field input:focus,.field textarea:focus,.hex:focus,.search:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 3px rgb(45 91 255/.15)}' +
+      '.steps{margin:0 0 14px;padding-left:20px;font-size:13px;color:#3b404b;display:grid;gap:4px}' +
+      '.send-status{margin:4px 0 12px;padding:10px 12px;border-radius:9px;background:#fff4e5;color:#7a3e00;font-size:12.5px}.send-status.ok{background:#e8f6ee;color:#1e6b43}' +
+      '.btn-wide:disabled{opacity:.6;cursor:progress}' +
+      '.count{justify-self:end;color:#646a76;font-size:11.5px}.count.full{color:#a14b00;font-weight:600}' +
       '.flash{background:#fff4d6;box-shadow:0 0 0 6px #fff4d6}' +
       '.img-card{border:1px solid #e3e5ea;border-radius:12px;padding:12px;margin-bottom:12px;transition:background-color .3s}' +
       '.img-head{display:flex;gap:12px;align-items:center;margin-bottom:10px}.img-head strong{display:block}.img-head small{color:#646a76;font-size:12px}' +

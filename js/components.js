@@ -767,7 +767,9 @@ function renderHeroInteractive() {
                 <label for="dx-format-pronto" class="dx-format-label">
                   <span class="dx-format-top"><span class="dx-chip">Mais rápido</span><span class="dx-radio" aria-hidden="true"></span></span>
                   <span class="dx-format-name">Modelo pronto</span>
-                  <span class="dx-format-desc">${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.</span>
+                  <span class="dx-format-desc">${tiersOf(state.selectedService)
+                    ? `${tiersOf(state.selectedService).length} modelos (${tiersOf(state.selectedService).map(t => t.label.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' e $1')}) com estrutura já testada. Você personaliza cores, textos e imagens.`
+                    : `${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.`}</span>
                   <span class="dx-facts">
                     <span><small>Investimento</small><strong>${brl(prontoPrice)}</strong></span>
                     <span><small>Prazo</small><strong>${info.prazo}</strong></span>

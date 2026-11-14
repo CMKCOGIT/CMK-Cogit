@@ -84,7 +84,10 @@
 .dx-chip { display: inline-flex; padding: 3px 10px; border-radius: 2px; background: rgba(126, 224, 176, 0.12); color: var(--dx-success); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; }
 .dx-chip--alt { background: var(--dx-accent-soft); color: var(--dx-accent); }
 .dx-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--dx-line-strong); transition: border-color 160ms ease, box-shadow 160ms ease; }
-.dx-format:has(> input:checked) .dx-radio { border-color: var(--dx-accent); box-shadow: inset 0 0 0 4px var(--dx-accent-soft), inset 0 0 0 10px var(--dx-accent); }
+/* Selecionado: fundo na cor de destaque + visto (sem box-shadow, que a identidade remove com !important) */
+.dx-radio { position: relative; flex: none; }
+.dx-format:has(> input:checked) .dx-radio { border-color: var(--dx-accent); background: var(--dx-accent); }
+.dx-format:has(> input:checked) .dx-radio::after { content: ""; position: absolute; left: 50%; top: 45%; width: 5px; height: 10px; border: solid var(--dx-surface, #fff); border-width: 0 2px 2px 0; transform: translate(-50%, -50%) rotate(45deg); }
 .dx-format-name { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; color: var(--dx-text); }
 .dx-format-desc { font-size: 0.9rem; line-height: 1.5; color: var(--dx-muted); }
 .dx-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--dx-line); }

@@ -8,6 +8,7 @@ Três sites estáticos e independentes, vendidos como **Modelos prontos**. Um mo
 | `portfolio/` | Portfólio Profissional | 1 página: topo, trabalhos (até 6), sobre (foto + números), serviços (até 3), depoimentos (2), contato | Lia Toledo, designer de identidade visual |
 | `landing-basica/` | Landing Page Básica (nível básico) | 1 página, 7 seções: início, serviços (3 com ícone e características), sobre nós (missão, visão e valores), diferenciais (4), depoimentos (2 + nota) e portfólio (2 fotos), contato (formulário + WhatsApp, e-mail, telefone e redes) e rodapé. Tem o painel **Personalizar** (ver abaixo) | Ponto Firme Reformas |
 | `landing-profissional/` | Landing Page Profissional (nível intermediário) | 1 página, 8 seções: cabeçalho, banner, sobre, serviços (3 com foto), diferenciais (4), depoimentos (3 + foto), chamada para ação e rodapé. Tem o painel **Personalizar** (ver abaixo) | Florescer Nutrição, nutricionista |
+| `landing-formal/` | Landing Page Corporativa (nível formal) | 1 página, 10 seções: cabeçalho, início com credenciais (4), o escritório (valores e assinatura), áreas de atuação (6), equipe (3 com foto e LinkedIn), diferenciais (4), depoimentos (2), dúvidas frequentes (4), contato (formulário + dados) e rodapé. Tem o painel **Personalizar** | Vasconcelos & Prado Advogados |
 | `institucional/` | Site Institucional Essencial | 4 páginas: Início (serviços, diferenciais, casos, depoimentos, proposta), Sobre, Serviços (até 6 + dúvidas) e Contato | Arrimo Contabilidade |
 
 Os três usam **o mesmo** `css/styles.css` e o mesmo `js/main.js` (fontes em `tools/templates/base/`). Só `css/tokens.css` muda de um modelo para outro, e de um cliente para outro.
@@ -30,7 +31,7 @@ As páginas são geradas por `python3 tools/templates/build-models.py` a partir 
 
 ## Landing pages por nível e o painel "Personalizar"
 
-A Landing Page tem três níveis de modelo pronto: **básico** (`landing-basica/`), **intermediário** (`landing-profissional/`) e **formal** (em preparação). No site, o modal de prévia mostra esses níveis em `MODEL_TIERS`, em `js/components.js`. Abrir a prévia pelo serviço `landing-page` mostra o básico. A Landing Page Essencial (`landing/`) continua no repositório, mas não aparece no seletor.
+A Landing Page tem três níveis de modelo pronto: **básico** (`landing-basica/`), **intermediário** (`landing-profissional/`) e **formal** (`landing-formal/`). No site, o modal de prévia mostra esses níveis em `MODEL_TIERS`, em `js/components.js`. Abrir a prévia pelo serviço `landing-page` mostra o básico. A Landing Page Essencial (`landing/`) continua no repositório, mas não aparece no seletor.
 
 Esses modelos não usam o `styles.css` e o `main.js` comuns. Cada um tem o próprio `css/styles.css`, que define o visual do nível. O script do site e o painel são **iguais em todos os níveis**:
 
@@ -45,7 +46,7 @@ O botão **Personalizar** abre o painel (`?personalizar` na URL abre direto no c
 
 - **Cores:** 8 paletas ou 6 cores em HEX (principal, secundária, destaque, fundo, títulos e textos). Todo o CSS deriva dessas 6 cores, e a cor do texto sobre botões é calculada pelo contraste.
 - **Textos:** todo elemento com `data-k` vira um campo. Com o painel aberto, clicar num texto da página leva ao campo dele.
-- **Imagens:** os espaços `data-img` (básico: IMAGEM 1 a 4; intermediário: IMAGEM 1 a 6) e o logotipo. Cada um aceita upload, substituição, remoção, posição horizontal e vertical, zoom e texto alternativo. As fotos são reduzidas no navegador para no máximo 1800 px, em WebP.
+- **Imagens:** os espaços `data-img` (básico: IMAGEM 1 a 4; intermediário e formal: IMAGEM 1 a 6) e o logotipo. Cada um aceita upload, substituição, remoção, posição horizontal e vertical, zoom e texto alternativo. As fotos são reduzidas no navegador para no máximo 1800 px, em WebP.
 - **Seções:** ocultar qualquer seção, exceto o início e o rodapé. Os itens do menu e do rodapé somem junto.
 - **Links:** todo `data-href`. Link vazio oculta o botão ou a rede social.
 - **Limites de texto:** cada campo tem um limite proporcional ao texto do modelo, com contador. Um elemento pode fixar o próprio limite com `data-max`. Palavras longas quebram de linha (`overflow-wrap`).

@@ -73,7 +73,7 @@
   // Revelação ao rolar (desligada para quem prefere menos movimento).
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (!reduce && 'IntersectionObserver' in window) {
-    var targets = document.querySelectorAll('.section-head, .about-copy, .slot-about, .card, .benefit, .quote, .testimonials-side, .cta-box, .work, [data-reveal]');
+    var targets = document.querySelectorAll('.section-head, .about-copy, .slot-about, .card, .benefit, .quote, .testimonials-side, .cta-box, .work, .area, .person, [data-reveal]');
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('is-in'); io.unobserve(en.target); } });
     }, { rootMargin: '0px 0px -8% 0px' });
@@ -93,7 +93,7 @@
         return;
       }
       var data = {}; new FormData(form).forEach(function (v, k) { data[k] = String(v).trim(); });
-      var text = 'Olá! Sou ' + (data.nome || '') + (data.email ? ' (' + data.email + ')' : '') + '.\n\n' + (data.mensagem || '');
+      var text = 'Olá! Sou ' + (data.nome || '') + (data.empresa ? ', da ' + data.empresa : '') + (data.email ? ' (' + data.email + ')' : '') + '.\n\n' + (data.mensagem || '');
       var wa = document.querySelector('[data-href="contact.whatsapp"]');
       var mail = document.querySelector('[data-href="contact.email"]');
       var waHref = wa && !wa.closest('[hidden]') ? wa.getAttribute('href') : '';

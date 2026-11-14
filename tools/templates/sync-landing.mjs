@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const repo = path.resolve(import.meta.dirname, '../..');
-export const LANDING_MODELS = ['landing-basica', 'landing-profissional'];
+export const LANDING_MODELS = ['landing-basica', 'landing-profissional', 'landing-formal'];
 const FILES = [['landing-site.js', 'js/site.js'], ['landing-editor.js', 'js/editor.js']];
 
 let stale = 0;

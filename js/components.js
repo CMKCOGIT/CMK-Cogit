@@ -1175,6 +1175,16 @@ const MODEL_PREVIEW_DATA = {
     features: ['7 seções, com opção de ocultar as que não usar', 'Formulário de contato com validação e LGPD', '4 espaços de imagem com upload e enquadramento', '8 paletas prontas ou suas cores em HEX', 'Todos os textos, botões e links editáveis', 'Responsivo em computador, tablet e celular'],
     previewImg: 'assets/videos/templates/landing-basica-poster.webp',
     liveUrl: 'templates/landing-basica/?personalizar'
+  },
+  'landing-page-formal': {
+    name: 'Landing Page Corporativa',
+    tagLabel: 'LANDING PAGE',
+    category: 'Landing page · Formal',
+    description: 'Página única de visual sóbrio para escritórios e empresas tradicionais: credenciais, o escritório, 6 áreas de atuação, equipe, diferenciais, depoimentos, dúvidas frequentes e contato com formulário. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Escritórios de advocacia', 'Contabilidade e consultorias', 'Clínicas e consultórios', 'Empresas B2B'],
+    features: ['10 seções, com opção de ocultar as que não usar', 'Equipe com foto, cargo, resumo e LinkedIn', 'Dúvidas frequentes e formulário com LGPD', '6 espaços de imagem com upload e enquadramento', '8 paletas prontas ou suas cores em HEX', 'Responsivo em computador, tablet e celular'],
+    previewImg: 'assets/videos/templates/landing-formal-poster.webp',
+    liveUrl: 'templates/landing-formal/?personalizar'
   }
 };
 
@@ -1185,7 +1195,7 @@ const MODEL_TIERS = {
   'landing-page': [
     { id: 'landing-page-basica', label: 'Básico' },
     { id: 'landing-page-profissional', label: 'Intermediário' },
-    { label: 'Formal', soon: true }
+    { id: 'landing-page-formal', label: 'Formal' }
   ]
 };
 function modelTiersFor(id) {

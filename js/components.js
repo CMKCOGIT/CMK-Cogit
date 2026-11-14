@@ -1053,8 +1053,31 @@ const MODEL_PREVIEW_DATA = {
     previewImg: 'assets/videos/templates/portfolio-poster.webp',
     video: 'assets/videos/templates/portfolio.mp4',
     liveUrl: 'templates/portfolio/'
+  },
+  'landing-page-profissional': {
+    name: 'Landing Page Profissional',
+    tagLabel: 'LANDING PAGE',
+    category: 'Landing page · Intermediário',
+    description: 'Página única completa com cabeçalho, banner principal, sobre, 3 serviços com foto, diferenciais, depoimentos, chamada final e rodapé. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Profissionais liberais', 'Clínicas e consultórios', 'Prestadores de serviço', 'Pequenas empresas'],
+    features: ['8 seções, com opção de ocultar as que não usar', '8 paletas prontas ou suas cores em HEX', '6 espaços de imagem com upload e enquadramento', 'Todos os textos, botões e links editáveis', 'Responsivo em computador, tablet e celular', 'Exporta o site pronto ou envia para publicarmos'],
+    previewImg: 'assets/videos/templates/landing-profissional-poster.webp',
+    liveUrl: 'templates/landing-profissional/?personalizar'
   }
 };
+
+// Níveis de modelo pronto por serviço (básico, intermediário e formal), mostrados como
+// seletor no topo do modal de prévia. Serviço sem entrada aqui segue com um único modelo.
+const MODEL_TIERS = {
+  'landing-page': [
+    { id: 'landing-page', label: 'Básico' },
+    { id: 'landing-page-profissional', label: 'Intermediário' },
+    { label: 'Formal', soon: true }
+  ]
+};
+function modelTiersFor(id) {
+  return Object.values(MODEL_TIERS).find((list) => list.some((t) => t.id === id)) || null;
+}
 
 // ── Modal de Informações do Modelo (Premium) ──
 function showModelPreview(selectedSvc, options) {
@@ -1082,7 +1105,12 @@ function openModelPreviewModal(modelId, title, options = {}) {
   const existing = document.getElementById('hero-model-preview-modal');
   if (existing) existing.remove();
 
-  const returnFocus = document.activeElement;
+  const returnFocus = options.returnFocus || document.activeElement;
+
+  const tiers = modelTiersFor(MODEL_PREVIEW_DATA[finalId] ? finalId : 'landing-page');
+  const tiersNav = tiers ? `<div class="hero-modal-tiers" role="group" aria-label="Nível do modelo">${tiers.map((t) => t.soon
+    ? `<button type="button" class="hero-modal-tier" disabled>${t.label}<small>Em breve</small></button>`
+    : `<button type="button" class="hero-modal-tier" data-tier="${t.id}" aria-pressed="${t.id === (MODEL_PREVIEW_DATA[finalId] ? finalId : 'landing-page')}">${t.label}</button>`).join('')}</div>` : '';
 
   // Build audience pills
   const audiencePills = data.audience.map(a => `<li class="hero-modal-audience-pill">${a}</li>`).join('');
@@ -1130,6 +1158,7 @@ function openModelPreviewModal(modelId, title, options = {}) {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
+        ${tiersNav}
 
         <div class="hero-modal-body">
           <div class="hero-modal-info">
@@ -1193,6 +1222,17 @@ function openModelPreviewModal(modelId, title, options = {}) {
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
   });
+
+  modal.querySelectorAll('[data-tier]').forEach((btn) => btn.addEventListener('click', () => {
+    if (btn.getAttribute('aria-pressed') === 'true') return;
+    // Troca de nível sem fechar: monta o mesmo modal com o outro modelo e mantém o foco no seletor.
+    const tierId = btn.dataset.tier;
+    modal.addEventListener('close', () => {
+      openModelPreviewModal(tierId, undefined, Object.assign({}, options, { returnFocus }));
+      document.querySelector('#hero-model-preview-modal [data-tier="' + tierId + '"]')?.focus();
+    }, { once: true });
+    closeModal();
+  }));
 
   if (selectBtn) selectBtn.addEventListener('click', () => {
     closeModal();

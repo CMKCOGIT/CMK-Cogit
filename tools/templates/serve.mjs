@@ -1,6 +1,6 @@
 // Servidor local que imita a hospedagem de um template na raiz do subdomínio.
 // Uso: node tools/templates/serve.mjs portfolio --port 5101
-//      node tools/templates/serve.mjs --all   (portfolio:5101, institucional:5102, landing:5103)
+//      node tools/templates/serve.mjs --all   (portfolio:5101, institucional:5102, landing:5103, landing-profissional:5104)
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
@@ -36,7 +36,7 @@ export function serve(name, port) {
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const list = args.includes('--all') ? [['portfolio', 5101], ['institucional', 5102], ['landing', 5103]] : [[args[0] || 'portfolio', Number(arg('--port') || 5101)]];
+  const list = args.includes('--all') ? [['portfolio', 5101], ['institucional', 5102], ['landing', 5103], ['landing-profissional', 5104]] : [[args[0] || 'portfolio', Number(arg('--port') || 5101)]];
   for (const [name, port] of list) {
     await serve(name, port);
     console.log(`${name}: http://localhost:${port}/`);

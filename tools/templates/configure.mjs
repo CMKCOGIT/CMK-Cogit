@@ -1,12 +1,12 @@
 // Aplica templates/<nome>/site.config.json às páginas: indexação, canonical, Open Graph,
 // robots.txt, sitemap.xml, endpoint do formulário e arquivos da hospedagem.
-// Uso: node tools/templates/configure.mjs [portfolio|institucional|landing]   (sem argumento: todos)
+// Uso: node tools/templates/configure.mjs [portfolio|institucional|landing|landing-profissional]   (sem argumento: todos)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
 const repo = path.resolve(import.meta.dirname, '../..');
-const names = process.argv[2] ? [process.argv[2]] : ['portfolio', 'institucional', 'landing'];
+const names = process.argv[2] ? [process.argv[2]] : ['portfolio', 'institucional', 'landing', 'landing-profissional'];
 
 for (const name of names) {
   const dir = path.join(repo, 'templates', name);

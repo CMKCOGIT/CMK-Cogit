@@ -1,0 +1,1 @@
+{ "name": "Florescer Nutrição", "short_name": "Florescer", "start_url": "./", "display": "standalone", "background_color": "#f7f5f0", "theme_color": "#1f5f4a", "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }] }

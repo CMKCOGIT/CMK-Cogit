@@ -6896,6 +6896,13 @@ dialog.custom-model-dialog.studio { width: 100%; height: 100dvh; max-height: 100
 .dx-personalize-status { margin: 14px 0 0; padding: 12px 14px; border-radius: 2px; background: var(--dx-accent-soft); color: var(--dx-text); font-size: .9rem; line-height: 1.5; }
 .dx-personalize-status.is-ok { background: rgba(126, 224, 176, 0.12); color: var(--dx-success); font-weight: 600; }
 .dx-pending { color: #b4570f; font-weight: 700; }
+.dx-page { width: min(1080px, 100%); margin-inline: auto; }
+.dx-page[hidden] { display: none; }
+.dx-page .hero-interactive-container { width: 100%; max-width: none; min-height: 0; margin: 0; padding: clamp(16px, 3vw, 32px); }
+.dx-note-inline { display: block; color: var(--dx-muted); font-size: .8rem; font-weight: 400; }
+.dx-btn--skip { margin-left: auto; }
+.dx-btn--skip + .dx-btn { margin-left: 10px; }
+@media (max-width: 560px) { .dx-foot:has(.dx-btn--skip) { flex-wrap: wrap; } .dx-foot:has(.dx-btn--skip) .dx-btn--skip, .dx-foot:has(.dx-btn--skip) [data-dx="next"] { flex: 1 1 100%; margin-left: 0; } }
 .i { width: 1em; height: 1em; flex: none; fill: currentColor; vertical-align: -0.125em; }
 html.animations-ready [data-reveal] {
 opacity: 0;

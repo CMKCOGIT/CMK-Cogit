@@ -719,26 +719,38 @@
   document.head.appendChild(pageCss);
 
   // ── Início: carrega o que foi salvo ──
-  try {
-    // vindo da plataforma, os dados chegam dela (abaixo): não mistura com o que está salvo aqui
-    var saved = PLAT || PREVIEW ? null : JSON.parse(localStorage.getItem(KEY) || 'null');
-    if (saved) {
-      state.colors = saved.colors || {}; state.texts = saved.texts || {}; state.links = saved.links || {};
-      state.hidden = saved.hidden || []; state.images = saved.images || {};
-    }
-  } catch (e) { /* sem dados salvos */ }
+  function readSaved() {
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY) || 'null');
+      return v && typeof v === 'object' ? v : null;
+    } catch (e) { return null; }
+  }
+  function loadSaved(saved) {
+    state.colors = saved.colors || {}; state.texts = saved.texts || {}; state.links = saved.links || {};
+    state.hidden = saved.hidden || []; state.images = saved.images || {};
+    applyColors(); applyTexts(); applyLinks(); applySections();
+    buildAll();
+    var pending = ['logo'].concat(slotIds()).filter(function (n) { return state.images[n] && state.images[n].has; });
+    return Promise.all(pending.map(function (n) { return getImg(String(n)).then(function (src) { if (src) state.images[n].src = src; else state.images[n] = null; }); }))
+      .then(function () { ['logo'].concat(slotIds()).forEach(function (n) { applyImage(n); refreshImageCard(n); }); });
+  }
+  function hasWork(saved) {
+    return !!saved && ['colors', 'texts', 'links', 'images'].some(function (k) { return saved[k] && Object.keys(saved[k]).length; }) || !!(saved && saved.hidden && saved.hidden.length);
+  }
   document.body.appendChild(host);
-  applyColors(); applyTexts(); applyLinks(); applySections();
-  buildAll();
-  var pending = ['logo'].concat(slotIds()).filter(function (n) { return state.images[n] && state.images[n].has; });
-  Promise.all(pending.map(function (n) { return getImg(String(n)).then(function (src) { if (src) state.images[n].src = src; else state.images[n] = null; }); }))
-    .then(function () { ['logo'].concat(slotIds()).forEach(function (n) { applyImage(n); refreshImageCard(n); }); });
+  // vindo da plataforma, os dados chegam dela (abaixo): não mistura com o que está salvo aqui
+  var saved = PLAT || PREVIEW ? null : readSaved();
+  loadSaved(saved || {});
   if (/[?&]personalizar\b/.test(location.search) && (DIAG || PLAT || window.matchMedia('(min-width: 901px)').matches)) setOpen(true);
 
   // Plataforma: avisa que está pronto e recebe a personalização da solicitação (só da origem do app)
   if (PLAT || PREVIEW) {
     window.addEventListener('message', function (e) {
       if (e.origin !== APP_ORIGIN || e.source !== window.opener || !e.data || e.data.type !== 'cmk:editor:dados') return;
+      // A plataforma não tem o arquivo (o envio anterior não terminou): recupera o que o cliente
+      // fez NESTE navegador, em vez de começar do zero e apagar o rascunho.
+      var local = PLAT && !e.data.dados ? readSaved() : null;
+      if (hasWork(local)) { loadSaved(local); toast('Recuperamos a personalização salva neste navegador. Confira e clique em “Concluir”.'); return; }
       try { applyImported(e.data.dados || null); }
       catch (err) { toast(err.message || 'Não foi possível abrir a personalização.'); return; }
       toast(PREVIEW ? 'Prévia do projeto do cliente (nada é salvo neste navegador).' : (e.data.dados ? 'Sua personalização foi carregada.' : 'Comece a personalizar o modelo.'));

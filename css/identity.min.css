@@ -568,3 +568,9 @@ background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2
 .dx-chip, .dx-format-status { background: #E8F6EE !important; color: #1E7A4C !important; }
 .studio-estimate { background: var(--white) !important; }
 @media (max-width: 760px) { .dx-foot { background: rgba(243, 243, 241, .97) !important; border-top: 1px solid var(--line); } }
+.dx-foot { position: sticky; bottom: 0; z-index: 3; margin-top: 8px; padding-block: 14px; background: rgba(243, 243, 241, .97) !important; border-top: 1px solid var(--line); }
+.dx-modal-body { --dx-pad: clamp(12px, 2vw, 24px); }
+.dx-modal-body .dx-foot { bottom: calc(-1 * var(--dx-pad)); margin-inline: calc(-1 * var(--dx-pad)); margin-bottom: calc(-1 * var(--dx-pad)); padding: 14px var(--dx-pad) calc(var(--dx-pad) + env(safe-area-inset-bottom)); }
+.dx-foot [data-dx="next"]:not(:disabled) { animation: dx-next-in .28s ease-out; }
+@keyframes dx-next-in { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .dx-foot [data-dx="next"]:not(:disabled) { animation: none; } }

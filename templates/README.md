@@ -51,6 +51,10 @@ O botão **Personalizar** abre o painel (`?personalizar` na URL abre direto no c
 - **Links:** todo `data-href`. Link vazio oculta o botão ou a rede social.
 - **Limites de texto:** cada campo tem um limite proporcional ao texto do modelo, com contador. Um elemento pode fixar o próprio limite com `data-max`. Palavras longas quebram de linha (`overflow-wrap`).
 - **Enviar:** o cliente **não baixa o site**. O botão **Enviar para a CMKCOGIT** abre `app.cmkcogit.com.br/continuar.html` com `#cfg`, que leva o modelo pronto, a `variante` (`data-variant` da tag do editor) e `personalizacao: true`. Os dados vão para a plataforma por `postMessage`. A solicitação entra **em validação**, a equipe revisa, ajusta e envia o orçamento, e depois do pagamento entrega o site. No banco da plataforma, rode `sql/31_personalizacao_modelo.sql`.
+- **Modos abertos por outra aba** (o editor conversa com quem o abriu por `postMessage`, conferindo a origem):
+  - `?personalizar&origem=diagnostico`: aberto pela etapa Modelo do "Monte sua solução". A aba "Concluir" devolve a personalização ao diagnóstico, que segue para o resumo. Na etapa Modelo também existe **Continuar sem personalizar**.
+  - `?personalizar&origem=plataforma`: aberto em "Minhas solicitações" (app). Recebe a versão enviada, e "Salvar e reenviar para análise" devolve a nova versão para a plataforma.
+  - `?equipe&origem=preview`: "Visualizar projeto" no admin da plataforma. Mostra o site com os dados do cliente sem salvar nada neste navegador.
 - **Equipe (`?equipe` na URL):** importar ou exportar o `.json` e **Gerar site final (.html)**. O arquivo sai sem o painel, sem os avisos de demonstração e com as imagens embutidas, e substitui o `index.html` da pasta. Depois rode `configure.mjs`. No admin da plataforma, o botão "Baixar personalização (.json)" do pedido traz o arquivo do cliente. O `?equipe` só esconde as ferramentas da interface; o código do modelo é público como em qualquer site estático.
 
 A personalização fica salva no navegador de quem edita: textos e cores no `localStorage`, imagens no IndexedDB.

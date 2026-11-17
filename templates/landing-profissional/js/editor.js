@@ -12,6 +12,10 @@
   var MODEL_NAME = SCRIPT.dataset.modelName || 'Landing Page';
   var STORE = SCRIPT.dataset.store || ('cmk-' + MODEL);
   var KEY = STORE + ':v1';
+  // Aberto pela plataforma (app.cmkcogit.com.br): o cliente edita a solicitação enviada
+  // (origem=plataforma) ou a equipe só visualiza o projeto (origem=preview, nada é salvo aqui).
+  var PLAT = /[?&]origem=plataforma\b/.test(location.search) && !!window.opener;
+  var PREVIEW = /[?&]origem=preview\b/.test(location.search) && !!window.opener;
   var LP = window.LP || {};
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -61,6 +65,7 @@
   $$('[data-href]').forEach(function (el) { var k = el.dataset.href; if (!(k in defaults.links)) defaults.links[k] = el.getAttribute('href') || ''; });
 
   function save() {
+    if (PREVIEW) return;
     try { localStorage.setItem(KEY, JSON.stringify({ colors: state.colors, texts: state.texts, links: state.links, hidden: state.hidden, images: stripSrc(state.images) })); } catch (e) { /* armazenamento indisponível */ }
   }
   function stripSrc(images) {
@@ -91,7 +96,7 @@
       });
     }).catch(function () { return null; });
   }
-  var putImg = function (k, v) { return idb('readwrite', function (s) { return v == null ? s.delete(k) : s.put(v, k); }); };
+  var putImg = function (k, v) { if (PREVIEW) return Promise.resolve(); return idb('readwrite', function (s) { return v == null ? s.delete(k) : s.put(v, k); }); };
   var getImg = function (k) { return idb('readonly', function (s) { return s.get(k); }); };
 
   // ── Aplicar na página ─────────────────────────────────
@@ -214,7 +219,7 @@
       '<div class="body"></div>' +
     '</aside><div class="toast" role="status" aria-live="polite"></div>';
   var fab = $('.fab', sh), panel = $('.panel', sh), tabsEl = $('.tabs', sh), body = $('.body', sh), toastEl = $('.toast', sh);
-  var TABS = [['cores', 'Cores'], ['textos', 'Textos'], ['imagens', 'Imagens'], ['secoes', 'Seções'], ['links', 'Links'], ['publicar', /[?&]origem=diagnostico\b/.test(location.search) ? 'Concluir' : 'Enviar']];
+  var TABS = [['cores', 'Cores'], ['textos', 'Textos'], ['imagens', 'Imagens'], ['secoes', 'Seções'], ['links', 'Links'], ['publicar', /[?&]origem=(diagnostico|plataforma)\b/.test(location.search) ? 'Concluir' : 'Enviar']];
   var panes = {};
   TABS.forEach(function (t, i) {
     var b = document.createElement('button');
@@ -470,6 +475,15 @@
   var DIAG = /[?&]origem=diagnostico\b/.test(location.search) && !!window.opener;
   function buildPublish() {
     var p = panes.publicar; p.innerHTML = '';
+    if (PLAT) {
+      p.appendChild(el('h3', '', 'Terminou? Reenvie para a análise'));
+      p.appendChild(el('p', 'hint', 'Suas alterações voltam para a plataforma CMKCOGIT como uma nova versão. A equipe analisa de novo antes de liberar o pagamento.'));
+      var bp = el('button', 'btn-wide primary', 'Salvar e reenviar para análise'); bp.type = 'button';
+      bp.addEventListener('click', function () { returnToPlatform(bp); });
+      p.appendChild(bp);
+      var sp = el('p', 'send-status'); sp.id = 'send-status'; sp.setAttribute('role', 'status'); sp.hidden = true; p.appendChild(sp);
+      return;
+    }
     if (DIAG) {
       p.appendChild(el('h3', '', 'Terminou? Volte ao seu resumo'));
       p.appendChild(el('p', 'hint', 'Quando o site estiver do seu jeito, conclua a personalização. Ela volta para o “Monte sua solução”, onde você revisa o resumo e envia tudo para a CMKCOGIT.'));
@@ -525,6 +539,22 @@
   }
   function randomRef() { var a = new Uint8Array(18); crypto.getRandomValues(a); var s = ''; a.forEach(function (b) { s += String.fromCharCode(b); }); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
   function sendStatus(msg, ok) { var s = $('#send-status', sh); if (!s) return; s.textContent = msg; s.hidden = !msg; s.classList.toggle('ok', !!ok); }
+  function returnToPlatform(btn) {
+    var opener = window.opener;
+    if (!opener || opener.closed) { sendStatus('A aba da plataforma foi fechada. Abra a solicitação de novo e clique em “Editar e reenviar”.'); return; }
+    btn.disabled = true;
+    var done = false;
+    function onMsg(e) {
+      if (e.origin !== APP_ORIGIN || e.source !== opener || !e.data || e.data.type !== 'cmk:editor:recebido') return;
+      done = true; window.removeEventListener('message', onMsg); btn.disabled = false;
+      sendStatus('Pronto! A nova versão foi para a plataforma e voltou para a análise da CMK.', true);
+      setTimeout(function () { try { window.close(); } catch (err) { /* */ } }, 1500);
+    }
+    window.addEventListener('message', onMsg);
+    opener.postMessage({ type: 'cmk:editor:salvo', dados: buildConfigData() }, APP_ORIGIN);
+    setTimeout(function () { if (!done) { window.removeEventListener('message', onMsg); btn.disabled = false; sendStatus('Não conseguimos falar com a plataforma. A aba dela continua aberta? Tente de novo.'); } }, 8000);
+  }
+
   function returnToDiagnostic(btn) {
     var opener = window.opener;
     if (!opener || opener.closed) { sendStatus('A aba do “Monte sua solução” foi fechada. Abra o diagnóstico de novo e clique em “Personalizar modelo”: suas alterações continuam salvas.'); return; }
@@ -591,6 +621,11 @@
     Object.keys(defaults.texts).forEach(function (k) { data.textos[k] = text(k); });
     Object.keys(defaults.links).forEach(function (k) { data.links[k] = link(k); });
     Object.keys(state.images).forEach(function (k) { var d = state.images[k]; if (d && d.src) data.imagens[k] = { src: d.src, x: d.x, y: d.y, zoom: d.zoom, alt: d.alt || '' }; });
+    data.rotulos = { textos: {}, links: {}, imagens: { logo: 'Logotipo' }, secoes: {} };
+    $$('[data-k]').forEach(function (n) { if (n.dataset.label) data.rotulos.textos[n.dataset.k] = n.dataset.label; });
+    $$('[data-href]').forEach(function (n) { if (n.dataset.labelHref) data.rotulos.links[n.dataset.href] = n.dataset.labelHref; });
+    $$('[data-img]').forEach(function (n) { data.rotulos.imagens[n.dataset.img] = 'IMAGEM ' + n.dataset.img + ' · ' + (n.dataset.imgLabel || ''); });
+    $$('[data-section]').forEach(function (n) { data.rotulos.secoes[n.dataset.section] = n.dataset.sectionLabel || n.dataset.section; });
     return data;
   }
   function exportJson() {
@@ -601,7 +636,20 @@
     var fr = new FileReader();
     fr.onload = function () {
       try {
-        var d = JSON.parse(fr.result);
+        applyImported(JSON.parse(fr.result));
+        toast('Configuração importada.');
+      } catch (e) { toast(e.message && e.message.indexOf(MODEL_NAME) !== -1 ? e.message : 'Arquivo inválido.'); }
+    };
+    fr.readAsText(file);
+  }
+  // d = null: começa do modelo original (cliente que ainda não personalizou)
+  function applyImported(d) {
+    if (!d) {
+      state = { colors: {}, texts: {}, links: {}, hidden: [], images: {} };
+      ['logo'].concat(slotIds()).forEach(function (n) { putImg(String(n), null); });
+      save(); applyAll(); buildAll();
+      return;
+    }
         if (d.modelo !== MODEL) throw new Error('Este arquivo não é de uma ' + MODEL_NAME + '.');
         var c = {}; COLOR_FIELDS.forEach(function (f) { var v = normHex(d.cores && d.cores[f[0]]); if (v) c[f[0]] = v; });
         var t = {}; Object.keys(d.textos || {}).forEach(function (k) { if (k in defaults.texts && typeof d.textos[k] === 'string') t[k] = d.textos[k]; });
@@ -614,10 +662,7 @@
         });
         state = { colors: c, texts: t, links: l, hidden: Array.isArray(d.secoesOcultas) ? d.secoesOcultas.filter(function (s) { return typeof s === 'string'; }) : [], images: imgs };
         ['logo'].concat(slotIds()).forEach(function (n) { if (!imgs[n]) putImg(String(n), null); });
-        save(); applyAll(); buildAll(); toast('Configuração importada.');
-      } catch (e) { toast(e.message && e.message.indexOf(MODEL_NAME) !== -1 ? e.message : 'Arquivo inválido.'); }
-    };
-    fr.readAsText(file);
+        save(); applyAll(); buildAll();
   }
   function clamp(v, a, b, d) { v = Number(v); return isFinite(v) ? Math.min(b, Math.max(a, v)) : d; }
 
@@ -675,7 +720,8 @@
 
   // ── Início: carrega o que foi salvo ──
   try {
-    var saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    // vindo da plataforma, os dados chegam dela (abaixo): não mistura com o que está salvo aqui
+    var saved = PLAT || PREVIEW ? null : JSON.parse(localStorage.getItem(KEY) || 'null');
     if (saved) {
       state.colors = saved.colors || {}; state.texts = saved.texts || {}; state.links = saved.links || {};
       state.hidden = saved.hidden || []; state.images = saved.images || {};
@@ -687,7 +733,18 @@
   var pending = ['logo'].concat(slotIds()).filter(function (n) { return state.images[n] && state.images[n].has; });
   Promise.all(pending.map(function (n) { return getImg(String(n)).then(function (src) { if (src) state.images[n].src = src; else state.images[n] = null; }); }))
     .then(function () { ['logo'].concat(slotIds()).forEach(function (n) { applyImage(n); refreshImageCard(n); }); });
-  if (/[?&]personalizar\b/.test(location.search) && (DIAG || window.matchMedia('(min-width: 901px)').matches)) setOpen(true);
+  if (/[?&]personalizar\b/.test(location.search) && (DIAG || PLAT || window.matchMedia('(min-width: 901px)').matches)) setOpen(true);
+
+  // Plataforma: avisa que está pronto e recebe a personalização da solicitação (só da origem do app)
+  if (PLAT || PREVIEW) {
+    window.addEventListener('message', function (e) {
+      if (e.origin !== APP_ORIGIN || e.source !== window.opener || !e.data || e.data.type !== 'cmk:editor:dados') return;
+      try { applyImported(e.data.dados || null); }
+      catch (err) { toast(err.message || 'Não foi possível abrir a personalização.'); return; }
+      toast(PREVIEW ? 'Prévia do projeto do cliente (nada é salvo neste navegador).' : (e.data.dados ? 'Sua personalização foi carregada.' : 'Comece a personalizar o modelo.'));
+    });
+    try { window.opener.postMessage({ type: 'cmk:editor:pronto' }, APP_ORIGIN); } catch (err) { /* aba sem opener */ }
+  }
 
   function PANEL_CSS() {
     return ':host{all:initial;font:400 14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#1b1d22;--ac:#2d5bff}' +

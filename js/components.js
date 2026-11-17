@@ -95,10 +95,32 @@ function renderChallenge() {
   `).join('');
 }
 
+// ── Rota da página "Monte sua solução" ──
+// Sem parâmetros, ou com UM serviço que o diagnóstico conhece, a página usa o mesmo fluxo da
+// tela inicial (diagnóstico). Combinações e serviços fora do diagnóstico (identidade, loja,
+// suporte...) continuam no configurador. Usada por components.js e configurator.js.
+const DX_IDS_DO_CATALOGO = {
+  'landing-page': 'landing-page', 'portfolio': 'portfolio', 'site-institucional': 'site-institucional',
+  'automacao': 'automacao-svc', 'sistema': 'sistema-svc', 'mvp': 'mvp-svc', 'plataforma': 'plataforma-svc', 'diagnostico': 'outro-svc'
+};
+function rotaMonteSuaSolucao() {
+  const params = new URLSearchParams(window.location.search);
+  const servicos = (params.get('services') || '').split(',').map(s => s.trim()).filter(Boolean);
+  if (params.get('problem') && !servicos.length) return { tipo: 'configurador' };
+  if (servicos.length > 1 || (servicos.length === 1 && !DX_IDS_DO_CATALOGO[servicos[0]])) return { tipo: 'configurador' };
+  const model = params.get('model');
+  return { tipo: 'diagnostico', servico: servicos.length ? DX_IDS_DO_CATALOGO[servicos[0]] : null, modelo: ['modelos-prontos', 'sob-medida'].includes(model) ? model : null };
+}
+window.rotaMonteSuaSolucao = rotaMonteSuaSolucao;
+
 // ── Render Hero Interactive — COGIT Diagnostic (Configurador: Grid de Serviços + Objetivo + Contexto + Resultado) ──
 function renderHeroInteractive() {
   const container = document.getElementById('hero-interactive-container');
   if (!container) return;
+  // Na página "Monte sua solução", o diagnóstico só aparece quando a rota é dele.
+  const naPagina = container.hasAttribute('data-dx-page');
+  const rota = naPagina ? rotaMonteSuaSolucao() : null;
+  if (naPagina && rota.tipo !== 'diagnostico') { container.closest('[data-dx-page-wrap]')?.setAttribute('hidden', ''); return; }
 
   // ── Desafios de negócio ──
   const CHALLENGES = [
@@ -292,7 +314,9 @@ function renderHeroInteractive() {
     objective: null,
     context: '',
     contextTags: [],
-    customProject: null
+    customProject: null,
+    variant: null, // modelo pronto escolhido quando o serviço tem níveis (MODEL_TIERS)
+    personalization: null // { variante, dados, nome }: site personalizado no editor do modelo
   };
 
   const heroSection = container.closest('.hero');
@@ -378,19 +402,36 @@ function renderHeroInteractive() {
     return model === 'sob-medida' ? (svc.customPrice || svc.price) : svc.price;
   }
 
+  // Níveis de modelo pronto do serviço (básico, intermediário, formal), se houver.
+  const tiersOf = (serviceId) => (typeof MODEL_TIERS !== 'undefined' && MODEL_TIERS[serviceId]) || null;
+
+  // Ordem das etapas: solução → contexto → formato → modelo (só modelo pronto com níveis) → resumo.
+  function dxPlan() {
+    const isPresence = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
+    const plan = [['solucao', 'Solução'], ['contexto', 'Contexto'], ['formato', isPresence ? 'Formato' : 'Objetivo']];
+    if (isPresence && state.objective !== 'sob-medida' && tiersOf(state.selectedService)) plan.push(['modelo', 'Modelo']);
+    plan.push(['resumo', 'Resumo']);
+    return plan;
+  }
+
   // Cabeçalho comum: etapas nomeadas (não só números), título e apoio.
-  function renderDxHead(current, title, desc) {
-    const isModelo = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
-    const labels = ['Solução', isModelo ? 'Formato' : 'Objetivo', 'Contexto', 'Resumo'];
+  function renderDxSteps(currentKey) {
+    const plan = dxPlan();
+    const current = plan.findIndex(([key]) => key === currentKey) + 1;
     return `
-      <header class="dx-head">
         <ol class="dx-steps" aria-label="Etapas do diagnóstico">
-          ${labels.map((label, i) => {
+          ${plan.map(([, label], i) => {
             const n = i + 1;
             const status = n < current ? 'is-done' : n === current ? 'is-current' : '';
             return `<li class="${status}"${n === current ? ' aria-current="step"' : ''}><span class="dx-step-n" aria-hidden="true">${n < current ? DX_ICON.check : n}</span><span class="dx-step-l">${label}</span>${n < current ? '<span class="sr-only"> (concluída)</span>' : ''}</li>`;
           }).join('')}
-        </ol>
+        </ol>`;
+  }
+
+  function renderDxHead(currentKey, title, desc) {
+    return `
+      <header class="dx-head">
+        ${renderDxSteps(currentKey)}
         <h2 class="dx-title">${title}</h2>
         ${desc ? `<p class="dx-desc">${desc}</p>` : ''}
       </header>`;
@@ -406,6 +447,7 @@ function renderHeroInteractive() {
 
   // ── ETAPA 0: Convite ──
   function renderStep0() {
+    if (naPagina) return renderStep1(); // na página, o fluxo não tem a tela de convite
     state.step = 0;
     container.innerHTML = `
       <div class="hero-step-wrapper hero-invite-view">
@@ -660,7 +702,7 @@ function renderHeroInteractive() {
 
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead(1, 'O que você precisa construir?', 'Escolha o mais próximo. Se não souber, a última opção leva você a uma orientação.')}
+        ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha o mais próximo. Se não souber, a última opção leva você a uma orientação.')}
         <div class="dx-body">
           ${SERVICE_GROUPS.map(group => `
             <fieldset class="dx-group">
@@ -679,7 +721,7 @@ function renderHeroInteractive() {
     container.querySelectorAll('input[name="dx-service"]').forEach(input => {
       input.addEventListener('change', () => {
         const svc = SERVICES_GRID.find(s => s.id === input.value);
-        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; }
+        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; }
         state.selectedService = svc.id;
         state.challenge = svc.challenge;
         next.disabled = false;
@@ -688,19 +730,19 @@ function renderHeroInteractive() {
       });
     });
     container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep0, 'back'));
-    next.addEventListener('click', () => { if (state.selectedService) transitionTo(renderStep2, 'next'); });
+    next.addEventListener('click', () => { if (state.selectedService) transitionTo(renderStep3, 'next'); });
   }
 
-  // ── ETAPA 2: objetivo (serviços de operação e produto) ──
+  // ── ETAPA 3: objetivo (serviços de operação e produto) ──
   function renderStep2() {
-    state.step = 2;
+    state.step = 3;
     const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
     if (PRESENCA_DIGITAL_IDS.includes(state.selectedService)) return renderStep2Modelo(selectedSvc);
 
     const objectives = getObjectives(state.selectedService);
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead(2, 'Qual resultado você busca?', `Para <strong>${selectedSvc ? selectedSvc.name : 'sua solução'}</strong>. Escolha o objetivo mais próximo.`)}
+        ${renderDxHead('formato', 'Qual resultado você busca?', `Para <strong>${selectedSvc ? selectedSvc.name : 'sua solução'}</strong>. Escolha o objetivo mais próximo.`)}
         <div class="dx-body">
           <fieldset class="dx-group">
             <legend class="sr-only">Objetivo</legend>
@@ -726,11 +768,11 @@ function renderHeroInteractive() {
         if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', input.value);
       });
     });
-    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep1, 'back'));
-    next.addEventListener('click', () => { if (state.objective) transitionTo(renderStep3, 'next'); });
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep3, 'back'));
+    next.addEventListener('click', () => { if (state.objective) transitionTo(renderResult, 'next'); });
   }
 
-  // ── ETAPA 2 (presença digital): modelo pronto ou sob medida ──
+  // ── ETAPA 3 (presença digital): modelo pronto ou sob medida ──
   function renderStep2Modelo(selectedSvc) {
     const info = PRESENCE_MODELS[state.selectedService];
     const prontoPrice = presencePrice(state.selectedService, 'modelos-prontos');
@@ -739,7 +781,7 @@ function renderHeroInteractive() {
 
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead(2, `Como você quer construir ${selectedSvc && selectedSvc.id === 'landing-page' ? 'sua landing page' : selectedSvc && selectedSvc.id === 'portfolio' ? 'seu portfólio' : 'seu site'}?`, 'Dois caminhos, com prazo e investimento diferentes. Você pode ver o modelo ou montar a estrutura antes de decidir.')}
+        ${renderDxHead('formato', `Como você quer construir ${selectedSvc && selectedSvc.id === 'landing-page' ? 'sua landing page' : selectedSvc && selectedSvc.id === 'portfolio' ? 'seu portfólio' : 'seu site'}?`, 'Dois caminhos, com prazo e investimento diferentes. Escolha um para continuar.')}
         <div class="dx-body">
           <fieldset class="dx-group">
             <legend class="sr-only">Formato</legend>
@@ -749,13 +791,14 @@ function renderHeroInteractive() {
                 <label for="dx-format-pronto" class="dx-format-label">
                   <span class="dx-format-top"><span class="dx-chip">Mais rápido</span><span class="dx-radio" aria-hidden="true"></span></span>
                   <span class="dx-format-name">Modelo pronto</span>
-                  <span class="dx-format-desc">${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.</span>
+                  <span class="dx-format-desc">${tiersOf(state.selectedService)
+                    ? `${tiersOf(state.selectedService).length} modelos (${tiersOf(state.selectedService).map(t => t.label.toLowerCase()).join(', ').replace(/, ([^,]*)$/, ' e $1')}) com estrutura já testada. Você personaliza cores, textos e imagens.`
+                    : `${info.pronto}: estrutura já testada. Aplicamos sua marca, seus textos e suas imagens.`}</span>
                   <span class="dx-facts">
                     <span><small>Investimento</small><strong>${brl(prontoPrice)}</strong></span>
                     <span><small>Prazo</small><strong>${info.prazo}</strong></span>
                   </span>
                 </label>
-                <button type="button" class="dx-link-btn" data-dx-action="preview">Ver o modelo e a demonstração ${DX_ICON.right}</button>
               </div>
               <div class="dx-format">
                 <input type="radio" id="dx-format-sob" name="dx-format" value="sob-medida" ${state.objective === 'sob-medida' ? 'checked' : ''}>
@@ -784,52 +827,175 @@ function renderHeroInteractive() {
     const syncNext = () => {
       next.disabled = !state.objective;
       nextLabel.textContent = state.objective === 'sob-medida' && !state.customProject ? 'Montar estrutura' : 'Continuar';
+      // a etapa "Modelo" aparece ou some conforme o formato
+      const steps = container.querySelector('.dx-steps');
+      if (steps) steps.outerHTML = renderDxSteps('formato');
     };
     const openStudio = () => openCustomModelModal(selectedSvc, (summary) => {
       state.customProject = summary;
       state.objective = 'sob-medida';
+      state.variant = null;
       if (summary.serviceId && summary.serviceId !== state.selectedService) state.selectedService = summary.serviceId;
-      transitionTo(renderStep3, 'next');
+      transitionTo(renderResult, 'next');
     }, { project: state.customProject });
 
     container.querySelectorAll('input[name="dx-format"]').forEach(input => {
       input.addEventListener('change', () => {
         state.objective = input.value;
+        if (input.value === 'sob-medida') state.variant = null;
         syncNext();
         revealNextAction(next);
         if (typeof trackEvent === 'function') trackEvent('hero_model_selected', input.value);
       });
     });
     syncNext();
-    container.querySelector('[data-dx-action="preview"]').addEventListener('click', () => showModelPreview(selectedSvc, {
-      onSelect: () => {
-        const pronto = container.querySelector('#dx-format-pronto');
-        if (!pronto) return;
-        pronto.checked = true;
-        pronto.dispatchEvent(new Event('change', { bubbles: true }));
-      }
+    // Clicar em um formato já leva à próxima etapa (o teclado continua usando "Continuar").
+    container.querySelectorAll('.dx-format-label').forEach(label => label.addEventListener('click', (e) => {
+      if (e.detail === 0) return; // clique gerado pelo teclado
+      setTimeout(() => { if (state.objective) next.click(); }, 160);
     }));
     container.querySelector('[data-dx-action="customize"]').addEventListener('click', () => {
       state.objective = 'sob-medida';
+      state.variant = null;
       container.querySelector('#dx-format-sob').checked = true;
       syncNext();
       openStudio();
     });
-    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep1, 'back'));
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep3, 'back'));
     next.addEventListener('click', () => {
       if (!state.objective) return;
       if (state.objective === 'sob-medida' && !state.customProject) openStudio();
-      else transitionTo(renderStep3, 'next');
+      else if (state.objective === 'modelos-prontos' && tiersOf(state.selectedService)) transitionTo(renderStepModelo, 'next');
+      else transitionTo(renderResult, 'next');
     });
   }
 
-  // ── ETAPA 3: contexto (opcional) ──
+  // ── ETAPA 4 (modelo pronto com níveis): qual modelo ──
+  function renderStepModelo() {
+    state.step = 4;
+    const tiers = tiersOf(state.selectedService) || [];
+    const prontoPrice = presencePrice(state.selectedService, 'modelos-prontos');
+    const info = PRESENCE_MODELS[state.selectedService] || {};
+    const card = (t) => {
+      if (t.soon || !MODEL_PREVIEW_DATA[t.id]) return `
+        <div class="dx-format dx-format--soon" aria-disabled="true">
+          <div class="dx-format-label">
+            <span class="dx-format-top"><span class="dx-chip dx-chip--alt">Em breve</span></span>
+            <span class="dx-format-name">${esc(t.label)}</span>
+            <span class="dx-format-desc">Novo modelo em preparação.</span>
+          </div>
+        </div>`;
+      const d = MODEL_PREVIEW_DATA[t.id];
+      return `
+        <div class="dx-format">
+          <input type="radio" id="dx-variant-${t.id}" name="dx-variant" value="${t.id}" ${state.variant === t.id ? 'checked' : ''}>
+          <label for="dx-variant-${t.id}" class="dx-format-label">
+            <span class="dx-format-top"><span class="dx-chip">${esc(t.label)}</span><span class="dx-radio" aria-hidden="true"></span></span>
+            <span class="dx-format-name">${esc(d.name)}</span>
+            <span class="dx-format-desc">${esc(d.description)}</span>
+            <span class="dx-facts">
+              <span><small>Investimento</small><strong>${brl(prontoPrice)}</strong></span>
+              <span><small>Prazo</small><strong>${info.prazo || '—'}</strong></span>
+            </span>
+          </label>
+        </div>`;
+    };
+
+    const done = () => state.personalization && state.personalization.variante === state.variant;
+    container.innerHTML = `
+      <div class="hero-step-wrapper dx-view">
+        ${renderDxHead('modelo', 'Qual modelo pronto combina com você?', 'Escolha o modelo. Você pode personalizar agora (cores, textos e imagens, com prévia na hora) ou continuar sem personalizar e fazer isso depois, na plataforma.')}
+        <div class="dx-body">
+          <fieldset class="dx-group">
+            <legend class="sr-only">Modelo pronto</legend>
+            <div class="dx-grid dx-grid--format dx-grid--tiers">${tiers.map(card).join('')}</div>
+          </fieldset>
+          <p class="dx-personalize-status" data-dx-pers-status role="status" hidden></p>
+        </div>
+        ${renderDxFooter('Voltar', 'Personalizar modelo', !state.variant)}
+      </div>`;
+
+    const next = container.querySelector('[data-dx="next"]');
+    // Segunda saída: seguir sem personalizar (a solicitação continua normalmente).
+    const skip = document.createElement('button');
+    skip.type = 'button'; skip.className = 'dx-btn dx-btn--ghost dx-btn--skip'; skip.setAttribute('data-dx', 'skip');
+    next.before(skip);
+    const nextLabel = container.querySelector('[data-dx-next-label]');
+    const status = container.querySelector('[data-dx-pers-status]');
+    const say = (msg, ok) => { status.textContent = msg || ''; status.hidden = !msg; status.classList.toggle('is-ok', !!ok); };
+    const sync = () => {
+      next.disabled = !state.variant;
+      skip.disabled = !state.variant;
+      nextLabel.textContent = done() ? 'Ver meu resumo' : 'Personalizar modelo';
+      skip.textContent = done() ? 'Editar personalização' : 'Continuar sem personalizar';
+      if (done()) say('Personalização concluída. Você pode revisar o resumo ou trocar de modelo.', true);
+      else if (!status.dataset.waiting) say('');
+    };
+    container.querySelectorAll('input[name="dx-variant"]').forEach(input => {
+      input.addEventListener('change', () => {
+        state.variant = input.value;
+        delete status.dataset.waiting;
+        sync();
+        revealNextAction(next);
+        if (typeof trackEvent === 'function') trackEvent('hero_variant_selected', input.value);
+      });
+    });
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep2, 'back'));
+    const personalizar = () => {
+      const opened = openModelEditor(state.variant, () => transitionTo(renderResult, 'next'));
+      if (!opened) { say('O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.'); return; }
+      status.dataset.waiting = '1';
+      say('Personalize o modelo na nova aba. Quando terminar, clique em “Concluir personalização” (aba Concluir do painel) para voltar ao resumo.');
+    };
+    next.addEventListener('click', () => {
+      if (!state.variant) return;
+      if (done()) { transitionTo(renderResult, 'next'); return; }
+      personalizar();
+    });
+    skip.addEventListener('click', () => {
+      if (!state.variant) return;
+      if (done()) { personalizar(); return; }
+      state.personalization = null; // segue sem personalização; dá para personalizar depois na plataforma
+      if (typeof trackEvent === 'function') trackEvent('hero_model_skip_personalization', state.variant);
+      transitionTo(renderResult, 'next');
+    });
+    sync();
+  }
+
+  // Abre o editor do modelo (mesma origem do site) e espera a personalização voltar.
+  // Devolve false se o navegador bloqueou a aba.
+  let editorListener = null;
+  function openModelEditor(variant, onDone) {
+    const d = MODEL_PREVIEW_DATA[variant];
+    if (!d) return false;
+    const root = location.pathname.includes('/solucoes/') ? '../' : '';
+    const base = (root + d.liveUrl).split('?')[0];
+    const win = window.open(base + '?personalizar&origem=diagnostico', '_blank');
+    if (!win) return false;
+    if (editorListener) window.removeEventListener('message', editorListener);
+    editorListener = (e) => {
+      const m = e.data;
+      if (e.origin !== location.origin || e.source !== win || !m || m.type !== 'cmk:diagnostico:personalizacao') return;
+      if (m.variante !== variant || !m.dados || typeof m.dados !== 'object') return;
+      state.personalization = { variante: variant, dados: m.dados, nome: String(m.nome || '').slice(0, 120) };
+      state.variant = variant;
+      try { win.postMessage({ type: 'cmk:diagnostico:recebida' }, location.origin); } catch (_) { /* aba fechada */ }
+      window.removeEventListener('message', editorListener); editorListener = null;
+      if (typeof trackEvent === 'function') trackEvent('hero_model_personalized', variant);
+      try { window.focus(); } catch (_) { /* */ }
+      onDone();
+    };
+    window.addEventListener('message', editorListener);
+    return true;
+  }
+
+  // ── ETAPA 2: contexto (opcional), logo depois da solução ──
   function renderStep3() {
-    state.step = 3;
+    state.step = 2;
     const tags = CONTEXT_TAGS[PRESENCA_DIGITAL_IDS.includes(state.selectedService) ? 'presenca' : 'outros'];
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead(3, 'Algo que devemos saber antes?', 'Opcional. Marque o que se aplica ou escreva com suas palavras.')}
+        ${renderDxHead('contexto', 'Algo que devemos saber antes?', 'Opcional. Marque o que se aplica ou escreva com suas palavras.')}
         <div class="dx-body">
           <fieldset class="dx-group">
             <legend class="dx-group-label">Marque o que se aplica</legend>
@@ -845,7 +1011,7 @@ function renderHeroInteractive() {
             <p class="dx-count" id="dx-context-count"><span data-dx-count>${state.context.length}</span>/2000</p>
           </div>
         </div>
-        ${renderDxFooter('Voltar', 'Ver meu resumo', false)}
+        ${renderDxFooter('Voltar', 'Continuar', false)}
       </div>`;
 
     const textarea = container.querySelector('#hero-context-input');
@@ -856,20 +1022,23 @@ function renderHeroInteractive() {
         state.contextTags = [...container.querySelectorAll('.dx-tag input:checked')].map(i => i.value);
       });
     });
-    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep2, 'back'));
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep1, 'back'));
     container.querySelector('[data-dx="next"]').addEventListener('click', () => {
       state.context = textarea.value;
-      transitionTo(renderResult, 'next');
+      transitionTo(renderStep2, 'next');
     });
   }
 
 
   // ── RESULTADO: resumo editável e próximos passos ──
   function renderResult() {
-    state.step = 4;
+    state.step = 5;
     const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
     const isPresence = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
     const model = isPresence && ['modelos-prontos', 'sob-medida'].includes(state.objective) ? state.objective : '';
+    const tiers = model === 'modelos-prontos' ? tiersOf(state.selectedService) : null;
+    const variantTier = tiers && state.variant ? tiers.find(t => t.id === state.variant) : null;
+    const variantData = variantTier && typeof MODEL_PREVIEW_DATA !== 'undefined' ? MODEL_PREVIEW_DATA[variantTier.id] : null;
     const objData = getObjectives(state.selectedService).find(o => o.id === state.objective);
     const solution = getSolution(state.selectedService, state.objective);
     const project = model === 'sob-medida' ? state.customProject : null;
@@ -883,7 +1052,7 @@ function renderHeroInteractive() {
       ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
       : 'monte-sua-solucao.html';
 
-    const headline = model === 'modelos-prontos' ? PRESENCE_MODELS[state.selectedService].pronto
+    const headline = model === 'modelos-prontos' ? (variantData ? variantData.name : PRESENCE_MODELS[state.selectedService].pronto)
       : project ? project.suggestion : solution.solution;
     const lede = model === 'modelos-prontos'
       ? 'Modelo pronto com a identidade da sua marca aplicada: estrutura, animações e responsividade já testadas.'
@@ -901,17 +1070,24 @@ function renderHeroInteractive() {
       priceNote = 'Estimativa inicial. A equipe confirma o valor depois de entender o escopo.';
       prazo = 'Definido na validação do escopo';
     }
-    const steps = model === 'modelos-prontos'
-      ? ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'Pague por Pix, cartão ou boleto.', 'Envie logotipo, textos e imagens para começarmos.']
+    // Modelo com níveis: o site é personalizado no editor e a equipe revisa antes do orçamento.
+    const needsPers = Boolean(variantData);
+    const pers = needsPers && state.personalization && state.personalization.variante === variantTier.id ? state.personalization : null;
+    if (needsPers) priceNote = 'Valor de referência do modelo. O orçamento final chega depois que revisarmos o seu site.';
+    const steps = needsPers
+      ? ['Envie para a CMKCOGIT e entre ou crie sua conta na plataforma.', 'Revisamos o seu site, fazemos os ajustes necessários e enviamos o orçamento.', 'Com o pagamento aprovado, publicamos e entregamos o site.']
+      : model === 'modelos-prontos'
+      ? ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'A equipe da CMK analisa e aprova a solicitação.', 'Com a aprovação, o pagamento é liberado na plataforma e começamos o seu site.']
       : ['Entre ou crie sua conta na plataforma. O diagnóstico vai junto.', 'A equipe revisa o escopo e confirma valor e prazo.', 'Com tudo aprovado, o pagamento é liberado na própria plataforma.'];
 
-    const previewData = typeof MODEL_PREVIEW_DATA !== 'undefined' ? MODEL_PREVIEW_DATA[state.selectedService] : null;
+    const previewId = variantData ? variantTier.id : state.selectedService;
+    const previewData = variantData || (typeof MODEL_PREVIEW_DATA !== 'undefined' ? MODEL_PREVIEW_DATA[state.selectedService] : null);
     const formatLabel = model === 'modelos-prontos' ? 'Modelo pronto' : model === 'sob-medida' ? 'Sob medida' : (objData ? objData.label : '—');
     const contextText = (state.context || '').trim();
 
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view dx-view--result">
-        ${renderDxHead(4, 'Seu ponto de partida', 'Revise o que você escolheu. Tudo pode ser ajustado aqui ou com a equipe.')}
+        ${renderDxHead('resumo', 'Seu ponto de partida', 'Revise o que você escolheu. Tudo pode ser ajustado aqui ou com a equipe.')}
         <div class="dx-result">
           <section class="dx-summary" aria-labelledby="dx-rec-title">
             <p class="dx-kicker">Recomendação</p>
@@ -921,6 +1097,8 @@ function renderHeroInteractive() {
             <dl class="dx-choices">
               <div><dt>Solução</dt><dd>${svcName}</dd><dd><button type="button" class="dx-edit" data-dx-edit="1">Alterar<span class="sr-only"> solução</span></button></dd></div>
               <div><dt>${isPresence ? 'Formato' : 'Objetivo'}</dt><dd>${formatLabel}</dd><dd><button type="button" class="dx-edit" data-dx-edit="2">Alterar<span class="sr-only"> ${isPresence ? 'formato' : 'objetivo'}</span></button></dd></div>
+              ${variantData ? `<div><dt>Modelo</dt><dd>${esc(variantTier.label)} · ${esc(variantData.name)}</dd><dd><button type="button" class="dx-edit" data-dx-edit="modelo">Alterar<span class="sr-only"> modelo</span></button></dd></div>
+              <div><dt>Personalização</dt><dd>${pers ? 'Concluída' + (pers.nome ? ' · ' + esc(pers.nome) : '') : 'Sem personalização <small class="dx-note-inline">(você pode personalizar depois, na plataforma)</small>'}</dd><dd><button type="button" class="dx-edit" data-dx-edit="personalizar">${pers ? 'Editar' : 'Personalizar'}<span class="sr-only"> o site</span></button></dd></div>` : ''}
             </dl>
 
             ${project ? `
@@ -949,7 +1127,8 @@ function renderHeroInteractive() {
             <dl class="dx-aside-facts"><div><dt>Prazo</dt><dd>${prazo}</dd></div></dl>
             <h4 class="dx-kicker">Próximos passos</h4>
             <ol class="dx-next">${steps.map(s => `<li>${s}</li>`).join('')}</ol>
-            <button type="button" class="dx-btn dx-btn--primary dx-btn--block" id="hero-btn-plataforma"><span>Continuar na plataforma</span>${DX_ICON.right}</button>
+            <button type="button" class="dx-btn dx-btn--primary dx-btn--block" id="hero-btn-plataforma"><span>${!needsPers ? 'Continuar na plataforma' : 'Concluir e enviar para a CMKCOGIT'}</span>${DX_ICON.right}</button>
+            <p class="dx-personalize-status" data-dx-send-status role="status" hidden></p>
             <p class="dx-reassure">Você revisa tudo antes de qualquer pagamento.</p>
             <div class="dx-aside-links">
               <a href="${configuratorLink}" id="hero-link-form">Ajustar no configurador</a>
@@ -970,12 +1149,19 @@ function renderHeroInteractive() {
         }, { project: state.customProject, startAt: 'structure' });
         return;
       }
-      transitionTo({ 1: renderStep1, 2: renderStep2, 3: renderStep3 }[target], 'back');
+      if (target === 'personalizar') {
+        if (!openModelEditor(variantTier.id, () => { renderResult(); CogitUI.focusHeading(container); })) sendStatus('O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.');
+        else sendStatus('Personalize na nova aba e clique em “Concluir personalização” para voltar.');
+        return;
+      }
+      transitionTo({ 1: renderStep1, 2: renderStep2, 3: renderStep3, modelo: renderStepModelo }[target], 'back');
     }));
     const previewBtn = container.querySelector('[data-dx-action="preview"]');
-    if (previewBtn) previewBtn.addEventListener('click', () => showModelPreview(selectedSvc));
+    if (previewBtn) previewBtn.addEventListener('click', () => (variantData ? openModelPreviewModal(previewId) : showModelPreview(selectedSvc)));
 
     const platformBtn = document.getElementById('hero-btn-plataforma');
+    const sendStatusEl = container.querySelector('[data-dx-send-status]');
+    function sendStatus(msg, ok) { sendStatusEl.textContent = msg || ''; sendStatusEl.hidden = !msg; sendStatusEl.classList.toggle('is-ok', !!ok); }
     platformBtn.addEventListener('click', () => {
       if (typeof CogitHandoff === 'undefined') return;
       platformBtn.disabled = true;
@@ -986,18 +1172,23 @@ function renderHeroInteractive() {
         state.contextTags.length ? `Marcado no diagnóstico: ${state.contextTags.join('; ')}` : '',
         contextText
       ].filter(Boolean).join('\n');
-      CogitHandoff.irParaPlataforma({
+      const cfg = {
         origem: 'diagnostico',
-        servicos: [{ id: catalogService, modelo: model || null, plano: null, nome: svcName }],
+        servicos: [{ id: catalogService, modelo: model || null, plano: null, nome: svcName, variante: variantData ? variantTier.id : null }],
         complementos: [],
         notas: notes,
-        diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : formatLabel, direcao: headline },
+        diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : variantData ? `${formatLabel} · ${variantTier.label}` : formatLabel, direcao: headline },
         estimativa: price
+      };
+      if (!pers) { CogitHandoff.irParaPlataforma(cfg); return; }
+      CogitHandoff.enviarComPersonalizacao(cfg, pers.dados, (estado, msg) => {
+        sendStatus(msg, estado === 'recebido');
+        if (estado !== 'enviando') platformBtn.disabled = false;
       });
     });
 
     document.getElementById('hero-btn-restart').addEventListener('click', () => {
-      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null });
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null, personalization: null });
       transitionTo(renderStep0, 'back');
     });
   }
@@ -1011,8 +1202,21 @@ function renderHeroInteractive() {
     }
   };
 
-  // Initial render
-  renderStep0();
+  // Initial render. Na página "Monte sua solução" o fluxo começa direto (sem o convite) e,
+  // se o link trouxe um serviço (?services=...&model=...), ele já vem escolhido.
+  if (naPagina) {
+    const svc = rota.servico && SERVICES_GRID.find(s => s.id === rota.servico);
+    if (svc) {
+      state.selectedService = svc.id;
+      state.challenge = svc.challenge;
+      if (rota.modelo && PRESENCA_DIGITAL_IDS.includes(svc.id)) state.objective = rota.modelo;
+      renderStep3();
+    } else {
+      renderStep1();
+    }
+  } else {
+    renderStep0();
+  }
   updateDiagnosticMode();
 }
 
@@ -1053,8 +1257,52 @@ const MODEL_PREVIEW_DATA = {
     previewImg: 'assets/videos/templates/portfolio-poster.webp',
     video: 'assets/videos/templates/portfolio.mp4',
     liveUrl: 'templates/portfolio/'
+  },
+  'landing-page-profissional': {
+    name: 'Landing Page Profissional',
+    tagLabel: 'LANDING PAGE',
+    category: 'Landing page · Intermediário',
+    description: 'Página única completa com cabeçalho, banner principal, sobre, 3 serviços com foto, diferenciais, depoimentos, chamada final e rodapé. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Profissionais liberais', 'Clínicas e consultórios', 'Prestadores de serviço', 'Pequenas empresas'],
+    features: ['8 seções, com opção de ocultar as que não usar', '8 paletas prontas ou suas cores em HEX', '6 espaços de imagem com upload e enquadramento', 'Todos os textos, botões e links editáveis', 'Responsivo em computador, tablet e celular', 'Exporta o site pronto ou envia para publicarmos'],
+    previewImg: 'assets/videos/templates/landing-profissional-poster.webp',
+    liveUrl: 'templates/landing-profissional/?personalizar'
+  },
+  'landing-page-basica': {
+    name: 'Landing Page Básica',
+    tagLabel: 'LANDING PAGE',
+    category: 'Landing page · Básico',
+    description: 'Página única com início, serviços, sobre nós, diferenciais, depoimentos e portfólio, contato com formulário e rodapé. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Prestadores de serviço', 'Negócios locais', 'Autônomos e MEIs', 'Primeiro site da empresa'],
+    features: ['7 seções, com opção de ocultar as que não usar', 'Formulário de contato com validação e LGPD', '4 espaços de imagem com upload e enquadramento', '8 paletas prontas ou suas cores em HEX', 'Todos os textos, botões e links editáveis', 'Responsivo em computador, tablet e celular'],
+    previewImg: 'assets/videos/templates/landing-basica-poster.webp',
+    liveUrl: 'templates/landing-basica/?personalizar'
+  },
+  'landing-page-formal': {
+    name: 'Landing Page Corporativa',
+    tagLabel: 'LANDING PAGE',
+    category: 'Landing page · Formal',
+    description: 'Página institucional completa, de visual sóbrio: apresentação, sobre a empresa (missão, visão e valores), serviços e soluções, diferenciais, metodologia, projetos, indicadores, depoimentos e parceiros, perguntas frequentes e contato. Você mesmo personaliza cores, imagens e textos com prévia em tempo real.',
+    audience: ['Empresas de engenharia e indústria', 'Consultorias e escritórios', 'Empresas B2B', 'Prestadores de serviço técnico'],
+    features: ['12 seções, com opção de ocultar as que não usar', 'Metodologia em 6 etapas e projetos com resultados', 'Indicadores, depoimentos com nota e logotipos de parceiros', '9 espaços de imagem com upload e enquadramento', 'Formulário com LGPD, política de privacidade e termos de uso', 'Responsivo em computador, tablet e celular'],
+    previewImg: 'assets/videos/templates/landing-formal-poster.webp',
+    liveUrl: 'templates/landing-formal/?personalizar'
   }
 };
+
+// Níveis de modelo pronto por serviço (básico, intermediário e formal), mostrados como
+// seletor no topo do modal de prévia. Abrir a prévia pelo id do serviço mostra o primeiro nível.
+// Serviço sem entrada aqui segue com um único modelo.
+const MODEL_TIERS = {
+  'landing-page': [
+    { id: 'landing-page-basica', label: 'Básico' },
+    { id: 'landing-page-profissional', label: 'Intermediário' },
+    { id: 'landing-page-formal', label: 'Formal' }
+  ]
+};
+function modelTiersFor(id) {
+  return Object.values(MODEL_TIERS).find((list) => list.some((t) => t.id === id)) || null;
+}
 
 // ── Modal de Informações do Modelo (Premium) ──
 function showModelPreview(selectedSvc, options) {
@@ -1077,12 +1325,19 @@ function openModelPreviewModal(modelId, title, options = {}) {
   }
 
   // Resolve data for the service
-  const data = MODEL_PREVIEW_DATA[finalId] || MODEL_PREVIEW_DATA['landing-page'];
+  if (!MODEL_PREVIEW_DATA[finalId]) finalId = 'landing-page';
+  if (MODEL_TIERS[finalId]) finalId = MODEL_TIERS[finalId][0].id; // serviço com níveis: abre no primeiro
+  const data = MODEL_PREVIEW_DATA[finalId];
 
   const existing = document.getElementById('hero-model-preview-modal');
   if (existing) existing.remove();
 
-  const returnFocus = document.activeElement;
+  const returnFocus = options.returnFocus || document.activeElement;
+
+  const tiers = modelTiersFor(finalId);
+  const tiersNav = tiers ? `<div class="hero-modal-tiers" role="group" aria-label="Nível do modelo">${tiers.map((t) => t.soon
+    ? `<button type="button" class="hero-modal-tier" disabled>${t.label}<small>Em breve</small></button>`
+    : `<button type="button" class="hero-modal-tier" data-tier="${t.id}" aria-pressed="${t.id === finalId}">${t.label}</button>`).join('')}</div>` : '';
 
   // Build audience pills
   const audiencePills = data.audience.map(a => `<li class="hero-modal-audience-pill">${a}</li>`).join('');
@@ -1130,6 +1385,7 @@ function openModelPreviewModal(modelId, title, options = {}) {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>
+        ${tiersNav}
 
         <div class="hero-modal-body">
           <div class="hero-modal-info">
@@ -1194,9 +1450,20 @@ function openModelPreviewModal(modelId, title, options = {}) {
     if (e.target === modal) closeModal();
   });
 
+  modal.querySelectorAll('[data-tier]').forEach((btn) => btn.addEventListener('click', () => {
+    if (btn.getAttribute('aria-pressed') === 'true') return;
+    // Troca de nível sem fechar: monta o mesmo modal com o outro modelo e mantém o foco no seletor.
+    const tierId = btn.dataset.tier;
+    modal.addEventListener('close', () => {
+      openModelPreviewModal(tierId, undefined, Object.assign({}, options, { returnFocus }));
+      document.querySelector('#hero-model-preview-modal [data-tier="' + tierId + '"]')?.focus();
+    }, { once: true });
+    closeModal();
+  }));
+
   if (selectBtn) selectBtn.addEventListener('click', () => {
     closeModal();
-    onSelect();
+    onSelect(finalId); // id do modelo exibido (com níveis, o nível escolhido no seletor)
   });
 
   if (typeof trackEvent === 'function') trackEvent('model_preview_opened', finalId);

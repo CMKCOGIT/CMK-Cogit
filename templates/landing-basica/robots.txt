@@ -1,0 +1,4 @@
+# Ambiente de demonstração: as páginas usam <meta name="robots" content="noindex">.
+# O rastreamento continua liberado para que essa diretiva seja lida.
+User-agent: *
+Allow: /

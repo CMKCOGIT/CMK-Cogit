@@ -84,13 +84,22 @@
 .dx-chip { display: inline-flex; padding: 3px 10px; border-radius: 2px; background: rgba(126, 224, 176, 0.12); color: var(--dx-success); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; }
 .dx-chip--alt { background: var(--dx-accent-soft); color: var(--dx-accent); }
 .dx-radio { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--dx-line-strong); transition: border-color 160ms ease, box-shadow 160ms ease; }
-.dx-format:has(> input:checked) .dx-radio { border-color: var(--dx-accent); box-shadow: inset 0 0 0 4px var(--dx-accent-soft), inset 0 0 0 10px var(--dx-accent); }
+/* Selecionado: fundo na cor de destaque + visto (sem box-shadow, que a identidade remove com !important) */
+.dx-radio { position: relative; flex: none; }
+.dx-format:has(> input:checked) .dx-radio { border-color: var(--dx-accent); background: var(--dx-accent); }
+.dx-format:has(> input:checked) .dx-radio::after { content: ""; position: absolute; left: 50%; top: 45%; width: 5px; height: 10px; border: solid var(--dx-surface, #fff); border-width: 0 2px 2px 0; transform: translate(-50%, -50%) rotate(45deg); }
 .dx-format-name { font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700; letter-spacing: -0.01em; color: var(--dx-text); }
 .dx-format-desc { font-size: 0.9rem; line-height: 1.5; color: var(--dx-muted); }
 .dx-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--dx-line); }
 .dx-facts > span { display: grid; gap: 2px; }
 .dx-facts small { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--dx-faint); }
 .dx-facts strong { font-size: 0.95rem; font-weight: 600; color: var(--dx-text); }
+/* Modelo: um cartão por nível do modelo pronto (básico, intermediário, formal) */
+.dx-grid--tiers { grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); }
+.dx-format-links { display: flex; flex-wrap: wrap; gap: 0 4px; margin-top: auto; }
+.dx-format-links .dx-link-btn { margin-right: 8px; }
+.dx-format--soon { border-style: dashed; opacity: .7; }
+.dx-format--soon .dx-format-label { cursor: default; }
 .dx-format-status { display: flex; align-items: center; gap: 8px; margin: 0 20px; padding: 10px 12px; border-radius: 2px; background: rgba(126, 224, 176, 0.08); color: var(--dx-success); font-size: 0.85rem; font-weight: 600; }
 
 .dx-link-btn {
@@ -344,3 +353,17 @@ dialog.custom-model-dialog.studio:has(.studio-body--objective) { height: auto; }
 
 /* Resultado: plano do modelo pronto (vitalício / mensal / anual) */
 
+
+/* Personalização do modelo (etapa Modelo e resumo) */
+.dx-personalize-status { margin: 14px 0 0; padding: 12px 14px; border-radius: 2px; background: var(--dx-accent-soft); color: var(--dx-text); font-size: .9rem; line-height: 1.5; }
+.dx-personalize-status.is-ok { background: rgba(126, 224, 176, 0.12); color: var(--dx-success); font-weight: 600; }
+.dx-pending { color: #b4570f; font-weight: 700; }
+
+/* Página "Monte sua solução": o mesmo diagnóstico da tela inicial, fora da janela */
+.dx-page { width: min(1080px, 100%); margin-inline: auto; }
+.dx-page[hidden] { display: none; }
+.dx-page .hero-interactive-container { width: 100%; max-width: none; min-height: 0; margin: 0; padding: clamp(16px, 3vw, 32px); }
+.dx-note-inline { display: block; color: var(--dx-muted); font-size: .8rem; font-weight: 400; }
+.dx-btn--skip { margin-left: auto; }
+.dx-btn--skip + .dx-btn { margin-left: 10px; }
+@media (max-width: 560px) { .dx-foot:has(.dx-btn--skip) { flex-wrap: wrap; } .dx-foot:has(.dx-btn--skip) .dx-btn--skip, .dx-foot:has(.dx-btn--skip) [data-dx="next"] { flex: 1 1 100%; margin-left: 0; } }

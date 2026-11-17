@@ -569,6 +569,12 @@ const ConfiguratorApp = (() => {
   function init() {
     containerEl = document.getElementById('configurator-app');
     if (!containerEl) return;
+    // Mesmo fluxo da tela inicial quando possível (ver rotaMonteSuaSolucao em components.js).
+    if (typeof window.rotaMonteSuaSolucao === 'function' && window.rotaMonteSuaSolucao().tipo === 'diagnostico' && document.getElementById('hero-interactive-container')) {
+      containerEl.hidden = true;
+      return;
+    }
+    containerEl.hidden = false;
     track('configurator_open', 'guided_v2');
     const params = new URLSearchParams(window.location.search);
     let services = params.get('services');

@@ -304,8 +304,15 @@
 
     <section class="tone-paper section configurator-section" id="configurator" aria-label="Monte sua solução">
       <div class="container">
+        <!-- Mesmo fluxo da tela inicial (js/components.js). Combinações e serviços que o
+             diagnóstico não cobre usam o configurador abaixo (rotaMonteSuaSolucao). -->
+        <div class="dx-page" data-dx-page-wrap>
+          <div class="hero-interactive-container hero-discovery-container" id="hero-interactive-container" data-dx-page>
+            <!-- Rendered by js/components.js -->
+          </div>
+        </div>
         <!-- APP CONTAINER -->
-        <div class="configurator-container" id="configurator-app">
+        <div class="configurator-container" id="configurator-app" hidden>
           <!-- Rendered by configurator.js -->
         </div>
       </div>

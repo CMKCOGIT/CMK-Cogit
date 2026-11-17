@@ -1,0 +1,1 @@
+{ "name": "Monteiro Engenharia & Consultoria", "short_name": "Monteiro", "start_url": "./", "display": "standalone", "background_color": "#fbfaf7", "theme_color": "#14304f", "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }] }

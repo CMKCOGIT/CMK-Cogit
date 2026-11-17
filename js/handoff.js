@@ -46,11 +46,18 @@ window.CogitHandoff = (() => {
 
   // cfg: { origem, objetivos, servicos: [{id, modelo, nome}], complementos: [{id, qtd, nome}], notas, diagnostico, estimativa }
   function montar(cfg) {
-    const servicos = (cfg.servicos || []).map(s => ({ id: s.id, modelo: s.modelo || null, plano: s.plano || null, nome: s.nome || '' }));
+    // variante: qual modelo pronto foi escolhido quando o serviço tem níveis (ex.: landing-page-basica).
+    const servicos = (cfg.servicos || []).map(s => {
+      const item = { id: s.id, modelo: s.modelo || null, plano: s.plano || null, nome: s.nome || '' };
+      if (s.variante && s.modelo === 'modelos-prontos') item.variante = s.variante;
+      return item;
+    });
     const complementos = (cfg.complementos || []).map(c => ({ id: c.id, qtd: c.qtd || 1, nome: c.nome || '' }));
-    const assinatura = JSON.stringify([cfg.origem, servicos.map(s => s.id + ':' + s.modelo + ':' + s.plano), complementos.map(c => c.id + ':' + c.qtd)]);
+    // Com site personalizado no editor, cada envio é uma solicitação nova (ref próprio).
+    const assinatura = JSON.stringify([cfg.origem, servicos.map(s => s.id + ':' + s.modelo + ':' + s.plano + ':' + (s.variante || '')), complementos.map(c => c.id + ':' + c.qtd), cfg.personalizacao ? novoRef() : '']);
     return {
       v: 1,
+      ...(cfg.personalizacao ? { personalizacao: true } : {}),
       ref: refPara(assinatura),
       origem: cfg.origem === 'diagnostico' ? 'diagnostico' : 'configurador',
       objetivos: (cfg.objetivos || []).slice(0, 8),
@@ -75,6 +82,28 @@ window.CogitHandoff = (() => {
     window.location.href = link(cfg);
   }
 
+  // Envia a solução + o site personalizado no editor do modelo. A plataforma abre em uma aba
+  // nova (esta página precisa continuar aberta para entregar os dados por postMessage).
+  // aoMudar(estado, mensagem): 'enviando' | 'recebido' | 'erro'.
+  function enviarComPersonalizacao(cfg, dados, aoMudar) {
+    const payload = montar(Object.assign({}, cfg, { personalizacao: true }));
+    const origemApp = new URL(APP_URL).origin;
+    const url = APP_URL + '/continuar.html' + volta() + '#cfg=' + base64url(JSON.stringify(payload));
+    const aba = window.open(url, '_blank');
+    if (!aba) { aoMudar('erro', 'O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.'); return; }
+    aoMudar('enviando', 'Abrindo a plataforma e enviando o seu site...');
+    const fim = () => { clearTimeout(prazo); window.removeEventListener('message', aoReceber); };
+    const prazo = setTimeout(() => { fim(); aoMudar('erro', 'Não conseguimos falar com a plataforma. Verifique se a nova aba abriu e clique de novo.'); }, 30000);
+    function aoReceber(e) {
+      const m = e.data;
+      if (e.origin !== origemApp || e.source !== aba || !m || m.ref !== payload.ref) return;
+      if (m.type === 'cmk:personalizacao:pronto') aba.postMessage({ type: 'cmk:personalizacao', ref: payload.ref, dados }, origemApp);
+      else if (m.type === 'cmk:personalizacao:recebida') { fim(); aoMudar('recebido', 'Enviado! Continue na aba da plataforma: entre ou crie sua conta para concluir.'); }
+      else if (m.type === 'cmk:personalizacao:erro') { fim(); aoMudar('erro', 'A plataforma não aceitou o envio. Tente de novo ou fale com a gente pelo WhatsApp.'); }
+    }
+    window.addEventListener('message', aoReceber);
+  }
+
   function salvarSessao(snapshot) {
     try {
       const agora = Date.now();
@@ -95,5 +124,5 @@ window.CogitHandoff = (() => {
     try { localStorage.removeItem(KEY_SESSAO); } catch (_) {}
   }
 
-  return { appUrl: APP_URL, montar, link, irParaPlataforma, salvarSessao, lerSessao, limparSessao };
+  return { appUrl: APP_URL, montar, link, irParaPlataforma, enviarComPersonalizacao, salvarSessao, lerSessao, limparSessao };
 })();

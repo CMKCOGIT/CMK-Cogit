@@ -6,6 +6,9 @@ Três sites estáticos e independentes, vendidos como **Modelos prontos**. Um mo
 | --- | --- | --- | --- |
 | `landing/` | Landing Page Essencial | 1 página, 5 seções: topo, benefícios (3), como funciona (3 passos), depoimentos (3 + números), contato (formulário + 3 dúvidas) | Alento, agenda para psicólogos |
 | `portfolio/` | Portfólio Profissional | 1 página: topo, trabalhos (até 6), sobre (foto + números), serviços (até 3), depoimentos (2), contato | Lia Toledo, designer de identidade visual |
+| `landing-basica/` | Landing Page Básica (nível básico) | 1 página, 7 seções: início, serviços (3 com ícone e características), sobre nós (missão, visão e valores), diferenciais (4), depoimentos (2 + nota) e portfólio (2 fotos), contato (formulário + WhatsApp, e-mail, telefone e redes) e rodapé. Tem o painel **Personalizar** (ver abaixo) | Ponto Firme Reformas |
+| `landing-profissional/` | Landing Page Profissional (nível intermediário) | 1 página, 8 seções: cabeçalho, banner, sobre, serviços (3 com foto), diferenciais (4), depoimentos (3 + foto), chamada para ação e rodapé. Tem o painel **Personalizar** (ver abaixo) | Florescer Nutrição, nutricionista |
+| `landing-formal/` | Landing Page Corporativa (nível formal) | 1 página, 12 seções: cabeçalho, apresentação (proposta de valor), sobre (história, atuação, missão/visão/valores, propósito, compromisso), serviços e soluções (4), diferenciais (6), metodologia (6 etapas), projetos (3), indicadores (opcional, só dados reais), depoimentos com nota, case e logotipos de parceiros, perguntas frequentes (6), contato e rodapé com privacidade e termos. Tem o painel **Personalizar** | Monteiro Engenharia & Consultoria |
 | `institucional/` | Site Institucional Essencial | 4 páginas: Início (serviços, diferenciais, casos, depoimentos, proposta), Sobre, Serviços (até 6 + dúvidas) e Contato | Arrimo Contabilidade |
 
 Os três usam **o mesmo** `css/styles.css` e o mesmo `js/main.js` (fontes em `tools/templates/base/`). Só `css/tokens.css` muda de um modelo para outro, e de um cliente para outro.
@@ -25,6 +28,36 @@ Os três usam **o mesmo** `css/styles.css` e o mesmo `js/main.js` (fontes em `to
 ```
 
 As páginas são geradas por `python3 tools/templates/build-models.py` a partir do conteúdo de cada modelo (o dicionário de cada função no arquivo). Depois de gerar, rode `node tools/templates/configure.mjs`.
+
+## Landing pages por nível e o painel "Personalizar"
+
+A Landing Page tem três níveis de modelo pronto: **básico** (`landing-basica/`), **intermediário** (`landing-profissional/`) e **formal** (`landing-formal/`). No site, o modal de prévia mostra esses níveis em `MODEL_TIERS`, em `js/components.js`. Abrir a prévia pelo serviço `landing-page` mostra o básico. A Landing Page Essencial (`landing/`) continua no repositório, mas não aparece no seletor.
+
+Esses modelos não usam o `styles.css` e o `main.js` comuns. Cada um tem o próprio `css/styles.css`, que define o visual do nível. O script do site e o painel são **iguais em todos os níveis**:
+
+| Fonte única | Cópia em cada modelo | O que faz |
+| --- | --- | --- |
+| `tools/templates/base/landing-site.js` | `js/site.js` | Menu, revelação ao rolar, espaços de imagem, ano do rodapé e formulário. Com `data-endpoint`, envia por POST; sem ele, abre o WhatsApp ou o e-mail do site com a mensagem pronta. |
+| `tools/templates/base/landing-editor.js` | `js/editor.js` | O painel **Personalizar**. |
+
+Edite só a fonte e rode `node tools/templates/sync-landing.mjs`. O `npm run check` falha se alguma cópia ficar diferente. Cada modelo se identifica na tag `<script data-lp-editor data-model="..." data-model-name="...">`, e o painel monta os campos a partir dos atributos do HTML. Um modelo novo só precisa do próprio HTML e CSS.
+
+O botão **Personalizar** abre o painel (`?personalizar` na URL abre direto no computador). Ele permite:
+
+- **Cores:** 8 paletas ou 6 cores em HEX (principal, secundária, destaque, fundo, títulos e textos). Todo o CSS deriva dessas 6 cores, e a cor do texto sobre botões é calculada pelo contraste.
+- **Textos:** todo elemento com `data-k` vira um campo. Com o painel aberto, clicar num texto da página leva ao campo dele.
+- **Imagens:** os espaços `data-img` (básico: IMAGEM 1 a 4; intermediário: 1 a 6; formal: 1 a 9, com 4 logotipos de parceiros) e o logotipo. Cada um aceita upload, substituição, remoção, posição horizontal e vertical, zoom e texto alternativo. As fotos são reduzidas no navegador para no máximo 1800 px, em WebP.
+- **Seções:** ocultar qualquer seção, exceto o início e o rodapé. Os itens do menu e do rodapé somem junto.
+- **Links:** todo `data-href`. Link vazio oculta o botão ou a rede social.
+- **Limites de texto:** cada campo tem um limite proporcional ao texto do modelo, com contador. Um elemento pode fixar o próprio limite com `data-max`. Palavras longas quebram de linha (`overflow-wrap`).
+- **Enviar:** o cliente **não baixa o site**. O botão **Enviar para a CMKCOGIT** abre `app.cmkcogit.com.br/continuar.html` com `#cfg`, que leva o modelo pronto, a `variante` (`data-variant` da tag do editor) e `personalizacao: true`. Os dados vão para a plataforma por `postMessage`. A solicitação entra **em validação**, a equipe revisa, ajusta e envia o orçamento, e depois do pagamento entrega o site. No banco da plataforma, rode `sql/31_personalizacao_modelo.sql`.
+- **Modos abertos por outra aba** (o editor conversa com quem o abriu por `postMessage`, conferindo a origem):
+  - `?personalizar&origem=diagnostico`: aberto pela etapa Modelo do "Monte sua solução". A aba "Concluir" devolve a personalização ao diagnóstico, que segue para o resumo. Na etapa Modelo também existe **Continuar sem personalizar**.
+  - `?personalizar&origem=plataforma`: aberto em "Minhas solicitações" (app). Recebe a versão enviada, e "Salvar e reenviar para análise" devolve a nova versão para a plataforma.
+  - `?equipe&origem=preview`: "Visualizar projeto" no admin da plataforma. Mostra o site com os dados do cliente sem salvar nada neste navegador.
+- **Equipe (`?equipe` na URL):** importar ou exportar o `.json` e **Gerar site final (.html)**. O arquivo sai sem o painel, sem os avisos de demonstração e com as imagens embutidas, e substitui o `index.html` da pasta. Depois rode `configure.mjs`. No admin da plataforma, o botão "Baixar personalização (.json)" do pedido traz o arquivo do cliente. O `?equipe` só esconde as ferramentas da interface; o código do modelo é público como em qualquer site estático.
+
+A personalização fica salva no navegador de quem edita: textos e cores no `localStorage`, imagens no IndexedDB.
 
 ## Rodar localmente
 

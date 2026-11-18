@@ -19,7 +19,7 @@ Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em H
 ## Versão em inglês (PT | EN)
 
 - **Botão PT | EN** no header e no menu do celular de todas as páginas. Em páginas que ainda não têm versão em inglês, o EN leva para a home em inglês.
-- **Páginas em inglês** em `en/` (hoje só `en/index.html`), geradas por `node tools/i18n/build.mjs` a partir da página em português e de `tools/i18n/en.json`. Não edite `en/` nem `js/i18n-en.js`.
+- **Páginas em inglês** em `en/` (todas as páginas do site), geradas por `node tools/i18n/build.mjs` a partir da página em português e de `tools/i18n/en.json`. Não edite `en/` nem `js/i18n-en.js`.
 - **Traduções:** `tools/i18n/en.json` → `texts` (português → inglês, trecho exato) e `patterns` (textos com valores, como preços e "Mover X para cima"). Para corrigir uma tradução, mude o texto em inglês e rode o build.
 - **Texto montado pelo JavaScript** (diagnóstico, estúdio sob medida, demonstração, cookies) é traduzido no navegador por `js/i18n.js`, com o mesmo dicionário. Abra `en/index.html?i18n-debug` e veja `window.__i18nFaltando` para achar textos sem tradução.
 - **Nova página em inglês:** acrescente o caminho em `pages`, rode `node tools/i18n/build.mjs --extract` (lista os textos que faltam com valor vazio), preencha e rode o build. `npm run check` falha se faltar tradução ou se algo ficar desatualizado. Os links para páginas sem versão em inglês apontam para o português.

@@ -28,11 +28,12 @@ export const norm = (s) => s.replace(/[\s ]+/g, ' ').trim();
 const hasWords = (s) => /\p{L}{2,}/u.test(s);
 const patterns = (dict.patterns || []).map(([re, to, deep]) => [new RegExp('^' + re + '$', 'u'), to, !!deep]);
 // trecho capturado: exato, em lista ("a, b e c") ou com a inicial maiúscula (igual ao js/i18n.js)
+const lower = Object.fromEntries(Object.entries(dict.texts).filter(([, v]) => v).map(([k, v]) => [k.toLowerCase(), v]));
 function part(x) {
   if (Object.hasOwn(dict.texts, x) && dict.texts[x]) return dict.texts[x];
+  const r = lower[x.toLowerCase()];
+  if (r != null) return x.charAt(0) === x.charAt(0).toLowerCase() && !/^[A-Z]{2}/.test(r) ? r.charAt(0).toLowerCase() + r.slice(1) : r;
   if (/, | e /.test(x)) return x.split(/(, | e )/).map((y) => (y === ', ' ? ', ' : y === ' e ' ? ' and ' : part(y))).join('');
-  const cap = x.charAt(0).toUpperCase() + x.slice(1);
-  if (cap !== x && dict.texts[cap]) return dict.texts[cap].charAt(0).toLowerCase() + dict.texts[cap].slice(1);
   return x;
 }
 
@@ -96,7 +97,9 @@ function relinkForEn(html, rel) {
       if (!u || /^(?:[a-z][a-z0-9+.-]*:|\/\/|#|\/)/i.test(u)) return u;
       const [p0, rest = ''] = u.split(/(?=[?#])/);
       const target = path.posix.normalize(path.posix.join(path.posix.dirname(rel), p0));
-      const dest = PAGES.includes(target) ? 'en/' + target : target;
+      // en/ espelha a árvore em português: link para página traduzida fica como está
+      if (PAGES.includes(target) || (p0.endsWith('/') && PAGES.includes(target + '/index.html'))) return u;
+      const dest = target;
       let r = path.posix.relative(fromDir, dest) || path.posix.basename(dest);
       if (p0.endsWith('/') && !r.endsWith('/')) r += '/';
       return r + rest;

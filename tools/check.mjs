@@ -24,7 +24,7 @@ check('Local HTML references exist; IDs are unique',()=>{
 });
 check('Mobile menus expose the solutions hub and main pages',()=>{
  for(const file of html){const source=fs.readFileSync(file,'utf8');if(!source.includes('class="mobile-nav-list"'))continue;
-  const prefix='../'.repeat(path.relative(root,file).split(path.sep).length-1);
+  const rel=path.relative(root,file).split(path.sep);const prefix='../'.repeat(rel.length-1-(rel[0]==='en'?1:0));
   for(const target of ['solucoes/index.html','monte-sua-solucao.html','como-trabalhamos.html','sobre.html','contato.html'])assert.ok(source.includes(`href="${prefix}${target}" class="mobile-nav-link"`),`${file}: ${target}`);
   assert.match(source,/class="[^"]*mobile-accordion-trigger[^"]*"[^>]*aria-expanded="false"/);
  }

@@ -52,8 +52,11 @@
     (function walk(node) {
       Array.prototype.slice.call(node.childNodes).forEach(function (n) {
         if (n.nodeType === 3) {
-          var parts = n.textContent.split(/(\s+)/);
-          if (!n.textContent.trim()) return;
+          // página em inglês: traduz a frase inteira antes de quebrar em palavras (js/i18n.js)
+          var raw = n.textContent, tr = window.cogitT ? window.cogitT(raw) : raw;
+          if (tr !== raw) raw = raw.match(/^\s*/)[0] + tr + raw.match(/\s*$/)[0];
+          var parts = raw.split(/(\s+)/);
+          if (!raw.trim()) return;
           var frag = document.createDocumentFragment();
           parts.forEach(function (p) {
             if (!p) return;

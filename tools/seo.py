@@ -172,7 +172,7 @@ for rel in indexable:
     sm += ['  <url>', f'    <loc>{url_of(rel)}</loc>', f'    <lastmod>{LASTMOD}</lastmod>', f'    <priority>{pr}</priority>', '  </url>']
 # versões em inglês (tools/i18n/build.mjs): mesma prioridade da página em português
 for rel in json.loads((ROOT / 'tools/i18n/en.json').read_text())['pages']:
-    if (ROOT / 'en' / rel).exists():
+    if rel in indexable and (ROOT / 'en' / rel).exists():
         sm += ['  <url>', f'    <loc>{url_of("en/" + rel)}</loc>', f'    <lastmod>{LASTMOD}</lastmod>', f'    <priority>{SITEMAP_PRIORITY.get(rel, "0.7")}</priority>', '  </url>']
 sm.append('</urlset>\n')
 smp = ROOT / 'sitemap.xml'

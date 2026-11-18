@@ -29,11 +29,12 @@
     return null;
   }
   // trecho capturado: exato, em lista ("a, b e c") ou com a inicial maiúscula ("vídeo em destaque")
+  var minus = {}; Object.keys(texts).forEach(function (k) { minus[k.toLowerCase()] = texts[k]; });
   function parte(x) {
     if (Object.prototype.hasOwnProperty.call(texts, x)) return texts[x];
+    var r = minus[x.toLowerCase()];
+    if (r != null) return x.charAt(0) === x.charAt(0).toLowerCase() && !/^[A-Z]{2}/.test(r) ? r.charAt(0).toLowerCase() + r.slice(1) : r;
     if (/, | e /.test(x)) return x.split(/(, | e )/).map(function (y) { return y === ', ' ? ', ' : y === ' e ' ? ' and ' : parte(y); }).join('');
-    var cap = x.charAt(0).toUpperCase() + x.slice(1);
-    if (cap !== x && Object.prototype.hasOwnProperty.call(texts, cap)) { var r = texts[cap]; return r.charAt(0).toLowerCase() + r.slice(1); }
     return x;
   }
   // Exato; senão, partes separadas por " · " (ex.: "Básico · Landing Page Básica"), cada uma traduzida.

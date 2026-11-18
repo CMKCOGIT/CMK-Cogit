@@ -64,13 +64,33 @@ const keepEdges = (raw, out) => raw.match(/^[\s ]*/)[0] + out + raw.match(/[\s�
 const TRANS_ATTR = /\s(alt|aria-label|title|placeholder|data-tip)="([^"]*)"/g;
 const META_TEXT = /^(description|og:title|og:description|og:image:alt|twitter:title|twitter:description)$/;
 
+// Frases quebradas por tags (ex.: título com destaque <span class="t-tone">): traduzidas inteiras.
+// phrases: { "frase em português": ["pedaço 1 em inglês", "pedaço 2 em inglês", ...] } — um pedaço por trecho de texto.
+const PHRASES = dict.phrases || {};
+function translatePhrases(html) {
+  return html.replace(/<(h[1-6]|p|li|a|button|strong|label|span)\b([^>]*)>((?:(?!<\/?\1\b)[\s\S])*?)<\/\1>/g, (all, tag, at, inner) => {
+    if (!/</.test(inner)) return all;
+    const parts = inner.split(/(<[^>]+>)/);
+    const texts = parts.filter((p, i) => i % 2 === 0 && /\S/.test(p));
+    const key = norm(decode(texts.join(' ')));
+    const to = PHRASES[key];
+    if (!to) return all;
+    if (to.length !== texts.length) throw new Error('phrases: "' + key + '" tem ' + texts.length + ' pedaços');
+    let k = 0;
+    const out = parts.map((p, i) => (i % 2 === 0 && /\S/.test(p) ? keepEdges(p, '\u0001' + escText(to[k++])) : p)).join('');
+    return '<' + tag + at + '>' + out + '</' + tag + '>';
+  });
+}
+
 // Traduz um HTML: trechos de texto (fora de script/style) e atributos de leitura.
 function translateHtml(html) {
+  html = translatePhrases(html);
   const out = [];
   const re = /(<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>|<!--[\s\S]*?-->|<[^>]+>)|([^<]+)/g;
   let m;
   while ((m = re.exec(html))) {
     if (m[2] != null) {
+      if (m[2].includes('\u0001')) { out.push(m[2].replace(/\u0001/g, '')); continue; }
       const t = tr(decode(m[2]));
       out.push(t == null ? m[2] : keepEdges(m[2], escText(t)));
       continue;

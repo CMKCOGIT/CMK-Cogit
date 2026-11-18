@@ -2268,5 +2268,35 @@
       "If you decide to develop with another company, the consulting is charged separately: $1.",
       true
     ]
-  ]
+  ],
+  "phrases": {
+    "Dúvidas frequentes.": [
+      "Frequently asked",
+      "questions."
+    ],
+    "Estrutura e visual personalizados.": [
+      "Customized structure",
+      "and design."
+    ],
+    "Setores em que queremos gerar transformação.": [
+      "Industries where",
+      "we want to drive change."
+    ],
+    "Como funciona o processo de criação": [
+      "How the",
+      "build process works"
+    ],
+    "Entenda as diferenças antes de construir.": [
+      "Understand the differences",
+      "before you build."
+    ],
+    "O que está incluso na sua Landing Page": [
+      "What's included",
+      "in your Landing Page"
+    ],
+    "Seu desafio pode ser a próxima solução construída com propósito.": [
+      "Your challenge could be the next solution",
+      "built with purpose."
+    ]
+  }
 }

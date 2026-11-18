@@ -704,15 +704,11 @@ function renderHeroInteractive() {
       <div class="hero-step-wrapper dx-view">
         ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha o mais próximo. Se não souber, a última opção leva você a uma orientação.')}
         <div class="dx-body">
-          ${SERVICE_GROUPS.map(group => `
+          ${SERVICE_GROUPS.map((group, gi) => `
             <fieldset class="dx-group">
               <legend class="dx-group-label">${group.label}</legend>
-              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}</div>
+              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}${gi === SERVICE_GROUPS.length - 1 ? card(unknown) : ''}</div>
             </fieldset>`).join('')}
-          <fieldset class="dx-group">
-            <legend class="sr-only">Outra opção</legend>
-            <div class="dx-grid dx-grid--single">${card(unknown)}</div>
-          </fieldset>
         </div>
         ${renderDxFooter('Voltar', 'Continuar', !state.selectedService)}
       </div>`;
@@ -849,11 +845,7 @@ function renderHeroInteractive() {
       });
     });
     syncNext();
-    // Clicar em um formato já leva à próxima etapa (o teclado continua usando "Continuar").
-    container.querySelectorAll('.dx-format-label').forEach(label => label.addEventListener('click', (e) => {
-      if (e.detail === 0) return; // clique gerado pelo teclado
-      setTimeout(() => { if (state.objective) next.click(); }, 160);
-    }));
+    // Os cards só marcam a escolha; quem avança é o botão "Continuar".
     container.querySelector('[data-dx-action="customize"]').addEventListener('click', () => {
       state.objective = 'sob-medida';
       state.variant = null;

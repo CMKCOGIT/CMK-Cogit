@@ -16,6 +16,10 @@
   // (origem=plataforma) ou a equipe só visualiza o projeto (origem=preview, nada é salvo aqui).
   var PLAT = /[?&]origem=plataforma\b/.test(location.search) && !!window.opener;
   var PREVIEW = /[?&]origem=preview\b/.test(location.search) && !!window.opener;
+  // Gerar o arquivo final (admin da plataforma, em aba ou em quadro oculto): aplica a
+  // personalização recebida, monta o .zip do site e devolve com as pendências. Nada é salvo aqui.
+  var PEER = window.opener || (window.parent !== window ? window.parent : null);
+  var GERAR = /[?&]origem=gerar\b/.test(location.search) && !!PEER;
   var LP = window.LP || {};
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -65,7 +69,7 @@
   $$('[data-href]').forEach(function (el) { var k = el.dataset.href; if (!(k in defaults.links)) defaults.links[k] = el.getAttribute('href') || ''; });
 
   function save() {
-    if (PREVIEW) return;
+    if (PREVIEW || GERAR) return;
     try { localStorage.setItem(KEY, JSON.stringify({ colors: state.colors, texts: state.texts, links: state.links, hidden: state.hidden, images: stripSrc(state.images) })); } catch (e) { /* armazenamento indisponível */ }
   }
   function stripSrc(images) {
@@ -96,7 +100,7 @@
       });
     }).catch(function () { return null; });
   }
-  var putImg = function (k, v) { if (PREVIEW) return Promise.resolve(); return idb('readwrite', function (s) { return v == null ? s.delete(k) : s.put(v, k); }); };
+  var putImg = function (k, v) { if (PREVIEW || GERAR) return Promise.resolve(); return idb('readwrite', function (s) { return v == null ? s.delete(k) : s.put(v, k); }); };
   var getImg = function (k) { return idb('readonly', function (s) { return s.get(k); }); };
 
   // ── Aplicar na página ─────────────────────────────────
@@ -626,6 +630,13 @@
     $$('[data-href]').forEach(function (n) { if (n.dataset.labelHref) data.rotulos.links[n.dataset.href] = n.dataset.labelHref; });
     $$('[data-img]').forEach(function (n) { data.rotulos.imagens[n.dataset.img] = 'IMAGEM ' + n.dataset.img + ' · ' + (n.dataset.imgLabel || ''); });
     $$('[data-section]').forEach(function (n) { data.rotulos.secoes[n.dataset.section] = n.dataset.sectionLabel || n.dataset.section; });
+    // Textos e links de demonstração e a seção de cada campo: a plataforma usa para listar as pendências.
+    data.padroes = { textos: Object.assign({}, defaults.texts), links: Object.assign({}, defaults.links) };
+    data.secaoDe = { textos: {}, links: {}, imagens: {} };
+    var sec = function (n) { var s = n.closest('[data-section]'); return s ? s.dataset.section : ''; };
+    $$('[data-k]').forEach(function (n) { if (!(n.dataset.k in data.secaoDe.textos)) data.secaoDe.textos[n.dataset.k] = sec(n); });
+    $$('[data-href]').forEach(function (n) { if (!(n.dataset.href in data.secaoDe.links)) data.secaoDe.links[n.dataset.href] = sec(n); });
+    $$('[data-img]').forEach(function (n) { data.secaoDe.imagens[n.dataset.img] = sec(n); });
     return data;
   }
   function exportJson() {
@@ -668,6 +679,12 @@
 
   function exportHtml() {
     var wasOpen = isOpen; if (isOpen) setOpen(false);
+    download('index.html', finalHtml(), 'text/html');
+    toast('Site pronto baixado (index.html).');
+    if (wasOpen) setOpen(true);
+  }
+  // HTML final: sem o painel, sem avisos de demonstração e com as imagens embutidas.
+  function finalHtml() {
     var doc = document.documentElement.cloneNode(true);
     $$('[data-lp-editor]', doc).forEach(function (n) { n.remove(); });
     $$('.slot-ph, .demo-note', doc).forEach(function (n) { n.remove(); });
@@ -684,9 +701,92 @@
     var desc = $('meta[name="description"]', doc); if (desc) desc.content = text('hero.subtitle');
     var r = $('meta[name="robots"]', doc); if (r) r.content = 'index, follow';
     [['og:site_name', name], ['og:title', name + ' — ' + sub], ['og:description', text('hero.subtitle')]].forEach(function (m) { var e = $('meta[property="' + m[0] + '"]', doc); if (e) e.content = m[1]; });
-    download('index.html', '<!doctype html>\n' + doc.outerHTML, 'text/html');
-    toast('Site pronto baixado (index.html).');
-    if (wasOpen) setOpen(true);
+    return '<!doctype html>\n' + doc.outerHTML;
+  }
+
+  // ── Pacote do site (.zip): index.html personalizado + CSS, JS, fontes e páginas do modelo ──
+  var CRC_T = (function () { var t = new Uint32Array(256); for (var n = 0; n < 256; n++) { var c = n; for (var k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+  function crc32(b) { var c = 0xFFFFFFFF; for (var i = 0; i < b.length; i++) c = CRC_T[(c ^ b[i]) & 255] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; }
+  // ZIP sem compressão ("store"): abre em qualquer sistema, sem biblioteca.
+  function zip(files) {
+    var enc = new TextEncoder(), parts = [], central = [], off = 0;
+    var d = new Date(), dt = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(), tm = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+    files.forEach(function (f) {
+      var name = enc.encode(f.name), data = f.data, crc = crc32(data);
+      var h = new DataView(new ArrayBuffer(30));
+      [[0, 0x04034b50, 4], [4, 20, 2], [6, 0x0800, 2], [8, 0, 2], [10, tm, 2], [12, dt, 2], [14, crc, 4], [18, data.length, 4], [22, data.length, 4], [26, name.length, 2], [28, 0, 2]]
+        .forEach(function (x) { if (x[2] === 4) h.setUint32(x[0], x[1], true); else h.setUint16(x[0], x[1], true); });
+      parts.push(new Uint8Array(h.buffer), name, data);
+      var c = new DataView(new ArrayBuffer(46));
+      [[0, 0x02014b50, 4], [4, 20, 2], [6, 20, 2], [8, 0x0800, 2], [10, 0, 2], [12, tm, 2], [14, dt, 2], [16, crc, 4], [20, data.length, 4], [24, data.length, 4], [28, name.length, 2], [30, 0, 2], [32, 0, 2], [34, 0, 2], [36, 0, 2], [38, 0, 4], [42, off, 4]]
+        .forEach(function (x) { if (x[2] === 4) c.setUint32(x[0], x[1], true); else c.setUint16(x[0], x[1], true); });
+      central.push(new Uint8Array(c.buffer), name);
+      off += 30 + name.length + data.length;
+    });
+    var size = central.reduce(function (a, p) { return a + p.length; }, 0);
+    var e = new DataView(new ArrayBuffer(22));
+    [[0, 0x06054b50, 4], [8, files.length, 2], [10, files.length, 2], [12, size, 4], [16, off, 4]]
+      .forEach(function (x) { if (x[2] === 4) e.setUint32(x[0], x[1], true); else e.setUint16(x[0], x[1], true); });
+    return new Blob(parts.concat(central, [new Uint8Array(e.buffer)]), { type: 'application/zip' });
+  }
+  function relRefs(html, base) {
+    var out = [], re = /\s(?:src|href)="([^"]+)"|url\((['"]?)([^'")]+)\2\)/g, m;
+    while ((m = re.exec(html))) {
+      var ref = (m[1] || m[3] || '').split('#')[0].split('?')[0];
+      if (!ref || /^(?:[a-z]+:|\/\/|\/)/i.test(ref)) continue;
+      try { var u = new URL(ref, base); if (u.origin === location.origin) out.push(u.pathname); } catch (e) { /* */ }
+    }
+    return out;
+  }
+  function buildSiteZip() {
+    var root = location.pathname.replace(/[^/]*$/, ''), enc = new TextEncoder();
+    var demo = defaults.texts['brand.name'] || '', nome = text('brand.name') || demo;
+    var html = finalHtml();
+    var files = [{ name: 'index.html', data: enc.encode(html) }], seen = {};
+    seen[root + 'index.html'] = seen[root] = true;
+    var queue = relRefs(html, location.href).concat(['404.html', 'robots.txt', 'site.config.json', 'privacidade.html', 'termos.html'].map(function (f) { return root + f; }));
+    function next() {
+      var path = queue.shift();
+      if (path == null) return Promise.resolve();
+      if (seen[path] || path.indexOf(root) !== 0 || /\/js\/editor\.js$/.test(path)) return next();
+      seen[path] = true;
+      return fetch(path, { cache: 'no-store' }).then(function (r) { return r.ok ? r.arrayBuffer() : null; }).then(function (buf) {
+        if (!buf) return next();
+        var rel = path.slice(root.length), data = new Uint8Array(buf);
+        if (/\.(css|html)$/.test(rel)) {
+          var txt = new TextDecoder().decode(data);
+          queue = queue.concat(relRefs(txt, location.origin + path));
+          // páginas de apoio (privacidade, termos) levam o nome do cliente no lugar da marca de demonstração
+          if (/\.html$/.test(rel) && demo && nome && demo !== nome) { txt = txt.split(demo).join(nome); data = enc.encode(txt); }
+        }
+        if (/\.woff2$/.test(rel)) queue.push(path.replace(/-latin.*$/, '-OFL.txt'));
+        files.push({ name: rel, data: data });
+        return next();
+      }).catch(function () { return next(); });
+    }
+    return next().then(function () { return { blob: zip(files), nome: slug() + '-site.zip', arquivos: files.map(function (f) { return f.name; }) }; });
+  }
+  // Pendências para a equipe cobrar do cliente (mesma regra da plataforma, em public/js/personalizacao.js)
+  function pendencias(d) {
+    var out = [], ocultas = d.secoesOcultas || [], r = d.rotulos || {};
+    var vis = function (grupo, k) { var s = d.secaoDe && d.secaoDe[grupo] && d.secaoDe[grupo][k]; return !s || ocultas.indexOf(s) === -1; };
+    var rot = function (g, k) { return (r[g] && r[g][k]) || k; };
+    var nome = (d.textos['brand.name'] || '').trim();
+    if (!nome || nome === defaults.texts['brand.name']) out.push({ tipo: 'nome', titulo: 'Nome da empresa', itens: [] });
+    // texto de conteúdo (40+ caracteres) igual ao da demonstração bloqueia; rótulo curto ("Serviços") só avisa
+    var demo = Object.keys(d.textos).filter(function (k) { return k !== 'brand.name' && vis('textos', k) && (d.textos[k] || '').trim() && d.textos[k].trim() === (defaults.texts[k] || '').trim(); });
+    var longos = demo.filter(function (k) { return d.textos[k].trim().length >= 40; }), curtos = demo.filter(function (k) { return d.textos[k].trim().length < 40; });
+    if (longos.length) out.push({ tipo: 'textos', titulo: 'Textos ainda iguais ao modelo de demonstração', itens: longos.map(function (k) { return rot('textos', k); }) });
+    if (curtos.length) out.push({ tipo: 'rotulos', nivel: 'aviso', titulo: 'Títulos e rótulos curtos mantidos do modelo (confira)', itens: curtos.map(function (k) { return rot('textos', k); }) });
+    var vazios = Object.keys(d.textos).filter(function (k) { return k !== 'brand.name' && vis('textos', k) && !(d.textos[k] || '').trim() && (defaults.texts[k] || '').trim(); });
+    if (vazios.length) out.push({ tipo: 'vazios', titulo: 'Textos em branco', itens: vazios.map(function (k) { return rot('textos', k); }) });
+    var imgs = slotIds().filter(function (n) { return vis('imagens', n) && !(d.imagens[n] && d.imagens[n].src); });
+    if (imgs.length) out.push({ tipo: 'imagens', titulo: 'Imagens não enviadas', itens: imgs.map(function (n) { return rot('imagens', n); }) });
+    var links = Object.keys(d.links).filter(function (k) { var v = (d.links[k] || '').trim(); return vis('links', k) && v && /^(https?:|mailto:|tel:)/i.test(v) && v === (defaults.links[k] || '').trim(); });
+    if (links.length) out.push({ tipo: 'links', titulo: 'Contatos e redes ainda com os dados de demonstração', itens: links.map(function (k) { return rot('links', k); }) });
+    if (!(d.imagens.logo && d.imagens.logo.src)) out.push({ tipo: 'logo', nivel: 'aviso', titulo: 'Sem logotipo: o site usa a inicial do nome no lugar', itens: [] });
+    out.forEach(function (x) { if (!x.nivel) x.nivel = 'bloqueia'; });
+    return out;
   }
 
   function buildAll() { buildColors(); buildTexts(); buildImages(); buildSections(); buildLinks(); buildPublish(); }
@@ -739,7 +839,7 @@
   }
   document.body.appendChild(host);
   // vindo da plataforma, os dados chegam dela (abaixo): não mistura com o que está salvo aqui
-  var saved = PLAT || PREVIEW ? null : readSaved();
+  var saved = PLAT || PREVIEW || GERAR ? null : readSaved();
   loadSaved(saved || {});
   if (/[?&]personalizar\b/.test(location.search) && (DIAG || PLAT || window.matchMedia('(min-width: 901px)').matches)) setOpen(true);
 
@@ -756,6 +856,23 @@
       toast(PREVIEW ? 'Prévia do projeto do cliente (nada é salvo neste navegador).' : (e.data.dados ? 'Sua personalização foi carregada.' : 'Comece a personalizar o modelo.'));
     });
     try { window.opener.postMessage({ type: 'cmk:editor:pronto' }, APP_ORIGIN); } catch (err) { /* aba sem opener */ }
+  }
+
+  // Gerar: recebe a personalização, aplica, monta o .zip e devolve com as pendências.
+  if (GERAR) {
+    window.addEventListener('message', function (e) {
+      if (e.origin !== APP_ORIGIN || e.source !== PEER || !e.data || e.data.type !== 'cmk:editor:dados') return;
+      var falhar = function (msg) { PEER.postMessage({ type: 'cmk:editor:arquivo-erro', erro: msg }, APP_ORIGIN); };
+      try { applyImported(e.data.dados); } catch (err) { falhar(err.message || 'Personalização inválida.'); return; }
+      var dados = buildConfigData();
+      buildSiteZip().then(function (z) {
+        return z.blob.arrayBuffer().then(function (buf) {
+          PEER.postMessage({ type: 'cmk:editor:arquivo', zip: buf, nome: z.nome, arquivos: z.arquivos, pendencias: pendencias(dados), marca: text('brand.name') || '' }, APP_ORIGIN, [buf]);
+          toast('Arquivo do site gerado e entregue à plataforma. Pode fechar esta aba.');
+        });
+      }).catch(function (err) { falhar((err && err.message) || 'Não foi possível montar o arquivo.'); });
+    });
+    try { PEER.postMessage({ type: 'cmk:editor:pronto' }, APP_ORIGIN); } catch (err) { /* sem janela de origem */ }
   }
 
   function PANEL_CSS() {

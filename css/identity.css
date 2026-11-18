@@ -676,3 +676,14 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .dx-foot [data-dx="next"]:not(:disabled) { animation: dx-next-in .28s ease-out; }
 @keyframes dx-next-in { from { transform: translateY(4px); opacity: .6; } to { transform: none; opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .dx-foot [data-dx="next"]:not(:disabled) { animation: none; } }
+
+/* Idioma: PT | EN no header e no menu do celular (tools/i18n/build.mjs) */
+.lang-switch { display: inline-flex; align-items: center; gap: 2px; font: 600 13px/1 var(--text, inherit); letter-spacing: .04em; color: var(--muted); }
+.lang-switch > span { padding: 0 2px; opacity: .5; }
+.lang-switch-link { display: inline-grid; place-items: center; min-width: 32px; min-height: 32px; padding: 0 4px; border-radius: 2px; color: var(--muted) !important; text-decoration: none !important; }
+.lang-switch-link:hover { color: var(--ink) !important; background: var(--grey); }
+.lang-switch-link:focus-visible { outline: 2px solid var(--navy); outline-offset: 1px; }
+.lang-switch-link[aria-current="true"] { color: var(--ink) !important; text-decoration: underline !important; text-decoration-thickness: 2px !important; text-underline-offset: 5px; }
+.lang-switch--header { margin-right: 6px; }
+.lang-switch--mobile { justify-content: center; width: 100%; margin: 4px 0 2px; font-size: 14px; }
+.lang-switch--mobile .lang-switch-link { min-width: 44px; min-height: 44px; }

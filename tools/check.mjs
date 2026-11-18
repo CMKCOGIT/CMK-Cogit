@@ -24,7 +24,7 @@ check('Local HTML references exist; IDs are unique',()=>{
 });
 check('Mobile menus expose the solutions hub and main pages',()=>{
  for(const file of html){const source=fs.readFileSync(file,'utf8');if(!source.includes('class="mobile-nav-list"'))continue;
-  const prefix=path.dirname(file)===path.join(root,'solucoes')?'../':'';
+  const prefix='../'.repeat(path.relative(root,file).split(path.sep).length-1);
   for(const target of ['solucoes/index.html','monte-sua-solucao.html','como-trabalhamos.html','sobre.html','contato.html'])assert.ok(source.includes(`href="${prefix}${target}" class="mobile-nav-link"`),`${file}: ${target}`);
   assert.match(source,/class="[^"]*mobile-accordion-trigger[^"]*"[^>]*aria-expanded="false"/);
  }
@@ -37,7 +37,7 @@ check('Sharing uses the square brand icon (small preview card) and stray pricing
 });
 check('Every content page supports zoom, landmarks, labels and local privacy controls',()=>{
  for(const file of html){const source=fs.readFileSync(file,'utf8');if(!source.includes('<main'))continue;
- assert.equal((source.match(/<h1\b/g)||[]).length,1,file);assert.match(source,/<html[^>]*lang="pt-BR"/);assert.match(source,/name="viewport"/);assert.doesNotMatch(source,/user-scalable=no|maximum-scale=1/);
+ assert.equal((source.match(/<h1\b/g)||[]).length,1,file);assert.match(source,path.relative(root,file).startsWith('en'+path.sep)?/<html[^>]*lang="en"/:/<html[^>]*lang="pt-BR"/,file);assert.match(source,/name="viewport"/);assert.doesNotMatch(source,/user-scalable=no|maximum-scale=1/);
  assert.match(source,/js\/privacy.js/);assert.match(source,/class="skip-link"/);assert.doesNotMatch(source,/fonts.googleapis.com|fonts.gstatic.com/);
  }
 });

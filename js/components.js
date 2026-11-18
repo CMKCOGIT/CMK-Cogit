@@ -3,6 +3,11 @@
    Renders data-driven sections from data.js
    ============================================ */
 
+// Caminho até a raiz do site a partir da página atual (subpastas solucoes/, projetos/ e en/)
+function cogitRoot() {
+  return /\/(solucoes|projetos|en)\//.test(location.pathname) ? '../' : '';
+}
+
 function getIcon(name) {
   return ICONS[name] || '';
 }
@@ -960,7 +965,7 @@ function renderHeroInteractive() {
   function openModelEditor(variant, onDone) {
     const d = MODEL_PREVIEW_DATA[variant];
     if (!d) return false;
-    const root = location.pathname.includes('/solucoes/') ? '../' : '';
+    const root = cogitRoot();
     const base = (root + d.liveUrl).split('?')[0];
     const win = window.open(base + '?personalizar&origem=diagnostico', '_blank');
     if (!win) return false;
@@ -1041,8 +1046,8 @@ function renderHeroInteractive() {
     const catalogService = catalogIds[state.selectedService] || state.selectedService || 'diagnostico';
     const configuratorService = state.selectedService === 'outro-svc' ? '' : catalogService;
     const configuratorLink = configuratorService
-      ? `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
-      : 'monte-sua-solucao.html';
+      ? cogitRoot() + `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
+      : cogitRoot() + 'monte-sua-solucao.html';
 
     const headline = model === 'modelos-prontos' ? (variantData ? variantData.name : PRESENCE_MODELS[state.selectedService].pronto)
       : project ? project.suggestion : solution.solution;
@@ -1100,7 +1105,7 @@ function renderHeroInteractive() {
               </div>` : ''}
             ${model === 'modelos-prontos' && previewData ? `
               <div class="dx-model-links">
-                <a class="dx-link-btn" href="${location.pathname.includes('/solucoes/') ? '../' : ''}${previewData.liveUrl}" target="_blank" rel="noopener">Abrir a demonstração ${DX_ICON.external}<span class="sr-only"> (nova aba)</span></a>
+                <a class="dx-link-btn" href="${cogitRoot()}${previewData.liveUrl}" target="_blank" rel="noopener">Abrir a demonstração ${DX_ICON.external}<span class="sr-only"> (nova aba)</span></a>
                 <button type="button" class="dx-link-btn" data-dx-action="preview">Ver o que está incluso</button>
               </div>` : ''}
 
@@ -1339,7 +1344,7 @@ function openModelPreviewModal(modelId, title, options = {}) {
   const featuresList = data.features.map(f => `<li>${checkSvg} ${f}</li>`).join('');
 
   // Caminhos relativos à raiz do site, inclusive quando o modal abre em /solucoes/.
-  const rootPrefix = location.pathname.includes('/solucoes/') ? '../' : '';
+  const rootPrefix = cogitRoot();
   const asset = (p) => (p && !/^https?:/.test(p) ? rootPrefix + p : p);
   const liveHref = asset(data.liveUrl);
 
@@ -1716,7 +1721,7 @@ function openCustomModelModal(selectedSvc, onFinish, options = {}) {
       });
       return;
     }
-    window.location.href = `${location.pathname.includes('/solucoes/') ? '../' : ''}contato.html?solucao=modelos-sob-medida&origem=custom-studio`;
+    window.location.href = `${cogitRoot()}contato.html?solucao=modelos-sob-medida&origem=custom-studio`;
   }
 
   function setStepIndicator() {
@@ -2256,8 +2261,7 @@ function renderCases() {
     return;
   }
 
-  const isSubfolder = window.location.pathname.includes('/projetos') || window.location.pathname.includes('/solucoes');
-  const targetUrl = isSubfolder ? '../contato.html' : 'contato.html';
+  const targetUrl = cogitRoot() + 'contato.html';
 
   const isHomePage = Boolean(container.closest('#cases')) || (!document.body.classList.contains('page-about-v2') && !container.closest('#projetos'));
   const casesToRender = isHomePage ? casesData.filter(c => c.showOnHome !== false) : casesData;

@@ -197,7 +197,7 @@
     at(2800, function () { moveTo($('.dd-st[data-s="1"] .dd-opt[data-k="a"]', stage), true); });
     at(4900, function () { rail(2, sc.isP); show(2); });
     at(5300, function () { var c = $$('.dd-st[data-s="2"] .dd-chip[data-pick]', stage); moveTo(c[0], true); at(800, function () { moveTo(c[1], true); }); });
-    at(7000, function () { var el = $('#dd-typed'), t = sc.txt, i = 0; (function ty() { if (i <= t.length) { el.textContent = t.slice(0, i); i += 2; at(28, ty); } })(); });
+    at(7000, function () { var el = $('#dd-typed'), t = window.cogitT ? window.cogitT(sc.txt) : sc.txt, i = 0; el.setAttribute('translate', 'no'); (function ty() { if (i <= t.length) { el.textContent = t.slice(0, i); i += 2; at(28, ty); } })(); });
     at(8200, function () { rail(3, sc.isP); show(3); moveTo($('.dd-st[data-s="3"] .dd-go', stage), false); });
     at(10500, function () { idx = (idx + 1) % DM.length; play(); });
   }

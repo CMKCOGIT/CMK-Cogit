@@ -170,6 +170,10 @@ sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitem
 for rel in indexable:
     pr = SITEMAP_PRIORITY.get(rel, '0.8' if rel.startswith('solucoes/') else '0.6' if rel in ('privacidade.html', 'termos-de-uso.html') else '0.7')
     sm += ['  <url>', f'    <loc>{url_of(rel)}</loc>', f'    <lastmod>{LASTMOD}</lastmod>', f'    <priority>{pr}</priority>', '  </url>']
+# versões em inglês (tools/i18n/build.mjs): mesma prioridade da página em português
+for rel in json.loads((ROOT / 'tools/i18n/en.json').read_text())['pages']:
+    if (ROOT / 'en' / rel).exists():
+        sm += ['  <url>', f'    <loc>{url_of("en/" + rel)}</loc>', f'    <lastmod>{LASTMOD}</lastmod>', f'    <priority>{SITEMAP_PRIORITY.get(rel, "0.7")}</priority>', '  </url>']
 sm.append('</urlset>\n')
 smp = ROOT / 'sitemap.xml'
 if smp.read_text() != '\n'.join(sm):

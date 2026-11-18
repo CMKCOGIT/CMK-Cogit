@@ -71,7 +71,9 @@ window.CogitHandoff = (() => {
 
   // ?volta= diz à plataforma para qual página do site o botão "Voltar para o site" leva
   function volta() {
-    try { return /^https?:$/.test(window.location.protocol) ? '?volta=' + encodeURIComponent(window.location.href) : ''; } catch (_) { return ''; }
+    // do site em inglês (/en/), a plataforma abre em inglês
+    const lang = typeof document !== 'undefined' && document.documentElement && document.documentElement.lang === 'en' ? '&lang=en' : '';
+    try { return /^https?:$/.test(window.location.protocol) ? '?volta=' + encodeURIComponent(window.location.href) + lang : ''; } catch (_) { return ''; }
   }
 
   function link(cfg) {

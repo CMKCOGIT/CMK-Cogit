@@ -146,7 +146,9 @@ function buildEn(rel, ptHtml) {
     .replace(/(<meta property="og:url" content=")[^"]*"/, `$1${urlOf('en/' + rel)}"`)
     .replace(/(<meta property="og:locale" content=")pt_BR"/, '$1en_US"')
     .replace(/\n?\s*<script type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/g, '')
-    .replace(/\n?\s*<meta name="google-site-verification"[^>]*>/, '');
+    .replace(/\n?\s*<meta name="google-site-verification"[^>]*>/, '')
+    // a plataforma abre em inglês para quem vem do site em inglês
+    .replace(/href="https:\/\/app\.cmkcogit\.com\.br\/"/g, 'href="https://app.cmkcogit.com.br/?lang=en"');
   s = withAlternates(s, rel);
   s = withSwitch(s, rel, 'en');
   // dicionário e tradutor antes do primeiro script do corpo

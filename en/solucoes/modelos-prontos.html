@@ -50,7 +50,7 @@
   <link rel="stylesheet" href="../../css/site.min.css">
   <link rel="stylesheet" href="../../css/identity.min.css">
   <script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("motion-wait")</script>
-  <style>.model-video { margin: 0 0 var(--space-4); border-radius: var(--radius-md); overflow: hidden; background: #111; } .model-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; } .model-demo-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-weight: 600; color: var(--purple); text-decoration: underline; text-underline-offset: 0.2em; } .model-demo-link:hover { color: var(--ink); }</style>
+  <style>.model-video { margin: 0 0 var(--space-4); border-radius: var(--radius-md); overflow: hidden; background: #111; } .model-video video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; } .model-demo-link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; font-weight: 600; color: var(--purple); text-decoration: underline; text-underline-offset: 0.2em; } .model-demo-link:hover { color: var(--ink); } .lp-personalize { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: var(--text-sm); color: var(--text-secondary); } .lp-personalize > span { flex: 1 1 100%; } .lp-personalize a { display: inline-flex; align-items: center; min-height: 36px; padding: 0 12px; border: 1px solid var(--line-s, #BFC1BD); border-radius: 2px; color: var(--purple); font-weight: 600; text-decoration: none; } .lp-personalize a:hover { border-color: var(--purple); background: var(--navy-soft, #E4E8F0); }</style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -222,7 +222,7 @@
           <div class="solution-block-card reveal reveal-delay-1" style="border-top: 4px solid var(--purple); display: flex; flex-direction: column;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-4);">
               <span class="dynamic-rec-card-tag" style="margin-bottom: 0; font-size: 10px; padding: 3px 8px; white-space: nowrap; flex-shrink: 0;">AUTHORITY</span>
-              <span style="font-family: var(--font-heading); font-size: 11px; font-weight: var(--fw-bold); color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0;">3 TO 5 BUSINESS DAYS</span>
+              <span style="font-family: var(--font-heading); font-size: 11px; font-weight: var(--fw-bold); color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0;">1 TO 5 BUSINESS DAYS</span>
             </div>
             <figure class="model-video">
               <video src="../../assets/videos/templates/portfolio.mp4" poster="../../assets/videos/templates/portfolio-poster.webp" controls muted playsinline preload="none" width="1920" height="1080" aria-label="Presentation video of the Professional Portfolio template"></video>
@@ -258,11 +258,9 @@
           <div class="solution-block-card reveal reveal-delay-2" style="border-top: 4px solid var(--purple); display: flex; flex-direction: column;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-4);">
               <span class="dynamic-rec-card-tag" style="background: var(--purple); color: var(--white); margin-bottom: 0; font-size: 10px; padding: 3px 8px; white-space: nowrap; flex-shrink: 0;">CONVERSION</span>
-              <span style="font-family: var(--font-heading); font-size: 11px; font-weight: var(--fw-bold); color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0;">3 TO 5 BUSINESS DAYS</span>
+              <span style="font-family: var(--font-heading); font-size: 11px; font-weight: var(--fw-bold); color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0;">1 TO 5 BUSINESS DAYS</span>
             </div>
-            <figure class="model-video">
-              <video src="../../assets/videos/templates/landing.mp4" poster="../../assets/videos/templates/landing-poster.webp" controls muted playsinline preload="none" width="1920" height="1080" aria-label="Presentation video of the Landing Page template"></video>
-            </figure>
+            <figure class="model-video"><a href="modelos-landing-page.html" tabindex="-1" aria-hidden="true"><img src="../../assets/videos/templates/landing-profissional-poster.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async" style="display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;object-position:top;"></a></figure>
             <h3 style="font-size: var(--text-2xl); color: var(--ink); margin-bottom: var(--space-2);">Landing Page</h3>
             <p style="color: var(--text-secondary); font-size: var(--text-sm); line-height: var(--leading-relaxed); margin-bottom: var(--space-4);">
               A single page structured for ad campaigns (Google and Meta Ads), designed to attract qualified leads and generate sales clearly and quickly.
@@ -285,7 +283,12 @@
                 <span style="font-size: 12px; color: var(--text-tertiary); display: block;">Price (one-time payment)</span>
                 <strong style="font-size: var(--text-2xl); color: var(--ink);">R$ 600</strong>
               </div>
-              <p style="margin: 0; font-size: var(--text-sm); color: var(--text-secondary);">3 templates: basic, intermediate and formal.</p>
+              <div class="lp-personalize" role="group" aria-labelledby="lp-personalize-t">
+                <span id="lp-personalize-t">Customize colors, images and copy:</span>
+                <a href="../../templates/landing-basica/?personalizar" target="_blank" rel="noopener">Basic<span class="sr-only"> (opens in a new tab)</span></a>
+                <a href="../../templates/landing-profissional/?personalizar" target="_blank" rel="noopener">Intermediate<span class="sr-only"> (opens in a new tab)</span></a>
+                <a href="../../templates/landing-formal/?personalizar" target="_blank" rel="noopener">Formal<span class="sr-only"> (opens in a new tab)</span></a>
+              </div>
               <a href="modelos-landing-page.html" class="btn btn-secondary-dark" style="width: 100%; justify-content: center;">See the 3 templates <span><i class="bi bi-arrow-right"></i></span></a>
             </div>
           </div>
@@ -294,7 +297,7 @@
           <div class="solution-block-card reveal reveal-delay-3" style="border-top: 4px solid var(--lilac); display: flex; flex-direction: column;">
             <div style="display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-4);">
               <span class="dynamic-rec-card-tag" style="margin-bottom: 0; font-size: 10px; padding: 3px 8px; white-space: nowrap; flex-shrink: 0;">CORPORATE</span>
-              <span style="font-family: var(--font-heading); font-size: 11px; font-weight: var(--fw-bold); color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0;">3 TO 7 BUSINESS DAYS</span>
+              <span style="font-family: var(--font-heading); font-size: 11px; font-weight: var(--fw-bold); color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; flex-shrink: 0;">1 TO 7 BUSINESS DAYS</span>
             </div>
             <figure class="model-video">
               <video src="../../assets/videos/templates/institucional.mp4" poster="../../assets/videos/templates/institucional-poster.webp" controls muted playsinline preload="none" width="1920" height="1080" aria-label="Presentation video of the Company Website template"></video>
@@ -406,7 +409,7 @@
               </tr>
               <tr style="border-bottom: 1px solid var(--neutral-dark); background: rgba(26, 44, 82, 0.01);">
                 <td style="padding: var(--space-4) var(--space-6); font-weight: var(--fw-semibold); color: var(--ink);">Delivery Timeline</td>
-                <td style="padding: var(--space-4) var(--space-6); font-weight: var(--fw-bold); color: var(--purple);">3 to 7 business days</td>
+                <td style="padding: var(--space-4) var(--space-6); font-weight: var(--fw-bold); color: var(--purple);">1 to 7 business days</td>
                 <td style="padding: var(--space-4) var(--space-6); font-weight: var(--fw-bold); color: var(--ink);">Set after understanding the project</td>
               </tr>
               <tr style="border-bottom: 1px solid var(--neutral-dark);">
@@ -487,7 +490,7 @@
               <svg class="faq-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="faq-answer">
-              <p>To ensure on-time delivery (3 to 7 business days), each template includes one full round of revisions after the preview version is presented. At that stage, you request specific adjustments to photos, copy or colors.</p>
+              <p>To ensure on-time delivery (1 to 7 business days), each template includes one full round of revisions after the preview version is presented. At that stage, you request specific adjustments to photos, copy or colors.</p>
             </div>
           </div>
 

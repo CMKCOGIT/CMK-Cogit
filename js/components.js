@@ -327,8 +327,11 @@ function renderHeroInteractive() {
   const heroSection = container.closest('.hero');
   const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  const inDialog = container.closest('dialog');
+  if (inDialog) inDialog.addEventListener('close', () => document.body.classList.remove('is-hero-diagnostic-active'));
   function updateDiagnosticMode() {
-    const isActive = state.step > 0;
+    // na janela, o modo "diagnóstico ativo" (esconde WhatsApp e barra fixa) só vale com ela aberta
+    const isActive = state.step > 0 && (!inDialog || inDialog.open);
     document.body.classList.toggle('is-hero-diagnostic-active', isActive);
     if (heroSection) heroSection.classList.toggle('is-diagnostic-active', isActive);
     container.dataset.step = String(state.step);
@@ -445,251 +448,15 @@ function renderHeroInteractive() {
   function renderDxFooter(backLabel, nextLabel, nextDisabled) {
     return `
       <footer class="dx-foot">
-        <button type="button" class="dx-btn dx-btn--ghost" data-dx="back">${DX_ICON.left}<span>${backLabel}</span></button>
+        ${backLabel ? `<button type="button" class="dx-btn dx-btn--ghost" data-dx="back">${DX_ICON.left}<span>${backLabel}</span></button>` : '<span aria-hidden="true"></span>'}
         <button type="button" class="dx-btn dx-btn--primary" data-dx="next" ${nextDisabled ? 'disabled' : ''}><span data-dx-next-label>${nextLabel}</span>${DX_ICON.right}</button>
       </footer>`;
   }
 
-  // ── ETAPA 0: Convite ──
-  function renderStep0() {
-    if (naPagina) return renderStep1(); // na página, o fluxo não tem a tela de convite
-    state.step = 0;
-    container.innerHTML = `
-      <div class="hero-step-wrapper hero-invite-view">
-        <div class="hero-invite-content">
-          <div class="hero-invite-text">
-            <p class="hero-invite-eyebrow">COGIT DIAGNOSTIC</p>
-            <h2 class="hero-invite-title">Encontre o melhor caminho digital para sua empresa.</h2>
-            <p class="hero-invite-desc">Responda 3 perguntas e receba uma direção inicial para o seu momento.</p>
-          </div>
+  // ── ETAPA 0 (removida): o fluxo começa direto em "O que você precisa construir?",
+  // na página e na janela. Mantida como nome porque Voltar/Recomeçar apontam para ela.
+  function renderStep0() { return renderStep1(); }
 
-          <div class="hero-invite-path" aria-hidden="true">
-            <div class="hip-labels">
-              <span class="hip-label" data-step="0">Pensar</span>
-              <span class="hip-label" data-step="1">Estruturar</span>
-              <span class="hip-label" data-step="2">Construir</span>
-            </div>
-            <div class="hip-track">
-              <div class="hip-line"></div>
-              <b class="hip-ball"></b>
-              <div class="hip-burst" id="hip-burst"></div>
-            </div>
-          </div>
-
-          <button type="button" class="btn-hero-montar btn-hero-start" id="hero-btn-start" aria-describedby="hero-diagnostic-meta">
-            Descobrir minha solução <span><i class="bi bi-arrow-right"></i></span>
-          </button>
-          <p class="hero-invite-meta" id="hero-diagnostic-meta">Menos de 1 minuto <span>•</span> Sem cadastro <span>•</span> Resultado imediato</p>
-        </div>
-      </div>
-    `;
-
-    let stopCurrentAnimation = null;
-
-    const startBtn = document.getElementById('hero-btn-start');
-    if (startBtn) startBtn.addEventListener('click', () => {
-      if (stopCurrentAnimation) stopCurrentAnimation();
-      transitionTo(renderStep1, 'next');
-    });
-
-    function runPathAnimation() {
-      if (stopCurrentAnimation) stopCurrentAnimation();
-      // Movimento reduzido: trilha estática, sem bolinha nem partículas.
-      if (prefersReducedMotion()) {
-        container.querySelectorAll('.hip-label').forEach(l => l.classList.add('hip-label--active'));
-        const staticBall = container.querySelector('.hip-ball');
-        if (staticBall) staticBall.style.opacity = '0';
-        return;
-      }
-
-      const ball   = container.querySelector('.hip-ball');
-      const labels = container.querySelectorAll('.hip-label');
-      const burst  = document.getElementById('hip-burst');
-      const track  = container.querySelector('.hip-track');
-      if (!ball || labels.length < 3 || !track) return;
-
-      const tw = track.getBoundingClientRect().width;
-      if (!tw) return;
-
-      // Centros das 3 colunas iguais: 1/6, 3/6, 5/6
-      const P = [tw / 6, tw / 2, tw * 5 / 6];
-      let timeouts = [];
-
-      function later(ms, fn) {
-        const id = setTimeout(() => {
-          if (state.step === 0 && ball.isConnected) {
-            fn();
-          }
-        }, ms);
-        timeouts.push(id);
-        return id;
-      }
-
-      function clearAllTimeouts() {
-        timeouts.forEach(clearTimeout);
-        timeouts = [];
-      }
-
-      stopCurrentAnimation = () => {
-        clearAllTimeouts();
-        if (ball && ball.getAnimations) {
-          ball.getAnimations().forEach(a => a.cancel());
-        }
-      };
-
-      function setLabels(activeIdx) {
-        labels.forEach((l, i) => {
-          l.classList.toggle('hip-label--done',   i < activeIdx);
-          l.classList.toggle('hip-label--active', i === activeIdx);
-          l.classList.toggle('hip-label--idle',   i > activeIdx);
-        });
-      }
-
-      function clearLabels() {
-        labels.forEach(l => l.classList.remove(
-          'hip-label--active', 'hip-label--done', 'hip-label--idle'
-        ));
-      }
-
-      function fireBurst(xPos) {
-        if (!burst) return;
-        burst.innerHTML = '';
-
-        const colors = ['#8EA6D8','#B9C7E6','#818cf8','#f0abfc','#ffffff','#7dd3fc','#fbbf24','#34d399'];
-        const count  = 24;
-
-        // Partículas radiantes
-        for (let i = 0; i < count; i++) {
-          const el    = document.createElement('span');
-          const angle = (360 / count) * i + (Math.random() * 16 - 8);
-          const dist  = 24 + Math.random() * 38;
-          const size  = 3 + Math.random() * 4;
-          const color = colors[i % colors.length];
-          const tx    = (Math.cos(angle * Math.PI / 180) * dist).toFixed(1);
-          const ty    = (Math.sin(angle * Math.PI / 180) * dist).toFixed(1);
-          const dur   = 480 + Math.random() * 260;
-
-          el.style.cssText = [
-            'position:absolute',
-            `left:${xPos}px`,
-            'top:50%',
-            `width:${size}px`,
-            `height:${size}px`,
-            'border-radius:50%',
-            `background:${color}`,
-            `box-shadow:0 0 ${size * 2}px ${color}`,
-            'pointer-events:none'
-          ].join(';');
-
-          burst.appendChild(el);
-
-          el.animate([
-            { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
-            { transform: `translate(calc(-50% + ${tx}px), calc(-50% + ${ty}px)) scale(0.15)`, opacity: 0 }
-          ], { duration: dur, easing: 'ease-out', delay: Math.random() * 50, fill: 'forwards' });
-        }
-
-        // 2 anéis expansivos de choque
-        [0, 140].forEach(delay => {
-          const ring = document.createElement('span');
-          ring.style.cssText = [
-            'position:absolute',
-            `left:${xPos}px`,
-            'top:50%',
-            'width:10px',
-            'height:10px',
-            'border-radius:50%',
-            'border:2px solid rgba(142, 166, 216,0.85)',
-            'pointer-events:none'
-          ].join(';');
-          burst.appendChild(ring);
-          ring.animate([
-            { transform: 'translate(-50%,-50%) scale(1)', opacity: 0.9 },
-            { transform: 'translate(-50%,-50%) scale(6)',  opacity: 0 }
-          ], { duration: 500, easing: 'ease-out', delay, fill: 'forwards' });
-        });
-
-        // Bolinha: pop de vitória e fade out suave (SEM fill: forwards para não travar opacidade)
-        const popAnim = ball.animate([
-          { transform: 'translate(-50%,-50%) scale(1)',   background: '#8EA6D8', opacity: 1 },
-          { transform: 'translate(-50%,-50%) scale(2.6)', background: '#ffffff', opacity: 1, offset: 0.26 },
-          { transform: 'translate(-50%,-50%) scale(0.2)', background: '#ffffff', opacity: 0 }
-        ], { duration: 520, easing: 'ease-out' });
-
-        popAnim.onfinish = () => {
-          ball.style.opacity = '0';
-          ball.style.transform = '';
-          ball.style.background = '';
-        };
-
-        // Limpa partículas após animação
-        setTimeout(() => { if (burst) burst.innerHTML = ''; }, 900);
-      }
-
-      function go() {
-        clearAllTimeouts();
-        if (state.step !== 0 || !ball.isConnected) return;
-
-        // Cancela qualquer animação prévia para garantir que opacity: 1 funcione no novo ciclo
-        if (ball.getAnimations) {
-          ball.getAnimations().forEach(a => a.cancel());
-        }
-
-        clearLabels();
-        ball.style.transition = 'none';
-        ball.style.transform  = '';
-        ball.style.background = '';
-        ball.style.boxShadow  = '';
-        ball.style.opacity    = '0';
-        ball.style.left       = P[0] + 'px';
-        void ball.offsetWidth; // Força reflow para aplicar estilos imediatamente
-
-        if (burst) burst.innerHTML = '';
-
-        // 1. Fade in em PENSAR
-        later(350, () => {
-          setLabels(0);
-          ball.style.transition = 'opacity 280ms ease';
-          ball.style.opacity    = '1';
-
-          // 2. Desliza para ESTRUTURAR
-          later(700, () => {
-            setLabels(1);
-            ball.style.transition = 'left 920ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-            ball.style.left       = P[1] + 'px';
-
-            // 3. Desliza para CONSTRUIR
-            later(1380, () => {
-              setLabels(2);
-              ball.style.transition = 'left 920ms cubic-bezier(0.25, 0.46, 0.45, 0.94)';
-              ball.style.left       = P[2] + 'px';
-
-              // 4. Explosão de vitória ao chegar
-              later(940, () => {
-                fireBurst(P[2]);
-
-                // 5. Aguarda vitória e reinicia o ciclo suavemente
-                later(2400, go);
-              });
-            });
-          });
-        });
-      }
-
-      go();
-    }
-
-    requestAnimationFrame(() => requestAnimationFrame(runPathAnimation));
-    let _rt;
-    window.addEventListener('resize', () => {
-      clearTimeout(_rt);
-      _rt = setTimeout(() => {
-        if (state.step === 0) runPathAnimation();
-      }, 200);
-    }, { passive: true });
-  }
-
-  // ── ETAPA 1: solução ──
   function renderStep1() {
     state.step = 1;
     const card = (svc) => `
@@ -715,7 +482,7 @@ function renderHeroInteractive() {
               <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}${gi === SERVICE_GROUPS.length - 1 ? card(unknown) : ''}</div>
             </fieldset>`).join('')}
         </div>
-        ${renderDxFooter('Voltar', 'Continuar', !state.selectedService)}
+        ${renderDxFooter(inDialog ? 'Fechar' : '', 'Continuar', !state.selectedService)}
       </div>`;
 
     const next = container.querySelector('[data-dx="next"]');
@@ -730,7 +497,8 @@ function renderHeroInteractive() {
         if (typeof trackEvent === 'function') trackEvent('hero_service_selected', svc.id);
       });
     });
-    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep0, 'back'));
+    // primeira etapa: na janela, "Fechar" fecha a janela; na página não há para onde voltar
+    container.querySelector('[data-dx="back"]')?.addEventListener('click', () => inDialog?.close());
     next.addEventListener('click', () => { if (state.selectedService) transitionTo(renderStep3, 'next'); });
   }
 
@@ -895,6 +663,9 @@ function renderHeroInteractive() {
               <span><small>Prazo</small><strong>${info.prazo || '—'}</strong></span>
             </span>
           </label>
+          <div class="dx-format-actions">
+            <button type="button" class="dx-link-btn" data-dx-personalize="${t.id}">Ver e personalizar ${DX_ICON.external}<span class="sr-only"> ${esc(d.name)} (nova aba)</span></button>
+          </div>
         </div>`;
     };
 
@@ -949,6 +720,12 @@ function renderHeroInteractive() {
       if (done()) { transitionTo(renderResult, 'next'); return; }
       personalizar();
     });
+    // "Ver e personalizar" no card: marca aquele modelo e abre o editor dele direto
+    container.querySelectorAll('[data-dx-personalize]').forEach(btn => btn.addEventListener('click', () => {
+      const input = container.querySelector(`input[name="dx-variant"][value="${btn.dataset.dxPersonalize}"]`);
+      if (input && !input.checked) { input.checked = true; input.dispatchEvent(new Event('change')); }
+      personalizar();
+    }));
     skip.addEventListener('click', () => {
       if (!state.variant) return;
       if (done()) { personalizar(); return; }
@@ -1192,11 +969,9 @@ function renderHeroInteractive() {
 
   // Expose global starter
   window.heroStartDiagnosis = function () {
-    if (state.step === 0) {
-      transitionTo(renderStep1, 'next');
-    } else {
-      focusDiagnosticViewport();
-    }
+    if (state.step === 0) renderStep1();
+    updateDiagnosticMode();
+    focusDiagnosticViewport();
   };
 
   // Initial render. Na página "Monte sua solução" o fluxo começa direto (sem o convite) e,

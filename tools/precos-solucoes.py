@@ -45,7 +45,7 @@ EXTRAS = ('Precisa de automação ou integração? Elas se somam ao projeto: aut
 
 # título, descrição e opções de cada item; cada página lista seus itens
 ITEMS = {
-    'landing-page': ('Landing Page', 'Página única para campanhas, ofertas e captação de contatos.', ['Até 5 seções no modelo pronto', 'Formulário e WhatsApp', 'SEO técnico inicial'], [pronto('landing-page'), medida('landing-page')]),
+    'landing-page': ('Landing Page', 'Página única para campanhas, ofertas e captação de contatos.', ['3 modelos prontos: básico, intermediário e formal', 'Formulário e WhatsApp', 'SEO técnico inicial'], [pronto('landing-page'), medida('landing-page')]),
     'portfolio': ('Portfólio digital', 'Para mostrar trabalhos, serviços e resultados.', ['Galeria de projetos', 'Contato direto pelo WhatsApp', 'Layout para celular e computador'], [pronto('portfolio'), medida('portfolio')]),
     'site-institucional': ('Site institucional', 'Até 4 páginas para apresentar empresa, serviços e diferenciais.', ['Início, Sobre, Serviços e Contato', 'Formulário e WhatsApp', 'SEO técnico inicial e Analytics'], [pronto('site-institucional'), medida('site-institucional')]),
     'automacao': ('Automação de processos', 'Rotinas que rodam sozinhas: atendimento, leads, vendas, notificações e tarefas internas. Não inclui site.', ['Mapeamento da rotina', 'Fluxos automáticos, alertas e relatórios'], [single('automacao', label='Investimento')]),

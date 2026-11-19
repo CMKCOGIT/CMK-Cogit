@@ -760,3 +760,21 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 
 /* Modelos prontos, "Passo a passo": "Começar agora" na escala da seção */
 .btn.btn-cta-wide { min-width: min(100%, 360px); min-height: 60px !important; padding: 18px 36px !important; font-size: 17px !important; justify-content: center; }
+
+/* Janela "Monte sua solução" (home): tamanho fixo e três faixas — etapa e título no topo,
+   conteúdo rolando no meio, Voltar / Continuar sempre presos no pé da janela */
+.dx-modal { width: min(1080px, calc(100vw - 32px)) !important; height: min(780px, calc(100svh - 32px)) !important; }
+@media (max-width: 760px) { .dx-modal { width: 100vw !important; height: 100svh !important; } }
+.dx-modal .dx-modal-body { display: flex; flex-direction: column; min-height: 0; overflow: hidden; padding: 0 !important; }
+.dx-modal .hero-interactive-container { flex: 1 1 auto; min-height: 0 !important; display: flex !important; flex-direction: column; overflow: hidden; }
+.dx-modal .hero-step-wrapper { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; gap: 0 !important; }
+.dx-modal .hero-step-wrapper > .dx-head { flex: none; padding: var(--dx-pad) var(--dx-pad) 18px; margin: 0; }
+.dx-modal .hero-step-wrapper > :is(.dx-body, .dx-result) { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px var(--dx-pad) var(--dx-pad); }
+.dx-modal .hero-step-wrapper > .dx-foot { position: static !important; flex: none; margin: 0 !important; padding: 14px var(--dx-pad) calc(14px + env(safe-area-inset-bottom)) !important; }
+.dx-modal .hero-step-wrapper > :is(.dx-body, .dx-result) { align-content: start; }
+.dx-modal .hero-step-wrapper > .dx-body > * { align-content: start; }
+.dx-modal .hero-step-wrapper > .dx-foot { background: transparent !important; }
+/* Etapa Modelo: "Ver e personalizar" no pé de cada card */
+.dx-format-actions { margin-top: auto; padding: 4px 20px 6px; border-top: 1px solid var(--dx-line, #D9DAD6); }
+.dx-format-actions .dx-link-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 !important; margin: 0 !important; width: auto !important; background: none; border: 0; cursor: pointer; font: 600 14px/1.2 var(--text); }
+.dx-format-actions .dx-link-btn svg { width: 14px; height: 14px; }

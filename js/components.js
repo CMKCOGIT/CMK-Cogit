@@ -114,7 +114,7 @@ function rotaMonteSuaSolucao() {
   if (params.get('problem') && !servicos.length) return { tipo: 'configurador' };
   if (servicos.length > 1 || (servicos.length === 1 && !DX_IDS_DO_CATALOGO[servicos[0]])) return { tipo: 'configurador' };
   const model = params.get('model');
-  return { tipo: 'diagnostico', servico: servicos.length ? DX_IDS_DO_CATALOGO[servicos[0]] : null, modelo: ['modelos-prontos', 'sob-medida'].includes(model) ? model : null };
+  return { tipo: 'diagnostico', servico: servicos.length ? DX_IDS_DO_CATALOGO[servicos[0]] : null, modelo: ['modelos-prontos', 'sob-medida'].includes(model) ? model : null, variante: params.get('variant') || null };
 }
 window.rotaMonteSuaSolucao = rotaMonteSuaSolucao;
 
@@ -1207,7 +1207,10 @@ function renderHeroInteractive() {
       state.selectedService = svc.id;
       state.challenge = svc.challenge;
       if (rota.modelo && PRESENCA_DIGITAL_IDS.includes(svc.id)) state.objective = rota.modelo;
-      renderStep3();
+      // ?variant=landing-page-basica (página dos 3 modelos de landing page): abre já no modelo escolhido
+      const tiers = state.objective === 'modelos-prontos' ? tiersOf(svc.id) : null;
+      if (tiers && rota.variante && tiers.some(t => t.id === rota.variante)) { state.variant = rota.variante; renderStepModelo(); }
+      else renderStep3();
     } else {
       renderStep1();
     }

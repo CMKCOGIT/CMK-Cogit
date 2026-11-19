@@ -45,6 +45,7 @@ PAGES = {
     'solucoes/landing-pages.html': ('Landing pages', SOL, ['landing-page']),
     'solucoes/sites-institucionais.html': ('Sites institucionais', SOL, ['site-institucional']),
     'solucoes/modelos-prontos.html': ('Modelos prontos', SOL, ['landing-page:pronto', 'portfolio:pronto', 'site-institucional:pronto']),
+    'solucoes/modelos-landing-page.html': ('Modelos de landing page', SOL, ['landing-page:pronto']),
     'solucoes/modelos-sob-medida.html': ('Modelos sob medida', SOL, ['landing-page:medida', 'portfolio:medida', 'site-institucional:medida']),
     'solucoes/sistemas-personalizados.html': ('Sistemas de gestão', SOL, ['sistema', 'plataforma']),
     'solucoes/plataformas-e-outras-solucoes.html': ('Plataformas web', SOL, ['plataforma', 'sistema']),

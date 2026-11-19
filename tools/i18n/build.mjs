@@ -130,17 +130,28 @@ function relinkForEn(html, rel) {
 }
 const urlOf = (rel) => BASE + '/' + rel.replace(/(^|\/)index\.html$/, '$1');
 
-// ── Botão PT | EN (header e menu do celular) ──
+// ── Idioma: BR com seta no header (abre um menu flutuante com o inglês); BR | EN no menu do celular ──
 const SWITCH = /\n?[ \t]*<!-- lang-switch -->[\s\S]*?<!-- \/lang-switch -->/g;
+const CHEVRON = '<svg class="lang-switch-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
 function langSwitch(rel, lang, where) {
   const up = '../'.repeat(depth(rel) + (lang === 'en' ? 1 : 0));
   const pt = up + rel;
   const en = lang === 'en' ? path.posix.basename(rel) : up + 'en/' + (PAGES.includes(rel) ? rel : 'index.html');
   const enLabel = PAGES.includes(rel) ? 'English version of this page' : 'English version (home page)';
-  const item = (code, href, label, on, hl) => `<a href="${href}" class="lang-switch-link"${on ? ' aria-current="true"' : ''} hreflang="${hl}" lang="${hl}" data-lang="${code.toLowerCase()}" title="${label}">${code}</a>`;
-  return `<!-- lang-switch --><div class="lang-switch lang-switch--${where}" role="group" aria-label="${lang === 'en' ? 'Language' : 'Idioma'}" translate="no">` +
-    item('PT', pt, 'Versão em português', lang === 'pt', 'pt-BR') + '<span aria-hidden="true">|</span>' +
-    item('EN', en, enLabel, lang === 'en', 'en') + '</div><!-- /lang-switch -->';
+  const opts = [['BR', pt, 'Versão em português', lang === 'pt', 'pt-BR', 'Português'], ['EN', en, enLabel, lang === 'en', 'en', 'English']];
+  const groupLabel = lang === 'en' ? 'Language' : 'Idioma';
+  if (where === 'mobile') {
+    const item = ([code, href, label, on, hl]) => `<a href="${href}" class="lang-switch-link"${on ? ' aria-current="true"' : ''} hreflang="${hl}" lang="${hl}" data-lang="${code === 'BR' ? 'pt' : 'en'}" title="${label}">${code}</a>`;
+    return `<!-- lang-switch --><div class="lang-switch lang-switch--mobile" role="group" aria-label="${groupLabel}" translate="no">` +
+      item(opts[0]) + '<span aria-hidden="true">|</span>' + item(opts[1]) + '</div><!-- /lang-switch -->';
+  }
+  // <details>: abre e fecha sem JavaScript; js/header.js fecha ao clicar fora e com Esc.
+  // O menu é absoluto, então abrir não mexe no restante do header.
+  const cur = opts.find((o) => o[3]);
+  const item = ([code, href, label, on, hl, name]) => `<a href="${href}" class="lang-switch-option"${on ? ' aria-current="true"' : ''} hreflang="${hl}" lang="${hl}" data-lang="${code === 'BR' ? 'pt' : 'en'}" title="${label}"><b>${code}</b><span>${name}</span></a>`;
+  return `<!-- lang-switch --><details class="lang-switch lang-switch--header" data-lang-menu translate="no">` +
+    `<summary class="lang-switch-btn" aria-label="${groupLabel}: ${cur[5]}" title="${groupLabel}">${cur[0]}${CHEVRON}</summary>` +
+    `<div class="lang-switch-menu" role="group" aria-label="${groupLabel}">` + opts.map(item).join('') + '</div></details><!-- /lang-switch -->';
 }
 function withSwitch(html, rel, lang) {
   let s = html.replace(SWITCH, '');

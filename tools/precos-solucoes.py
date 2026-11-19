@@ -67,13 +67,47 @@ PAGES = {
 }
 
 
+# Páginas de um item só (landing page, site institucional): modelo pronto à esquerda e sob medida
+# à direita, cada um no seu card, em vez de um card único com as duas linhas de preço.
+SPLIT = {
+    'landing-page': (
+        ('Página única com estrutura já testada para campanhas, ofertas e captação de contatos.',
+         ['3 modelos: básico, intermediário e formal', 'Formulário e WhatsApp', 'SEO técnico inicial', 'Sua marca, cores, fotos e textos']),
+        ('Estratégia de conversão e visual desenhados do zero para a sua oferta e o seu público.',
+         ['Estrutura e copy pensadas para a campanha', 'Design exclusivo, tela a tela', 'Formulários, automações e integrações', 'Eventos para medir e otimizar']),
+    ),
+    'site-institucional': (
+        ('Até 4 páginas com estrutura já testada para apresentar empresa, serviços e diferenciais.',
+         ['Início, Sobre, Serviços e Contato', 'Formulário e WhatsApp', 'SEO técnico inicial e Analytics', 'Sua marca, cores, fotos e textos']),
+        ('Presença corporativa desenhada do zero, com páginas e navegação pensadas para o seu negócio.',
+         ['Número de páginas conforme a necessidade', 'Design exclusivo com sistema visual próprio', 'Funcionalidades e integrações específicas', 'Conteúdo alinhado ao posicionamento']),
+    ),
+}
+
+
+def render_split(sid):
+    name, _, _, opts = ITEMS[sid]
+    out = []
+    for o, (desc, bullets) in zip(opts, SPLIT[sid]):
+        lis = ''.join(f'<li>{e(b)}</li>' for b in bullets)
+        medida_ = o['label'] == 'Sob medida'
+        btn = 'btn-primary' if medida_ else 'btn-secondary-dark'
+        out.append(f'      <article class="price-opt price-opt--{"medida" if medida_ else "pronto"} reveal"><span class="price-opt-tag">{e(name)}</span>'
+                   f'<h3>{e(o["label"])}</h3><p>{e(desc)}</p><ul>{lis}</ul>'
+                   f'<div class="price-rows"><div class="price-row"><div class="price-row-top"><span>Investimento</span><strong>{e(o["price"])}</strong></div>'
+                   f'<small>{e(o["note"])}</small><a class="btn {btn}" href="{e(o["href"])}">{e(o["cta"])} <span aria-hidden="true">↗</span></a></div></div></article>')
+    return out
+
+
 def render(key, label, title, lead, ids, extras):
     out = [f'<section class="tone-grey section price-section" id="investimento" aria-labelledby="precos-{key}-titulo">',
            '  <div class="container">',
            f'    <div class="section-header reveal"><span class="section-label">{e(label.upper())}</span>'
            f'<h2 id="precos-{key}-titulo">{e(title)}</h2><p class="text-body-lg">{e(lead)}</p></div>',
-           f'    <div class="price-set price-set--{len(ids)}">']
+           f'    <div class="price-set price-set--{2 if len(ids) == 1 and ids[0] in SPLIT else len(ids)}">']
     for sid in ids:
+        if len(ids) == 1 and sid in SPLIT:
+            out += render_split(sid); continue
         name, desc, bullets, opts = ITEMS[sid]
         lis = ''.join(f'<li>{e(b)}</li>' for b in bullets)
         rows = ''.join(

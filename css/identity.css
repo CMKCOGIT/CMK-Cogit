@@ -778,3 +778,6 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .dx-format-actions { margin-top: auto; padding: 4px 20px 6px; border-top: 1px solid var(--dx-line, #D9DAD6); }
 .dx-format-actions .dx-link-btn { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 !important; margin: 0 !important; width: auto !important; background: none; border: 0; cursor: pointer; font: 600 14px/1.2 var(--text); }
 .dx-format-actions .dx-link-btn svg { width: 14px; height: 14px; }
+/* Etapa Modelo: Investimento / Prazo alinhados na mesma altura nos 3 cards (descrições de tamanhos diferentes) */
+.dx-grid--tiers .dx-format-label { flex: 1 1 auto; display: flex; flex-direction: column; }
+.dx-grid--tiers .dx-format-label > .dx-facts { margin-top: auto; }

@@ -449,7 +449,7 @@ function renderHeroInteractive() {
     return `
       <footer class="dx-foot">
         ${backLabel ? `<button type="button" class="dx-btn dx-btn--ghost" data-dx="back">${DX_ICON.left}<span>${backLabel}</span></button>` : '<span aria-hidden="true"></span>'}
-        <button type="button" class="dx-btn dx-btn--primary" data-dx="next" ${nextDisabled ? 'disabled' : ''}><span data-dx-next-label>${nextLabel}</span>${DX_ICON.right}</button>
+        ${nextLabel ? `<button type="button" class="dx-btn dx-btn--primary" data-dx="next" ${nextDisabled ? 'disabled' : ''}><span data-dx-next-label>${nextLabel}</span>${DX_ICON.right}</button>` : ''}
       </footer>`;
   }
 
@@ -910,7 +910,11 @@ function renderHeroInteractive() {
             </div>
           </section>
         </div>
+        ${renderDxFooter('Voltar', '')}
       </div>`;
+
+    // Voltar no resumo: etapa Modelo quando há modelo escolhido; senão, Formato / Objetivo
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(variantData ? renderStepModelo : renderStep2, 'back'));
 
     container.querySelectorAll('[data-dx-edit]').forEach(btn => btn.addEventListener('click', () => {
       const target = btn.dataset.dxEdit;

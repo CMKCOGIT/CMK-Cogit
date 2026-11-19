@@ -1,0 +1,333 @@
+# Catálogo de serviços e funcionalidades da COGIT (Obsidian Bases).
+# Cada linha é uma nota de 04-Catalogo/Itens. Edite preço, status e horas direto na tabela.
+# Depois rode: python3 _sistema/catalogo.py  (atualiza as tabelas das notas e o catalogo.json)
+filters:
+  and:
+    - file.inFolder("04-Catalogo/Itens")
+    - 'tipo == "item"'
+formulas:
+  valor_hora: 'if(horas, (preco / horas).round(), "")'
+properties:
+  file.name:
+    displayName: Item
+  note.categoria:
+    displayName: Categoria
+  note.tipo_preco:
+    displayName: Tipo de preço
+  note.preco:
+    displayName: Preço (R$)
+  note.unidade:
+    displayName: Unidade
+  note.formato:
+    displayName: Formato
+  note.horas:
+    displayName: Horas estimadas
+  formula.valor_hora:
+    displayName: R$ por hora
+  note.status:
+    displayName: Status
+  note.servicos:
+    displayName: Serviços
+views:
+  - type: table
+    name: Todos os itens
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+      - note.servicos
+  - type: table
+    name: A validar
+    filters:
+      and:
+        - 'status == "a-validar"'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Landing Page
+    filters:
+      or:
+        - 'servicos.contains("landing-page")'
+        - 'incluso_em.contains("landing-page")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Portfólio digital
+    filters:
+      or:
+        - 'servicos.contains("portfolio")'
+        - 'incluso_em.contains("portfolio")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Site institucional
+    filters:
+      or:
+        - 'servicos.contains("site-institucional")'
+        - 'incluso_em.contains("site-institucional")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Loja virtual
+    filters:
+      or:
+        - 'servicos.contains("loja-virtual")'
+        - 'incluso_em.contains("loja-virtual")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Identidade visual essencial
+    filters:
+      or:
+        - 'servicos.contains("identidade-essencial")'
+        - 'incluso_em.contains("identidade-essencial")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Sistema de gestão
+    filters:
+      or:
+        - 'servicos.contains("sistema")'
+        - 'incluso_em.contains("sistema")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Plataforma web personalizada
+    filters:
+      or:
+        - 'servicos.contains("plataforma")'
+        - 'incluso_em.contains("plataforma")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: MVP
+    filters:
+      or:
+        - 'servicos.contains("mvp")'
+        - 'incluso_em.contains("mvp")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Produto digital completo (SaaS)
+    filters:
+      or:
+        - 'servicos.contains("saas")'
+        - 'incluso_em.contains("saas")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Automação de processos
+    filters:
+      or:
+        - 'servicos.contains("automacao")'
+        - 'incluso_em.contains("automacao")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Integrações de sistemas e pagamentos
+    filters:
+      or:
+        - 'servicos.contains("integracao")'
+        - 'incluso_em.contains("integracao")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Suporte técnico essencial
+    filters:
+      or:
+        - 'servicos.contains("manutencao")'
+        - 'incluso_em.contains("manutencao")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Suporte técnico contínuo
+    filters:
+      or:
+        - 'servicos.contains("suporte")'
+        - 'incluso_em.contains("suporte")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Diagnóstico inicial
+    filters:
+      or:
+        - 'servicos.contains("diagnostico")'
+        - 'incluso_em.contains("diagnostico")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status
+  - type: table
+    name: Consultoria e planejamento digital
+    filters:
+      or:
+        - 'servicos.contains("consultoria")'
+        - 'incluso_em.contains("consultoria")'
+    groupBy:
+      property: note.categoria
+      direction: ASC
+    order:
+      - file.name
+      - note.tipo_preco
+      - note.preco
+      - note.unidade
+      - note.formato
+      - note.horas
+      - formula.valor_hora
+      - note.status

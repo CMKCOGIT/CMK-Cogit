@@ -39,7 +39,7 @@ Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em H
 
 ## Usar os arquivos
 
-Para hospedar, utilize o conteúdo da pasta `cmkcogit` como a raiz do site, preservando `assets`, `css`, `js`, `solucoes` e `projetos`. A pasta `docs` e os arquivos de revisão em `tools` são documentação e apoio local; não são necessários na hospedagem pública.
+Para hospedar, utilize o conteúdo da pasta `cmkcogit` como a raiz do site, preservando `assets`, `css`, `js`, `solucoes` e `projetos`. A pasta `docs` e os arquivos de revisão em `tools` são documentação e apoio local; não são necessários na hospedagem pública. O mesmo vale para `obsidian-cogit`: é a base de conhecimento interna (vault do Obsidian com fluxos, serviços e o catálogo de preços por funcionalidade) e **não deve ir para a hospedagem**. Veja `obsidian-cogit/README.md`.
 
 Para testar localmente com Node.js 20.11 ou superior:
 

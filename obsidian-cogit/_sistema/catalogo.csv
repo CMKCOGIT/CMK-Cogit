@@ -1,0 +1,229 @@
+id,nome,categoria,servicos,incluso_em,formato,tipo_preco,preco,unidade,horas,status,preco_rotulo
+ssl,Certificado de segurança (HTTPS),"Domínio, hospedagem e e-mail",,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,ambos,incluso,0,projeto,,a-validar,Incluso
+dominio-taxa-registro,Compra do domínio pela COGIT,"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,50,projeto,0.5,a-validar,R$ 50
+email-profissional,Configuração de e-mail profissional,"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,150,projeto,1.5,a-validar,R$ 150
+dominio-registro-br,Domínio .com.br (Registro.br),"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,repasse,40,ano,0,a-validar,Repasse ≈ R$ 40 / ano
+dominio-internacional,"Domínio internacional (.com, .net, .io)","Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,repasse,90,ano,0,a-validar,Repasse ≈ R$ 90 / ano
+hospedagem-gerenciada,Hospedagem gerenciada pela COGIT,"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual,,ambos,recorrente,30,mês,0.5,a-validar,R$ 30/mês
+email-licencas,Licenças de e-mail profissional,"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,repasse,35,usuário/mês,0,a-validar,Repasse ≈ R$ 35 / usuário/mês
+migracao-site,Migração de site existente,"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+dominio-dns,Publicação no domínio do cliente (DNS),"Domínio, hospedagem e e-mail",,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,ambos,incluso,0,projeto,,a-validar,Incluso
+redirecionamentos,Redirecionamento de endereços antigos (301),"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,100,projeto,1,a-validar,R$ 100
+hospedagem-sistema,Servidor e banco de dados,"Domínio, hospedagem e e-mail",sistema;plataforma;mvp;saas;loja-virtual,,ambos,repasse,100,mês,0,a-validar,Repasse ≈ R$ 100 / mês
+subdominio,Subdomínio adicional,"Domínio, hospedagem e e-mail",landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,50,projeto,0.5,a-validar,R$ 50
+seo-mensal,Acompanhamento mensal de SEO,SEO,landing-page;portfolio;site-institucional;loja-virtual,,ambos,recorrente,250,mês,3,a-validar,R$ 250/mês
+seo-artigo,Artigo de blog otimizado,SEO,landing-page;portfolio;site-institucional,,ambos,por-unidade,180,artigo,2.5,a-validar,R$ 180 / artigo
+seo-dados-estruturados,Dados estruturados (schema.org),SEO,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,150,projeto,2,a-validar,R$ 150
+seo-search-console,Google Search Console,SEO,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,80,projeto,1,a-validar,R$ 80
+seo-on-page,Otimização de SEO por página,SEO,landing-page;portfolio;site-institucional;loja-virtual,,ambos,por-unidade,90,página,1,a-validar,R$ 90 / página
+seo-perfil-empresa,Perfil da Empresa no Google (Google Meu Negócio),SEO,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,180,projeto,2,a-validar,R$ 180
+seo-palavras-chave,Pesquisa de palavras-chave,SEO,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+seo-pagina-local,Página por cidade ou região (SEO local),SEO,landing-page;portfolio;site-institucional,,ambos,por-unidade,180,página,2,a-validar,R$ 180 / página
+seo-tecnico,SEO técnico básico,SEO,,landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+metricas-capi,API de Conversões da Meta (servidor),Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+metricas-google-ads,Conversões do Google Ads,Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,100,projeto,1,a-validar,R$ 100
+metricas-eventos,Eventos de conversão,Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,por-unidade,40,evento,0.5,a-validar,R$ 40 / evento
+metricas-ga4,Google Analytics 4,Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,100,projeto,1,a-validar,R$ 100
+metricas-gtm,Google Tag Manager,Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,120,projeto,1.5,a-validar,R$ 120
+metricas-mapa-calor,Mapa de calor e gravação de sessões,Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,60,projeto,0.5,a-validar,R$ 60
+metricas-produto,Métricas de uso do produto,Métricas e rastreamento,sistema;plataforma;mvp;saas,mvp,ambos,fixo,500,projeto,6,a-validar,R$ 500
+metricas-utm,Padrão de UTMs para campanhas,Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,60,projeto,0.5,a-validar,R$ 60
+metricas-painel-marketing,Painel de resultados de marketing (Looker Studio),Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+metricas-pixel-meta,Pixel da Meta (Facebook e Instagram),Métricas e rastreamento,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,100,projeto,1,a-validar,R$ 100
+lgpd-consentimento-form,Autorização de contato nos formulários,Privacidade e LGPD,,landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+lgpd-cookies,Aviso e preferências de cookies,Privacidade e LGPD,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,150,projeto,2,a-validar,R$ 150
+lgpd-direitos,Exportação e exclusão de dados do usuário,Privacidade e LGPD,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+lgpd-politicas,Política de Privacidade e Termos de Uso,Privacidade e LGPD,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,150,projeto,1.5,a-validar,R$ 150
+cadastro-projetos,Cadastro de projetos no portfólio,Conteúdo e textos,portfolio,,ambos,por-unidade,60,lote de 5 projetos,0.75,a-validar,R$ 60 / lote de 5 projetos
+conteudo-imagens-gratuitas,Imagens de banco gratuito,Conteúdo e textos,,landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+conteudo-imagens-pagas,Imagens de banco pago,Conteúdo e textos,landing-page;portfolio;site-institucional;loja-virtual,,ambos,repasse,30,imagem,0,a-validar,Repasse ≈ R$ 30 / imagem
+conteudo-cliente,Inserção do conteúdo enviado pelo cliente,Conteúdo e textos,,landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+conteudo-copy-pagina,Redação de textos por página,Conteúdo e textos,portfolio;site-institucional;loja-virtual,,ambos,por-unidade,150,página,2,a-validar,R$ 150 / página
+conteudo-copy-lp,Redação dos textos da landing page,Conteúdo e textos,landing-page,,ambos,fixo,350,projeto,4,a-validar,R$ 350
+conteudo-revisao,Revisão de textos enviados,Conteúdo e textos,landing-page;portfolio;site-institucional;loja-virtual,,ambos,por-unidade,50,página,0.5,a-validar,R$ 50 / página
+conteudo-traducao,Tradução de textos,Conteúdo e textos,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,por-unidade,60,página,0.5,a-validar,R$ 60 / página
+conteudo-tratamento-imagens,Tratamento e recorte de imagens,Conteúdo e textos,landing-page;portfolio;site-institucional;loja-virtual,,ambos,por-unidade,80,lote de 20 imagens,1,a-validar,R$ 80 / lote de 20 imagens
+conteudo-idioma,Versão em outro idioma,Conteúdo e textos,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,por-unidade,250,idioma,3,a-validar,R$ 250 / idioma
+design-animacoes,Animações e efeitos de rolagem,Páginas e design,landing-page;portfolio;site-institucional,,sob-medida,fixo,300,projeto,4,a-validar,R$ 300
+design-responsivo,Layout responsivo,Páginas e design,,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,ambos,incluso,0,projeto,,a-validar,Incluso
+design-modo-escuro,Modo escuro,Páginas e design,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,250,projeto,3,a-validar,R$ 250
+design-prototipo,Protótipo visual antes do desenvolvimento,Páginas e design,landing-page;portfolio;site-institucional;sistema;plataforma;mvp;saas,,sob-medida,por-unidade,150,tela,1.5,a-validar,R$ 150 / tela
+design-pagina-extra,Página extra,Páginas e design,portfolio;site-institucional;loja-virtual,,ambos,por-unidade,180,página,2.5,a-validar,R$ 180 / página
+design-pagina-simples,"Página simples (obrigado, política, 404)",Páginas e design,landing-page;portfolio;site-institucional;loja-virtual,,ambos,por-unidade,60,página,0.5,a-validar,R$ 60 / página
+design-acessibilidade,Revisão de acessibilidade (WCAG AA),Páginas e design,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+design-rodada-extra,Rodada extra de ajustes,Páginas e design,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;identidade-essencial,,ambos,por-unidade,100,rodada,1,a-validar,R$ 100 / rodada
+design-secao-extra,Seção extra,Páginas e design,landing-page;portfolio;site-institucional,,sob-medida,por-unidade,100,seção,1.5,a-validar,R$ 100 / seção
+design-teste-ab,Teste A/B entre duas versões,Páginas e design,landing-page,,ambos,fixo,300,projeto,3,a-validar,R$ 300
+design-lp-variacao,Variação da landing page,Páginas e design,landing-page,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+design-icones,Ícones ou ilustrações personalizados,Páginas e design,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,por-unidade,250,conjunto de até 8,3,a-validar,R$ 250 / conjunto de até 8
+comp-agenda,Agendamento on-line,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,100,projeto,1,a-validar,R$ 100
+comp-antesdepois,Antes e depois,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,150,projeto,2,a-validar,R$ 150
+comp-imagem,Banner de imagem,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,40,projeto,0.5,a-validar,R$ 40
+comp-blog-lista,Blog simples,Componentes de página,portfolio;site-institucional,,sob-medida,fixo,300,projeto,3.5,a-validar,R$ 300
+comp-carrossel,Carrossel,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,100,projeto,1.5,a-validar,R$ 100
+comp-cases,Cases,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,120,projeto,1.5,a-validar,R$ 120
+comp-parceiros,Clientes e parceiros,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,50,projeto,0.5,a-validar,R$ 50
+comp-processo,Como funciona,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,60,projeto,0.75,a-validar,R$ 60
+comp-depoimentos,Depoimentos,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,60,projeto,0.75,a-validar,R$ 60
+comp-equipe,Equipe,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,80,projeto,1,a-validar,R$ 80
+comp-instagram,Feed do Instagram,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,150,projeto,1.5,a-validar,R$ 150
+comp-formulario,Formulário extra,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,100,projeto,1,a-validar,R$ 100
+comp-galeria,Galeria de imagens,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,120,projeto,1.5,a-validar,R$ 120
+comp-mapa,Mapa e endereço,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,50,projeto,0.5,a-validar,R$ 50
+comp-downloads,Materiais para download,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,60,projeto,0.75,a-validar,R$ 60
+comp-numeros,Números e resultados,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,60,projeto,0.75,a-validar,R$ 60
+comp-faq,Perguntas frequentes,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,60,projeto,0.75,a-validar,R$ 60
+comp-precos,Tabela de preços ou planos,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,100,projeto,1.25,a-validar,R$ 100
+comp-video,Vídeo em destaque,Componentes de página,landing-page;portfolio;site-institucional,,sob-medida,fixo,50,projeto,0.5,a-validar,R$ 50
+form-whatsapp,Botão de WhatsApp com mensagem pronta,Formulários e captação,,landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+form-chat,Chat on-line,Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,100,projeto,1,a-validar,R$ 100
+form-planilha,Contatos enviados para planilha,Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,150,projeto,1.5,a-validar,R$ 150
+form-email-confirmacao,E-mail automático para quem preencheu,Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,120,projeto,1,a-validar,R$ 120
+form-arquivos,Formulário com envio de arquivos,Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,150,projeto,1.5,a-validar,R$ 150
+form-contato,Formulário de contato,Formulários e captação,,landing-page;portfolio;site-institucional,ambos,incluso,0,projeto,,a-validar,Incluso
+form-etapas,Formulário em etapas (quiz ou qualificação),Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+form-newsletter,Inscrição em newsletter,Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,150,projeto,1.5,a-validar,R$ 150
+form-popup,Pop-up de captura,Formulários e captação,landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,120,projeto,1.5,a-validar,R$ 120
+form-antispam,Proteção contra spam,Formulários e captação,,landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+loja-avaliacoes,Avaliações de produtos,Loja virtual,loja-virtual,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+loja-busca,Busca de produtos,Loja virtual,,loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+loja-produtos,Cadastro de produtos adicionais,Loja virtual,loja-virtual,,ambos,por-unidade,150,lote de 50 produtos,2,a-validar,R$ 150 / lote de 50 produtos
+loja-estoque,Controle de estoque da loja,Loja virtual,loja-virtual,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+loja-cupons,Cupons de desconto,Loja virtual,loja-virtual,,ambos,fixo,350,projeto,4,a-validar,R$ 350
+loja-frete,"Cálculo de frete (Correios, Melhor Envio)",Loja virtual,loja-virtual,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+loja-nfe,Emissão de nota fiscal na loja,Loja virtual,loja-virtual,,ambos,a-partir-de,1200,projeto,14,a-validar,a partir de R$ 1.200
+loja-filtros,Filtros avançados de produtos,Loja virtual,loja-virtual,,ambos,fixo,400,projeto,5,a-validar,R$ 400
+loja-importacao,Importação de produtos por planilha,Loja virtual,loja-virtual,,ambos,fixo,400,projeto,5,a-validar,R$ 400
+loja-marketplace,Integração com marketplaces,Loja virtual,loja-virtual,,ambos,a-partir-de,1500,projeto,18,a-validar,a partir de R$ 1.500
+loja-favoritos,Lista de desejos,Loja virtual,loja-virtual,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+loja-multivendedor,Marketplace com vários vendedores,Loja virtual,loja-virtual;plataforma,,ambos,a-partir-de,4000,projeto,45,a-validar,a partir de R$ 4.000
+loja-pagamento-extra,Meio de pagamento adicional,Loja virtual,loja-virtual,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+loja-whatsapp-pedido,Pedido pelo WhatsApp,Loja virtual,loja-virtual,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+loja-cashback,Programa de pontos ou cashback,Loja virtual,loja-virtual,,ambos,fixo,1500,projeto,18,a-validar,R$ 1.500
+loja-carrinho-abandonado,Recuperação de carrinho abandonado,Loja virtual,loja-virtual,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+loja-b2b,Tabela de preços por cliente (atacado),Loja virtual,loja-virtual,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+loja-variacoes,"Variações de produto (tamanho, cor)",Loja virtual,loja-virtual,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+loja-assinatura,Venda por assinatura,Loja virtual,loja-virtual,,ambos,fixo,1500,projeto,18,a-validar,R$ 1.500
+loja-area-cliente,Área do cliente,Loja virtual,loja-virtual,,ambos,fixo,700,projeto,8,a-validar,R$ 700
+acesso-aprovacao,Cadastro aberto com aprovação,Acesso e usuários,sistema;plataforma;mvp;saas,,ambos,fixo,350,projeto,4,a-validar,R$ 350
+acesso-convites,Convite de usuários e gestão de equipe,Acesso e usuários,sistema;plataforma;mvp;saas,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+acesso-auditoria,Histórico de alterações (auditoria),Acesso e usuários,sistema;plataforma;mvp;saas,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+acesso-login-social,Login com Google ou Apple,Acesso e usuários,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+acesso-login,Login com e-mail e senha,Acesso e usuários,,sistema;plataforma;mvp;saas,ambos,incluso,0,projeto,,a-validar,Incluso
+acesso-sso,Login corporativo (SSO),Acesso e usuários,sistema;plataforma;mvp;saas,,ambos,a-partir-de,1500,projeto,16,a-validar,a partir de R$ 1.500
+acesso-multiempresa,Multiempresa (várias contas isoladas),Acesso e usuários,sistema;plataforma;mvp;saas,,ambos,a-partir-de,2500,projeto,28,a-validar,a partir de R$ 2.500
+acesso-perfis,Perfis e permissões por função,Acesso e usuários,mvp,sistema;plataforma;saas,ambos,fixo,800,projeto,9,a-validar,R$ 800
+acesso-2fa,Verificação em duas etapas,Acesso e usuários,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+dados-busca,Busca e filtros avançados,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,400,projeto,4.5,a-validar,R$ 400
+dados-cadastro-complexo,Cadastro com regras e relacionamentos (por entidade),Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,por-unidade,750,entidade,8,a-validar,R$ 750 / entidade
+dados-cadastro-simples,Cadastro simples (por entidade),Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,por-unidade,350,entidade,4,a-validar,R$ 350 / entidade
+dados-campos-personalizados,Campos personalizáveis pelo cliente,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+dados-exportacao,Exportação em Excel ou CSV,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+dados-aprovacao,Fluxo de aprovação,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+dados-pdf,Geração de documentos em PDF,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+dados-importacao,Importação de dados por planilha,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+dados-migracao,Migração de dados de outro sistema,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,a-partir-de,800,projeto,9,a-validar,a partir de R$ 800
+dados-kanban,Quadro kanban,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,700,projeto,8,a-validar,R$ 700
+dados-upload,Upload e armazenamento de arquivos,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,450,projeto,5,a-validar,R$ 450
+dados-calendario,Visualização em calendário,Dados e cadastros,sistema;plataforma;mvp;saas,,ambos,fixo,700,projeto,8,a-validar,R$ 700
+painel-indicadores,Dashboard com indicadores e gráficos,Painéis e relatórios,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+painel-admin,Painel administrativo,Painéis e relatórios,,sistema;plataforma;mvp;saas,ambos,incluso,0,projeto,,a-validar,Incluso
+painel-relatorio-email,Relatório automático por e-mail,Painéis e relatórios,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+painel-relatorio,Relatório personalizado,Painéis e relatórios,sistema;plataforma;mvp;saas,,ambos,por-unidade,400,relatório,4.5,a-validar,R$ 400 / relatório
+notif-chamados,Central de chamados (tickets),Comunicação e notificações,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+notif-central,Central de notificações no sistema,Comunicação e notificações,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+notif-chat,Chat entre usuários (tempo real),Comunicação e notificações,sistema;plataforma;mvp;saas,,ambos,a-partir-de,1800,projeto,20,a-validar,a partir de R$ 1.800
+notif-comentarios,Comentários e menções,Comunicação e notificações,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+notif-email,E-mails automáticos do sistema,Comunicação e notificações,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,400,projeto,4.5,a-validar,R$ 400
+notif-email-marca,E-mails com o layout da marca,Comunicação e notificações,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+notif-sms,Notificações por SMS,Comunicação e notificações,sistema;plataforma;mvp;saas,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+notif-whatsapp,Notificações por WhatsApp,Comunicação e notificações,sistema;plataforma;mvp;saas;loja-virtual,,ambos,a-partir-de,900,projeto,10,a-validar,a partir de R$ 900
+notif-push,Notificações push,Comunicação e notificações,sistema;plataforma;mvp;saas,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+pag-assinatura,Assinaturas e cobrança recorrente,Pagamentos e cobrança,sistema;plataforma;mvp;saas,saas,ambos,fixo,1800,projeto,20,a-validar,R$ 1.800
+pag-carteira,Créditos ou carteira digital,Pagamentos e cobrança,sistema;plataforma;mvp;saas,,ambos,fixo,1500,projeto,17,a-validar,R$ 1.500
+pag-cupons,Cupons e período de teste,Pagamentos e cobrança,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+pag-split,Divisão de pagamento entre vendedores (split),Pagamentos e cobrança,sistema;plataforma;mvp;saas,,ambos,a-partir-de,2500,projeto,28,a-validar,a partir de R$ 2.500
+pag-cobrancas,Emissão de cobranças para clientes,Pagamentos e cobrança,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+pag-nfse,Emissão de nota fiscal de serviço (NFS-e),Pagamentos e cobrança,sistema;plataforma;mvp;saas,,ambos,a-partir-de,1200,projeto,14,a-validar,a partir de R$ 1.200
+pag-checkout,"Pagamento único (Pix, cartão, boleto)",Pagamentos e cobrança,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+pag-planos,Planos e limites por plano,Pagamentos e cobrança,sistema;plataforma;mvp;saas,saas,ambos,fixo,900,projeto,10,a-validar,R$ 900
+mod-agendamento,Agendamento de horários,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+mod-avaliacoes,Avaliações entre usuários,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+mod-marketplace,Conexão entre oferta e demanda,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,a-partir-de,3000,projeto,34,a-validar,a partir de R$ 3.000
+mod-contratos,Contratos com assinatura eletrônica,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+mod-estoque,Controle de estoque,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+mod-equipe,Escalas e gestão de equipe,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1500,projeto,17,a-validar,R$ 1.500
+mod-financeiro,Financeiro (contas a pagar e a receber),Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1500,projeto,17,a-validar,R$ 1.500
+mod-funil,Funil de vendas (CRM simples),Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+mod-gamificacao,"Gamificação (pontos, medalhas, ranking)",Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1500,projeto,17,a-validar,R$ 1.500
+mod-mapas,Mapas e geolocalização,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,800,projeto,9,a-validar,R$ 800
+mod-os,Ordens de serviço,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+mod-orcamentos,Orçamentos e propostas,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+mod-pedidos,Pedidos e vendas,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+mod-reservas,Reservas de espaços ou recursos,Módulos de negócio,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+cursos-aulas,Aulas em vídeo por módulos,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+cursos-certificados,Certificados automáticos,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+cursos-comunidade,Comunidade ou fórum,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,1500,projeto,17,a-validar,R$ 1.500
+cursos-conteudo-plano,Conteúdo exclusivo por plano,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+cursos-progresso,Progresso do aluno,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+cursos-quiz,Questionários e provas,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,700,projeto,8,a-validar,R$ 700
+cursos-turmas,Turmas e professores,Área de membros e cursos,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+ia-assistente,Assistente com IA (chat),Inteligência artificial,sistema;plataforma;mvp;saas,,ambos,a-partir-de,1500,projeto,17,a-validar,a partir de R$ 1.500
+ia-classificacao,Classificação e resumo automático,Inteligência artificial,sistema;plataforma;mvp;saas;automacao,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+ia-consumo,Consumo da IA,Inteligência artificial,sistema;plataforma;mvp;saas;automacao,,ambos,repasse,0,mês,0,a-validar,Repasse (conforme uso)
+ia-geracao,Geração de textos ou imagens,Inteligência artificial,sistema;plataforma;mvp;saas,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+ia-extracao,Leitura de documentos e extração de dados,Inteligência artificial,sistema;plataforma;mvp;saas;automacao,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+ia-documentos-empresa,Respostas com base nos documentos da empresa,Inteligência artificial,sistema;plataforma;mvp;saas,,ambos,a-partir-de,2000,projeto,22,a-validar,a partir de R$ 2.000
+infra-api,API para outros sistemas,Infraestrutura e plataforma,sistema;plataforma;mvp;saas,,ambos,a-partir-de,1500,projeto,17,a-validar,a partir de R$ 1.500
+infra-ambiente-teste,Ambiente de testes (homologação),Infraestrutura e plataforma,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,400,projeto,4.5,a-validar,R$ 400
+infra-pwa,Aplicativo instalável (PWA),Infraestrutura e plataforma,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+infra-app-lojas,App nas lojas (Android e iOS),Infraestrutura e plataforma,sistema;plataforma;mvp;saas,,ambos,a-partir-de,4000,projeto,45,a-validar,a partir de R$ 4.000
+infra-backup,Backup automático diário,Infraestrutura e plataforma,sistema;plataforma;mvp;saas;loja-virtual;suporte,,ambos,recorrente,50,mês,0.5,a-validar,R$ 50/mês
+infra-monitoramento,Monitoramento de disponibilidade e erros,Infraestrutura e plataforma,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;suporte,,ambos,recorrente,50,mês,0.5,a-validar,R$ 50/mês
+infra-escala,Preparação para alto volume,Infraestrutura e plataforma,sistema;plataforma;mvp;saas;loja-virtual,,ambos,a-partir-de,1500,projeto,17,a-validar,a partir de R$ 1.500
+infra-seguranca,Revisão de segurança,Infraestrutura e plataforma,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,900,projeto,10,a-validar,R$ 900
+infra-webhooks,Webhooks,Infraestrutura e plataforma,sistema;plataforma;mvp;saas,,ambos,fixo,600,projeto,7,a-validar,R$ 600
+int-ia,"API de IA (OpenAI, Anthropic, Google)",Integrações,sistema;plataforma;mvp;saas;automacao;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-assinatura-eletronica,"Assinatura eletrônica (Clicksign, D4Sign)",Integrações,sistema;plataforma;mvp;saas;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-crm,"CRM (RD Station, HubSpot, Pipedrive)",Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-email-marketing,"E-mail marketing (Mailchimp, Brevo)",Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-erp,"ERP ou sistema de gestão (Bling, Tiny, Omie, Conta Azul)",Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;integracao,,ambos,a-partir-de,1500,projeto,17,a-validar,a partir de R$ 1.500
+int-nota-fiscal,"Emissor de nota fiscal (NFE.io, Focus NFe)",Integrações,loja-virtual;sistema;plataforma;mvp;saas;integracao,,ambos,fixo,1200,projeto,14,a-validar,R$ 1.200
+int-frete,"Frete e rastreio (Correios, Melhor Envio)",Integrações,loja-virtual;sistema;plataforma;mvp;saas;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-agenda,Google Agenda ou Outlook,Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-planilhas,Google Sheets ou Excel on-line,Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-padrao,"Integração padrão (API documentada, um sentido)",Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao,integracao,ambos,fixo,990,projeto,11,ativo,R$ 990
+int-gateway,"Meio de pagamento (Mercado Pago, Stripe, Asaas)",Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;integracao,,ambos,fixo,990,projeto,11,a-validar,R$ 990
+int-bidirecional,Sincronização nos dois sentidos,Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;integracao,,ambos,fixo,500,projeto,6,a-validar,R$ 500
+int-erp-legado,Sistema sem API documentada,Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;integracao,,ambos,a-partir-de,2990,projeto,34,a-validar,a partir de R$ 2.990
+int-whatsapp-api,WhatsApp API oficial,Integrações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao;integracao,,ambos,a-partir-de,1200,projeto,14,a-validar,a partir de R$ 1.200
+auto-chatbot-ia,Atendimento com IA no WhatsApp,Automações,automacao,,ambos,a-partir-de,2490,projeto,28,a-validar,a partir de R$ 2.490
+auto-leads,Captura e distribuição de leads,Automações,automacao;landing-page;portfolio;site-institucional;loja-virtual,,ambos,fixo,890,projeto,10,a-validar,R$ 890
+auto-chatbot-menu,Chatbot de WhatsApp com menu,Automações,automacao,,ambos,fixo,1490,projeto,17,a-validar,R$ 1.490
+auto-ferramenta,"Ferramenta de automação (Make, Zapier, n8n)",Automações,automacao,,ambos,repasse,0,mês,0,a-validar,Repasse (conforme uso)
+auto-fluxo-adicional,Fluxo adicional no mesmo projeto,Automações,automacao;landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,590,projeto,7,a-validar,R$ 590
+auto-fluxo-complexo,Fluxo com condições e várias etapas,Automações,automacao;landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,a-partir-de,1490,projeto,17,a-validar,a partir de R$ 1.490
+auto-fluxo-simples,"Fluxo simples (1 gatilho, até 3 ações)",Automações,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,automacao,ambos,fixo,890,projeto,10,ativo,R$ 890
+auto-followup,Follow-up automático,Automações,automacao;landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,fixo,890,projeto,10,a-validar,R$ 890
+auto-documentos,Geração automática de documentos,Automações,automacao,,ambos,fixo,890,projeto,10,a-validar,R$ 890
+auto-lembretes,Lembretes e confirmação de agendamentos,Automações,automacao;sistema;plataforma;mvp;saas,,ambos,fixo,890,projeto,10,a-validar,R$ 890
+auto-mapeamento,Mapeamento da rotina,Automações,,automacao,ambos,incluso,0,projeto,,a-validar,Incluso
+auto-relatorio,Relatório automático periódico,Automações,automacao,,ambos,fixo,890,projeto,10,a-validar,R$ 890
+id-redes,Kit para redes sociais,Identidade visual,identidade-essencial,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+id-logo,"Logo, paleta e tipografia",Identidade visual,,identidade-essencial,ambos,incluso,0,projeto,,a-validar,Incluso
+id-manual,Manual de marca simplificado,Identidade visual,identidade-essencial,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+id-mockups,Mockups de aplicação,Identidade visual,identidade-essencial,,ambos,fixo,120,projeto,1.5,a-validar,R$ 120
+id-apresentacao,Modelo de apresentação (slides),Identidade visual,identidade-essencial,,ambos,fixo,300,projeto,3.5,a-validar,R$ 300
+id-papelaria,Papelaria digital,Identidade visual,identidade-essencial,,ambos,fixo,200,projeto,2.5,a-validar,R$ 200
+id-rodada-conceito,Rodada extra de conceito de logo,Identidade visual,identidade-essencial,,ambos,fixo,150,projeto,2,a-validar,R$ 150
+id-favicon,Ícone do site e do app (favicon),Identidade visual,,identidade-essencial;landing-page;portfolio;site-institucional;loja-virtual,ambos,incluso,0,projeto,,a-validar,Incluso
+sup-mes-gratis,1 mês de suporte gratuito,Suporte e operação,,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;identidade-essencial;automacao;integracao,ambos,incluso,0,projeto,,ativo,Incluso
+sup-hora,Hora técnica avulsa,Suporte e operação,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;automacao;integracao;manutencao,,ambos,por-unidade,120,hora,1,a-validar,R$ 120 / hora
+sup-manual,Manual de uso,Suporte e operação,sistema;plataforma;mvp;saas;loja-virtual,,ambos,fixo,400,projeto,4.5,a-validar,R$ 400
+sup-treinamento,Treinamento da equipe,Suporte e operação,sistema;plataforma;mvp;saas;loja-virtual;automacao,,ambos,por-unidade,150,sessão de 1 h,1.5,a-validar,R$ 150 / sessão de 1 h
+proj-complexidade,Complexidade alta,Projeto e entrega,sistema;plataforma;mvp;saas;loja-virtual;automacao;integracao,,ambos,percentual,20,sobre o projeto,,a-validar,+20% sobre o projeto
+proj-combo,Desconto de combinação,Projeto e entrega,identidade-essencial;landing-page;portfolio;site-institucional;automacao;sistema;integracao,,ambos,percentual,-10,sobre a combinação,,ativo,−10% sobre a combinação
+proj-documentacao,Documentação técnica,Projeto e entrega,sistema;plataforma;mvp;saas;loja-virtual;integracao,,ambos,fixo,400,projeto,4.5,a-validar,R$ 400
+proj-reuniao,Reunião extra de alinhamento,Projeto e entrega,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;identidade-essencial;automacao;integracao,,ambos,por-unidade,100,reunião,1,a-validar,R$ 100 / reunião
+proj-codigo,Transferência do código-fonte,Projeto e entrega,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas,,ambos,sob-consulta,0,projeto,,a-validar,Sob consulta
+proj-urgencia,Urgência (prazo reduzido pela metade),Projeto e entrega,landing-page;portfolio;site-institucional;loja-virtual;sistema;plataforma;mvp;saas;identidade-essencial;automacao;integracao,,ambos,percentual,30,sobre o projeto,,a-validar,+30% sobre o projeto

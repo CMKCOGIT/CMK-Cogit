@@ -25,11 +25,11 @@ ORG = {
     'image': BASE + '/assets/images/og-cmkcogit-icone.png',
     'description': 'Desenvolvimento de software e soluções digitais sob medida: sites, landing pages, sistemas de gestão, plataformas, automações, MVPs e SaaS.',
     'slogan': 'Pensamos antes de construir.',
-    'email': 'contato@cmkcogit.com.br', 'telephone': '+55-17-98156-8889',
+    'email': 'contato@cmkcogit.com.br', 'telephone': '+55-17-3198-3769',
     'address': {'@type': 'PostalAddress', 'addressLocality': 'São José do Rio Preto', 'addressRegion': 'SP', 'addressCountry': 'BR'},
     'areaServed': {'@type': 'Country', 'name': 'Brasil'},
     'priceRange': 'R$ 500 - R$ 6.000+',
-    'contactPoint': [{'@type': 'ContactPoint', 'contactType': 'customer service', 'telephone': '+55-17-98156-8889',
+    'contactPoint': [{'@type': 'ContactPoint', 'contactType': 'customer service', 'telephone': '+55-17-3198-3769',
                       'email': 'contato@cmkcogit.com.br', 'availableLanguage': ['Portuguese'], 'areaServed': 'BR'}],
     'sameAs': ['https://www.instagram.com/cmkcogit', 'https://www.linkedin.com/in/cmkcogit'],
 }

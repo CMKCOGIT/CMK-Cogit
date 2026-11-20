@@ -62,7 +62,7 @@ function initContactHub() {
     optionsContainer.querySelectorAll('.whatsapp-popup-option').forEach(btn => {
       btn.addEventListener('click', () => {
         const message = decodeURIComponent(btn.dataset.message);
-        const baseUrl = (typeof socialLinks !== 'undefined' && socialLinks.whatsapp) ? socialLinks.whatsapp : 'https://wa.me/5517981568889';
+        const baseUrl = (typeof socialLinks !== 'undefined' && socialLinks.whatsapp) ? socialLinks.whatsapp : 'https://wa.me/551731983769';
         
         // Track analytics
         if (typeof trackEvent === 'function') {

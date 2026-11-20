@@ -3,7 +3,7 @@
 (function () {
   'use strict';
 
-  const WHATSAPP = '5517981568889';
+  const WHATSAPP = '551731983769';
   const EMAIL = 'contato@cmkcogit.com.br';
 
   // Busca: mostra só as dúvidas que têm o termo (sem acento, sem maiúscula)

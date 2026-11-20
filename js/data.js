@@ -553,7 +553,7 @@ const socialLinks = {
   instagram: 'https://www.instagram.com/cmkcogit',
   linkedin: 'https://www.linkedin.com/in/cmkcogit',
   email: 'mailto:contato@cmkcogit.com.br',
-  whatsapp: 'https://wa.me/5517981568889'
+  whatsapp: 'https://wa.me/551731983769'
 };
 
 

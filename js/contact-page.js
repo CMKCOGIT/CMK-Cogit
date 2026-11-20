@@ -110,7 +110,7 @@
         receipt
       ].filter(Boolean);
       if (typeof window.trackEvent === 'function') window.trackEvent('contact_message_prepared', { source: serviceContext ? 'solution_page' : 'contact_page' });
-      window.open(`https://wa.me/5517981568889?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
+      window.open(`https://wa.me/551731983769?text=${encodeURIComponent(lines.join('\n'))}`, '_blank', 'noopener,noreferrer');
     });
   }
 

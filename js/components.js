@@ -101,20 +101,31 @@ function renderChallenge() {
 }
 
 // ── Rota da página "Monte sua solução" ──
-// Sem parâmetros, ou com UM serviço que o diagnóstico conhece, a página usa o mesmo fluxo da
-// tela inicial (diagnóstico). Combinações e serviços fora do diagnóstico (identidade, loja,
-// suporte...) continuam no configurador. Usada por components.js e configurator.js.
+// A página e a janela da tela inicial usam o MESMO fluxo (diagnóstico, abaixo): todos os serviços
+// do catálogo têm um card na primeira etapa. Um link com vários serviços (combinações da página
+// Soluções) abre com o serviço principal escolhido e os demais já marcados em "Complementos".
+// O configurador antigo (configurator.js) só aparece para um serviço que o fluxo não conhece.
 const DX_IDS_DO_CATALOGO = {
-  'landing-page': 'landing-page', 'portfolio': 'portfolio', 'site-institucional': 'site-institucional',
-  'automacao': 'automacao-svc', 'sistema': 'sistema-svc', 'mvp': 'mvp-svc', 'plataforma': 'plataforma-svc', 'diagnostico': 'outro-svc'
+  'landing-page': 'landing-page', 'portfolio': 'portfolio', 'site-institucional': 'site-institucional', 'loja-virtual': 'loja-svc',
+  'automacao': 'automacao-svc', 'integracao': 'integracao-svc', 'sistema': 'sistema-svc', 'mvp': 'mvp-svc', 'plataforma': 'plataforma-svc',
+  'identidade-essencial': 'identidade-svc', 'manutencao': 'suporte-essencial-svc', 'suporte': 'suporte-continuo-svc', 'diagnostico': 'outro-svc'
 };
+// Em uma combinação, o principal é o primeiro que não é complemento típico (identidade, suporte).
+const DX_COMPLEMENTOS_TIPICOS = ['identidade-essencial', 'manutencao', 'suporte', 'integracao', 'automacao'];
 function rotaMonteSuaSolucao() {
   const params = new URLSearchParams(window.location.search);
-  const servicos = (params.get('services') || '').split(',').map(s => s.trim()).filter(Boolean);
+  const servicos = [...new Set((params.get('services') || '').split(',').map(s => s.trim()).filter(Boolean))];
   if (params.get('problem') && !servicos.length) return { tipo: 'configurador' };
-  if (servicos.length > 1 || (servicos.length === 1 && !DX_IDS_DO_CATALOGO[servicos[0]])) return { tipo: 'configurador' };
+  if (servicos.some(id => !DX_IDS_DO_CATALOGO[id])) return { tipo: 'configurador' };
   const model = params.get('model');
-  return { tipo: 'diagnostico', servico: servicos.length ? DX_IDS_DO_CATALOGO[servicos[0]] : null, modelo: ['modelos-prontos', 'sob-medida'].includes(model) ? model : null, variante: params.get('variant') || null };
+  const principal = servicos.find(id => !DX_COMPLEMENTOS_TIPICOS.includes(id)) || servicos[0] || null;
+  return {
+    tipo: 'diagnostico',
+    servico: principal ? DX_IDS_DO_CATALOGO[principal] : null,
+    complementos: servicos.filter(id => id !== principal && id !== 'diagnostico'),
+    modelo: ['modelos-prontos', 'sob-medida'].includes(model) ? model : null,
+    variante: params.get('variant') || null
+  };
 }
 window.rotaMonteSuaSolucao = rotaMonteSuaSolucao;
 
@@ -186,7 +197,31 @@ function renderHeroInteractive() {
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/><path d="M2 12h20"/></svg>'
     },
     {
-      id: 'outro-svc', name: 'Não sei ainda', desc: 'Receba orientação para encontrar o melhor começo.', priceLabel: 'Sob consulta', challenge: 'outro',
+      id: 'loja-svc', name: 'Loja virtual', desc: 'Venda on-line com catálogo, carrinho e pagamentos.', priceLabel: 'A partir de R$ 6.000', challenge: 'presenca',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>'
+    },
+    {
+      id: 'identidade-svc', name: 'Identidade Visual Essencial', desc: 'Logo, cores e tipografia para a sua marca.', priceLabel: 'R$ 500', challenge: 'marca',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="1.5"/><circle cx="17.5" cy="10.5" r="1.5"/><circle cx="8.5" cy="7.5" r="1.5"/><circle cx="6.5" cy="12.5" r="1.5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.7 1.7-1.7H16c3.1 0 5.6-2.5 5.6-5.6C21.9 6.2 17.5 2 12 2z"/></svg>'
+    },
+    {
+      id: 'consultoria-svc', name: 'Consultoria e planejamento', desc: 'Mapeamos negócio, processos e prioridades antes de construir.', priceLabel: 'Sem custo fechando com a COGIT', challenge: 'outro',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>'
+    },
+    {
+      id: 'integracao-svc', name: 'Integrações', desc: 'Conecte pagamentos, WhatsApp e os sistemas que você já usa.', priceLabel: 'A partir de R$ 990', challenge: 'automacao',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>'
+    },
+    {
+      id: 'suporte-essencial-svc', name: 'Suporte Técnico Essencial', desc: 'Correções e ajustes quando precisar, sem mensalidade.', priceLabel: 'A partir de R$ 150 por solicitação', challenge: 'suporte',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>'
+    },
+    {
+      id: 'suporte-continuo-svc', name: 'Suporte Técnico Contínuo', desc: 'Manutenção, ajustes e acompanhamento todo mês.', priceLabel: 'R$ 150/mês · 1º mês grátis', challenge: 'suporte',
+      iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>'
+    },
+    {
+      id: 'outro-svc', name: 'Não sei ainda', desc: 'Receba orientação para encontrar o melhor começo.', priceLabel: 'Diagnóstico inicial gratuito', challenge: 'outro',
       iconSvg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4z"/><path d="M14 4h6v6h-6z"/><path d="M14 14h6v6h-6z"/><path d="M4 14h6v6H4z"/><path d="M10 7h4M10 17h4M7 10v4M17 10v4"/></svg>'
     }
   ];
@@ -194,34 +229,70 @@ function renderHeroInteractive() {
   // ── Objetivos dinâmicos por serviço selecionado (Etapa 2) ──
   const OBJECTIVES_BY_SERVICE = {
     'mvp-svc': [
-      { id: 'tirar-papel', label: 'Tirar minha ideia do papel' },
-      { id: 'mvp-funcional', label: 'Criar um MVP funcional' },
-      { id: 'validar-conceito', label: 'Validar meu conceito' },
-      { id: 'testar-solucao', label: 'Testar uma nova solução' }
+      { id: 'tirar-papel', label: 'Tirar minha ideia do papel', desc: 'Primeira versão real, no menor prazo e investimento possíveis.' },
+      { id: 'mvp-funcional', label: 'Criar um MVP funcional', desc: 'As funções principais prontas para usuários de verdade.' },
+      { id: 'validar-conceito', label: 'Validar meu conceito', desc: 'Testar a aceitação do público antes de investir mais.' },
+      { id: 'testar-solucao', label: 'Testar uma nova solução', desc: 'Medir uso, retenção e viabilidade de uma nova frente.' }
     ],
     'saas-svc': [
-      { id: 'plataforma-escalavel', label: 'Criar uma plataforma escalável' },
-      { id: 'ideia-em-produto', label: 'Transformar minha ideia em produto' },
-      { id: 'sistema-assinatura', label: 'Criar um sistema por assinatura' },
-      { id: 'validar-modelo', label: 'Validar modelo de negócio' }
+      { id: 'plataforma-escalavel', label: 'Criar uma plataforma escalável', desc: 'Estrutura em nuvem pronta para crescer com os clientes.' },
+      { id: 'ideia-em-produto', label: 'Transformar minha ideia em produto', desc: 'Do painel de gestão à experiência de quem assina.' },
+      { id: 'sistema-assinatura', label: 'Criar um sistema por assinatura', desc: 'Planos, cobrança recorrente e liberação de acesso.' },
+      { id: 'validar-modelo', label: 'Validar modelo de negócio', desc: 'Uma versão beta para testar preço e retenção.' }
     ],
     'plataforma-svc': [
-      { id: 'plataforma-escalavel', label: 'Criar uma plataforma escalável' },
-      { id: 'ideia-em-produto', label: 'Transformar minha ideia em produto' },
-      { id: 'sistema-assinatura', label: 'Criar um sistema por assinatura' },
-      { id: 'validar-modelo', label: 'Validar modelo de negócio' }
+      { id: 'plataforma-escalavel', label: 'Criar uma plataforma escalável', desc: 'Vários perfis de usuário com bom desempenho.' },
+      { id: 'ideia-em-produto', label: 'Transformar minha ideia em produto', desc: 'Regras de negócio próprias com uso simples.' },
+      { id: 'sistema-assinatura', label: 'Criar um sistema por assinatura', desc: 'Módulos, permissões e cobrança por perfil.' },
+      { id: 'validar-modelo', label: 'Validar modelo de negócio', desc: 'Lançamento piloto, controlado, para aprender rápido.' }
     ],
     'automacao-svc': [
-      { id: 'automatizar-processos', label: 'Automatizar processos internos' },
-      { id: 'reduzir-tarefas', label: 'Reduzir tarefas manuais' },
-      { id: 'integrar-ferramentas', label: 'Integrar ferramentas existentes' },
-      { id: 'fluxos-inteligentes', label: 'Criar fluxos inteligentes' }
+      { id: 'automatizar-processos', label: 'Automatizar processos internos', desc: 'Rotinas da equipe rodando sozinhas, sem retrabalho.' },
+      { id: 'reduzir-tarefas', label: 'Reduzir tarefas manuais', desc: 'Menos digitação e cópia entre planilhas e sistemas.' },
+      { id: 'integrar-ferramentas', label: 'Integrar ferramentas existentes', desc: 'Fazer as ferramentas que você já usa conversarem.' },
+      { id: 'fluxos-inteligentes', label: 'Criar fluxos inteligentes', desc: 'Alertas, mensagens e relatórios automáticos.' }
+    ],
+    'integracao-svc': [
+      { id: 'integrar-pagamentos', label: 'Receber pagamentos on-line', desc: 'Pix, cartão e boleto ligados ao seu site ou sistema.' },
+      { id: 'integrar-whatsapp', label: 'Conectar o WhatsApp', desc: 'Mensagens e avisos automáticos para os clientes.' },
+      { id: 'integrar-sistemas', label: 'Conectar sistemas que já uso', desc: 'ERP, CRM, planilhas e APIs trocando dados.' },
+      { id: 'sincronizar-dados', label: 'Acabar com dados duplicados', desc: 'Uma informação cadastrada uma vez vale para todos.' }
     ],
     'sistema-svc': [
-      { id: 'sistema-personalizado', label: 'Criar um sistema personalizado' },
-      { id: 'melhorar-operacao', label: 'Melhorar minha operação' },
-      { id: 'centralizar-informacoes', label: 'Centralizar informações' },
-      { id: 'digitalizar-processos', label: 'Digitalizar processos' }
+      { id: 'sistema-personalizado', label: 'Criar um sistema personalizado', desc: 'Software feito para as regras do seu negócio.' },
+      { id: 'melhorar-operacao', label: 'Melhorar minha operação', desc: 'Demandas, prazos e histórico organizados em um lugar.' },
+      { id: 'centralizar-informacoes', label: 'Centralizar informações', desc: 'Painel com dados que hoje estão espalhados.' },
+      { id: 'digitalizar-processos', label: 'Digitalizar processos', desc: 'Trocar planilhas e papel por uma aplicação segura.' }
+    ],
+    'loja-svc': [
+      { id: 'comecar-vender', label: 'Começar a vender on-line', desc: 'Primeira loja com catálogo, carrinho e pagamento.' },
+      { id: 'loja-fisica-digital', label: 'Levar minha loja física para a internet', desc: 'Os mesmos produtos, agora com venda 24 horas.' },
+      { id: 'sair-marketplace', label: 'Ter canal próprio além do marketplace', desc: 'Menos taxa e mais relação direta com o cliente.' },
+      { id: 'organizar-pedidos', label: 'Organizar pedidos e estoque', desc: 'Pedidos, estoque e entregas acompanhados em um painel.' }
+    ],
+    'identidade-svc': [
+      { id: 'criar-marca', label: 'Criar minha primeira marca', desc: 'Logo, cores e tipografia para começar com identidade.' },
+      { id: 'renovar-marca', label: 'Renovar uma marca que já existe', desc: 'Modernizar sem perder o que já é reconhecido.' },
+      { id: 'padronizar-marca', label: 'Padronizar a comunicação', desc: 'Mesma aparência no site, nas redes e nos materiais.' },
+      { id: 'marca-para-site', label: 'Preparar a marca para um site', desc: 'Versões e arquivos prontos para usar no digital.' }
+    ],
+    'consultoria-svc': [
+      { id: 'planejar-projeto', label: 'Planejar um projeto digital', desc: 'Escopo, prioridades e etapas antes de construir.' },
+      { id: 'escolher-tecnologia', label: 'Escolher a tecnologia certa', desc: 'Comparar caminhos com custo, prazo e risco.' },
+      { id: 'mapear-processos', label: 'Mapear processos da empresa', desc: 'Entender onde a tecnologia gera mais resultado.' },
+      { id: 'revisar-existente', label: 'Revisar o que já tenho', desc: 'Avaliar site, sistema ou ferramentas atuais.' }
+    ],
+    'suporte-essencial-svc': [
+      { id: 'corrigir-problema', label: 'Corrigir um problema', desc: 'Algo parou de funcionar ou está com erro.' },
+      { id: 'pequenos-ajustes', label: 'Fazer pequenos ajustes', desc: 'Trocar textos, imagens, contatos ou seções.' },
+      { id: 'atualizar-tecnico', label: 'Atualizar a parte técnica', desc: 'Versões, segurança, domínio ou hospedagem.' },
+      { id: 'avaliar-tecnico', label: 'Avaliar um problema técnico', desc: 'Entender a causa antes de decidir o que fazer.' }
+    ],
+    'suporte-continuo-svc': [
+      { id: 'manutencao-mensal', label: 'Manutenção todo mês', desc: 'Correções e atualizações sem precisar abrir orçamento.' },
+      { id: 'melhorias-continuas', label: 'Melhorias contínuas', desc: 'Pequenos ajustes e evoluções ao longo dos meses.' },
+      { id: 'seguranca-estabilidade', label: 'Segurança e estabilidade', desc: 'Monitorar, prevenir falhas e manter tudo no ar.' },
+      { id: 'apoio-equipe', label: 'Apoio para a minha equipe', desc: 'Um canal para dúvidas e pedidos do dia a dia.' }
     ],
     'landing-page': [
       { id: 'modelos-prontos', label: 'Modelos Prontos' },
@@ -236,10 +307,10 @@ function renderHeroInteractive() {
       { id: 'sob-medida', label: 'Modelos Sob Medida' }
     ],
     'outro-svc': [
-      { id: 'desafio-especifico', label: 'Resolver um desafio específico' },
-      { id: 'explorar-tecnologia', label: 'Explorar possibilidades tecnológicas' },
-      { id: 'avaliar-viabilidade', label: 'Avaliar viabilidade de um projeto' },
-      { id: 'consultoria-medida', label: 'Consultoria e solução sob medida' }
+      { id: 'desafio-especifico', label: 'Resolver um desafio específico', desc: 'Você sabe o problema, mas não qual tecnologia usar.' },
+      { id: 'explorar-tecnologia', label: 'Explorar possibilidades tecnológicas', desc: 'Descobrir o que pode ser automatizado ou digitalizado.' },
+      { id: 'avaliar-viabilidade', label: 'Avaliar a viabilidade de um projeto', desc: 'Escopo, prazo, riscos e investimento antes de decidir.' },
+      { id: 'consultoria-medida', label: 'Receber uma solução sob medida', desc: 'Um caminho desenhado para a realidade da sua empresa.' }
     ]
   };
 
@@ -299,6 +370,40 @@ function renderHeroInteractive() {
     'portfolio:modelos-prontos': { solution: 'Portfólio (Modelo)', desc: 'Modelo base focado em conversão e agilidade.' },
     'portfolio:sob-medida': { solution: 'Portfólio Exclusivo', desc: 'Design 100% personalizado e sob medida.' },
 
+    // Integrações
+    'integracao-svc:integrar-pagamentos': { solution: 'Integração de Pagamentos', desc: 'Pix, cartão e boleto conectados ao seu site ou sistema, com confirmação automática.' },
+    'integracao-svc:integrar-whatsapp': { solution: 'Integração com WhatsApp', desc: 'Mensagens, confirmações e avisos automáticos para os seus clientes.' },
+    'integracao-svc:integrar-sistemas': { solution: 'Integração entre Sistemas e APIs', desc: 'ERP, CRM, planilhas e ferramentas trocando dados sem digitação manual.' },
+    'integracao-svc:sincronizar-dados': { solution: 'Sincronização de Dados', desc: 'Um cadastro único que atualiza todas as ferramentas da empresa.' },
+
+    // Loja virtual
+    'loja-svc:comecar-vender': { solution: 'Loja Virtual Completa', desc: 'Catálogo, carrinho, checkout e pagamentos para começar a vender on-line.' },
+    'loja-svc:loja-fisica-digital': { solution: 'Loja Virtual para Negócio Físico', desc: 'Seus produtos disponíveis 24 horas, com pedidos e entregas organizados.' },
+    'loja-svc:sair-marketplace': { solution: 'Loja Própria com Marca', desc: 'Canal de venda próprio, com menos taxas e relação direta com o cliente.' },
+    'loja-svc:organizar-pedidos': { solution: 'Loja com Gestão de Pedidos', desc: 'Pedidos, estoque e entregas acompanhados em um painel simples.' },
+
+    // Identidade visual
+    'identidade-svc:criar-marca': { solution: 'Identidade Visual Essencial', desc: 'Logo, paleta de cores, tipografia e versões principais para começar.' },
+    'identidade-svc:renovar-marca': { solution: 'Renovação de Identidade Visual', desc: 'Marca atualizada, mantendo o que o seu público já reconhece.' },
+    'identidade-svc:padronizar-marca': { solution: 'Identidade Visual Padronizada', desc: 'Elementos básicos para a mesma aparência em site, redes e materiais.' },
+    'identidade-svc:marca-para-site': { solution: 'Identidade Visual para o Digital', desc: 'Versões e arquivos da marca prontos para o site e as redes sociais.' },
+
+    // Consultoria e planejamento
+    'consultoria-svc:planejar-projeto': { solution: 'Planejamento de Projeto Digital', desc: 'Escopo, prioridades e etapas definidos antes de qualquer desenvolvimento.' },
+    'consultoria-svc:escolher-tecnologia': { solution: 'Consultoria de Tecnologia', desc: 'Caminhos comparados por custo, prazo e risco para você decidir com segurança.' },
+    'consultoria-svc:mapear-processos': { solution: 'Mapeamento de Processos', desc: 'Onde a tecnologia gera mais resultado na sua operação, em ordem de prioridade.' },
+    'consultoria-svc:revisar-existente': { solution: 'Revisão do Ambiente Digital', desc: 'Avaliação do site, sistema ou ferramentas atuais, com recomendações claras.' },
+
+    // Suporte
+    'suporte-essencial-svc:corrigir-problema': { solution: 'Suporte Técnico Essencial', desc: 'Correção do problema sob demanda, sem mensalidade.' },
+    'suporte-essencial-svc:pequenos-ajustes': { solution: 'Ajustes sob Demanda', desc: 'Textos, imagens, contatos e seções atualizados quando você precisar.' },
+    'suporte-essencial-svc:atualizar-tecnico': { solution: 'Atualização Técnica', desc: 'Versões, segurança, domínio e hospedagem em dia.' },
+    'suporte-essencial-svc:avaliar-tecnico': { solution: 'Avaliação Técnica', desc: 'Entendemos a causa do problema e explicamos o melhor caminho.' },
+    'suporte-continuo-svc:manutencao-mensal': { solution: 'Suporte Técnico Contínuo', desc: 'Manutenção, correções e atualizações todo mês, com o 1º mês gratuito.' },
+    'suporte-continuo-svc:melhorias-continuas': { solution: 'Acompanhamento com Melhorias', desc: 'Pequenos ajustes e evoluções mensais no seu site ou sistema.' },
+    'suporte-continuo-svc:seguranca-estabilidade': { solution: 'Monitoramento e Estabilidade', desc: 'Prevenção de falhas, segurança e acompanhamento contínuo.' },
+    'suporte-continuo-svc:apoio-equipe': { solution: 'Suporte para a Equipe', desc: 'Um canal fixo para dúvidas e pedidos do dia a dia.' },
+
     // Outra Solução
     'outro-svc:desafio-especifico': { solution: 'Consultoria e Solução Personalizada', desc: 'Análise aprofundada do seu desafio para desenhar a arquitetura técnica ideal.' },
     'outro-svc:explorar-tecnologia': { solution: 'Diagnóstico e Mapeamento Tecnológico', desc: 'Explorar tecnologias modernas e automações que podem alavancar seu negócio.' },
@@ -321,7 +426,9 @@ function renderHeroInteractive() {
     contextTags: [],
     customProject: null,
     variant: null, // modelo pronto escolhido quando o serviço tem níveis (MODEL_TIERS)
-    personalization: null // { variante, dados, nome }: site personalizado no editor do modelo
+    personalization: null, // { variante, dados, nome }: site personalizado no editor do modelo
+    extras: [], // ids do catálogo escolhidos em "Complementos"
+    consultoria: false // consultoria e planejamento digital (sem custo fechando com a COGIT)
   };
 
   const heroSection = container.closest('.hero');
@@ -387,12 +494,100 @@ function renderHeroInteractive() {
   const PRESENCE_MODELS = presenceModels;
   const SERVICE_GROUPS = [
     { label: 'Presença digital', ids: ['site-institucional', 'landing-page', 'portfolio'] },
-    { label: 'Operação e produto', ids: ['automacao-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] }
+    { label: 'Marca, vendas e planejamento', ids: ['identidade-svc', 'loja-svc', 'consultoria-svc'] },
+    { label: 'Operação e produto', ids: ['automacao-svc', 'integracao-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] },
+    { label: 'Suporte e orientação', ids: ['suporte-essencial-svc', 'suporte-continuo-svc', 'outro-svc'] }
   ];
   const CONTEXT_TAGS = {
     presenca: ['Já tenho logotipo e identidade visual', 'Preciso de ajuda com os textos', 'Tenho fotos e imagens próprias', 'Já tenho domínio', 'Tenho um prazo definido'],
+    loja: ['Já tenho logotipo e identidade visual', 'Já vendo em marketplace ou redes sociais', 'Tenho fotos dos produtos', 'Preciso calcular frete', 'Tenho um prazo definido'],
+    marca: ['Já tenho um logotipo que quero renovar', 'Tenho referências visuais', 'Vou usar a marca em site e redes sociais', 'Preciso de ajuda com o nome', 'Tenho um prazo definido'],
+    suporte: ['O site ou sistema foi feito pela COGIT', 'Foi feito por outra empresa', 'Tenho acesso à hospedagem e ao domínio', 'É urgente'],
     outros: ['Hoje usamos planilhas', 'Preciso integrar com sistemas que já uso', 'Ainda estou validando a ideia', 'Tenho um prazo definido', 'Já tenho uma equipe técnica']
   };
+  const TEM_MARCA = 'Já tenho logotipo e identidade visual';
+  const QUER_INTEGRAR = 'Preciso integrar com sistemas que já uso';
+  function contextTagsFor(serviceId) {
+    if (PRESENCA_DIGITAL_IDS.includes(serviceId)) return CONTEXT_TAGS.presenca;
+    if (serviceId === 'loja-svc') return CONTEXT_TAGS.loja;
+    if (serviceId === 'identidade-svc') return CONTEXT_TAGS.marca;
+    if (serviceId === 'suporte-essencial-svc' || serviceId === 'suporte-continuo-svc') return CONTEXT_TAGS.suporte;
+    return CONTEXT_TAGS.outros;
+  }
+
+  // ── Catálogo (js/data.js): o mesmo do configurador e da plataforma ──
+  const CATALOG_OF = {
+    'automacao-svc': 'automacao', 'integracao-svc': 'integracao', 'sistema-svc': 'sistema', 'saas-svc': 'mvp', 'mvp-svc': 'mvp', 'plataforma-svc': 'plataforma',
+    'loja-svc': 'loja-virtual', 'identidade-svc': 'identidade-essencial', 'suporte-essencial-svc': 'manutencao', 'suporte-continuo-svc': 'suporte',
+    'consultoria-svc': 'diagnostico', 'outro-svc': 'diagnostico'
+  };
+  const catalogIdOf = (dxId) => CATALOG_OF[dxId] || dxId || 'diagnostico';
+  const catalogSvc = (id) => (typeof configuratorData !== 'undefined' ? configuratorData.services : []).find(x => x.id === id) || null;
+  const dxIdOfCatalog = (id) => ({ 'loja-virtual': 'loja-svc', 'identidade-essencial': 'identidade-svc', automacao: 'automacao-svc', integracao: 'integracao-svc', sistema: 'sistema-svc', mvp: 'mvp-svc', plataforma: 'plataforma-svc', manutencao: 'suporte-essencial-svc', suporte: 'suporte-continuo-svc' })[id] || id;
+  const isRecurring = (svc) => svc && (svc.billing === 'monthly' || svc.billing === 'demand');
+  // Valor de um complemento: presença digital entra com o modelo pronto (o mais comum em combinação).
+  function extraPrice(id) {
+    const svc = catalogSvc(id);
+    if (!svc) return { value: null, from: false, label: 'Sob consulta' };
+    const from = svc.priceType === 'from';
+    const suffix = svc.billing === 'monthly' ? '/mês após o 1º mês grátis' : svc.billing === 'demand' ? ' por solicitação' : '';
+    return { value: svc.price, from, label: (from ? 'a partir de ' : '') + brl(svc.price) + suffix };
+  }
+  const CONSULTORIA_PRECO = 350;
+
+  // Complementos recomendados para cada serviço principal: [id do catálogo, por que combina].
+  const RECOMMENDED_EXTRAS = {
+    'site-institucional': [['identidade-essencial', 'Logo, cores e tipografia prontos para aplicar no site.'], ['automacao', 'Contatos do site respondidos e encaminhados automaticamente.'], ['integracao', 'WhatsApp, agenda ou pagamentos ligados ao site.'], ['suporte', 'Manutenção e pequenos ajustes todo mês depois da entrega.']],
+    'landing-page': [['automacao', 'Cada contato da página vira um lead tratado na hora, sem planilha.'], ['identidade-essencial', 'Marca consistente para a campanha passar confiança.'], ['integracao', 'Pagamento, WhatsApp ou CRM conectados à página.'], ['manutencao', 'Ajustes pontuais quando a campanha mudar.']],
+    'portfolio': [['identidade-essencial', 'Uma marca própria valoriza o seu trabalho.'], ['automacao', 'Pedidos de orçamento organizados automaticamente.'], ['manutencao', 'Novos projetos e fotos publicados quando você precisar.']],
+    'loja-svc': [['identidade-essencial', 'Marca forte para a loja, as embalagens e as redes.'], ['integracao', 'Pagamentos, frete e nota fiscal conectados à loja.'], ['automacao', 'Avisos de pedido, carrinho abandonado e pós-venda.'], ['suporte', 'Loja sempre no ar, com ajustes todo mês.']],
+    'automacao-svc': [['integracao', 'Conecta as ferramentas que a automação vai usar.'], ['sistema', 'Um painel para acompanhar o que a automação faz.'], ['suporte', 'Acompanhamento para ajustar os fluxos com o tempo.']],
+    'integracao-svc': [['automacao', 'Usa os dados integrados para disparar tarefas sozinho.'], ['sistema', 'Um lugar único para ver os dados que chegam.'], ['suporte', 'Integrações monitoradas e ajustadas todo mês.']],
+    'sistema-svc': [['integracao', 'O sistema conversa com pagamentos e ferramentas atuais.'], ['automacao', 'Tarefas repetitivas do sistema feitas sozinhas.'], ['suporte', 'Correções e evolução do sistema todo mês.']],
+    'saas-svc': [['identidade-essencial', 'Marca do produto pronta para o lançamento.'], ['landing-page', 'Página de lançamento para captar os primeiros clientes.'], ['integracao', 'Pagamentos e assinaturas conectados ao produto.'], ['suporte', 'Produto estável e evoluindo depois do lançamento.']],
+    'mvp-svc': [['identidade-essencial', 'Marca do produto pronta para os primeiros usuários.'], ['landing-page', 'Página para apresentar o MVP e captar interessados.'], ['integracao', 'Pagamentos ou ferramentas que o MVP precisa.'], ['suporte', 'Ajustes rápidos durante a validação.']],
+    'plataforma-svc': [['identidade-essencial', 'Marca da plataforma para os dois públicos.'], ['landing-page', 'Página para atrair os primeiros usuários.'], ['integracao', 'Pagamentos e repasses conectados à plataforma.'], ['suporte', 'Plataforma monitorada e evoluindo todo mês.']],
+    'identidade-svc': [['site-institucional', 'Aplicar a nova marca em um site completo.'], ['landing-page', 'Lançar a marca com uma página de campanha.'], ['portfolio', 'Mostrar o seu trabalho com a nova identidade.']],
+    'consultoria-svc': [['identidade-essencial', 'Marca definida junto com o planejamento.'], ['site-institucional', 'Presença digital para colocar o plano em prática.'], ['automacao', 'Primeiras automações dos processos mapeados.'], ['sistema', 'Sistema para a operação que vamos planejar.']],
+    'suporte-essencial-svc': [['suporte', 'Prefere previsibilidade? Acompanhamento mensal com o 1º mês grátis.'], ['automacao', 'Automatizar o que hoje dá trabalho manual.'], ['integracao', 'Conectar o site ou sistema a novas ferramentas.']],
+    'suporte-continuo-svc': [['automacao', 'Automatizar o que hoje dá trabalho manual.'], ['integracao', 'Conectar o site ou sistema a novas ferramentas.'], ['identidade-essencial', 'Renovar a marca junto com a manutenção.']]
+  };
+  const hasComplementos = () => Boolean(state.selectedService) && state.selectedService !== 'outro-svc';
+  // Consultoria opcional em qualquer solução que vamos construir (não em suporte nem na própria consultoria).
+  const consultoriaElegivel = () => hasComplementos() && !['consultoria-svc', 'suporte-essencial-svc', 'suporte-continuo-svc'].includes(state.selectedService);
+
+  // Recomendação conforme o serviço, o objetivo e o que a pessoa marcou no contexto.
+  function recommendedExtras() {
+    const main = catalogIdOf(state.selectedService);
+    let list = (RECOMMENDED_EXTRAS[state.selectedService] || []).map(([id, why]) => ({ id, why }));
+    if (state.contextTags.includes(TEM_MARCA)) list = list.filter(r => r.id !== 'identidade-essencial');
+    const querIntegrar = state.contextTags.includes(QUER_INTEGRAR) || state.objective === 'integrar-ferramentas';
+    if (querIntegrar) {
+      const i = list.findIndex(r => r.id === 'integracao');
+      const rec = i >= 0 ? list.splice(i, 1)[0] : { id: 'integracao', why: '' };
+      rec.why = 'Você marcou que precisa integrar com sistemas que já usa.';
+      list.unshift(rec);
+    }
+    return list.filter(r => r.id !== main && catalogSvc(r.id));
+  }
+  function otherExtras(recs) {
+    const skip = new Set([catalogIdOf(state.selectedService), 'diagnostico', ...recs.map(r => r.id)]);
+    return (typeof configuratorData !== 'undefined' ? configuratorData.services : []).filter(x => !skip.has(x.id));
+  }
+  // Combinação (js/data.js · serviceBundles) completa com o principal + complementos.
+  function activeBundleFor(ids) {
+    const bundles = typeof serviceBundles !== 'undefined' ? serviceBundles : [];
+    const presenceModel = PRESENCA_DIGITAL_IDS.includes(state.selectedService) ? state.objective : null;
+    let best = null;
+    bundles.forEach(bundle => {
+      if (!bundle.services.every(id => ids.includes(id))) return;
+      if (bundle.model && bundle.services.includes(state.selectedService) && presenceModel !== bundle.model) return;
+      const base = bundle.services.reduce((sum, id) => sum + (id === state.selectedService && presenceModel ? presencePrice(id, presenceModel) : (catalogSvc(id) || {}).price || 0), 0);
+      const value = base - Math.floor(base * (100 - bundle.discount) / 100 / 10) * 10;
+      if (!best || value > best.value) best = { bundle, value };
+    });
+    return best;
+  }
   const DX_ICON = {
     check: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
     right: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
@@ -413,11 +608,14 @@ function renderHeroInteractive() {
   // Níveis de modelo pronto do serviço (básico, intermediário, formal), se houver.
   const tiersOf = (serviceId) => (typeof MODEL_TIERS !== 'undefined' && MODEL_TIERS[serviceId]) || null;
 
-  // Ordem das etapas: solução → contexto → formato → modelo (só modelo pronto com níveis) → resumo.
+  // Ordem das etapas: solução → contexto → formato → modelo (só modelo pronto com níveis) → complementos → resumo.
+  // Depois do formato (ou do modelo), a próxima etapa é Complementos; em "Não sei ainda", direto o resumo.
+  const afterFormat = () => (hasComplementos() ? renderStepComplementos : renderResult);
   function dxPlan() {
     const isPresence = PRESENCA_DIGITAL_IDS.includes(state.selectedService);
     const plan = [['solucao', 'Solução'], ['contexto', 'Contexto'], ['formato', isPresence ? 'Formato' : 'Objetivo']];
     if (isPresence && state.objective !== 'sob-medida' && tiersOf(state.selectedService)) plan.push(['modelo', 'Modelo']);
+    if (hasComplementos()) plan.push(['complementos', 'Complementos']);
     plan.push(['resumo', 'Resumo']);
     return plan;
   }
@@ -470,16 +668,14 @@ function renderHeroInteractive() {
         </span>
         <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
       </label>`;
-    const unknown = SERVICES_GRID.find(s => s.id === 'outro-svc');
-
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha o mais próximo. Se não souber, a última opção leva você a uma orientação.')}
+        ${renderDxHead('solucao', 'O que você precisa construir?', 'Todos os nossos serviços estão aqui. Escolha o principal; os complementos vêm antes do resumo. Se não souber, “Não sei ainda” leva você a uma orientação.')}
         <div class="dx-body">
           ${SERVICE_GROUPS.map((group, gi) => `
             <fieldset class="dx-group">
               <legend class="dx-group-label">${group.label}</legend>
-              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}${gi === SERVICE_GROUPS.length - 1 ? card(unknown) : ''}</div>
+              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}</div>
             </fieldset>`).join('')}
         </div>
         ${renderDxFooter(inDialog ? 'Fechar' : '', 'Continuar', !state.selectedService)}
@@ -489,7 +685,7 @@ function renderHeroInteractive() {
     container.querySelectorAll('input[name="dx-service"]').forEach(input => {
       input.addEventListener('change', () => {
         const svc = SERVICES_GRID.find(s => s.id === input.value);
-        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; }
+        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; state.extras = []; }
         state.selectedService = svc.id;
         state.challenge = svc.challenge;
         next.disabled = false;
@@ -509,21 +705,51 @@ function renderHeroInteractive() {
     if (PRESENCA_DIGITAL_IDS.includes(state.selectedService)) return renderStep2Modelo(selectedSvc);
 
     const objectives = getObjectives(state.selectedService);
+    const isUnknown = state.selectedService === 'outro-svc';
+    // "Não sei ainda": como funciona a orientação, para a etapa não ficar vazia e a pessoa saber o que vem.
+    const guide = isUnknown ? `
+          <section class="dx-guide" aria-labelledby="dx-guide-title">
+            <div class="dx-guide-head">
+              <p class="dx-kicker" id="dx-guide-title">Como funciona a orientação</p>
+              <p class="dx-guide-price"><strong>Diagnóstico inicial gratuito</strong><span>sem compromisso de contratar</span></p>
+            </div>
+            <ol class="dx-guide-steps">
+              <li><strong>Você conta o desafio</strong><span>O objetivo e o contexto que você escreveu vão junto para a equipe.</span></li>
+              <li><strong>Conversamos sobre o negócio</strong><span>Uma reunião para entender o problema, as pessoas envolvidas e o momento.</span></li>
+              <li><strong>Você recebe um caminho</strong><span>Solução recomendada, com escopo, prazo e investimento antes de qualquer decisão.</span></li>
+            </ol>
+            <div class="dx-guide-alt">
+              <p>Quer dar uma olhada antes? Temos sites, landing pages, loja virtual, identidade visual, automações, integrações, sistemas, MVP, plataformas, consultoria e suporte.</p>
+              <button type="button" class="dx-link-btn" data-dx-action="all-services">${DX_ICON.left} Ver todos os serviços</button>
+            </div>
+          </section>` : `
+          <div class="dx-picked">
+            <span class="dx-option-icon" aria-hidden="true">${selectedSvc ? selectedSvc.iconSvg : ''}</span>
+            <span class="dx-picked-body"><small>Solução escolhida</small><strong>${selectedSvc ? selectedSvc.name : ''}</strong></span>
+            <span class="dx-picked-price">${selectedSvc ? selectedSvc.priceLabel : ''}</span>
+            <button type="button" class="dx-edit" data-dx-action="all-services">Trocar<span class="sr-only"> solução</span></button>
+          </div>`;
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead('formato', 'Qual resultado você busca?', `Para <strong>${selectedSvc ? selectedSvc.name : 'sua solução'}</strong>. Escolha o objetivo mais próximo.`)}
+        ${renderDxHead('formato', isUnknown ? 'O que você quer descobrir?' : 'Qual resultado você busca?', isUnknown
+          ? 'Escolha o que mais se parece com o seu momento. Isso direciona a conversa com a equipe.'
+          : `Para <strong>${selectedSvc ? selectedSvc.name : 'sua solução'}</strong>. Escolha o objetivo mais próximo.`)}
         <div class="dx-body">
           <fieldset class="dx-group">
             <legend class="sr-only">Objetivo</legend>
             <div class="dx-grid dx-grid--objective">
               ${objectives.map(obj => `
-                <label class="dx-option dx-option--row">
+                <label class="dx-option dx-option--objective">
                   <input type="radio" name="dx-objective" value="${obj.id}" ${state.objective === obj.id ? 'checked' : ''}>
-                  <span class="dx-option-name">${obj.label}</span>
+                  <span class="dx-option-body">
+                    <span class="dx-option-name">${obj.label}</span>
+                    ${obj.desc ? `<span class="dx-option-desc">${obj.desc}</span>` : ''}
+                  </span>
                   <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
                 </label>`).join('')}
             </div>
           </fieldset>
+          ${guide}
         </div>
         ${renderDxFooter('Voltar', 'Continuar', !state.objective)}
       </div>`;
@@ -537,8 +763,111 @@ function renderHeroInteractive() {
         if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', input.value);
       });
     });
+    container.querySelector('[data-dx-action="all-services"]')?.addEventListener('click', () => transitionTo(renderStep1, 'back'));
     container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep3, 'back'));
-    next.addEventListener('click', () => { if (state.objective) transitionTo(renderResult, 'next'); });
+    next.addEventListener('click', () => { if (state.objective) transitionTo(afterFormat(), 'next'); });
+  }
+
+  // ── COMPLEMENTOS: serviços que combinam com o escolhido (recomendados) + consultoria opcional ──
+  function renderStepComplementos() {
+    state.step = 4;
+    const selectedSvc = SERVICES_GRID.find(s => s.id === state.selectedService);
+    const main = catalogIdOf(state.selectedService);
+    const recs = recommendedExtras();
+    const others = otherExtras(recs);
+    state.extras = state.extras.filter(id => id !== main && catalogSvc(id));
+    const icon = (id) => { const dx = SERVICES_GRID.find(x => x.id === dxIdOfCatalog(id)); return dx ? dx.iconSvg : ''; };
+    const bundleHint = (id) => {
+      if (state.extras.includes(id)) return '';
+      const withIt = activeBundleFor([main, ...state.extras, id]);
+      const without = activeBundleFor([main, ...state.extras]);
+      return withIt && (!without || withIt.value > without.value) ? `<span class="dx-chip">Combinação ${esc(withIt.bundle.name)}: ${withIt.bundle.discount}% de desconto</span>` : '';
+    };
+    const card = (id, why) => {
+      const svc = catalogSvc(id);
+      return `
+        <label class="dx-option dx-option--svc dx-option--extra">
+          <input type="checkbox" name="dx-extra" value="${id}" ${state.extras.includes(id) ? 'checked' : ''}>
+          <span class="dx-option-icon" aria-hidden="true">${icon(id)}</span>
+          <span class="dx-option-body">
+            <span class="dx-option-name">${esc(svc.name)}</span>
+            <span class="dx-option-desc">${esc(why || svc.description)}</span>
+            <span class="dx-option-meta">${extraPrice(id).label}</span>
+            ${bundleHint(id)}
+          </span>
+          <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
+        </label>`;
+    };
+    const svcName = selectedSvc ? selectedSvc.name : 'sua solução';
+    const othersOpen = others.some(x => state.extras.includes(x.id));
+
+    container.innerHTML = `
+      <div class="hero-step-wrapper dx-view">
+        ${renderDxHead('complementos', 'Quer somar mais algum serviço?', `Opcional. Separamos o que costuma combinar com <strong>${esc(svcName)}</strong>. Marque o que fizer sentido ou siga para o resumo.`)}
+        <div class="dx-body">
+          ${consultoriaElegivel() ? `
+          <div class="dx-group">
+            <label class="dx-option dx-option--consult">
+              <input type="checkbox" name="dx-consultoria" ${state.consultoria ? 'checked' : ''}>
+              <span class="dx-option-icon" aria-hidden="true">${(SERVICES_GRID.find(x => x.id === 'consultoria-svc') || {}).iconSvg || ''}</span>
+              <span class="dx-option-body">
+                <span class="dx-option-name">Incluir consultoria e planejamento digital</span>
+                <span class="dx-option-desc">Opcional. Mapeamos negócio, processos e prioridades antes de construir ${esc(svcName.toLowerCase())}.</span>
+                <span class="dx-consult-note">Se você decidir desenvolver com outra empresa, a consultoria é cobrada à parte: ${brl(CONSULTORIA_PRECO)}.</span>
+              </span>
+              <span class="dx-consult-price"><b>Sem custo</b><small>fechando com a COGIT</small></span>
+              <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
+            </label>
+          </div>` : ''}
+          ${recs.length ? `
+          <fieldset class="dx-group">
+            <legend class="dx-group-label">Recomendados para ${esc(svcName)}</legend>
+            <div class="dx-grid dx-grid--svc">${recs.map(r => card(r.id, r.why)).join('')}</div>
+          </fieldset>` : ''}
+          ${others.length ? `
+          <details class="dx-more"${othersOpen ? ' open' : ''}>
+            <summary><span>Ver todos os outros serviços</span><small>${others.length} serviços</small></summary>
+            <fieldset class="dx-group">
+              <legend class="sr-only">Outros serviços</legend>
+              <div class="dx-grid dx-grid--svc">${others.map(x => card(x.id, '')).join('')}</div>
+            </fieldset>
+          </details>` : ''}
+          <p class="dx-personalize-status is-ok" data-dx-extras-status role="status" hidden></p>
+        </div>
+        ${renderDxFooter('Voltar', 'Ver resumo', false)}
+      </div>`;
+
+    const status = container.querySelector('[data-dx-extras-status]');
+    const nextLabel = container.querySelector('[data-dx-next-label]');
+    const sync = () => {
+      const n = state.extras.length;
+      const bundle = activeBundleFor([main, ...state.extras]);
+      nextLabel.textContent = n || state.consultoria ? 'Ver resumo' : 'Seguir sem complementos';
+      // partes separadas por " · " (cada uma é traduzida sozinha na versão em inglês)
+      const msg = [n ? `${n} serviço${n > 1 ? 's' : ''} adicionado${n > 1 ? 's' : ''}` : '', state.consultoria ? 'Consultoria incluída' : '', bundle ? `Combinação ${bundle.bundle.name} aplicada (${bundle.bundle.discount}% de desconto)` : ''].filter(Boolean).join(' · ');
+      status.textContent = msg;
+      status.hidden = !msg;
+    };
+    container.querySelectorAll('input[name="dx-extra"]').forEach(input => input.addEventListener('change', () => {
+      state.extras = [...container.querySelectorAll('input[name="dx-extra"]:checked')].map(i => i.value);
+      // Atualiza as dicas de combinação sem redesenhar a etapa (não perde foco nem rolagem).
+      container.querySelectorAll('input[name="dx-extra"]').forEach(other => {
+        const body = other.closest('label').querySelector('.dx-option-body');
+        body.querySelector('.dx-chip')?.remove();
+        body.insertAdjacentHTML('beforeend', bundleHint(other.value));
+      });
+      sync();
+      if (typeof trackEvent === 'function') trackEvent('hero_extra_toggled', input.value + ':' + (input.checked ? 'on' : 'off'));
+    }));
+    container.querySelector('input[name="dx-consultoria"]')?.addEventListener('change', (e) => {
+      state.consultoria = e.target.checked;
+      sync();
+      if (typeof trackEvent === 'function') trackEvent('hero_consultoria', state.consultoria ? 'on' : 'off');
+    });
+    const variantData = state.variant && PRESENCA_DIGITAL_IDS.includes(state.selectedService) && state.objective === 'modelos-prontos';
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(variantData ? renderStepModelo : renderStep2, 'back'));
+    container.querySelector('[data-dx="next"]').addEventListener('click', () => transitionTo(renderResult, 'next'));
+    sync();
   }
 
   // ── ETAPA 3 (presença digital): modelo pronto ou sob medida ──
@@ -605,7 +934,7 @@ function renderHeroInteractive() {
       state.objective = 'sob-medida';
       state.variant = null;
       if (summary.serviceId && summary.serviceId !== state.selectedService) state.selectedService = summary.serviceId;
-      transitionTo(renderResult, 'next');
+      transitionTo(afterFormat(), 'next');
     }, { project: state.customProject });
 
     container.querySelectorAll('input[name="dx-format"]').forEach(input => {
@@ -631,7 +960,7 @@ function renderHeroInteractive() {
       if (!state.objective) return;
       if (state.objective === 'sob-medida' && !state.customProject) openStudio();
       else if (state.objective === 'modelos-prontos' && tiersOf(state.selectedService)) transitionTo(renderStepModelo, 'next');
-      else transitionTo(renderResult, 'next');
+      else transitionTo(afterFormat(), 'next');
     });
   }
 
@@ -694,7 +1023,7 @@ function renderHeroInteractive() {
     const sync = () => {
       next.disabled = !state.variant;
       skip.disabled = !state.variant;
-      nextLabel.textContent = done() ? 'Ver meu resumo' : 'Personalizar modelo';
+      nextLabel.textContent = done() ? 'Continuar' : 'Personalizar modelo';
       skip.textContent = done() ? 'Editar personalização' : 'Continuar sem personalizar';
       if (done()) say('Personalização concluída. Você pode revisar o resumo ou trocar de modelo.', true);
       else if (!status.dataset.waiting) say('');
@@ -710,14 +1039,14 @@ function renderHeroInteractive() {
     });
     container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(renderStep2, 'back'));
     const personalizar = () => {
-      const opened = openModelEditor(state.variant, () => transitionTo(renderResult, 'next'));
+      const opened = openModelEditor(state.variant, () => transitionTo(afterFormat(), 'next'));
       if (!opened) { say('O navegador bloqueou a nova aba. Permita pop-ups para este site e clique de novo.'); return; }
       status.dataset.waiting = '1';
       say('Personalize o modelo na nova aba. Quando terminar, clique em “Concluir personalização” (aba Concluir do painel) para voltar ao resumo.');
     };
     next.addEventListener('click', () => {
       if (!state.variant) return;
-      if (done()) { transitionTo(renderResult, 'next'); return; }
+      if (done()) { transitionTo(afterFormat(), 'next'); return; }
       personalizar();
     });
     // "Ver e personalizar" no card: marca aquele modelo e abre o editor dele direto
@@ -731,7 +1060,7 @@ function renderHeroInteractive() {
       if (done()) { personalizar(); return; }
       state.personalization = null; // segue sem personalização; dá para personalizar depois na plataforma
       if (typeof trackEvent === 'function') trackEvent('hero_model_skip_personalization', state.variant);
-      transitionTo(renderResult, 'next');
+      transitionTo(afterFormat(), 'next');
     });
     sync();
   }
@@ -766,7 +1095,8 @@ function renderHeroInteractive() {
   // ── ETAPA 2: contexto (opcional), logo depois da solução ──
   function renderStep3() {
     state.step = 2;
-    const tags = CONTEXT_TAGS[PRESENCA_DIGITAL_IDS.includes(state.selectedService) ? 'presenca' : 'outros'];
+    const tags = contextTagsFor(state.selectedService);
+    state.contextTags = state.contextTags.filter(t => tags.includes(t));
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
         ${renderDxHead('contexto', 'Algo que devemos saber antes?', 'Opcional. Marque o que se aplica ou escreva com suas palavras.')}
@@ -819,12 +1149,9 @@ function renderHeroInteractive() {
     const svcName = selectedSvc ? selectedSvc.name : 'Solução digital';
 
     // id do diagnóstico -> id do catálogo (o mesmo usado no configurador e na plataforma)
-    const catalogIds = { 'automacao-svc': 'automacao', 'sistema-svc': 'sistema', 'saas-svc': 'mvp', 'mvp-svc': 'mvp', 'plataforma-svc': 'plataforma', 'outro-svc': 'diagnostico' };
-    const catalogService = catalogIds[state.selectedService] || state.selectedService || 'diagnostico';
-    const configuratorService = state.selectedService === 'outro-svc' ? '' : catalogService;
-    const configuratorLink = configuratorService
-      ? cogitRoot() + `monte-sua-solucao.html?services=${encodeURIComponent(configuratorService)}` + (model ? `&model=${model}` : '')
-      : cogitRoot() + 'monte-sua-solucao.html';
+    const catalogService = catalogIdOf(state.selectedService);
+    const extras = hasComplementos() ? state.extras.filter(id => id !== catalogService && catalogSvc(id)) : [];
+    const consultoria = consultoriaElegivel() && state.consultoria;
 
     const headline = model === 'modelos-prontos' ? (variantData ? variantData.name : PRESENCE_MODELS[state.selectedService].pronto)
       : project ? project.suggestion : solution.solution;
@@ -833,21 +1160,64 @@ function renderHeroInteractive() {
       : project ? `${project.sections.length} seções definidas por você${project.components.length ? `, com ${project.components.map(c => c.toLowerCase()).join(', ')}` : ''}.`
       : solution.desc;
 
-    let price, priceNote, prazo;
+    // Valor do serviço principal
+    let mainValue = null, mainFrom = false, price, priceNote, prazo, recurring = null;
+    const mainCatalog = catalogSvc(catalogService);
     if (model) {
-      const value = presencePrice(state.selectedService, model);
-      price = model === 'sob-medida' ? `a partir de ${brl(value)}` : brl(value);
+      mainValue = presencePrice(state.selectedService, model);
+      mainFrom = model === 'sob-medida';
       priceNote = model === 'sob-medida' ? 'O valor final é confirmado depois da validação do escopo.' : 'Pagamento único, com o site no seu domínio.';
       prazo = model === 'sob-medida' ? 'Definido na validação do escopo' : PRESENCE_MODELS[state.selectedService].prazo;
+    } else if (state.selectedService === 'outro-svc') {
+      mainValue = 0;
+      priceNote = 'O diagnóstico inicial não tem custo. O investimento do projeto é definido depois da conversa.';
+      prazo = 'Conversa agendada pela plataforma';
+    } else if (state.selectedService === 'consultoria-svc') {
+      mainValue = 0;
+      priceNote = `Sem custo se o projeto for desenvolvido com a COGIT. Se você levar o planejamento para outra empresa, a consultoria custa ${brl(CONSULTORIA_PRECO)}.`;
+      prazo = 'Definido na conversa inicial';
+    } else if (mainCatalog && isRecurring(mainCatalog)) {
+      recurring = extraPrice(catalogService).label;
+      priceNote = mainCatalog.billing === 'monthly' ? 'Mensalidade fixa, com o 1º mês gratuito. Cancele quando quiser.' : 'Sem mensalidade: cada solicitação é orçada antes de começar.';
+      prazo = mainCatalog.billing === 'monthly' ? 'Começa assim que aprovado' : 'Combinado em cada solicitação';
     } else {
-      price = selectedSvc ? selectedSvc.priceLabel : 'Sob consulta';
+      // SaaS e demais: o valor exibido no card (SERVICES_GRID) prevalece sobre o do catálogo
+      const fromLabel = selectedSvc && /R\$ ([\d.]+)/.exec(selectedSvc.priceLabel);
+      mainValue = fromLabel ? Number(fromLabel[1].replace(/\./g, '')) : (mainCatalog ? mainCatalog.price : null);
+      mainFrom = !mainCatalog || mainCatalog.priceType !== 'fixed';
       priceNote = 'Estimativa inicial. A equipe confirma o valor depois de entender o escopo.';
       prazo = 'Definido na validação do escopo';
     }
+    // Complementos: somam ao valor único; suporte (mensal ou por solicitação) aparece à parte
+    const lines = [];
+    if (mainValue != null && !recurring) lines.push({ name: svcName, label: mainValue === 0 ? 'Sem custo' : (mainFrom ? 'a partir de ' : '') + brl(mainValue) });
+    let total = mainValue || 0, anyFrom = mainFrom;
+    const recurringLines = recurring ? [{ name: svcName, label: recurring }] : [];
+    extras.forEach(id => {
+      const svc = catalogSvc(id), pr = extraPrice(id);
+      if (isRecurring(svc)) { recurringLines.push({ name: svc.name, label: pr.label }); return; }
+      lines.push({ name: svc.name, label: pr.label });
+      total += Number(pr.value) || 0;
+      if (pr.from) anyFrom = true;
+    });
+    const bundle = extras.length ? activeBundleFor([catalogService, ...extras]) : null;
+    if (bundle) { total -= bundle.value; lines.push({ name: `Combinação ${bundle.bundle.name} (${bundle.bundle.discount}% de desconto)`, label: '− ' + brl(bundle.value), discount: true }); }
+    if (consultoria) lines.push({ name: 'Consultoria e planejamento digital', label: 'Sem custo fechando com a COGIT' });
+    if (recurring && !lines.length) price = recurring;
+    else if (total <= 0) price = state.selectedService === 'consultoria-svc' ? 'Sem custo' : 'Gratuito';
+    else price = (anyFrom ? 'a partir de ' : '') + brl(total);
+    const oneOffExtras = extras.filter(id => !isRecurring(catalogSvc(id)));
+    let priceLead = '';
+    if (extras.length) {
+      priceLead = recurring ? 'Valor único dos complementos; o suporte é cobrado à parte.' : 'Soma do serviço principal com os complementos.';
+      if (anyFrom || recurring) priceNote = 'A equipe confirma os valores depois de entender o escopo.';
+    }
+    // O prazo do principal não cobre os complementos de projeto (automação, sistema...): eles entram no escopo.
+    if (oneOffExtras.length && !recurring) prazo = `${prazo} (${svcName}); complementos definidos no escopo`;
     // Modelo com níveis: o site é personalizado no editor e a equipe revisa antes do orçamento.
     const needsPers = Boolean(variantData);
     const pers = needsPers && state.personalization && state.personalization.variante === variantTier.id ? state.personalization : null;
-    if (needsPers) priceNote = 'Valor de referência do modelo. O orçamento final chega depois que revisarmos o seu site.';
+    if (needsPers) { priceLead = extras.length ? 'Soma do serviço principal com os complementos.' : ''; priceNote = 'Valor de referência do modelo. O orçamento final chega depois que revisarmos o seu site.'; }
     const steps = needsPers
       ? ['Envie para a CMKCOGIT e entre ou crie sua conta na plataforma.', 'Revisamos o seu site, fazemos os ajustes necessários e enviamos o orçamento.', 'Com o pagamento aprovado, publicamos e entregamos o site.']
       : model === 'modelos-prontos'
@@ -873,6 +1243,7 @@ function renderHeroInteractive() {
               <div><dt>${isPresence ? 'Formato' : 'Objetivo'}</dt><dd>${formatLabel}</dd><dd><button type="button" class="dx-edit" data-dx-edit="2">Alterar<span class="sr-only"> ${isPresence ? 'formato' : 'objetivo'}</span></button></dd></div>
               ${variantData ? `<div><dt>Modelo</dt><dd>${esc(variantTier.label)} · ${esc(variantData.name)}</dd><dd><button type="button" class="dx-edit" data-dx-edit="modelo">Alterar<span class="sr-only"> modelo</span></button></dd></div>
               <div><dt>Personalização</dt><dd>${pers ? 'Concluída' + (pers.nome ? ' · ' + esc(pers.nome) : '') : 'Sem personalização <small class="dx-note-inline">(você pode personalizar depois, na plataforma)</small>'}</dd><dd><button type="button" class="dx-edit" data-dx-edit="personalizar">${pers ? 'Editar' : 'Personalizar'}<span class="sr-only"> o site</span></button></dd></div>` : ''}
+              ${hasComplementos() ? `<div><dt>Complementos</dt><dd>${extras.length ? extras.map(id => `<span>${esc(catalogSvc(id).name)}</span>`).join(', ') : 'Nenhum'}${consultoria ? `<br><small class="dx-note-inline">Com consultoria e planejamento digital</small>` : ''}</dd><dd><button type="button" class="dx-edit" data-dx-edit="complementos">${extras.length || consultoria ? 'Alterar' : 'Adicionar'}<span class="sr-only"> complementos</span></button></dd></div>` : ''}
             </dl>
 
             ${project ? `
@@ -897,7 +1268,9 @@ function renderHeroInteractive() {
           <section class="dx-aside" aria-labelledby="dx-invest-title">
             <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
             <p class="dx-price">${price}</p>
-            <p class="dx-price-note">${priceNote}</p>
+            ${lines.length > 1 || recurringLines.length && lines.length ? `<ul class="dx-breakdown">${lines.map(l => `<li${l.discount ? ' class="is-discount"' : ''}><span>${esc(l.name)}</span><b>${esc(l.label)}</b></li>`).join('')}</ul>` : ''}
+            ${recurringLines.length && lines.length ? `<p class="dx-kicker dx-kicker--sub">Suporte</p><ul class="dx-breakdown">${recurringLines.map(l => `<li><span>${esc(l.name)}</span><b>${esc(l.label)}</b></li>`).join('')}</ul>` : ''}
+            <p class="dx-price-note">${priceLead ? `<span>${priceLead}</span> ` : ''}<span>${priceNote}</span></p>
             <dl class="dx-aside-facts"><div><dt>Prazo</dt><dd>${prazo}</dd></div></dl>
             <h4 class="dx-kicker">Próximos passos</h4>
             <ol class="dx-next">${steps.map(s => `<li>${s}</li>`).join('')}</ol>
@@ -905,7 +1278,6 @@ function renderHeroInteractive() {
             <p class="dx-personalize-status" data-dx-send-status role="status" hidden></p>
             <p class="dx-reassure">Você revisa tudo antes de qualquer pagamento.</p>
             <div class="dx-aside-links">
-              <a href="${configuratorLink}" id="hero-link-form">Ajustar no configurador</a>
               <button type="button" id="hero-btn-restart">${DX_ICON.restart} Recomeçar</button>
             </div>
           </section>
@@ -913,8 +1285,8 @@ function renderHeroInteractive() {
         ${renderDxFooter('Voltar', '')}
       </div>`;
 
-    // Voltar no resumo: etapa Modelo quando há modelo escolhido; senão, Formato / Objetivo
-    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(variantData ? renderStepModelo : renderStep2, 'back'));
+    // Voltar no resumo: Complementos; sem eles, etapa Modelo quando há modelo escolhido; senão, Formato / Objetivo
+    container.querySelector('[data-dx="back"]').addEventListener('click', () => transitionTo(hasComplementos() ? renderStepComplementos : variantData ? renderStepModelo : renderStep2, 'back'));
 
     container.querySelectorAll('[data-dx-edit]').forEach(btn => btn.addEventListener('click', () => {
       const target = btn.dataset.dxEdit;
@@ -932,7 +1304,7 @@ function renderHeroInteractive() {
         else sendStatus('Personalize na nova aba e clique em “Concluir personalização” para voltar.');
         return;
       }
-      transitionTo({ 1: renderStep1, 2: renderStep2, 3: renderStep3, modelo: renderStepModelo }[target], 'back');
+      transitionTo({ 1: renderStep1, 2: renderStep2, 3: renderStep3, modelo: renderStepModelo, complementos: renderStepComplementos }[target], 'back');
     }));
     const previewBtn = container.querySelector('[data-dx-action="preview"]');
     if (previewBtn) previewBtn.addEventListener('click', () => (variantData ? openModelPreviewModal(previewId) : showModelPreview(selectedSvc)));
@@ -948,11 +1320,15 @@ function renderHeroInteractive() {
         project ? `Estrutura sob medida (${project.suggestion}): ${project.sections.join(' > ')}` : '',
         project && project.components.length ? `Componentes: ${project.components.join(', ')}` : '',
         state.contextTags.length ? `Marcado no diagnóstico: ${state.contextTags.join('; ')}` : '',
+        consultoria ? `Consultoria e planejamento digital solicitada para: ${svcName}. Sem custo se o projeto for fechado com a COGIT; ${brl(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.` : '',
+        state.selectedService === 'consultoria-svc' ? `Consultoria e planejamento digital (${objData ? objData.label : 'objetivo não informado'}). Sem custo se o projeto for fechado com a COGIT; ${brl(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.` : '',
+        bundle ? `Combinação ${bundle.bundle.name}: ${bundle.bundle.discount}% de desconto (− ${brl(bundle.value)}).` : '',
         contextText
       ].filter(Boolean).join('\n');
       const cfg = {
         origem: 'diagnostico',
-        servicos: [{ id: catalogService, modelo: model || null, plano: null, nome: svcName, variante: variantData ? variantTier.id : null }],
+        servicos: [{ id: catalogService, modelo: model || null, plano: null, nome: svcName, variante: variantData ? variantTier.id : null },
+          ...extras.map(id => ({ id, modelo: PRESENCA_DIGITAL_IDS.includes(id) ? 'modelos-prontos' : null, plano: null, nome: catalogSvc(id).name, variante: null }))],
         complementos: [],
         notas: notes,
         diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : variantData ? `${formatLabel} · ${variantTier.label}` : formatLabel, direcao: headline },
@@ -966,7 +1342,7 @@ function renderHeroInteractive() {
     });
 
     document.getElementById('hero-btn-restart').addEventListener('click', () => {
-      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null, personalization: null });
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null, personalization: null, extras: [], consultoria: false });
       transitionTo(renderStep0, 'back');
     });
   }
@@ -985,6 +1361,7 @@ function renderHeroInteractive() {
     if (svc) {
       state.selectedService = svc.id;
       state.challenge = svc.challenge;
+      state.extras = (rota.complementos || []).filter(id => catalogSvc(id) && id !== catalogIdOf(svc.id));
       if (rota.modelo && PRESENCA_DIGITAL_IDS.includes(svc.id)) state.objective = rota.modelo;
       // ?variant=landing-page-basica (página dos 3 modelos de landing page): abre já no modelo escolhido
       const tiers = state.objective === 'modelos-prontos' ? tiersOf(svc.id) : null;

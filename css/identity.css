@@ -331,6 +331,29 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 #custom-model-dialog .studio-head p, #custom-model-dialog [class*="desc"], #custom-model-dialog [class*="lead"] { color: var(--muted) !important; }
 #custom-model-dialog .studio-foot { background: var(--white) !important; border-top: 1px solid var(--line) !important; }
 #custom-model-dialog .studio-foot .btn:not(.btn-primary), #custom-model-dialog .studio-foot button:not(.btn-primary):not([class*="primary"]) { background: transparent !important; color: var(--ink) !important; border: 1px solid var(--ink) !important; }
+/* Prévia dos modelos prontos ("Ver o que está incluso"): mesma paleta clara do estúdio e do Monte sua solução */
+.hero-model-dialog .hero-modal-content, .hero-model-dialog .hero-modal-body, .hero-model-dialog .hero-modal-tiers { background: var(--paper) !important; color: var(--ink) !important; }
+.hero-model-dialog .hero-modal-header { background: var(--paper) !important; border-bottom: 1px solid var(--line) !important; }
+.hero-model-dialog .hero-modal-footer { background: var(--white) !important; border-top: 1px solid var(--line) !important; }
+.hero-model-dialog .hero-modal-title, .hero-model-dialog .hero-modal-content :is(h3, h4) { color: var(--ink) !important; }
+.hero-model-dialog .hero-modal-description, .hero-model-dialog .hero-modal-features-list li { color: var(--ink) !important; }
+.hero-model-dialog .hero-modal-audience-title, .hero-model-dialog .hero-modal-features-title { color: var(--muted) !important; }
+.hero-model-dialog .hero-modal-tag { background: var(--navy-soft) !important; color: var(--navy) !important; border: 0 !important; }
+.hero-model-dialog .hero-modal-audience-pill { background: var(--white) !important; color: var(--ink) !important; border: 1px solid var(--line) !important; }
+.hero-model-dialog .hero-modal-features-list li svg { color: var(--navy) !important; }
+.hero-model-dialog .hero-modal-close { background: transparent !important; color: var(--ink) !important; border: 1px solid var(--ink) !important; border-radius: 2px !important; }
+.hero-model-dialog .hero-modal-close:hover { background: var(--ink) !important; color: var(--paper) !important; }
+.hero-model-dialog .hero-modal-tier { color: var(--ink) !important; background: var(--white) !important; border: 1px solid var(--line) !important; }
+.hero-model-dialog .hero-modal-tier:hover:not(:disabled) { border-color: var(--ink) !important; }
+.hero-model-dialog .hero-modal-tier[aria-pressed="true"] { background: var(--navy) !important; border-color: var(--navy) !important; color: #fff !important; box-shadow: none !important; }
+.hero-model-dialog .hero-modal-preview-container { background: var(--grey) !important; border: 1px solid var(--line) !important; }
+.hero-model-dialog .hero-modal-preview-badge { background: rgba(18, 19, 20, .72) !important; color: #fff !important; }
+.hero-model-dialog .hero-modal-live-link { background: var(--white) !important; color: var(--navy) !important; border: 1px solid var(--line) !important; }
+.hero-model-dialog .hero-modal-live-link:hover { border-color: var(--navy) !important; background: var(--navy-soft) !important; }
+.hero-model-dialog .hero-modal-btn-back { background: transparent !important; color: var(--ink) !important; border: 1px solid var(--ink) !important; }
+.hero-model-dialog .hero-modal-btn-back:hover { background: var(--ink) !important; color: var(--paper) !important; }
+.hero-model-dialog .hero-modal-btn-select { background: var(--navy) !important; color: #fff !important; border: 1px solid var(--navy) !important; }
+.hero-model-dialog .hero-modal-btn-select:hover { background: var(--navy-hover) !important; }
 .mobile-menu-header { background: var(--paper) !important; }
 .mobile-menu-close { background: transparent !important; border: 1px solid var(--ink) !important; border-radius: 2px !important; color: var(--ink) !important; }
 .mobile-nav-arrow, .mobile-accordion-icon { color: var(--navy) !important; }
@@ -737,7 +760,8 @@ body :where(*:not(img):not(video):not(svg):not(svg *):not([style*="background-im
 .configurator-section .dx-page .hero-interactive-container { padding: clamp(18px, 3.4vw, 48px); }
 @media (min-width: 1024px) {
   .configurator-section .dx-title, .configurator-section .dx-page h2 { font-size: clamp(30px, 2.6vw, 42px) !important; }
-  .configurator-section .dx-option { padding: 20px 22px; }
+  /* o lado direito fica livre para o visto (antes o visto cobria o fim do texto) */
+  .configurator-section .dx-option { padding: 20px 52px 20px 22px; }
   .configurator-section .dx-option-name { font-size: 1.06rem; }
   .configurator-section .dx-option-desc { font-size: .92rem; }
 }

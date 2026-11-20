@@ -50,7 +50,6 @@
 .dx-grid { display: grid; gap: 10px; }
 .dx-grid--svc { grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); }
 @media (min-width: 900px) { .dx-grid--svc { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-.dx-grid--objective { grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); }
 
 .dx-option {
   position: relative; display: flex; align-items: flex-start; gap: 12px;
@@ -72,6 +71,64 @@
 .dx-option:has(input:checked) .dx-option-mark { background: var(--dx-accent); border-color: var(--dx-accent); color: #1E2022; }
 .dx-option--row { align-items: center; }
 .dx-option--row .dx-option-mark { top: 50%; margin-top: -10px; }
+
+/* ---------- Objetivo: cartões com descrição, 2 por linha; o visto nunca encosta no texto ---------- */
+.dx-grid--objective { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; }
+@media (min-width: 700px) { .dx-grid--objective { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.dx-option--objective { min-height: 88px; padding: 18px 52px 18px 18px; }
+.dx-option--objective .dx-option-name { text-wrap: pretty; }
+.dx-option--objective .dx-option-mark { top: 18px; }
+/* Solução escolhida (etapa Objetivo) */
+.dx-picked { display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 12px 16px; padding: 14px 16px; border: 1px dashed var(--dx-line-strong); border-radius: 2px; }
+.dx-picked-body { display: grid; gap: 2px; min-width: 0; }
+.dx-picked-body small { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dx-faint); }
+.dx-picked-body strong { font-size: 1rem; color: var(--dx-text); }
+.dx-picked-price { font-size: 0.9rem; font-weight: 600; color: var(--dx-accent); }
+@media (max-width: 560px) { .dx-picked { grid-template-columns: auto 1fr auto; } .dx-picked-price { grid-column: 2 / -1; grid-row: 2; } }
+/* "Não sei ainda": como funciona a orientação */
+.dx-guide { display: grid; gap: 18px; padding: clamp(18px, 2.4vw, 28px); background: var(--dx-surface); border: 1px solid var(--dx-line); border-top: 2px solid var(--dx-accent); border-radius: 2px; }
+.dx-guide-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 20px; }
+.dx-guide-price { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 0; }
+.dx-guide-price strong { font-size: 1rem; color: var(--dx-text); }
+.dx-guide-price span { font-size: 0.85rem; color: var(--dx-muted); }
+.dx-guide-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: dx-guide; }
+.dx-guide-steps li { display: grid; gap: 6px; padding: 16px 16px 16px 52px; position: relative; border: 1px solid var(--dx-line); border-radius: 2px; counter-increment: dx-guide; }
+.dx-guide-steps li::before { content: counter(dx-guide); position: absolute; left: 16px; top: 16px; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 2px; background: var(--dx-accent-soft); color: var(--dx-accent); font-size: 0.78rem; font-weight: 700; }
+.dx-guide-steps strong { font-size: 0.95rem; color: var(--dx-text); }
+.dx-guide-steps span { font-size: 0.86rem; line-height: 1.45; color: var(--dx-muted); }
+.dx-guide-alt { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 20px; padding-top: 14px; border-top: 1px solid var(--dx-line); }
+.dx-guide-alt p { margin: 0; max-width: 70ch; font-size: 0.88rem; line-height: 1.5; color: var(--dx-muted); }
+.dx-guide-alt .dx-link-btn { margin: 0; }
+
+/* ---------- Complementos ---------- */
+.dx-option--extra .dx-chip { justify-self: start; margin-top: 6px; }
+.dx-option--consult { align-items: center; padding: 18px 52px 18px 18px; border-style: solid; border-width: 1px 1px 1px 3px; border-left-color: var(--dx-accent); }
+.dx-option--consult .dx-option-mark { top: 50%; margin-top: -10px; }
+.dx-consult-note { margin-top: 4px; font-size: 0.8rem; color: var(--dx-faint); }
+.dx-consult-price { flex: none; display: grid; justify-items: end; gap: 2px; margin-left: auto; padding-left: 12px; text-align: right; }
+.dx-consult-price b { font-size: 1rem; color: var(--dx-success); }
+.dx-consult-price small { font-size: 0.75rem; color: var(--dx-muted); }
+@media (max-width: 560px) {
+  .dx-option--consult { flex-wrap: wrap; align-items: flex-start; }
+  .dx-option--consult .dx-option-icon { display: none; }
+  .dx-option--consult .dx-option-mark { top: 18px; margin-top: 0; }
+  .dx-option--consult .dx-option-body { flex: 1 1 100%; }
+  .dx-consult-price { display: flex; align-items: baseline; gap: 6px; margin-left: 0; padding-left: 0; text-align: left; }
+}
+.dx-more { border: 1px solid var(--dx-line); border-radius: 2px; }
+.dx-more > summary { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px; cursor: pointer; list-style: none; font-weight: 600; color: var(--dx-text); }
+.dx-more > summary::-webkit-details-marker { display: none; }
+.dx-more > summary::after { content: ""; width: 8px; height: 8px; border: solid currentColor; border-width: 0 2px 2px 0; transform: rotate(45deg); transition: transform 160ms ease; }
+.dx-more[open] > summary::after { transform: rotate(-135deg); }
+.dx-more > summary small { margin-left: auto; font-weight: 500; white-space: nowrap; color: var(--dx-faint); }
+.dx-more > summary:focus-visible { outline: 2px solid var(--dx-accent); outline-offset: 2px; }
+.dx-more > .dx-group { padding: 0 16px 16px; }
+/* Resumo: valores por item */
+.dx-breakdown { display: grid; gap: 6px; margin: 0; padding: 10px 0 0; list-style: none; border-top: 1px solid var(--dx-line); }
+.dx-breakdown li { display: flex; justify-content: space-between; gap: 12px; font-size: 0.86rem; color: var(--dx-muted); }
+.dx-breakdown li b { flex: none; font-weight: 600; color: var(--dx-text); text-align: right; }
+.dx-breakdown li.is-discount b { color: var(--dx-success); }
+.dx-kicker--sub { margin-top: 4px; }
 
 /* ---------- Formato: modelo pronto × sob medida ---------- */
 .dx-grid--format { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 14px; }

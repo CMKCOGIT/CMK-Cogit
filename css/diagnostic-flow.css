@@ -72,6 +72,18 @@
 .dx-option--row { align-items: center; }
 .dx-option--row .dx-option-mark { top: 50%; margin-top: -10px; }
 
+/* ---------- Primeira etapa: grupos de serviços (um por grupo de alternativas) ----------
+   Em área larga, uma grade de 4 colunas: cada grupo ocupa tantas colunas quantos cards tem, então
+   grupos pequenos ficam lado a lado e os cards de todos os grupos têm a mesma largura. */
+.dx-view { container: dxview / inline-size; }
+.dx-groups { display: grid; gap: 22px; }
+.dx-group-hint { font-weight: 600; letter-spacing: 0.02em; text-transform: none; color: var(--dx-muted); }
+@container dxview (min-width: 960px) {
+  .dx-groups { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 10px; }
+  .dx-groups > .dx-group { grid-column: span var(--span, 4); }
+  .dx-groups .dx-grid--svc { grid-template-columns: repeat(var(--span, 4), minmax(0, 1fr)); }
+}
+
 /* ---------- Objetivo: cartões com descrição, 2 por linha; o visto nunca encosta no texto ---------- */
 .dx-grid--objective { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 12px; }
 @media (min-width: 700px) { .dx-grid--objective { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

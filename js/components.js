@@ -427,7 +427,8 @@ function renderHeroInteractive() {
     customProject: null,
     variant: null, // modelo pronto escolhido quando o serviço tem níveis (MODEL_TIERS)
     personalization: null, // { variante, dados, nome }: site personalizado no editor do modelo
-    extras: [], // ids do catálogo escolhidos em "Complementos"
+    extras: [], // ids do catálogo escolhidos em "Complementos" (ou junto com o principal, na primeira etapa)
+    picked: [], // ids da primeira etapa, para lembrar Produto digital (SaaS) × MVP, que têm o mesmo id no catálogo
     consultoria: false // consultoria e planejamento digital (sem custo fechando com a COGIT)
   };
 
@@ -492,12 +493,21 @@ function renderHeroInteractive() {
 
   // Nome comercial e prazo dos modelos prontos (data.js). Preços vêm do catálogo (configuratorData).
   const PRESENCE_MODELS = presenceModels;
+  // Primeira etapa: dá para combinar serviços de grupos diferentes (ex.: site + identidade visual).
+  // pick 'one': alternativas entre si, só uma por grupo (site OU landing page OU portfólio OU loja).
+  // pick 'any': serviços que se somam (automação + integrações). 'alone': "Não sei ainda" não combina com nada.
   const SERVICE_GROUPS = [
-    { label: 'Presença digital', ids: ['site-institucional', 'landing-page', 'portfolio'] },
-    { label: 'Marca, vendas e planejamento', ids: ['identidade-svc', 'loja-svc', 'consultoria-svc'] },
-    { label: 'Operação e produto', ids: ['automacao-svc', 'integracao-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] },
-    { label: 'Suporte e orientação', ids: ['suporte-essencial-svc', 'suporte-continuo-svc', 'outro-svc'] }
+    { label: 'Site e vendas on-line', pick: 'one', ids: ['site-institucional', 'landing-page', 'portfolio', 'loja-svc'] },
+    { label: 'Sistemas e produto digital', pick: 'one', ids: ['sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] },
+    { label: 'Automação e integrações', pick: 'any', ids: ['automacao-svc', 'integracao-svc'] },
+    { label: 'Marca e planejamento', pick: 'any', ids: ['identidade-svc', 'consultoria-svc'] },
+    { label: 'Suporte técnico', pick: 'one', ids: ['suporte-essencial-svc', 'suporte-continuo-svc'] },
+    { label: 'Ainda não sabe?', pick: 'alone', ids: ['outro-svc'] }
   ];
+  const groupOf = (dxId) => SERVICE_GROUPS.find(g => g.ids.includes(dxId)) || null;
+  // Quem vira o serviço principal (guia formato, modelo e resumo); os demais viram complementos.
+  const PRIMARY_ORDER = ['site-institucional', 'landing-page', 'portfolio', 'loja-svc', 'sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc',
+    'automacao-svc', 'integracao-svc', 'identidade-svc', 'consultoria-svc', 'suporte-essencial-svc', 'suporte-continuo-svc'];
   const CONTEXT_TAGS = {
     presenca: ['Já tenho logotipo e identidade visual', 'Preciso de ajuda com os textos', 'Tenho fotos e imagens próprias', 'Já tenho domínio', 'Tenho um prazo definido'],
     loja: ['Já tenho logotipo e identidade visual', 'Já vendo em marketplace ou redes sociais', 'Tenho fotos dos produtos', 'Preciso calcular frete', 'Tenho um prazo definido'],
@@ -568,12 +578,15 @@ function renderHeroInteractive() {
       rec.why = 'Você marcou que precisa integrar com sistemas que já usa.';
       list.unshift(rec);
     }
-    return list.filter(r => r.id !== main && catalogSvc(r.id));
+    return list.filter(r => r.id !== main && catalogSvc(r.id) && !rivalOfMain(r.id));
   }
   function otherExtras(recs) {
     const skip = new Set([catalogIdOf(state.selectedService), 'diagnostico', ...recs.map(r => r.id)]);
-    return (typeof configuratorData !== 'undefined' ? configuratorData.services : []).filter(x => !skip.has(x.id));
+    return (typeof configuratorData !== 'undefined' ? configuratorData.services : []).filter(x => !skip.has(x.id) && !rivalOfMain(x.id));
   }
+  // Mesma regra da primeira etapa: alternativas do mesmo grupo não se somam (site + landing page, suporte essencial + contínuo).
+  const altGroupOfCatalog = (id) => { const g = groupOf(dxIdOfCatalog(id)); return g && g.pick === 'one' ? g : null; };
+  const rivalOfMain = (id) => { const g = altGroupOfCatalog(id); return Boolean(g) && g === groupOf(state.selectedService); };
   // Combinação (js/data.js · serviceBundles) completa com o principal + complementos.
   function activeBundleFor(ids) {
     const bundles = typeof serviceBundles !== 'undefined' ? serviceBundles : [];
@@ -655,11 +668,21 @@ function renderHeroInteractive() {
   // na página e na janela. Mantida como nome porque Voltar/Recomeçar apontam para ela.
   function renderStep0() { return renderStep1(); }
 
+  // O que aparece marcado na primeira etapa: o principal, os complementos e a consultoria.
+  function pickedServices() {
+    if (!state.selectedService) return [];
+    if (state.selectedService === 'outro-svc') return ['outro-svc'];
+    const fromExtras = state.extras.map(dxIdOfCatalog).map(id => (id === 'mvp-svc' && state.picked.includes('saas-svc') ? 'saas-svc' : id));
+    const all = [state.selectedService, ...fromExtras, ...(state.consultoria ? ['consultoria-svc'] : [])];
+    return [...new Set(all)].filter(id => groupOf(id));
+  }
+
   function renderStep1() {
     state.step = 1;
-    const card = (svc) => `
+    const picked = pickedServices();
+    const card = (svc, group) => `
       <label class="dx-option dx-option--svc">
-        <input type="radio" name="dx-service" value="${svc.id}" ${state.selectedService === svc.id ? 'checked' : ''}>
+        <input type="checkbox" name="dx-service" value="${svc.id}" data-pick="${group.pick}" ${picked.includes(svc.id) ? 'checked' : ''}>
         <span class="dx-option-icon" aria-hidden="true">${svc.iconSvg}</span>
         <span class="dx-option-body">
           <span class="dx-option-name">${svc.name}</span>
@@ -668,34 +691,62 @@ function renderHeroInteractive() {
         </span>
         <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
       </label>`;
+    const hint = { one: 'Escolha 1', any: 'Pode marcar os dois', alone: '' };
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead('solucao', 'O que você precisa construir?', 'Todos os nossos serviços estão aqui. Escolha o principal; os complementos vêm antes do resumo. Se não souber, “Não sei ainda” leva você a uma orientação.')}
+        ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha um serviço por grupo e combine o que precisar, como um site com identidade visual. Se não souber, “Não sei ainda” leva você a uma orientação.')}
         <div class="dx-body">
-          ${SERVICE_GROUPS.map((group, gi) => `
-            <fieldset class="dx-group">
-              <legend class="dx-group-label">${group.label}</legend>
-              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id))).join('')}</div>
+          <div class="dx-groups">
+          ${SERVICE_GROUPS.map(group => `
+            <fieldset class="dx-group" style="--span:${group.ids.length}">
+              <legend class="dx-group-label">${group.label}${hint[group.pick] ? ` <span class="dx-group-hint">· ${hint[group.pick]}</span>` : ''}</legend>
+              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id), group)).join('')}</div>
             </fieldset>`).join('')}
+          </div>
         </div>
-        ${renderDxFooter(inDialog ? 'Fechar' : '', 'Continuar', !state.selectedService)}
+        ${renderDxFooter(inDialog ? 'Fechar' : '', 'Continuar', !picked.length)}
       </div>`;
 
     const next = container.querySelector('[data-dx="next"]');
-    container.querySelectorAll('input[name="dx-service"]').forEach(input => {
+    const nextLabel = container.querySelector('[data-dx-next-label]');
+    const inputs = [...container.querySelectorAll('input[name="dx-service"]')];
+    const sync = () => {
+      const n = inputs.filter(i => i.checked).length;
+      next.disabled = !n;
+      nextLabel.textContent = n > 1 ? `Continuar com ${n} serviços` : 'Continuar';
+    };
+    inputs.forEach(input => {
       input.addEventListener('change', () => {
-        const svc = SERVICES_GRID.find(s => s.id === input.value);
-        if (state.selectedService !== svc.id) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; state.extras = []; }
-        state.selectedService = svc.id;
-        state.challenge = svc.challenge;
-        next.disabled = false;
-        revealNextAction(next);
-        if (typeof trackEvent === 'function') trackEvent('hero_service_selected', svc.id);
+        if (input.checked) {
+          const group = groupOf(input.value);
+          inputs.forEach(other => {
+            if (other === input || !other.checked) return;
+            // "Não sei ainda" fica sozinho; num grupo de alternativas, só uma fica marcada
+            if (group.pick === 'alone' || other.dataset.pick === 'alone' || (group.pick === 'one' && groupOf(other.value) === group)) other.checked = false;
+          });
+          revealNextAction(next);
+          if (typeof trackEvent === 'function') trackEvent('hero_service_selected', input.value);
+        }
+        sync();
       });
     });
+    sync();
     // primeira etapa: na janela, "Fechar" fecha a janela; na página não há para onde voltar
     container.querySelector('[data-dx="back"]')?.addEventListener('click', () => inDialog?.close());
-    next.addEventListener('click', () => { if (state.selectedService) transitionTo(renderStep3, 'next'); });
+    next.addEventListener('click', () => {
+      const chosen = inputs.filter(i => i.checked).map(i => i.value);
+      if (!chosen.length) return;
+      const primary = chosen.includes('outro-svc') ? 'outro-svc' : PRIMARY_ORDER.find(id => chosen.includes(id));
+      const svc = SERVICES_GRID.find(s => s.id === primary);
+      if (state.selectedService !== primary) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; }
+      state.selectedService = primary;
+      state.challenge = svc.challenge;
+      state.picked = chosen;
+      // os outros escolhidos entram como complementos; a consultoria vira a opção "incluir consultoria"
+      state.consultoria = primary !== 'consultoria-svc' && chosen.includes('consultoria-svc');
+      state.extras = primary === 'outro-svc' ? [] : chosen.filter(id => id !== primary && id !== 'consultoria-svc').map(catalogIdOf);
+      transitionTo(renderStep3, 'next');
+    });
   }
 
   // ── ETAPA 3: objetivo (serviços de operação e produto) ──
@@ -775,7 +826,7 @@ function renderHeroInteractive() {
     const main = catalogIdOf(state.selectedService);
     const recs = recommendedExtras();
     const others = otherExtras(recs);
-    state.extras = state.extras.filter(id => id !== main && catalogSvc(id));
+    state.extras = state.extras.filter(id => id !== main && catalogSvc(id) && !rivalOfMain(id));
     const icon = (id) => { const dx = SERVICES_GRID.find(x => x.id === dxIdOfCatalog(id)); return dx ? dx.iconSvg : ''; };
     const bundleHint = (id) => {
       if (state.extras.includes(id)) return '';
@@ -849,6 +900,8 @@ function renderHeroInteractive() {
       status.hidden = !msg;
     };
     container.querySelectorAll('input[name="dx-extra"]').forEach(input => input.addEventListener('change', () => {
+      const group = input.checked ? altGroupOfCatalog(input.value) : null;
+      if (group) container.querySelectorAll('input[name="dx-extra"]:checked').forEach(other => { if (other !== input && altGroupOfCatalog(other.value) === group) other.checked = false; });
       state.extras = [...container.querySelectorAll('input[name="dx-extra"]:checked')].map(i => i.value);
       // Atualiza as dicas de combinação sem redesenhar a etapa (não perde foco nem rolagem).
       container.querySelectorAll('input[name="dx-extra"]').forEach(other => {
@@ -1342,7 +1395,7 @@ function renderHeroInteractive() {
     });
 
     document.getElementById('hero-btn-restart').addEventListener('click', () => {
-      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null, personalization: null, extras: [], consultoria: false });
+      Object.assign(state, { step: 0, selectedService: null, challenge: null, objective: null, context: '', contextTags: [], customProject: null, variant: null, personalization: null, extras: [], picked: [], consultoria: false });
       transitionTo(renderStep0, 'back');
     });
   }

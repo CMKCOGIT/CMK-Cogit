@@ -2443,7 +2443,16 @@
     "Quer dar uma olhada antes? Temos sites, landing pages, loja virtual, identidade visual, automações, integrações, sistemas, MVP, plataformas, consultoria e suporte.": "Want to look around first? We offer websites, landing pages, online stores, visual identity, automations, integrations, systems, MVPs, platforms, consulting and support.",
     "Ver todos os serviços": "See all services",
     "O diagnóstico inicial não tem custo. O investimento do projeto é definido depois da conversa.": "The initial diagnosis is free. The project investment is set after the conversation.",
-    "Conversa agendada pela plataforma": "Conversation scheduled through the platform"
+    "Conversa agendada pela plataforma": "Conversation scheduled through the platform",
+    "Site e vendas on-line": "Websites and online sales",
+    "Sistemas e produto digital": "Systems and digital products",
+    "Automação e integrações": "Automation and integrations",
+    "Marca e planejamento": "Brand and planning",
+    "Suporte técnico": "Technical support",
+    "Ainda não sabe?": "Not sure yet?",
+    "· Escolha 1": "· Pick 1",
+    "· Pode marcar os dois": "· You can pick both",
+    "Escolha um serviço por grupo e combine o que precisar, como um site com identidade visual. Se não souber, “Não sei ainda” leva você a uma orientação.": "Pick one service per group and combine what you need, like a website with a visual identity. If you are not sure, “Not sure yet” takes you to guidance."
   },
   "patterns": [
     [
@@ -2592,6 +2601,10 @@
       "(.+) \\(nova aba\\)",
       "$1 (new tab)",
       true
+    ],
+    [
+      "Continuar com (\\d+) serviços",
+      "Continue with $1 services"
     ]
   ],
   "phrases": {

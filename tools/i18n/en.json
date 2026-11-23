@@ -2452,7 +2452,41 @@
     "Ainda não sabe?": "Not sure yet?",
     "· Escolha 1": "· Pick 1",
     "· Pode marcar os dois": "· You can pick both",
-    "Escolha um serviço por grupo e combine o que precisar, como um site com identidade visual. Se não souber, “Não sei ainda” leva você a uma orientação.": "Pick one service per group and combine what you need, like a website with a visual identity. If you are not sure, “Not sure yet” takes you to guidance."
+    "Escolha um serviço por grupo e combine o que precisar, como um site com identidade visual. Se não souber, “Não sei ainda” leva você a uma orientação.": "Pick one service per group and combine what you need, like a website with a visual identity. If you are not sure, “Not sure yet” takes you to guidance.",
+    "Escolha os serviços, conte o seu contexto e veja na hora o investimento inicial. Sem compromisso.": "Pick the services, tell us your context and see the starting price right away. No commitment.",
+    "Escolha os serviços": "Pick the services",
+    "Conte o seu contexto": "Tell us your context",
+    "Veja investimento e prazo": "See price and timeline",
+    "Escolha um serviço em cada grupo que fizer sentido e combine, como um site com identidade visual. O investimento estimado aparece enquanto você escolhe.": "Pick one service in each group that makes sense and combine them, like a website with a visual identity. The estimated price shows up as you choose.",
+    "Presença on-line": "Online presence",
+    "Para apresentar a empresa, gerar contatos ou vender pela internet.": "To present your company, get leads or sell online.",
+    "Marca e estratégia": "Brand and strategy",
+    "Para começar com identidade própria e um plano claro.": "To start with your own identity and a clear plan.",
+    "Para tirar tarefas repetitivas da equipe e conectar ferramentas.": "To take repetitive tasks off your team and connect tools.",
+    "Sistemas e produtos digitais": "Systems and digital products",
+    "Para organizar a operação ou lançar um produto próprio.": "To organize your operation or launch your own product.",
+    "Para manter tudo funcionando depois que estiver no ar.": "To keep everything running once it is live.",
+    "Escolha 1": "Pick 1",
+    "Combine à vontade": "Combine freely",
+    "Não sabe por onde começar?": "Not sure where to start?",
+    "Conte o seu desafio e receba um diagnóstico gratuito da equipe.": "Tell us your challenge and get a free diagnosis from the team.",
+    "Você escolheu o diagnóstico gratuito. Continue ou escolha serviços abaixo.": "You chose the free diagnosis. Continue or pick services below.",
+    "Seu projeto": "Your project",
+    "Escolha um ou mais serviços. O investimento estimado aparece aqui, na hora.": "Pick one or more services. The estimated price shows up here right away.",
+    "Você revisa tudo antes de pagar": "You review everything before paying",
+    "Investimento estimado": "Estimated price",
+    "Valor de referência. A equipe confirma depois de entender o escopo.": "Reference price. The team confirms it after understanding the scope.",
+    "Você recebe orientação antes de qualquer investimento.": "You get guidance before any investment.",
+    "Diagnóstico gratuito": "Free diagnosis",
+    "Resumo do seu projeto": "Summary of your project",
+    "principal": "main",
+    "Para apresentar a empresa e gerar contatos, com a cara da sua marca.": "To present your company and get leads, with your brand’s look.",
+    "1 tipo de site + identidade": "1 type of site + identity",
+    "Loja virtual e produtos digitais": "Online store and digital products",
+    "Para vender pela internet, organizar a operação ou lançar um produto próprio.": "To sell online, organize your operation or launch your own product.",
+    "Consultoria e suporte": "Consulting and support",
+    "Para planejar antes de construir e manter tudo funcionando depois.": "To plan before building and keep everything running afterwards.",
+    "Consultoria + 1 suporte": "Consulting + 1 support plan"
   },
   "patterns": [
     [
@@ -2605,6 +2639,16 @@
     [
       "Continuar com (\\d+) serviços",
       "Continue with $1 services"
+    ],
+    [
+      "(\\d+) serviços? · (.+)",
+      "$1 service(s) · $2",
+      true
+    ],
+    [
+      "Combinação (.+): −(R\\$ [\\d.,]+) \\((\\d+)% de desconto\\)",
+      "$1 combo: −$2 ($3% off)",
+      true
     ]
   ],
   "phrases": {

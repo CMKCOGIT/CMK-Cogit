@@ -127,7 +127,7 @@ check('Platform handoff carries only IDs/choices, keeps the same ref for the sam
 check('Home diagnostic sends to the platform instead of WhatsApp',()=>{
  const source=read('js/components.js');const result=source.slice(source.indexOf('function renderResult()'),source.indexOf('window.heroStartDiagnosis'));
  assert.match(result,/CogitHandoff\.irParaPlataforma/);assert.doesNotMatch(result,/wa\.me|hero-btn-whatsapp/);assert.doesNotMatch(source,/renderInvite/);
- for(const page of ['index.html','monte-sua-solucao.html'])assert.ok(read(page).indexOf('src="js/handoff.js"')>0&&read(page).indexOf('src="js/handoff.js"')<read(page).indexOf('src="js/components.js"'),page);
+ for(const page of ['monte-sua-solucao.html'])assert.ok(read(page).indexOf('src="js/handoff.js"')>0&&read(page).indexOf('src="js/handoff.js"')<read(page).indexOf('src="js/components.js"'),page);
 });
 check('Configurator selection is restored from this browser without free text',()=>{
  const first=configuratorTest();first.app.toggleService('landing-page');first.app.selectSolutionModel('modelos-prontos','landing-page');

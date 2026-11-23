@@ -1,5 +1,5 @@
 // home-v2.js — interações da página inicial (identidade 2026).
-// · Diagnóstico em janela: o mesmo fluxo de js/components.js, aberto por "Monte sua solução".
+// · "Monte sua solução" leva para monte-sua-solucao.html (antes abria numa janela).
 // · Demonstração em movimento do diagnóstico, passando por cada solução.
 // · Projetos com prévia fixa, carrossel de modelos prontos e preços vindos de js/data.js.
 (function () {
@@ -11,24 +11,8 @@
   var svc = function (id) { return (typeof configuratorData !== 'undefined' && configuratorData.services || []).find(function (s) { return s.id === id; }) || {}; };
   var prazo = function (id) { return (typeof presenceModels !== 'undefined' && presenceModels[id] && presenceModels[id].prazo) || ''; };
 
-  /* ── Diagnóstico em janela ── */
-  var dlg = $('#dx-modal');
-  function openDx() {
-    if (!dlg) return;
-    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
-    document.body.classList.add('no-scroll');
-    if (window.heroStartDiagnosis) window.heroStartDiagnosis();
-    // anima só o conteúdo: mexer no próprio <dialog> com transform o tira da camada modal
-    if (window.gsap && !RM) gsap.fromTo(dlg.children, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.05, ease: 'expo.out', clearProps: 'transform,opacity' });
-  }
-  function closeDx() { if (dlg && dlg.open) dlg.close(); }
-  if (dlg) {
-    dlg.addEventListener('close', function () { document.body.classList.remove('no-scroll'); });
-    dlg.addEventListener('click', function (e) { if (e.target === dlg) closeDx(); });
-    $$('[data-close-diagnostico]', dlg).forEach(function (b) { b.addEventListener('click', closeDx); });
-  }
-  $$('[data-open-diagnostico]').forEach(function (b) { b.addEventListener('click', openDx); });
-  if (/[?&]diagnostico=1/.test(location.search) || location.hash === '#diagnostico') setTimeout(openDx, 300);
+  /* ── Monte sua solução: tem página própria (a janela saiu). Links antigos que abriam a janela vão para a página. ── */
+  if (/[?&]diagnostico=1/.test(location.search) || location.hash === '#diagnostico') location.replace('monte-sua-solucao.html');
 
   /* ── Preços dos modelos (catálogo) ── */
   $$('[data-price]').forEach(function (el) { var s = svc(el.dataset.price); if (s.price) el.textContent = brl(s.price); });

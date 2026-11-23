@@ -578,15 +578,20 @@ function renderHeroInteractive() {
   // Primeira etapa: dá para combinar serviços de grupos diferentes (ex.: site + identidade visual).
   // pick 'one': alternativas entre si, só uma por grupo (site OU landing page OU portfólio OU loja).
   // pick 'any': serviços que se somam (automação + integrações). 'alone': "Não sei ainda" não combina com nada.
-  // Ordem da jornada de um cliente: presença on-line, marca, operação, produto e, depois de pronto, suporte.
+  // Ordem da jornada de um cliente: presença digital (com a marca), vendas e produtos, operação e, por fim,
+  // planejamento e suporte. alts: as alternativas do grupo, das quais só uma fica marcada (site OU landing page
+  // OU portfólio); os demais itens do grupo somam com elas (identidade visual, consultoria).
   // "Não sei ainda" não é uma opção da lista: aparece como atalho logo abaixo do título.
   const SERVICE_GROUPS = [
-    { label: 'Presença on-line', desc: 'Para apresentar a empresa, gerar contatos ou vender pela internet.', pick: 'one', ids: ['site-institucional', 'landing-page', 'portfolio', 'loja-svc'] },
-    { label: 'Marca e estratégia', desc: 'Para começar com identidade própria e um plano claro.', pick: 'any', ids: ['identidade-svc', 'consultoria-svc'] },
-    { label: 'Automação e integrações', desc: 'Para tirar tarefas repetitivas da equipe e conectar ferramentas.', pick: 'any', ids: ['automacao-svc', 'integracao-svc'] },
-    { label: 'Sistemas e produtos digitais', desc: 'Para organizar a operação ou lançar um produto próprio.', pick: 'one', ids: ['sistema-svc', 'plataforma-svc', 'mvp-svc', 'saas-svc'] },
-    { label: 'Suporte técnico', desc: 'Para manter tudo funcionando depois que estiver no ar.', pick: 'one', ids: ['suporte-essencial-svc', 'suporte-continuo-svc'] },
-    { label: 'Ainda não sabe?', pick: 'alone', ids: ['outro-svc'], hidden: true }
+    { label: 'Presença digital', desc: 'Para apresentar a empresa e gerar contatos, com a cara da sua marca.', rule: '1 tipo de site + identidade',
+      ids: ['site-institucional', 'landing-page', 'portfolio', 'identidade-svc'], alts: ['site-institucional', 'landing-page', 'portfolio'] },
+    { label: 'Loja virtual e produtos digitais', desc: 'Para vender pela internet, organizar a operação ou lançar um produto próprio.', rule: 'Escolha 1',
+      ids: ['loja-svc', 'sistema-svc', 'plataforma-svc', 'mvp-svc', 'saas-svc'], alts: ['loja-svc', 'sistema-svc', 'plataforma-svc', 'mvp-svc', 'saas-svc'] },
+    { label: 'Automação e integrações', desc: 'Para tirar tarefas repetitivas da equipe e conectar ferramentas.', rule: 'Combine à vontade',
+      ids: ['automacao-svc', 'integracao-svc'], alts: [] },
+    { label: 'Consultoria e suporte', desc: 'Para planejar antes de construir e manter tudo funcionando depois.', rule: 'Consultoria + 1 suporte',
+      ids: ['consultoria-svc', 'suporte-essencial-svc', 'suporte-continuo-svc'], alts: ['suporte-essencial-svc', 'suporte-continuo-svc'] },
+    { label: 'Ainda não sabe?', rule: '', ids: ['outro-svc'], alts: [], hidden: true }
   ];
   const groupOf = (dxId) => SERVICE_GROUPS.find(g => g.ids.includes(dxId)) || null;
   // Quem vira o serviço principal (guia formato, modelo e resumo); os demais viram complementos.
@@ -669,8 +674,8 @@ function renderHeroInteractive() {
     return (typeof configuratorData !== 'undefined' ? configuratorData.services : []).filter(x => !skip.has(x.id) && !rivalOfMain(x.id));
   }
   // Mesma regra da primeira etapa: alternativas do mesmo grupo não se somam (site + landing page, suporte essencial + contínuo).
-  const altGroupOfCatalog = (id) => { const g = groupOf(dxIdOfCatalog(id)); return g && g.pick === 'one' ? g : null; };
-  const rivalOfMain = (id) => { const g = altGroupOfCatalog(id); return Boolean(g) && g === groupOf(state.selectedService); };
+  const altGroupOfCatalog = (id) => { const dx = dxIdOfCatalog(id); const g = groupOf(dx); return g && g.alts.includes(dx) ? g : null; };
+  const rivalOfMain = (id) => { const g = altGroupOfCatalog(id); return Boolean(g) && g === groupOf(state.selectedService) && g.alts.includes(state.selectedService); };
   // Combinação (js/data.js · serviceBundles) completa com o principal + complementos.
   function activeBundleFor(ids) {
     const bundles = typeof serviceBundles !== 'undefined' ? serviceBundles : [];
@@ -769,16 +774,15 @@ function renderHeroInteractive() {
     const unsure = state.selectedService === 'outro-svc';
     const card = (svc, group) => `
       <label class="dx-option dx-option--svc dx-pick">
-        <input type="checkbox" name="dx-service" value="${svc.id}" data-pick="${group.pick}" ${picked.includes(svc.id) ? 'checked' : ''}>
+        <input type="checkbox" name="dx-service" value="${svc.id}" ${picked.includes(svc.id) ? 'checked' : ''}>
         <span class="dx-option-icon" aria-hidden="true">${svc.iconSvg}</span>
         <span class="dx-option-body">
           <span class="dx-option-name">${svc.name}</span>
           <span class="dx-option-desc">${svc.desc}</span>
           <span class="dx-option-meta">${svc.priceLabel}</span>
         </span>
-        <span class="dx-option-mark dx-option-mark--${group.pick === 'one' ? 'radio' : 'check'}" aria-hidden="true">${DX_ICON.check}</span>
+        <span class="dx-option-mark dx-option-mark--${group.alts.includes(svc.id) ? 'radio' : 'check'}" aria-hidden="true">${DX_ICON.check}</span>
       </label>`;
-    const rule = { one: 'Escolha 1', any: 'Combine à vontade' };
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
         ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha um serviço em cada grupo que fizer sentido e combine, como um site com identidade visual. O investimento estimado aparece enquanto você escolhe.')}
@@ -790,7 +794,7 @@ function renderHeroInteractive() {
           </button>
           ${SERVICE_GROUPS.filter(g => !g.hidden).map((group, gi) => `
             <fieldset class="dx-group dx-cat">
-              <legend class="dx-cat-head"><span class="dx-cat-n" aria-hidden="true">${String(gi + 1).padStart(2, '0')}</span><span class="dx-cat-title">${group.label}</span><span class="dx-rule dx-rule--${group.pick}">${rule[group.pick]}</span></legend>
+              <legend class="dx-cat-head"><span class="dx-cat-n" aria-hidden="true">${String(gi + 1).padStart(2, '0')}</span><span class="dx-cat-title">${group.label}</span><span class="dx-rule${group.alts.length ? ' dx-rule--one' : ''}">${group.rule}</span></legend>
               <p class="dx-cat-desc">${group.desc}</p>
               <div class="dx-grid dx-grid--pick">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id), group)).join('')}</div>
             </fieldset>`).join('')}
@@ -812,8 +816,8 @@ function renderHeroInteractive() {
       input.addEventListener('change', () => {
         if (input.checked) {
           const group = groupOf(input.value);
-          // num grupo de alternativas, só uma fica marcada
-          if (group.pick === 'one') inputs.forEach(other => { if (other !== input && other.checked && groupOf(other.value) === group) other.checked = false; });
+          // entre as alternativas do grupo, só uma fica marcada (identidade e consultoria somam)
+          if (group.alts.includes(input.value)) inputs.forEach(other => { if (other !== input && other.checked && group.alts.includes(other.value)) other.checked = false; });
           revealNextAction(next);
           if (typeof trackEvent === 'function') trackEvent('hero_service_selected', input.value);
         }

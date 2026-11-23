@@ -1,0 +1,165 @@
+/* COGIT — Monte sua solução (monte-sua-solucao.html), carregado depois de identity.min.css.
+   Princípios: a ferramenta aparece logo (hero compacto), uma coluna de decisão por vez,
+   painel "Seu projeto" sempre visível com o que foi escolhido e o investimento (retorno imediato),
+   grupos na ordem da jornada com a regra à vista, rádio onde só cabe 1 e caixa onde dá para combinar.
+   Mesma identidade do site: grafite, papel e Marinho, fios de 1 px, raio 2 px, sem sombra. */
+
+/* ---------- Hero compacto: o configurador já aparece na primeira tela ---------- */
+.page-configurator section.configurator-hero.tone-ink { min-height: 0 !important; padding: calc(var(--header-h) + clamp(22px, 3vw, 40px)) 0 clamp(24px, 2.8vw, 36px) !important; }
+.page-configurator .configurator-hero h1 { margin: 12px 0 14px !important; font-size: clamp(32px, 1.2rem + 2.3vw, 54px) !important; line-height: .98 !important; }
+.page-configurator .configurator-hero p { max-width: 60ch; margin: 0 !important; font-size: clamp(16px, 1.15vw, 18px) !important; }
+.configurator-how { display: flex; flex-wrap: wrap; gap: 10px 28px; margin: 22px 0 0; padding: 0; list-style: none; }
+.configurator-how li { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; color: var(--muted-d, #A4A8AD); }
+.configurator-how b { display: grid; place-items: center; width: 24px; height: 24px; border: 1px solid var(--line-d, #34373A); border-radius: 2px; font-size: 12px; color: var(--paper, #F3F3F1); }
+
+/* ---------- Área do configurador ---------- */
+.page-configurator .configurator-section { padding-top: clamp(20px, 3vw, 40px) !important; }
+.page-configurator .dx-page { width: 100%; max-width: 1320px; margin-inline: auto; }
+.page-configurator .dx-page .hero-interactive-container {
+  min-height: 0 !important; padding: 0 !important; overflow: visible !important;
+  background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+.page-configurator .dx-page .hero-interactive-container > .hero-step-wrapper { display: block; }
+
+/* duas colunas: a decisão à esquerda, o painel "Seu projeto" à direita */
+.dx-shell { display: grid; gap: 24px; align-items: start; }
+.dx-main {
+  --pad: clamp(18px, 3vw, 40px);
+  container: dxmain / inline-size;
+  display: flex; flex-direction: column; gap: 28px; min-width: 0;
+  padding: var(--pad) var(--pad) 0;
+  background: var(--white); border: 1px solid var(--line); border-top: 2px solid var(--ink);
+}
+.dx-side { display: none; }
+@media (min-width: 1100px) {
+  .dx-shell { grid-template-columns: minmax(0, 1fr) 340px; gap: 28px; }
+  .dx-side {
+    position: sticky; top: calc(var(--header-h) + 20px);
+    display: grid; gap: 16px; padding: 24px;
+    background: var(--white); border: 1px solid var(--line);
+  }
+}
+/* o resumo final tem o próprio painel, então fica numa folha só */
+.page-configurator .dx-view--result {
+  padding: clamp(18px, 3vw, 40px) clamp(18px, 3vw, 40px) 0;
+  background: var(--white); border: 1px solid var(--line); border-top: 2px solid var(--ink);
+}
+
+/* ---------- Cabeçalho da etapa e progresso ---------- */
+.page-configurator .dx-head { gap: 10px; }
+.page-configurator .dx-title { font-size: clamp(26px, 2.2vw, 36px) !important; }
+.page-configurator .dx-desc { max-width: 64ch; }
+.page-configurator .dx-steps { position: relative; margin-bottom: 12px !important; padding-bottom: 16px !important; border-bottom: 1px solid var(--line) !important; }
+.page-configurator .dx-steps::after {
+  content: ""; position: absolute; left: 0; bottom: -1px; height: 2px;
+  width: calc(var(--dx-progress, 0) * 100%); background: var(--navy); transition: width .35s var(--ease-c, ease);
+}
+.dx-steps-compact { display: none; margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+.dx-steps-compact span { color: var(--navy); }
+.dx-steps-compact b { font-weight: 600; color: var(--ink); }
+
+/* ---------- Primeira etapa: atalho "Não sei" ---------- */
+.dx-unsure {
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px;
+  width: 100%; padding: 14px 16px; text-align: left; cursor: pointer;
+  background: var(--paper); border: 1px dashed var(--line-s); border-radius: 2px; color: var(--ink); font: inherit;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.dx-unsure:hover { border-style: solid; border-color: var(--ink); }
+.dx-unsure:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+.dx-unsure.is-selected { border: 1px solid var(--navy); background: var(--navy-soft); }
+.dx-unsure-icon { display: grid; place-items: center; width: 40px; height: 40px; background: var(--white); border: 1px solid var(--line); color: var(--navy); }
+.dx-unsure-icon svg { width: 18px; height: 18px; }
+.dx-unsure-text { display: grid; gap: 2px; }
+.dx-unsure-text strong { font-size: 15px; font-weight: 600; }
+.dx-unsure-text span { font-size: 13.5px; line-height: 1.45; color: var(--muted); }
+.dx-unsure-go { color: var(--navy); transition: transform .2s var(--ease-c, ease); }
+.dx-unsure:hover .dx-unsure-go { transform: translateX(3px); }
+
+/* ---------- Primeira etapa: grupos ---------- */
+.dx-cat { display: grid; gap: 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.dx-cat + .dx-cat { padding-top: 26px; border-top: 1px solid var(--line); }
+.dx-cat-head { display: flex; align-items: center; gap: 10px; width: 100%; padding: 0; float: left; }
+.dx-cat-head + * { clear: left; }
+.dx-cat-n { font: 600 12px/1 var(--display); letter-spacing: .06em; color: var(--muted); }
+.dx-cat-title { font: 600 clamp(17px, 1.3vw, 19px)/1.2 var(--display); letter-spacing: -.01em; color: var(--ink); }
+.dx-rule { margin-left: auto; padding: 4px 10px; border: 1px solid var(--line); border-radius: 2px; background: var(--paper); font-size: 12px; font-weight: 600; white-space: nowrap; color: var(--muted); }
+.dx-rule--one { border-color: var(--navy-soft); background: var(--navy-soft); color: var(--navy); }
+.page-configurator .dx-cat-desc { margin: 0 0 4px !important; font-size: 14px; line-height: 1.5; color: var(--muted) !important; }
+
+/* cards em lista: ícone, nome e preço numa linha de leitura; 2 colunas quando cabe */
+.dx-grid--pick { display: grid; gap: 10px; grid-template-columns: minmax(0, 1fr); }
+@container dxmain (min-width: 600px) { .dx-grid--pick { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.page-configurator .dx-pick {
+  position: relative; display: grid !important; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 14px;
+  min-height: 88px; padding: 16px !important;
+  background: var(--white) !important; border: 1px solid var(--line) !important; border-radius: 2px;
+  transition: border-color .16s ease, background-color .16s ease;
+}
+.page-configurator .dx-pick::before { content: ""; position: absolute; left: -1px; top: -1px; bottom: -1px; width: 3px; background: transparent; transition: background-color .16s ease; }
+.page-configurator .dx-pick:hover { border-color: var(--ink) !important; }
+.page-configurator .dx-pick:has(input:checked) { border-color: var(--navy) !important; background: var(--navy-soft) !important; }
+.page-configurator .dx-pick:has(input:checked)::before { background: var(--navy); }
+.page-configurator .dx-pick:has(input:focus-visible) { outline: 2px solid var(--navy); outline-offset: 2px; }
+.page-configurator .dx-pick .dx-option-icon { width: 40px; height: 40px; }
+.page-configurator .dx-pick .dx-option-body { gap: 2px; }
+.page-configurator .dx-pick .dx-option-name { font-size: 15.5px !important; font-weight: 600; line-height: 1.3; }
+.page-configurator .dx-pick .dx-option-desc { font-size: 13.5px !important; line-height: 1.45; color: var(--muted) !important; }
+.page-configurator .dx-pick .dx-option-meta { margin-top: 4px; font-size: 12.5px; font-weight: 600; color: var(--navy) !important; }
+.page-configurator .dx-pick .dx-option-mark {
+  position: static !important; margin: 0 !important; width: 22px; height: 22px;
+  display: grid; place-items: center; background: var(--white) !important; border: 1.5px solid var(--line-s) !important; color: transparent !important;
+}
+.page-configurator .dx-option-mark--radio { border-radius: 50% !important; }
+.page-configurator .dx-option-mark--check { border-radius: 3px !important; }
+.page-configurator .dx-pick:has(input:checked) .dx-option-mark { background: var(--navy) !important; border-color: var(--navy) !important; color: #fff !important; }
+.page-configurator .dx-pick:has(input:checked) .dx-option-mark--radio svg { display: none; }
+.page-configurator .dx-pick:has(input:checked) .dx-option-mark--radio::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; }
+
+/* ---------- Rodapé da etapa: preso ao pé da tela, dentro do painel ---------- */
+.page-configurator .dx-main > .dx-foot,
+.page-configurator .dx-view--result > .dx-foot {
+  position: sticky; bottom: 0; z-index: 3;
+  margin: auto calc(-1 * var(--pad, clamp(18px, 3vw, 40px))) 0 !important;
+  padding: 14px var(--pad, clamp(18px, 3vw, 40px)) calc(14px + env(safe-area-inset-bottom)) !important;
+  background: var(--white) !important; border-top: 1px solid var(--line);
+}
+.page-configurator .dx-view--result > .dx-foot { margin-top: 24px !important; }
+.dx-foot-sum { flex: 1; margin: 0; font-size: 13.5px; font-weight: 600; text-align: right; color: var(--ink); }
+.dx-foot-sum:empty { display: none; }
+@media (min-width: 1100px) { .dx-foot-sum { display: none; } }
+
+/* ---------- Painel "Seu projeto" ---------- */
+.dx-side .dx-kicker { margin: 0; }
+.dx-side-empty { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+.dx-side-items { display: grid; margin: 0; padding: 0; list-style: none; }
+.dx-side-items li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.dx-side-items li span { display: grid; gap: 2px; min-width: 0; }
+.dx-side-items li b { font-weight: 600; color: var(--ink); }
+.dx-side-items li small { font-size: 12.5px; color: var(--muted); }
+.dx-side-items li em { flex: none; max-width: 52%; font-style: normal; font-size: 13px; font-weight: 600; text-align: right; color: var(--ink); }
+.dx-side-items li.is-main b::after { content: "principal"; display: table; margin-top: 4px; padding: 1px 6px; border-radius: 2px; background: var(--navy-soft); font-size: 11px; font-weight: 600; color: var(--navy); vertical-align: 1px; }
+.dx-side-bundle { margin: 0; padding: 8px 10px; border-radius: 2px; background: #E8F6EE; font-size: 13px; font-weight: 600; color: #1E7A4C; }
+.dx-side-total { display: grid; gap: 2px; padding-top: 14px; border-top: 2px solid var(--ink); }
+.dx-side-total span { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dx-side-total strong { font: 600 clamp(24px, 1.9vw, 30px)/1.1 var(--display); letter-spacing: -.02em; color: var(--ink); }
+.dx-side-total small { font-size: 13px; color: var(--muted); }
+.dx-side-note { margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--muted); }
+.dx-side-trust { display: grid; gap: 6px; margin: 0; padding: 12px 0 0; list-style: none; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+.dx-side-trust li { display: flex; align-items: center; gap: 8px; }
+.dx-side-trust li::before { content: ""; width: 9px; height: 5px; border: solid var(--navy); border-width: 0 0 2px 2px; transform: rotate(-45deg) translateY(-2px); }
+
+/* ---------- Celular ---------- */
+@media (max-width: 680px) {
+  .dx-steps-compact { display: block; }
+  .page-configurator .dx-steps { padding-bottom: 0 !important; margin-bottom: 4px !important; }
+  .page-configurator .dx-steps li { display: none !important; }
+  .dx-cat-head { flex-wrap: wrap; }
+  .dx-rule { margin-left: 0; }
+  .page-configurator .dx-pick { min-height: 0; }
+  .page-configurator .dx-main > .dx-foot, .page-configurator .dx-view--result > .dx-foot { flex-wrap: wrap; row-gap: 10px; }
+  .dx-foot-sum { order: -1; flex: 1 1 100%; text-align: left; }
+}
+
+/* o título recebe foco ao trocar de etapa (leitores de tela anunciam); sem contorno visual nele */
+.page-configurator .dx-title:focus, .page-configurator .dx-title:focus-visible { outline: none !important; box-shadow: none !important; }

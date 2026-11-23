@@ -437,7 +437,89 @@ function renderHeroInteractive() {
 
   const inDialog = container.closest('dialog');
   if (inDialog) inDialog.addEventListener('close', () => document.body.classList.remove('is-hero-diagnostic-active'));
+  // ── Painel "Seu projeto": o que foi escolhido e o investimento estimado, em todas as etapas antes do resumo ──
+  const RECURRING_DX = ['suporte-essencial-svc', 'suporte-continuo-svc'];
+  function priceOfDx(id) {
+    const svc = SERVICES_GRID.find(x => x.id === id);
+    if (!svc) return { label: '', value: 0, from: false };
+    if (id === 'consultoria-svc') return { label: 'Sem custo fechando com a COGIT', value: 0, from: false };
+    if (id === 'outro-svc') return { label: 'Diagnóstico gratuito', value: 0, from: false };
+    if (PRESENCA_DIGITAL_IDS.includes(id) && id === state.selectedService && ['modelos-prontos', 'sob-medida'].includes(state.objective)) {
+      const v = presencePrice(id, state.objective);
+      return { label: (state.objective === 'sob-medida' ? 'a partir de ' : '') + brl(v), value: v, from: state.objective === 'sob-medida' };
+    }
+    const m = /R\$ ([\d.]+)/.exec(svc.priceLabel);
+    const value = m ? Number(m[1].replace(/\./g, '')) : 0;
+    return { label: svc.priceLabel.replace(/^A partir/, 'a partir'), value, from: /a partir/i.test(svc.priceLabel), recurring: RECURRING_DX.includes(id) };
+  }
+  function asideHtml(picks) {
+    const ordered = picks.includes('outro-svc') ? ['outro-svc'] : PRIMARY_ORDER.filter(id => picks.includes(id));
+    if (!ordered.length) {
+      return `<p class="dx-kicker">Seu projeto</p>
+        <p class="dx-side-empty">Escolha um ou mais serviços. O investimento estimado aparece aqui, na hora.</p>
+        <ul class="dx-side-trust"><li>Sem compromisso</li><li>Você revisa tudo antes de pagar</li></ul>`;
+    }
+    const isMainSet = state.step > 1 && state.selectedService;
+    const detail = (id) => {
+      if (!isMainSet || id !== state.selectedService) return '';
+      const parts = [];
+      if (PRESENCA_DIGITAL_IDS.includes(id) && state.objective) parts.push(state.objective === 'sob-medida' ? 'Sob medida' : 'Modelo pronto');
+      else if (state.objective) { const o = getObjectives(id).find(x => x.id === state.objective); if (o) parts.push(o.label); }
+      if (state.variant && typeof MODEL_PREVIEW_DATA !== 'undefined' && MODEL_PREVIEW_DATA[state.variant]) parts.push(MODEL_PREVIEW_DATA[state.variant].name);
+      return parts.join(' · ');
+    };
+    let total = 0, from = false;
+    const rows = ordered.map(id => {
+      const p = priceOfDx(id);
+      if (!p.recurring) { total += p.value; from = from || p.from; }
+      const d = detail(id);
+      return `<li${id === ordered[0] && ordered.length > 1 ? ' class="is-main"' : ''}><span><b>${esc(SERVICES_GRID.find(x => x.id === id).name)}</b>${d ? `<small>${esc(d)}</small>` : ''}</span><em>${esc(p.label)}</em></li>`;
+    });
+    const bundle = isMainSet && state.extras.length ? activeBundleFor([catalogIdOf(state.selectedService), ...state.extras]) : null;
+    if (bundle) total -= bundle.value;
+    const recurring = ordered.filter(id => RECURRING_DX.includes(id)).map(id => priceOfDx(id).label);
+    const totalLabel = ordered[0] === 'outro-svc' ? 'Gratuito' : total > 0 ? (from ? 'a partir de ' : '') + brl(total) : recurring.length ? recurring[0] : 'Sem custo';
+    return `<p class="dx-kicker">Seu projeto</p>
+      <ul class="dx-side-items">${rows.join('')}</ul>
+      ${bundle ? `<p class="dx-side-bundle">Combinação ${esc(bundle.bundle.name)}: −${brl(bundle.value)} (${bundle.bundle.discount}% de desconto)</p>` : ''}
+      <div class="dx-side-total"><span>Investimento estimado</span><strong>${totalLabel}</strong>${recurring.length && total > 0 ? `<small>+ <span>${esc(recurring[0])}</span></small>` : ''}</div>
+      <p class="dx-side-note">${ordered[0] === 'outro-svc' ? 'Você recebe orientação antes de qualquer investimento.' : 'Valor de referência. A equipe confirma depois de entender o escopo.'}</p>
+      <ul class="dx-side-trust"><li>Sem compromisso</li><li>Você revisa tudo antes de pagar</li></ul>`;
+  }
+  function footSummary(picks) {
+    const ordered = PRIMARY_ORDER.filter(id => picks.includes(id));
+    if (picks.includes('outro-svc')) return 'Diagnóstico gratuito';
+    if (!ordered.length) return '';
+    const html = document.createElement('div'); html.innerHTML = asideHtml(picks);
+    const total = html.querySelector('.dx-side-total strong');
+    return `${ordered.length} serviço${ordered.length > 1 ? 's' : ''} · ${total ? total.textContent : ''}`;
+  }
+  function refreshAside(picks) {
+    const list = picks || pickedServices();
+    const side = container.querySelector('.dx-side');
+    if (side) side.innerHTML = asideHtml(list);
+    const sum = container.querySelector('[data-dx-foot-sum]');
+    if (sum) sum.textContent = footSummary(list);
+  }
+  function mountAside() {
+    const wrapper = container.querySelector('.hero-step-wrapper');
+    if (!wrapper || wrapper.classList.contains('dx-view--result')) return;
+    if (wrapper.querySelector(':scope > .dx-shell')) { refreshAside(); return; }
+    const shell = document.createElement('div');
+    shell.className = 'dx-shell';
+    const main = document.createElement('div');
+    main.className = 'dx-main';
+    while (wrapper.firstChild) main.appendChild(wrapper.firstChild);
+    const side = document.createElement('aside');
+    side.className = 'dx-side';
+    side.setAttribute('aria-label', 'Resumo do seu projeto');
+    shell.append(main, side);
+    wrapper.appendChild(shell);
+    refreshAside(state.step === 1 ? [...container.querySelectorAll('input[name="dx-service"]:checked')].map(i => i.value).concat(state.selectedService === 'outro-svc' ? ['outro-svc'] : []) : undefined);
+  }
+
   function updateDiagnosticMode() {
+    mountAside();
     // na janela, o modo "diagnóstico ativo" (esconde WhatsApp e barra fixa) só vale com ela aberta
     const isActive = state.step > 0 && (!inDialog || inDialog.open);
     document.body.classList.toggle('is-hero-diagnostic-active', isActive);
@@ -496,13 +578,15 @@ function renderHeroInteractive() {
   // Primeira etapa: dá para combinar serviços de grupos diferentes (ex.: site + identidade visual).
   // pick 'one': alternativas entre si, só uma por grupo (site OU landing page OU portfólio OU loja).
   // pick 'any': serviços que se somam (automação + integrações). 'alone': "Não sei ainda" não combina com nada.
+  // Ordem da jornada de um cliente: presença on-line, marca, operação, produto e, depois de pronto, suporte.
+  // "Não sei ainda" não é uma opção da lista: aparece como atalho logo abaixo do título.
   const SERVICE_GROUPS = [
-    { label: 'Site e vendas on-line', pick: 'one', ids: ['site-institucional', 'landing-page', 'portfolio', 'loja-svc'] },
-    { label: 'Sistemas e produto digital', pick: 'one', ids: ['sistema-svc', 'saas-svc', 'mvp-svc', 'plataforma-svc'] },
-    { label: 'Automação e integrações', pick: 'any', ids: ['automacao-svc', 'integracao-svc'] },
-    { label: 'Marca e planejamento', pick: 'any', ids: ['identidade-svc', 'consultoria-svc'] },
-    { label: 'Suporte técnico', pick: 'one', ids: ['suporte-essencial-svc', 'suporte-continuo-svc'] },
-    { label: 'Ainda não sabe?', pick: 'alone', ids: ['outro-svc'] }
+    { label: 'Presença on-line', desc: 'Para apresentar a empresa, gerar contatos ou vender pela internet.', pick: 'one', ids: ['site-institucional', 'landing-page', 'portfolio', 'loja-svc'] },
+    { label: 'Marca e estratégia', desc: 'Para começar com identidade própria e um plano claro.', pick: 'any', ids: ['identidade-svc', 'consultoria-svc'] },
+    { label: 'Automação e integrações', desc: 'Para tirar tarefas repetitivas da equipe e conectar ferramentas.', pick: 'any', ids: ['automacao-svc', 'integracao-svc'] },
+    { label: 'Sistemas e produtos digitais', desc: 'Para organizar a operação ou lançar um produto próprio.', pick: 'one', ids: ['sistema-svc', 'plataforma-svc', 'mvp-svc', 'saas-svc'] },
+    { label: 'Suporte técnico', desc: 'Para manter tudo funcionando depois que estiver no ar.', pick: 'one', ids: ['suporte-essencial-svc', 'suporte-continuo-svc'] },
+    { label: 'Ainda não sabe?', pick: 'alone', ids: ['outro-svc'], hidden: true }
   ];
   const groupOf = (dxId) => SERVICE_GROUPS.find(g => g.ids.includes(dxId)) || null;
   // Quem vira o serviço principal (guia formato, modelo e resumo); os demais viram complementos.
@@ -638,7 +722,8 @@ function renderHeroInteractive() {
     const plan = dxPlan();
     const current = plan.findIndex(([key]) => key === currentKey) + 1;
     return `
-        <ol class="dx-steps" aria-label="Etapas do diagnóstico">
+        <p class="dx-steps-compact" aria-hidden="true"><span>Etapa ${current} de ${plan.length}</span> · <b>${plan[current - 1] ? plan[current - 1][1] : ''}</b></p>
+        <ol class="dx-steps" aria-label="Etapas do diagnóstico" style="--dx-progress:${plan.length > 1 ? (current - 1) / (plan.length - 1) : 0}">
           ${plan.map(([, label], i) => {
             const n = i + 1;
             const status = n < current ? 'is-done' : n === current ? 'is-current' : '';
@@ -660,6 +745,7 @@ function renderHeroInteractive() {
     return `
       <footer class="dx-foot">
         ${backLabel ? `<button type="button" class="dx-btn dx-btn--ghost" data-dx="back">${DX_ICON.left}<span>${backLabel}</span></button>` : '<span aria-hidden="true"></span>'}
+        <p class="dx-foot-sum" data-dx-foot-sum aria-live="polite"></p>
         ${nextLabel ? `<button type="button" class="dx-btn dx-btn--primary" data-dx="next" ${nextDisabled ? 'disabled' : ''}><span data-dx-next-label>${nextLabel}</span>${DX_ICON.right}</button>` : ''}
       </footer>`;
   }
@@ -679,9 +765,10 @@ function renderHeroInteractive() {
 
   function renderStep1() {
     state.step = 1;
-    const picked = pickedServices();
+    const picked = pickedServices().filter(id => id !== 'outro-svc');
+    const unsure = state.selectedService === 'outro-svc';
     const card = (svc, group) => `
-      <label class="dx-option dx-option--svc">
+      <label class="dx-option dx-option--svc dx-pick">
         <input type="checkbox" name="dx-service" value="${svc.id}" data-pick="${group.pick}" ${picked.includes(svc.id) ? 'checked' : ''}>
         <span class="dx-option-icon" aria-hidden="true">${svc.iconSvg}</span>
         <span class="dx-option-body">
@@ -689,63 +776,72 @@ function renderHeroInteractive() {
           <span class="dx-option-desc">${svc.desc}</span>
           <span class="dx-option-meta">${svc.priceLabel}</span>
         </span>
-        <span class="dx-option-mark" aria-hidden="true">${DX_ICON.check}</span>
+        <span class="dx-option-mark dx-option-mark--${group.pick === 'one' ? 'radio' : 'check'}" aria-hidden="true">${DX_ICON.check}</span>
       </label>`;
-    const hint = { one: 'Escolha 1', any: 'Pode marcar os dois', alone: '' };
+    const rule = { one: 'Escolha 1', any: 'Combine à vontade' };
     container.innerHTML = `
       <div class="hero-step-wrapper dx-view">
-        ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha um serviço por grupo e combine o que precisar, como um site com identidade visual. Se não souber, “Não sei ainda” leva você a uma orientação.')}
+        ${renderDxHead('solucao', 'O que você precisa construir?', 'Escolha um serviço em cada grupo que fizer sentido e combine, como um site com identidade visual. O investimento estimado aparece enquanto você escolhe.')}
         <div class="dx-body">
-          <div class="dx-groups">
-          ${SERVICE_GROUPS.map(group => `
-            <fieldset class="dx-group" style="--span:${group.ids.length}">
-              <legend class="dx-group-label">${group.label}${hint[group.pick] ? ` <span class="dx-group-hint">· ${hint[group.pick]}</span>` : ''}</legend>
-              <div class="dx-grid dx-grid--svc">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id), group)).join('')}</div>
+          <button type="button" class="dx-unsure${unsure ? ' is-selected' : ''}" data-dx-unsure>
+            <span class="dx-unsure-icon" aria-hidden="true">${SERVICES_GRID.find(x => x.id === 'outro-svc').iconSvg}</span>
+            <span class="dx-unsure-text"><strong>Não sabe por onde começar?</strong><span>${unsure ? 'Você escolheu o diagnóstico gratuito. Continue ou escolha serviços abaixo.' : 'Conte o seu desafio e receba um diagnóstico gratuito da equipe.'}</span></span>
+            <span class="dx-unsure-go" aria-hidden="true">${DX_ICON.right}</span>
+          </button>
+          ${SERVICE_GROUPS.filter(g => !g.hidden).map((group, gi) => `
+            <fieldset class="dx-group dx-cat">
+              <legend class="dx-cat-head"><span class="dx-cat-n" aria-hidden="true">${String(gi + 1).padStart(2, '0')}</span><span class="dx-cat-title">${group.label}</span><span class="dx-rule dx-rule--${group.pick}">${rule[group.pick]}</span></legend>
+              <p class="dx-cat-desc">${group.desc}</p>
+              <div class="dx-grid dx-grid--pick">${group.ids.map(id => card(SERVICES_GRID.find(s => s.id === id), group)).join('')}</div>
             </fieldset>`).join('')}
-          </div>
         </div>
-        ${renderDxFooter(inDialog ? 'Fechar' : '', 'Continuar', !picked.length)}
+        ${renderDxFooter('', 'Continuar', !picked.length && !unsure)}
       </div>`;
 
     const next = container.querySelector('[data-dx="next"]');
     const nextLabel = container.querySelector('[data-dx-next-label]');
     const inputs = [...container.querySelectorAll('input[name="dx-service"]')];
+    const chosen = () => inputs.filter(i => i.checked).map(i => i.value);
     const sync = () => {
-      const n = inputs.filter(i => i.checked).length;
-      next.disabled = !n;
+      const n = chosen().length;
+      next.disabled = !n && !unsure;
       nextLabel.textContent = n > 1 ? `Continuar com ${n} serviços` : 'Continuar';
+      refreshAside(n ? chosen() : unsure ? ['outro-svc'] : []);
     };
     inputs.forEach(input => {
       input.addEventListener('change', () => {
         if (input.checked) {
           const group = groupOf(input.value);
-          inputs.forEach(other => {
-            if (other === input || !other.checked) return;
-            // "Não sei ainda" fica sozinho; num grupo de alternativas, só uma fica marcada
-            if (group.pick === 'alone' || other.dataset.pick === 'alone' || (group.pick === 'one' && groupOf(other.value) === group)) other.checked = false;
-          });
+          // num grupo de alternativas, só uma fica marcada
+          if (group.pick === 'one') inputs.forEach(other => { if (other !== input && other.checked && groupOf(other.value) === group) other.checked = false; });
           revealNextAction(next);
           if (typeof trackEvent === 'function') trackEvent('hero_service_selected', input.value);
         }
         sync();
       });
     });
-    sync();
-    // primeira etapa: na janela, "Fechar" fecha a janela; na página não há para onde voltar
-    container.querySelector('[data-dx="back"]')?.addEventListener('click', () => inDialog?.close());
-    next.addEventListener('click', () => {
-      const chosen = inputs.filter(i => i.checked).map(i => i.value);
-      if (!chosen.length) return;
-      const primary = chosen.includes('outro-svc') ? 'outro-svc' : PRIMARY_ORDER.find(id => chosen.includes(id));
+    const go = (list) => {
+      const primary = list.includes('outro-svc') ? 'outro-svc' : PRIMARY_ORDER.find(id => list.includes(id));
       const svc = SERVICES_GRID.find(s => s.id === primary);
       if (state.selectedService !== primary) { state.objective = null; state.customProject = null; state.variant = null; state.personalization = null; }
       state.selectedService = primary;
       state.challenge = svc.challenge;
-      state.picked = chosen;
+      state.picked = list;
       // os outros escolhidos entram como complementos; a consultoria vira a opção "incluir consultoria"
-      state.consultoria = primary !== 'consultoria-svc' && chosen.includes('consultoria-svc');
-      state.extras = primary === 'outro-svc' ? [] : chosen.filter(id => id !== primary && id !== 'consultoria-svc').map(catalogIdOf);
+      state.consultoria = primary !== 'consultoria-svc' && list.includes('consultoria-svc');
+      state.extras = primary === 'outro-svc' ? [] : list.filter(id => id !== primary && id !== 'consultoria-svc').map(catalogIdOf);
       transitionTo(renderStep3, 'next');
+    };
+    // atalho: quem não sabe vai direto para a orientação gratuita
+    container.querySelector('[data-dx-unsure]').addEventListener('click', () => {
+      if (typeof trackEvent === 'function') trackEvent('hero_service_selected', 'outro-svc');
+      go(['outro-svc']);
+    });
+    sync();
+    next.addEventListener('click', () => {
+      const list = chosen();
+      if (list.length) go(list);
+      else if (unsure) go(['outro-svc']);
     });
   }
 
@@ -810,6 +906,7 @@ function renderHeroInteractive() {
       input.addEventListener('change', () => {
         state.objective = input.value;
         next.disabled = false;
+        refreshAside();
         revealNextAction(next);
         if (typeof trackEvent === 'function') trackEvent('hero_objective_selected', input.value);
       });
@@ -898,6 +995,7 @@ function renderHeroInteractive() {
       const msg = [n ? `${n} serviço${n > 1 ? 's' : ''} adicionado${n > 1 ? 's' : ''}` : '', state.consultoria ? 'Consultoria incluída' : '', bundle ? `Combinação ${bundle.bundle.name} aplicada (${bundle.bundle.discount}% de desconto)` : ''].filter(Boolean).join(' · ');
       status.textContent = msg;
       status.hidden = !msg;
+      refreshAside();
     };
     container.querySelectorAll('input[name="dx-extra"]').forEach(input => input.addEventListener('change', () => {
       const group = input.checked ? altGroupOfCatalog(input.value) : null;
@@ -979,8 +1077,9 @@ function renderHeroInteractive() {
       next.disabled = !state.objective;
       nextLabel.textContent = state.objective === 'sob-medida' && !state.customProject ? 'Montar estrutura' : 'Continuar';
       // a etapa "Modelo" aparece ou some conforme o formato
-      const steps = container.querySelector('.dx-steps');
-      if (steps) steps.outerHTML = renderDxSteps('formato');
+      const head = container.querySelector('.dx-head');
+      if (head) { head.querySelector('.dx-steps-compact')?.remove(); head.querySelector('.dx-steps')?.remove(); head.insertAdjacentHTML('afterbegin', renderDxSteps('formato')); }
+      refreshAside();
     };
     const openStudio = () => openCustomModelModal(selectedSvc, (summary) => {
       state.customProject = summary;
@@ -1086,6 +1185,7 @@ function renderHeroInteractive() {
         state.variant = input.value;
         delete status.dataset.waiting;
         sync();
+        refreshAside();
         revealNextAction(next);
         if (typeof trackEvent === 'function') trackEvent('hero_variant_selected', input.value);
       });

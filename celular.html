@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script data-cogit-modo>(function(){try{var m=localStorage.getItem("cogit_modo"),app=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;if(!m||!app||window.top!==window.self)return;var a=screen.width,b=screen.height,p=Math.min(a,b)<=820&&matchMedia("(pointer: coarse)").matches;if(m==="computador"){if(p){var v=document.querySelector('meta[name="viewport"]');if(v){v.setAttribute("content","width=1280, viewport-fit=cover");var d=document.documentElement;d.classList.add("modo-pc");d.style.setProperty("--pwa-k",(1280/Math.min(a,b)).toFixed(2))}}return}if(m==="celular"&&location.pathname!=="/celular.html"&&innerWidth>=1024&&(!p||innerWidth>Math.max(a,b)+20))location.replace("/celular.html?u="+encodeURIComponent(location.pathname+location.search+location.hash))}catch(e){}})()</script>
+  <title>COGIT</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#1A2C52">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="COGIT">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <!-- Versão celular dentro do app aberto num monitor: o site numa coluna com largura de celular.
+       Escolhida no seletor Celular | Computador (js/pwa.js). ?u= é a página aberta na coluna. -->
+  <style>
+    @font-face { font-family: 'Satoshi'; src: url('/assets/fonts/satoshi-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+    :root { --ink: #121314; --paper: #F3F3F1; --grey: #E6E6E2; --navy: #1A2C52; --line: #D9DAD6; --line-s: #8A8D91; --barra: 56px; }
+    @view-transition { navigation: auto; } /* mesma troca de página do site, sem aviso de transição interrompida */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body { background: var(--grey); color: var(--ink); font: 500 13px/1 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif; overflow: hidden; }
+    .barra { height: var(--barra); display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left)); background: var(--paper); border-bottom: 1px solid var(--line); }
+    .marca { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-size: 15px; letter-spacing: .02em; }
+    .marca svg { width: 26px; height: 26px; }
+    .modo { display: inline-flex; padding: 3px; gap: 3px; background: #fff; border: 1px solid var(--line-s); border-radius: 2px; }
+    .modo button { display: inline-flex; align-items: center; gap: 7px; min-height: 34px; padding: 0 12px; background: none; border: 0; border-radius: 2px; font: inherit; color: var(--ink); cursor: pointer; }
+    .modo button:hover { background: var(--paper); }
+    .modo button[aria-pressed="true"] { background: var(--navy); color: #fff; cursor: default; }
+    .modo button:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+    .modo svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .palco { height: calc(100% - var(--barra)); display: flex; justify-content: center; padding: 16px 16px 0; }
+    iframe { display: block; width: 430px; max-width: 100%; height: 100%; border: 1px solid var(--line-s); border-bottom: 0; background: var(--paper); }
+    /* celular que o navegador força a mostrar como computador: a coluna ocupa a tela e é ampliada */
+    html.ampliado .barra { display: none; }
+    html.ampliado .palco { height: 100%; padding: 0; display: block; }
+    html.ampliado iframe { border: 0; max-width: none; transform-origin: 0 0; }
+  </style>
+</head>
+<body>
+  <header class="barra">
+    <a class="marca" href="/" id="marca" aria-label="COGIT — início">
+      <svg viewBox="0 0 1010 1000" aria-hidden="true"><g fill="#121314"><path d="M847.7 191.5A480 480 0 1 0 847.7 808.5L783.4 754.5A396 396 0 1 1 783.4 245.5Z"/><path d="M230 750V250L450.0 470.0L670 250V750H590V431.8L450.0 571.8L310 431.8V750Z"/><path d="M670 469.1L889.1 250H990.9L740.9 500.0L990.9 750H889.1L690.0 550.9L670 570.9Z"/></g></svg>
+      <span>COGIT</span>
+    </a>
+    <div class="modo" role="group" aria-label="Versão do site" id="modo">
+      <button type="button" data-modo="celular" aria-pressed="true"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></svg><span>Celular</span></button>
+      <button type="button" data-modo="computador" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="4" width="19" height="12.5" rx="1.5"/><path d="M8.5 20.5h7M12 16.5v4"/></svg><span>Computador</span></button>
+    </div>
+  </header>
+  <div class="palco">
+    <iframe id="quadro" title="COGIT — versão celular"></iframe>
+  </div>
+  <script>
+    (function () {
+      var quadro = document.getElementById('quadro');
+      // só caminhos do próprio site (nada de //outro-site ou javascript:)
+      var u = new URLSearchParams(location.search).get('u') || '/';
+      if (!/^\/(?!\/)/.test(u) || /^\/celular\.html/.test(u)) u = '/';
+      var atual = u;
+      var en = function (p) { return p.indexOf('/en/') === 0; };
+      function idioma(p) {
+        var e = en(p);
+        document.documentElement.lang = e ? 'en' : 'pt-BR';
+        document.getElementById('modo').setAttribute('aria-label', e ? 'Site version' : 'Versão do site');
+        var s = document.querySelectorAll('#modo span');
+        s[0].textContent = e ? 'Mobile' : 'Celular';
+        s[1].textContent = e ? 'Desktop' : 'Computador';
+        document.getElementById('marca').href = e ? '/en/' : '/';
+      }
+      // celular forçado a "site para computador": coluna na largura real do aparelho, ampliada para a tela
+      function ajustar() {
+        var a = screen.width, b = screen.height;
+        var pequeno = Math.min(a, b) <= 820 && matchMedia('(pointer: coarse)').matches;
+        if (!(pequeno && innerWidth > Math.max(a, b) + 20)) { document.documentElement.classList.remove('ampliado'); quadro.style.cssText = ''; return; }
+        var w = innerWidth > innerHeight ? Math.max(a, b) : Math.min(a, b);
+        var k = innerWidth / w;
+        document.documentElement.classList.add('ampliado');
+        quadro.style.cssText = 'width:' + w + 'px;height:' + (innerHeight / k) + 'px;transform:scale(' + k + ')';
+      }
+      addEventListener('resize', ajustar);
+      ajustar();
+      quadro.addEventListener('load', function () {
+        try {
+          var l = quadro.contentWindow.location;
+          if (l.origin !== location.origin) return;
+          atual = l.pathname + l.search + l.hash;
+          history.replaceState(null, '', '/celular.html?u=' + encodeURIComponent(atual));
+          document.title = quadro.contentDocument.title || 'COGIT';
+          idioma(l.pathname);
+        } catch (e) { /* página de outro site dentro do quadro: mantém o endereço anterior */ }
+      });
+      document.getElementById('modo').addEventListener('click', function (e) {
+        var b = e.target.closest('[data-modo="computador"]');
+        if (!b) return;
+        try { localStorage.setItem('cogit_modo', 'computador'); } catch (_) {}
+        location.replace(atual);
+      });
+      idioma(u);
+      quadro.src = u;
+    })();
+  </script>
+</body>
+</html>

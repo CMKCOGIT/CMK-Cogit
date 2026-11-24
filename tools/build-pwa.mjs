@@ -32,6 +32,13 @@ export function versionar(html, relPage, overrides = {}) {
 }
 
 // ── 1. <head> do modo app ──
+// Versão do site escolhida no app (js/pwa.js, seletor Celular | Computador), aplicada antes de desenhar:
+//   computador num celular -> viewport de 1280 px; celular num monitor -> /celular.html (coluna de celular).
+// Só vale no app instalado (display-mode: standalone) e fora do quadro de /celular.html.
+export const MODO_SCRIPT = '<script data-cogit-modo>(function(){try{var m=localStorage.getItem("cogit_modo"),app=matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;' +
+  'if(!m||!app||window.top!==window.self)return;var a=screen.width,b=screen.height,p=Math.min(a,b)<=820&&matchMedia("(pointer: coarse)").matches;' +
+  'if(m==="computador"){if(p){var v=document.querySelector(\'meta[name="viewport"]\');if(v){v.setAttribute("content","width=1280, viewport-fit=cover");var d=document.documentElement;d.classList.add("modo-pc");d.style.setProperty("--pwa-k",(1280/Math.min(a,b)).toFixed(2))}}return}' +
+  'if(m==="celular"&&location.pathname!=="/celular.html"&&innerWidth>=1024&&(!p||innerWidth>Math.max(a,b)+20))location.replace("/celular.html?u="+encodeURIComponent(location.pathname+location.search+location.hash))}catch(e){}})()</script>';
 function garantirHead(html, rel) {
   const up = '../'.repeat(rel.split('/').length - 1);
   const ind = (html.match(/\n([ \t]*)<meta charset/i) || [, '  '])[1];
@@ -44,6 +51,9 @@ function garantirHead(html, rel) {
   } else {
     s = s.replace(/(<meta charset="[^"]*">)/i, `$1\n${ind}<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">`);
   }
+  // trecho do seletor Celular | Computador logo depois da viewport (sempre a versão atual)
+  s = s.replace(/\n?[ \t]*<script data-cogit-modo>[\s\S]*?<\/script>/, '');
+  s = s.replace(/(\n([ \t]*)<meta name="viewport"[^>]*>)/, (m, all, ws) => `${all}\n${ws}${MODO_SCRIPT}`);
   if (!/rel="apple-touch-icon"/.test(s)) antesDoFim(`<link rel="apple-touch-icon" href="${up}apple-touch-icon.png">`);
   if (!/rel="manifest"/.test(s)) antesDoFim(`<link rel="manifest" href="${up}site.webmanifest">`);
   if (/<meta name="theme-color"/.test(s)) s = s.replace(/<meta name="theme-color" content="[^"]*">/, `<meta name="theme-color" content="${THEME}">`);

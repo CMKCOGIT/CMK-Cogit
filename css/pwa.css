@@ -92,3 +92,48 @@
   .pwa-install { transition: none; transform: none; }
 }
 @media print { .pwa-install { display: none !important; } }
+
+/* ── Seletor Celular | Computador (só no app instalado, js/pwa.js) ── */
+.pwa-modo {
+  display: inline-flex;
+  padding: 3px;
+  gap: 3px;
+  background: var(--white, #FFFFFF);
+  border: 1px solid var(--line-s, #8A8D91);
+  border-radius: 2px;
+  font-family: var(--text, system-ui, sans-serif);
+}
+.pwa-modo button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 12px;
+  background: none;
+  border: 0;
+  border-radius: 2px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink, #121314);
+  cursor: pointer;
+}
+.pwa-modo button svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.pwa-modo button:hover { background: var(--paper, #F3F3F1); }
+.pwa-modo button[aria-pressed="true"] { background: var(--navy, #1A2C52); color: #fff; cursor: default; }
+.pwa-modo button:focus-visible { outline: 2px solid var(--navy, #1A2C52); outline-offset: 2px; }
+.pwa-modo--flutuante {
+  position: fixed;
+  z-index: 1100; /* acima do conteúdo da home; abaixo dos diálogos (1190+) */
+  left: max(20px, env(safe-area-inset-left, 0px));
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.pwa-modo--menu { display: flex; width: 100%; }
+.pwa-modo--menu button { flex: 1 1 0; min-height: 40px; }
+/* celular em "Computador" (página reduzida a 1280 px): o seletor volta ao tamanho de toque */
+.modo-pc .pwa-modo--flutuante { transform: scale(var(--pwa-k, 1)); transform-origin: left bottom; }
+body:has(#cookie-banner) .pwa-modo--flutuante { display: none; } /* volta depois da escolha de cookies */
+/* abaixo de 1024 px o seletor fica dentro do menu do celular */
+@media (max-width: 1023px) { .pwa-modo--flutuante { display: none; } }
+@media print { .pwa-modo { display: none !important; } }

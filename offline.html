@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Sem conexão | CMKCOGIT</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#1A2C52">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="COGIT">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <!-- Página servida pelo sw.js quando não há rede: tudo embutido, só as fontes já guardadas no cache. -->
+  <style>
+    @font-face { font-family: 'Clash Display'; src: url('/assets/fonts/clash-display-500.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+    @font-face { font-family: 'Satoshi'; src: url('/assets/fonts/satoshi-400.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+    @font-face { font-family: 'Satoshi'; src: url('/assets/fonts/satoshi-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+    :root { --ink: #121314; --paper: #F3F3F1; --navy: #1A2C52; --navy-hover: #13213E; --muted: #55595E; --line: #D9DAD6; }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 'Satoshi', system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+    .skip-link { position: fixed; top: .75rem; left: .75rem; padding: .75rem 1rem; background: #fff; color: var(--ink); transform: translateY(-200%); }
+    .skip-link:focus { transform: none; }
+    main { min-height: 100%; display: grid; place-items: center; padding: max(24px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left)); }
+    .offline { width: 100%; max-width: 460px; border-top: 1px solid var(--line); padding-top: 28px; }
+    .offline svg { display: block; width: 48px; height: 48px; margin-bottom: 28px; }
+    h1 { font: 500 clamp(2rem, 1.5rem + 2.4vw, 2.75rem)/1.08 'Clash Display', system-ui, sans-serif; letter-spacing: -.01em; margin: 0 0 14px; }
+    p { margin: 0 0 28px; color: var(--muted); }
+    button { font: 700 15px/1 'Satoshi', system-ui, sans-serif; color: #fff; background: var(--navy); border: 1px solid var(--navy); border-radius: 2px; padding: 15px 22px; min-height: 48px; cursor: pointer; }
+    button:hover { background: var(--navy-hover); border-color: var(--navy-hover); }
+    button:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+    .tagline { margin: 36px 0 0; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+  <main id="main-content">
+    <div class="offline">
+      <svg viewBox="0 0 1010 1000" role="img" aria-label="COGIT"><g fill="#121314"><path d="M847.7 191.5A480 480 0 1 0 847.7 808.5L783.4 754.5A396 396 0 1 1 783.4 245.5Z"/><path d="M230 750V250L450.0 470.0L670 250V750H590V431.8L450.0 571.8L310 431.8V750Z"/><path d="M670 469.1L889.1 250H990.9L740.9 500.0L990.9 750H889.1L690.0 550.9L670 570.9Z"/></g></svg>
+      <h1 data-en="You are offline.">Você está sem conexão.</h1>
+      <p data-en="This page needs the internet. Check your connection and try again.">Esta página precisa da internet. Confira sua conexão e tente de novo.</p>
+      <button type="button" id="offline-retry" data-en="Try again">Tentar de novo</button>
+      <p class="tagline" data-en="Think. Structure. Build.">Pensar. Estruturar. Construir.</p>
+    </div>
+  </main>
+  <script src="/js/privacy.js?v=d94ce64c"></script>
+  <script src="/js/pwa.js?v=cc06f8d5"></script>
+  <script>
+    (function () {
+      // O sw.js entrega esta página no endereço que a pessoa abriu: em /en/, o texto vai em inglês.
+      if (location.pathname.indexOf('/en/') === 0) {
+        document.documentElement.lang = 'en';
+        document.title = 'Offline | CMKCOGIT';
+        document.querySelectorAll('[data-en]').forEach(function (el) { el.textContent = el.getAttribute('data-en'); });
+        document.querySelector('.skip-link').textContent = 'Skip to content';
+      }
+      var retry = function () { location.reload(); };
+      document.getElementById('offline-retry').addEventListener('click', retry);
+      window.addEventListener('online', retry);
+    })();
+  </script>
+</body>
+</html>

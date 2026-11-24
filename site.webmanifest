@@ -1,14 +1,19 @@
 {
-  "name": "CMKCOGIT",
-  "short_name": "CMKCOGIT",
-  "description": "Desenvolvimento de software e soluções digitais sob medida.",
+  "id": "/",
+  "name": "CMK COGIT",
+  "short_name": "COGIT",
+  "description": "Pensar. Estruturar. Construir.",
   "lang": "pt-BR",
-  "start_url": "/",
-  "display": "browser",
-  "background_color": "#FFFFFF",
-  "theme_color": "#0F1B33",
+  "dir": "ltr",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F3F3F1",
+  "theme_color": "#1A2C52",
+  "categories": ["business", "productivity"],
   "icons": [
-    { "src": "/assets/images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "/assets/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "/assets/images/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/images/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/images/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }

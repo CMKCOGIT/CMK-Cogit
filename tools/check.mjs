@@ -47,6 +47,22 @@ check('Styles and fonts resolve locally',()=>{
 check('Personal drafts are not persisted or logged',()=>{
  for(const file of files.filter(f=>f.endsWith('.js'))){const source=fs.readFileSync(file,'utf8');assert.doesNotMatch(source,/sessionStorage\.setItem|console\.log/);}
 });
+check('Installable app (PWA): manifest, icons, iOS tags, service worker and versioned assets',()=>{
+ const m=JSON.parse(read('site.webmanifest'));
+ assert.equal(m.name,'CMK COGIT');assert.equal(m.short_name,'COGIT');assert.equal(m.start_url,'/?source=pwa');assert.equal(m.scope,'/');assert.equal(m.display,'standalone');assert.equal(m.lang,'pt-BR');
+ assert.ok(!('orientation'in m),'no orientation lock (tablets)');assert.equal(m.theme_color,'#1A2C52');assert.equal(m.background_color,'#F3F3F1');
+ const png=f=>{const b=fs.readFileSync(path.join(root,f));return {w:b.readUInt32BE(16),h:b.readUInt32BE(20),alpha:[4,6].includes(b[25])};};
+ for(const [purpose,size] of [['any','192x192'],['any','512x512'],['maskable','512x512']]){const icon=m.icons.find(i=>i.purpose===purpose&&i.sizes===size);assert.ok(icon,purpose+' '+size);const p=png(icon.src.slice(1));assert.equal(p.w+'x'+p.h,size,icon.src);}
+ const apple=png('apple-touch-icon.png');assert.equal(apple.w,180);assert.equal(apple.h,180);assert.equal(apple.alpha,false,'apple-touch-icon must be opaque');
+ for(const file of html.filter(f=>!path.basename(f).startsWith('google'))){const source=fs.readFileSync(file,'utf8');
+  for(const re of [/rel="manifest" href="[^"]*site\.webmanifest"/,/rel="apple-touch-icon"/,/name="theme-color" content="#1A2C52"/,/name="apple-mobile-web-app-capable" content="yes"/,/name="mobile-web-app-capable" content="yes"/,/name="apple-mobile-web-app-title" content="COGIT"/,/name="apple-mobile-web-app-status-bar-style" content="default"/,/name="viewport" content="[^"]*viewport-fit=cover/])assert.match(source,re,file);
+  if(source.includes('<main'))assert.match(source,/js\/pwa\.js\?v=/,file);
+  for(const t of source.matchAll(/<(?:link|script)\b[^>]*?\s(?:href|src)="([^"?#:]+\.(?:css|js))(\?v=[0-9a-f]+)?"/g))assert.ok(t[2],`${file}: ${t[1]} sem ?v= (rode npm run build)`);
+  if(path.relative(root,file).startsWith('en'+path.sep)&&source.includes('class="header-actions"'))assert.match(source,/js\/i18n-en\.js\?v=[^"]*"><\/script>\s*<script src="[^"]*js\/i18n\.js/,file);
+ }
+ const sw=read('sw.js');assert.match(sw,/const VERSION = '[0-9a-f]{12}';/);assert.match(sw,/url\.origin !== self\.location\.origin\) return/);assert.match(sw,/skipWaiting/);assert.match(sw,/clients\.claim/);
+ for(const f of ['offline.html',...sw.match(/'\/assets\/[^']+'/g).map(s=>s.slice(2,-1))])assert.ok(fs.existsSync(path.join(root,f)),f);
+});
 function environment(saved=null,blocked=false){
  const handlers={},nodes=new Map(),storage=new Map(),scripts=[],cookies=[];let clock=Date.now(),reloads=0;
  if(saved!==null)storage.set('cogit_consent_v2',typeof saved==='string'?saved:JSON.stringify(saved));
@@ -127,7 +143,7 @@ check('Platform handoff carries only IDs/choices, keeps the same ref for the sam
 check('Home diagnostic sends to the platform instead of WhatsApp',()=>{
  const source=read('js/components.js');const result=source.slice(source.indexOf('function renderResult()'),source.indexOf('window.heroStartDiagnosis'));
  assert.match(result,/CogitHandoff\.irParaPlataforma/);assert.doesNotMatch(result,/wa\.me|hero-btn-whatsapp/);assert.doesNotMatch(source,/renderInvite/);
- for(const page of ['monte-sua-solucao.html'])assert.ok(read(page).indexOf('src="js/handoff.js"')>0&&read(page).indexOf('src="js/handoff.js"')<read(page).indexOf('src="js/components.js"'),page);
+ for(const page of ['monte-sua-solucao.html'])assert.ok(read(page).indexOf('src="js/handoff.js')>0&&read(page).indexOf('src="js/handoff.js')<read(page).indexOf('src="js/components.js'),page);
 });
 check('Configurator selection is restored from this browser without free text',()=>{
  const first=configuratorTest();first.app.toggleService('landing-page');first.app.selectSolutionModel('modelos-prontos','landing-page');

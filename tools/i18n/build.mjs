@@ -12,6 +12,7 @@
 // com o mesmo dicionário. Edite sempre o português e o en.json; não edite en/ nem js/i18n-en.js.
 import fs from 'node:fs';
 import path from 'node:path';
+import { versionar } from '../build-pwa.mjs';
 
 const root = path.resolve(import.meta.dirname, '../..');
 const DICT_FILE = path.join(root, 'tools/i18n/en.json');
@@ -184,7 +185,7 @@ function buildEn(rel, ptHtml) {
   s = withSwitch(s, rel, 'en');
   // dicionário e tradutor antes do primeiro script do corpo
   const up = '../'.repeat(depth(rel) + 1);
-  s = s.replace(/(\n[ \t]*)(<script src="[^"]*js\/privacy\.js"><\/script>)/, `$1<script src="${up}js/i18n-en.js"></script>$1<script src="${up}js/i18n.js"></script>$1$2`);
+  s = s.replace(/(\n[ \t]*)(<script src="[^"]*js\/privacy\.js(?:\?v=[0-9a-f]+)?"><\/script>)/, `$1<script src="${up}js/i18n-en.js"></script>$1<script src="${up}js/i18n.js"></script>$1$2`);
   return '<!-- Gerado por tools/i18n/build.mjs a partir de ' + rel + ' e tools/i18n/en.json. Não edite. -->\n' + s;
 }
 
@@ -196,16 +197,18 @@ function ptPages() {
 }
 
 const writes = [];
+const runtime = '/* Gerado por tools/i18n/build.mjs a partir de tools/i18n/en.json. Não edite. */\n' +
+  'window.COGIT_I18N = ' + JSON.stringify({ lang: 'en', pages: PAGES, texts: Object.fromEntries(Object.entries(dict.texts).filter(([, v]) => v)), patterns: dict.patterns || [] }) + ';\n';
+// links de CSS/JS com ?v=<hash> (tools/build-pwa.mjs); o dicionário ainda vai ser gravado, então o hash sai do conteúdo novo
+const comVersao = (html, rel) => versionar(html, rel, { 'js/i18n-en.js': runtime });
 for (const rel of ptPages()) {
   const file = path.join(root, rel);
   const src = fs.readFileSync(file, 'utf8');
   if (!src.includes('class="header-actions"')) continue;
   const next = withAlternates(withSwitch(src, rel, 'pt'), rel);
-  writes.push([file, next]);
-  if (PAGES.includes(rel)) writes.push([path.join(root, 'en', rel), buildEn(rel, next)]);
+  writes.push([file, comVersao(next, rel)]);
+  if (PAGES.includes(rel)) writes.push([path.join(root, 'en', rel), comVersao(buildEn(rel, next), 'en/' + rel)]);
 }
-const runtime = '/* Gerado por tools/i18n/build.mjs a partir de tools/i18n/en.json. Não edite. */\n' +
-  'window.COGIT_I18N = ' + JSON.stringify({ lang: 'en', pages: PAGES, texts: Object.fromEntries(Object.entries(dict.texts).filter(([, v]) => v)), patterns: dict.patterns || [] }) + ';\n';
 writes.push([path.join(root, 'js/i18n-en.js'), runtime]);
 
 if (MODE === 'extract') {

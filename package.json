@@ -5,7 +5,7 @@
   "description": "Site estático da COGIT. Node é opcional e usado apenas para revisão local.",
   "scripts": {
     "dev": "node tools/preview.mjs",
-    "build": "node tools/build-css.mjs && node tools/build-pwa.mjs && node tools/i18n/build.mjs && node tools/build-pwa.mjs",
+    "gerar": "node tools/build-css.mjs && node tools/build-pwa.mjs && node tools/i18n/build.mjs && node tools/build-pwa.mjs",
     "check": "node tools/build-css.mjs --check && node tools/templates/sync-landing.mjs --check && node tools/i18n/build.mjs --check && node tools/build-pwa.mjs --check && node tools/check.mjs"
   }
 }

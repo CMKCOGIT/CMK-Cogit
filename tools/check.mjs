@@ -57,7 +57,7 @@ check('Installable app (PWA): manifest, icons, iOS tags, service worker and vers
  for(const file of html.filter(f=>!path.basename(f).startsWith('google'))){const source=fs.readFileSync(file,'utf8');
   for(const re of [/rel="manifest" href="[^"]*site\.webmanifest"/,/rel="apple-touch-icon"/,/name="theme-color" content="#1A2C52"/,/name="apple-mobile-web-app-capable" content="yes"/,/name="mobile-web-app-capable" content="yes"/,/name="apple-mobile-web-app-title" content="COGIT"/,/name="apple-mobile-web-app-status-bar-style" content="default"/,/name="viewport" content="[^"]*viewport-fit=cover/])assert.match(source,re,file);
   if(source.includes('<main'))assert.match(source,/js\/pwa\.js\?v=/,file);
-  for(const t of source.matchAll(/<(?:link|script)\b[^>]*?\s(?:href|src)="([^"?#:]+\.(?:css|js))(\?v=[0-9a-f]+)?"/g))assert.ok(t[2],`${file}: ${t[1]} sem ?v= (rode npm run build)`);
+  for(const t of source.matchAll(/<(?:link|script)\b[^>]*?\s(?:href|src)="([^"?#:]+\.(?:css|js))(\?v=[0-9a-f]+)?"/g))assert.ok(t[2],`${file}: ${t[1]} sem ?v= (rode npm run gerar)`);
   if(path.relative(root,file).startsWith('en'+path.sep)&&source.includes('class="header-actions"'))assert.match(source,/js\/i18n-en\.js\?v=[^"]*"><\/script>\s*<script src="[^"]*js\/i18n\.js/,file);
  }
  const sw=read('sw.js');assert.match(sw,/const VERSION = '[0-9a-f]{12}';/);assert.match(sw,/url\.origin !== self\.location\.origin\) return/);assert.match(sw,/skipWaiting/);assert.match(sw,/clients\.claim/);

@@ -8,7 +8,7 @@
 //
 // Uso: node tools/build-pwa.mjs          -> grava
 //      node tools/build-pwa.mjs --check  -> falha se algo estiver desatualizado (npm run check)
-// Fluxo completo: npm run build (CSS -> head/versões -> inglês -> versão do service worker).
+// Fluxo completo: npm run gerar (CSS -> head/versões -> inglês -> versão do service worker).
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -91,7 +91,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.met
   let pendentes = 0;
   const gravar = (rel, atual, novo) => {
     if (atual === novo) return;
-    if (CHECK) { console.error(rel + ' desatualizado: rode npm run build'); pendentes++; }
+    if (CHECK) { console.error(rel + ' desatualizado: rode npm run gerar'); pendentes++; }
     else { fs.writeFileSync(path.join(root, rel), novo); console.log(rel + ' atualizado'); }
   };
   const lista = paginas();

@@ -21,7 +21,7 @@ Revisão de 9 de setembro de 2026 a partir do ZIP original. O site continua em H
 - **Manifest** `site.webmanifest` (nome "CMK COGIT", tela cheia, `start_url` `/?source=pwa`), **ícones** `assets/images/icon-192.png`, `icon-512.png`, `icon-maskable-512.png` e `apple-touch-icon.png`, gerados a partir de `assets/images/icone-cogit.svg` por `node tools/pwa-icons.mjs`.
 - **Service worker** `sw.js`: páginas pela rede (sem conexão: cópia guardada ou `offline.html`); CSS, JS, fontes e imagens do site em cache. Não toca em outros domínios (Analytics, plataforma) nem em `/api/`.
 - **Aviso "Instalar app"** e dica do iPhone: `js/pwa.js` + `css/pwa.css`. Some com o app instalado e por 14 dias depois de dispensado.
-- **Versões automáticas:** `node tools/build-pwa.mjs` põe `?v=<hash>` nos links de CSS/JS, mantém as metas do modo app no `<head>` e grava em `sw.js` a versão do cache (hash dos assets). Rode **`npm run build`** depois de qualquer mudança em `css/`, `js/` ou `assets/`; o `npm run check` falha se esquecer.
+- **Versões automáticas:** `node tools/build-pwa.mjs` põe `?v=<hash>` nos links de CSS/JS, mantém as metas do modo app no `<head>` e grava em `sw.js` a versão do cache (hash dos assets). Rode **`npm run gerar`** depois de qualquer mudança em `css/`, `js/` ou `assets/`; o `npm run check` falha se esquecer. O script se chama `gerar` (e não `build`) de propósito: com um `build` no `package.json`, a Vercel tenta compilar o site e procura uma pasta `public`; sem ele, publica a raiz como site estático, como sempre.
 
 ## Versão em inglês (PT | EN)
 

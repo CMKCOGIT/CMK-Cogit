@@ -128,7 +128,7 @@ self.CogitBlack = (() => {
     if (home && !home.childElementCount) home.innerHTML = htmlCombosHome();
 
     const titulo = document.querySelector('[data-bk-titulo]');
-    const txt = f === 'depois' ? 'A Black da Cogit acabou. Obrigado!' : 'Black Friday sem maquiagem.';
+    const txt = f === 'depois' ? 'A Black da Cogit acabou. Obrigado!' : 'Black Friday da Cogit.';
     if (titulo && titulo.textContent.replace(/\s+/g, ' ').trim() !== txt) titulo.textContent = txt;
     const mods = document.querySelector('[data-bk-modelos]');
     if (mods) mods.innerHTML = f === 'durante'

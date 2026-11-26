@@ -181,7 +181,7 @@ check('Black: botão da home, página /blackcogit e rota limpa',()=>{
  const home=read('index.html');assert.match(home,/href="https:\/\/www\.cmkcogit\.com\.br\/blackcogit" class="btn btn-lg btn-black hx-black bk-fase bk-em-antes bk-em-durante"/);
  assert.ok(home.indexOf('id="cta-hero-start"')<home.indexOf('id="cta-hero-black"'),'Monte sua solução vem primeiro');
  assert.match(home,/class="hc hc-black bk-fase bk-em-durante"/);
- const pg=read('blackcogit.html');for(const t2 of ['Black Friday sem maquiagem.','Monte sua solução em 1 minuto, sem cadastro.','O desconto é real?','Pagamento pelo Mercado Pago, dentro da plataforma.','og:title" content="Black da Cogit · 26 e 27/11"','og:url" content="https://www.cmkcogit.com.br/blackcogit"'])assert.ok(pg.includes(t2),t2);
+ const pg=read('blackcogit.html');for(const t2 of ['Black Friday da Cogit.','Monte sua solução em 1 minuto, sem cadastro.','O desconto é real?','Pagamento pelo Mercado Pago, dentro da plataforma.','og:title" content="Black da Cogit · 26 e 27/11"','og:url" content="https://www.cmkcogit.com.br/blackcogit"'])assert.ok(pg.includes(t2),t2);
  const v=JSON.parse(read('vercel.json'));assert.ok(v.rewrites.some(x=>x.source==='/blackcogit'&&x.destination==='/blackcogit.html'));
  const css=read('css/black.css').replace(/\/\*[\s\S]*?\*\//g,'');assert.doesNotMatch(css,/gradient/);assert.doesNotMatch(css,/box-shadow:(?!\s*none)/);assert.doesNotMatch(css,/border-radius:(?!\s*0)/);
  for(const [a,b] of [['#121314','#F3F3F1'],['#1A2C52','#F3F3F1'],['#8EA6D8','#121314'],['#55595E','#FFFFFF'],['#1A2C52','#FFFFFF']])assert.ok(contrast(a,b)>=4.5,a+' / '+b);

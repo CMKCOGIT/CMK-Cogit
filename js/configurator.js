@@ -99,17 +99,38 @@ const ConfiguratorApp = (() => {
   // Combinação ativa: todos os serviços do pacote selecionados (presença com o formato do pacote).
   // Fica com a de maior desconto quando mais de uma se aplica.
   const BUNDLES = typeof serviceBundles !== 'undefined' ? serviceBundles : [];
+  // Black da Cogit (black-config.js + js/black.js): preço de modelo pronto e combos próprios;
+  // os 10% dos combos não somam com a Black. Só visual: a plataforma recalcula pelo servidor.
+  let semPromo = false;
+  const blackOn = () => !semPromo && typeof CogitBlack !== 'undefined' && CogitBlack.ativa();
+  function blackModel(entry) { return blackOn() && entry.modelId === 'modelos-prontos' ? CogitBlack.precoModelo(entry.serviceId) : null; }
+  function currentPrice(entry) { const b = blackModel(entry); return b ? b.por : entry.price; }
+  function bundleList() {
+    if (semPromo) return [];
+    if (!blackOn()) return BUNDLES;
+    return CogitBlack.combos().map(c => ({ id: c.id, name: c.nome, services: c.servicos, model: c.modelo, discount: c.percentual, de: c.de, por: c.por, aPartirDe: c.aPartirDe, black: true }));
+  }
   function activeBundle() {
     let best = null;
-    BUNDLES.forEach(bundle => {
+    bundleList().forEach(bundle => {
       const entries = bundle.services.map(getEntry);
       if (entries.some(entry => !entry || entry.price == null || ['analysis', 'custom'].includes(entry.priceType))) return;
       if (bundle.model && entries.some(entry => isPresence(entry.serviceId) && entry.modelId !== bundle.model)) return;
-      const base = entries.reduce((sum, entry) => sum + Number(entry.price), 0);
-      const value = base - Math.floor(base * (100 - bundle.discount) / 100 / 10) * 10;
+      const base = entries.reduce((sum, entry) => sum + Number(currentPrice(entry)), 0);
+      const value = bundle.black ? base - bundle.por : base - Math.floor(base * (100 - bundle.discount) / 100 / 10) * 10;
       if (!best || value > best.value) best = { bundle, base, value };
     });
     return best;
+  }
+  // Preço de antes (sem Black e sem combo) e economia da Black, para o resumo riscado
+  function blackSavings() {
+    if (!blackOn()) return null;
+    const now = calculateTotal();
+    semPromo = true;
+    const before = calculateTotal();
+    semPromo = false;
+    if (now.value == null || before.value == null || before.value <= now.value) return null;
+    return { de: before.value, por: now.value, economia: before.value - now.value, aPartirDe: now.type !== 'fixed' };
   }
   function calculateTotal() {
     state.isComplex = checkComplexity();
@@ -119,7 +140,7 @@ const ConfiguratorApp = (() => {
     state.selectedServices.forEach(entry => {
       if (['analysis', 'custom'].includes(entry.priceType)) { hasCustom = true; return; }
       if (isSupport(entry.billing)) return;
-      if (entry.price != null) { value += Number(entry.price); if (entry.priceType === 'from') hasFrom = true; }
+      if (entry.price != null) { value += Number(currentPrice(entry)); if (entry.priceType === 'from') hasFrom = true; }
     });
     state.selectedAddons.forEach(entry => {
       if (['analysis', 'custom'].includes(entry.priceType)) { hasCustom = true; return; }
@@ -265,7 +286,8 @@ const ConfiguratorApp = (() => {
     const description = pronto
       ? (info.pronto ? info.pronto + ': estrutura' : 'Estrutura') + ' já testada. Aplicamos sua marca, seus textos e suas imagens.'
       : 'Você escolhe seções e componentes, como vídeo, galeria e depoimentos. O layout é desenhado para o seu negócio.';
-    const price = pronto ? money(service.price) : 'a partir de ' + money(service.customPrice);
+    const black = pronto && blackOn() ? CogitBlack.precoModelo(service.id) : null;
+    const price = black ? dePor(money(black.de), money(black.por)) : pronto ? money(service.price) : 'a partir de ' + money(service.customPrice);
     const prazo = pronto ? (info.prazo || 'definido no escopo') : 'definido no escopo';
     return '<button type="button" class="cfg-model-option ' + (selected ? 'is-selected' : '') + '" data-model-service="' + entry.serviceId + '" data-model-id="' + modelId + '" aria-pressed="' + selected + '">'
       + '<span class="cfg-model-top"><span class="cfg-model-chip' + (pronto ? '' : ' is-alt') + '">' + chip + '</span><span class="cfg-model-radio" aria-hidden="true"></span></span>'
@@ -353,10 +375,21 @@ const ConfiguratorApp = (() => {
     const howItWorks = needsValidation
       ? 'Na plataforma você entra ou cria sua conta e a solicitação vai para a validação técnica. Quando a equipe confirmar escopo e valor, o pagamento é liberado lá mesmo.'
       : 'O preço já está fechado. Na plataforma você entra ou cria sua conta, confere o resumo e paga com Pix, cartão ou boleto pelo Mercado Pago.';
-    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 1 mês de suporte gratuito; o suporte escolhido começa depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
+    return '<section class="cfg-step cfg-final" data-step="5">' + heading('Configuração concluída', 'Sua solução está pronta para avançar.', needsValidation ? 'A equipe valida os detalhes técnicos antes de confirmar escopo, prazo e investimento.' : 'Escopo e investimento já estão definidos para esta configuração.') + '<div class="cfg-final-estimate"><span>Investimento inicial</span><strong>' + totalHtml() + '</strong><p>Valores consideram o escopo selecionado. Todo projeto inclui 1 mês de suporte gratuito; o suporte escolhido começa depois desse período.</p></div><div class="cfg-next-path"><span class="cfg-path-dot"></span><div><strong>Próximo passo</strong><p>' + (needsValidation ? 'Validação técnica na plataforma COGIT e liberação do pagamento.' : 'Pagamento seguro na plataforma COGIT.') + '</p></div></div><form class="cfg-form" id="cfg-contact-form" novalidate><div class="cfg-form-heading"><h3>Continuar na plataforma COGIT</h3><p>' + howItWorks + '</p></div><div class="cfg-form-grid"><div class="form-group full-width"><label class="form-label" for="cfg-notes">Algo importante sobre o projeto? (opcional)</label><textarea class="form-textarea" maxlength="2000" id="cfg-notes" name="notes" placeholder="Contexto, prazo ou necessidade específica..." rows="3"></textarea></div></div><p id="cfg-contact-status" class="form-status" role="status"></p><button class="btn btn-primary btn-lg cfg-submit-btn" type="submit" id="cfg-submit">Continuar na plataforma <span aria-hidden="true"><i class="bi bi-arrow-right"></i></span></button><p class="cfg-inline-note"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span> Sua seleção vai junto e fica salva até você entrar. O valor é conferido novamente pela plataforma antes do pagamento.</p></form></section>';
+  }
+  // de/por acessível: o leitor de tela lê "de R$ 500, por R$ 400"; o riscado fica aria-hidden
+  function dePor(de, por) {
+    return '<span class="sr-only">de ' + de + ', por ' + por + '</span><span aria-hidden="true"><s class="cfg-black-de">' + de + '</s> ' + por + '</span>';
+  }
+  function totalHtml() {
+    const saving = blackSavings();
+    if (!saving) return estimate(false);
+    return dePor(money(saving.de), estimate(false)) + '<span class="cfg-black-economia">Black da Cogit · economia de ' + money(saving.economia) + '</span>';
   }
   function entryPrice(entry) {
     if (['custom', 'analysis'].includes(entry.priceType)) return 'Análise';
+    const black = blackModel(entry);
+    if (black) return dePor(money(black.de), money(black.por));
     return entry.price == null ? '—' : (entry.priceType === 'from' ? 'A partir de ' : '') + money(entry.price) + billingSuffix(entry.billing);
   }
   function summaryService(entry) {
@@ -375,7 +408,7 @@ const ConfiguratorApp = (() => {
   }
   function renderSummary() {
     const objectives = state.selectedObjectives.map(getObjective).filter(Boolean);
-    return '<section class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (activeBundle() ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Combinação</span><div class="cfg-summary-lines"><div><span><strong>' + esc(activeBundle().bundle.name) + '</strong><small>' + activeBundle().bundle.discount + '% de desconto no pacote</small></span><em>− ' + money(activeBundle().value) + '</em></div></div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + estimate(false) + '</strong><small>Todo projeto inclui 1 mês de suporte gratuito. O suporte escolhido começa depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></section>';
+    return '<section class="cfg-summary-v2" aria-label="Resumo da solução"><div class="cfg-summary-head"><span>Resumo ao vivo</span><strong>Sua solução</strong></div>' + (objectives.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Objetivos</span><div class="cfg-summary-tags">' + objectives.map(item => '<span>' + item.name + '</span>').join('') + '</div></div>' : '<div class="cfg-summary-empty"><span>01</span><p>Escolha um objetivo para começar.</p></div>') + (state.selectedServices.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Soluções</span><div class="cfg-summary-lines">' + state.selectedServices.map(summaryService).join('') + '</div></div>' : '') + (activeBundle() ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Combinação</span><div class="cfg-summary-lines"><div><span>' + (activeBundle().bundle.black ? '<span class="cfg-black-tag">Black da Cogit</span>' : '') + '<strong>' + esc(activeBundle().bundle.name) + '</strong><small>' + (activeBundle().bundle.black ? 'de ' + money(activeBundle().bundle.de) + ' por ' + money(activeBundle().bundle.por) + ' (' + activeBundle().bundle.discount + '% de desconto)' : activeBundle().bundle.discount + '% de desconto no pacote') + '</small></span><em>− ' + money(activeBundle().value) + '</em></div></div></div>' : '') + (state.selectedAddons.length ? '<div class="cfg-summary-section"><span class="cfg-summary-label">Complementos</span><div class="cfg-summary-lines">' + state.selectedAddons.map(summaryAddon).join('') + '</div></div>' : '') + '<div class="cfg-summary-total-v2"><span>Investimento inicial</span><strong>' + totalHtml() + '</strong><small>Todo projeto inclui 1 mês de suporte gratuito. O suporte escolhido começa depois.</small></div><div class="cfg-summary-security"><span aria-hidden="true"><i class="bi bi-shield-check"></i></span><p>Você revisa tudo antes de compartilhar seus dados.</p></div></section>';
   }
   function configurationComplete() {
     return state.selectedServices.every(entry => {
@@ -520,7 +553,10 @@ const ConfiguratorApp = (() => {
       .map(entry => { const c = customStructures[entry.serviceId]; return `Estrutura sob medida (${c.suggestion}): ${c.sections.join(' > ')}${c.components.length ? `\nComponentes: ${c.components.join(', ')}` : ''}`; });
     const consult = state.selectedServices.filter(entry => entry.consultoria).map(entry => (getService(entry.serviceId) || {}).name || entry.serviceId);
     const combo = activeBundle();
-    if (combo) structures.unshift(`Combinação ${combo.bundle.name}: ${combo.bundle.discount}% de desconto no pacote (− ${money(combo.value)} sobre ${money(combo.base)}).`);
+    const saving = blackSavings();
+    if (combo && combo.bundle.black) structures.unshift(`Black da Cogit · Combinação ${combo.bundle.name}: de ${money(combo.bundle.de)} por ${combo.bundle.aPartirDe ? 'a partir de ' : ''}${money(combo.bundle.por)} (${combo.bundle.discount}%).`);
+    else if (combo) structures.unshift(`Combinação ${combo.bundle.name}: ${combo.bundle.discount}% de desconto no pacote (− ${money(combo.value)} sobre ${money(combo.base)}).`);
+    if (saving) structures.unshift(`Black da Cogit: de ${money(saving.de)} por ${estimate(false)} (economia de ${money(saving.economia)}).`);
     if (consult.length) structures.unshift(`Consultoria e planejamento digital solicitada para: ${consult.join(', ')}. Sem custo se o projeto for fechado com a COGIT; ${money(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.`);
     return {
       origem: 'configurador',
@@ -531,7 +567,9 @@ const ConfiguratorApp = (() => {
       }),
       complementos: state.selectedAddons.map(entry => ({ id: entry.addonId, qtd: entry.quantity || 1, nome: entry.name })),
       notas: structures.concat(notes ? notes.value.trim() : (state.formData['cfg-notes'] || '')).filter(Boolean).join('\n'),
-      estimativa: estimate(false)
+      estimativa: estimate(false),
+      // marca da Black: a plataforma confere a data no servidor e recalcula o preço
+      ...(saving ? { promo: CogitBlack.config().id } : {})
     };
   }
   function submitConfiguration(event) {

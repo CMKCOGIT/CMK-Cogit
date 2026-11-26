@@ -6,7 +6,7 @@
      nada de /api/ e só requisições GET.
    · VERSION é o hash do conteúdo dos assets, gravado por tools/build-pwa.mjs (npm run check confere).
      Versão nova: instala, assume na hora (skipWaiting + clients.claim) e apaga os caches antigos. */
-const VERSION = '69fe5cdb3dab';
+const VERSION = '48306bb787af';
 const CACHE_PAGES = 'cogit-pages-' + VERSION;
 const CACHE_ASSETS = 'cogit-assets-' + VERSION;
 const OFFLINE_URL = '/offline.html';

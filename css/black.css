@@ -1,0 +1,147 @@
+/* =====================================================================
+   COGIT — Black da Cogit (26 e 27/11/2026). Home, /blackcogit e simulador.
+   Identidade: fundo chapado, fios de 2px, cantos retos, sem sombra/degradê.
+   Visibilidade pela fase marcada em <html data-black="antes|durante|depois"> (js/black.js).
+   ===================================================================== */
+
+/* ── O que aparece em cada fase ── */
+/* .bk-fase + .bk-em-antes / .bk-em-durante / .bk-em-depois; --bk-d = display quando visível */
+.bk-fase { display: none !important; }
+html[data-black="antes"] .bk-fase.bk-em-antes,
+html[data-black="durante"] .bk-fase.bk-em-durante,
+html[data-black="depois"] .bk-fase.bk-em-depois { display: var(--bk-d, block) !important; }
+.hx-black { --bk-d: inline-flex; }
+.hc-black, .bk-contador { --bk-d: grid; }
+.bk-preco > span[aria-hidden] { display: grid; gap: 2px; }
+.hc-item .bk-preco > span[aria-hidden] { display: block; }
+.bk-combos > .bk-outros:first-child { border-top: 0; }
+/* home: durante a Black, os combos de 10% saem e entram os da Black */
+html[data-black="durante"] .hc:not(.hc-black) { display: none !important; }
+
+/* ── Botão Black (Grafite sobre Papel) ── */
+.btn.btn-black, a.btn-black { background: var(--ink) !important; color: var(--paper) !important; border: 2px solid var(--ink) !important; border-radius: 0 !important; box-shadow: none !important; text-decoration: none; }
+.btn.btn-black:hover, .btn.btn-black:focus-visible { background: var(--paper) !important; color: var(--ink) !important; transform: none !important; }
+.btn.btn-black::after { display: none; }
+.btn.btn-black:focus-visible { outline: 2px solid var(--navy); outline-offset: 3px; }
+
+/* hero da home: os dois botões lado a lado; no celular, empilhados (Monte sua solução primeiro) */
+.hx-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.hx .hx-main, .hx .hx-black { border-radius: 0 !important; }
+.hx .hx-black { min-width: min(260px, 86vw); padding-inline: 36px !important; min-height: 54px !important; font-size: 16px !important; }
+@media (max-width: 600px) {
+  .hx-btns { flex-direction: column; align-items: stretch; width: min(340px, 86vw); }
+  .hx-btns .btn { width: 100%; min-width: 0; }
+}
+
+/* selo */
+.bk-selo { display: inline-block; font: 700 11px/1 var(--text); letter-spacing: .14em; text-transform: uppercase; background: var(--ink); color: var(--paper); padding: 7px 9px; }
+.hc-black .hc-tag { background: var(--paper); color: var(--ink); }
+.hc-black { background: var(--ink) !important; }
+.hc-black .hc-item { border-bottom-color: var(--line-d); }
+.hc-black .hc-list { border-top-color: var(--line-d); }
+.hc-black .hc-item em s { color: var(--muted-d); }
+.hc-black .hc-item small { grid-column: 1; font: 700 11px/1.3 var(--text); letter-spacing: .12em; text-transform: uppercase; color: var(--sky); }
+
+/* preço de/por (acessível: o texto completo vai no .sr-only; o visual fica aria-hidden) */
+.bk-preco s, .bk-preco del { text-decoration-thickness: 2px; }
+
+/* =====================================================================
+   Página /blackcogit
+   ===================================================================== */
+.bk { background: var(--paper); color: var(--ink); }
+.bk .container { max-width: var(--site-max, 1320px); margin: 0 auto; padding-inline: max(var(--site-pad, 24px), env(safe-area-inset-left, 0px)) max(var(--site-pad, 24px), env(safe-area-inset-right, 0px)); }
+.bk h1, .bk h2, .bk h3 { font-family: var(--display) !important; font-weight: 500 !important; letter-spacing: -.02em; color: inherit; margin: 0; }
+.bk-rotulo { display: block; font: 700 12px/1.3 var(--text); letter-spacing: .16em; text-transform: uppercase; margin: 0 0 18px; }
+.bk-sec { padding-block: clamp(56px, 8vw, 112px); border-top: 2px solid var(--ink); }
+.bk-sec-head { display: grid; gap: 12px; margin-bottom: clamp(28px, 4vw, 48px); max-width: 60ch; }
+.bk-sec-head h2 { font-size: clamp(30px, 3.6vw, 52px); line-height: 1.02; }
+.bk-sec-head p { margin: 0; font-size: 17px; line-height: 1.55; color: var(--muted); }
+
+/* hero escuro */
+.bk-hero { background: var(--ink); color: var(--paper); padding-top: calc(var(--header-h, 72px) + clamp(40px, 7vw, 96px)); padding-bottom: clamp(56px, 8vw, 112px); }
+.bk-hero .bk-rotulo { color: var(--sky); }
+.bk-hero h1 { font-size: clamp(44px, 7.4vw, 120px) !important; line-height: .94 !important; max-width: 14ch; color: var(--paper) !important; }
+.bk-hero .bk-lead { margin: 22px 0 0; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.5; color: var(--paper); max-width: 52ch; }
+.bk-hero .btn-primary { background: var(--paper) !important; color: var(--ink) !important; border: 2px solid var(--paper) !important; border-radius: 0 !important; box-shadow: none !important; }
+.bk-hero .btn-primary:hover { background: var(--ink) !important; color: var(--paper) !important; transform: none !important; }
+.bk-acoes { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.bk .btn { border-radius: 0 !important; box-shadow: none !important; }
+.bk .btn:hover { transform: none !important; }
+.bk-sec .btn-primary { border: 2px solid var(--navy) !important; }
+
+/* contador */
+.bk-contador { margin-top: clamp(28px, 4vw, 44px); display: grid; gap: 10px; }
+.bk-contador > span { font: 700 12px/1.3 var(--text); letter-spacing: .16em; text-transform: uppercase; color: var(--sky); }
+.bk-contador ol { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 560px; border: 2px solid var(--paper); }
+.bk-contador li { display: grid; gap: 4px; padding: 14px 16px; border-left: 2px solid var(--paper); }
+.bk-contador li:first-child { border-left: 0; }
+.bk-contador b { font: 500 clamp(30px, 4vw, 52px)/1 var(--display); font-variant-numeric: tabular-nums; }
+.bk-contador small { font: 700 11px/1.2 var(--text); letter-spacing: .14em; text-transform: uppercase; }
+
+/* cards de preço */
+.bk-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 2px solid var(--ink); background: var(--white); }
+.bk-item { display: grid; align-content: start; gap: 10px; padding: clamp(22px, 2.6vw, 32px); border-left: 2px solid var(--ink); }
+.bk-item:first-child { border-left: 0; }
+.bk-item h3 { font-size: clamp(22px, 2vw, 28px); line-height: 1.1; }
+.bk-item p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.bk-item .bk-preco { margin-top: 8px; }
+.bk-item .btn { margin-top: 10px; justify-self: start; }
+.bk-preco { display: grid; gap: 2px; }
+.bk-preco s { font: 400 15px/1.2 var(--text); color: var(--muted); }
+.bk-preco b { font: 500 clamp(30px, 3vw, 42px)/1 var(--display); }
+.bk-preco b small { font: 700 12px/1 var(--text); letter-spacing: .12em; text-transform: uppercase; margin-right: 6px; }
+.bk-economia { font: 700 12px/1.3 var(--text); letter-spacing: .12em; text-transform: uppercase; color: var(--navy); }
+.bk-nota { margin: 18px 0 0; font-size: 16px; }
+
+/* combos: Autônomo Pronto em destaque, os outros três menores */
+.bk-combos { display: grid; gap: 0; border: 2px solid var(--ink); }
+.bk-destaque { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(20px, 4vw, 56px); padding: clamp(26px, 4vw, 52px); background: var(--navy); color: var(--paper); }
+.bk-destaque h3 { font-size: clamp(32px, 3.8vw, 56px); line-height: 1; color: var(--paper) !important; }
+.bk-destaque p { margin: 12px 0 0; color: var(--paper); font-size: 17px; line-height: 1.5; }
+.bk-destaque .bk-preco s { color: var(--navy-muted); }
+.bk-destaque .bk-economia { color: var(--sky); }
+.bk-destaque .bk-selo { background: var(--paper); color: var(--navy); margin-bottom: 16px; }
+.bk-destaque .btn-primary { background: var(--paper) !important; color: var(--navy) !important; border: 2px solid var(--paper) !important; margin-top: 18px; }
+.bk-destaque .btn-primary:hover { background: var(--navy) !important; color: var(--paper) !important; }
+.bk-destaque-preco { align-self: end; display: grid; gap: 8px; }
+.bk-outros { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); background: var(--white); border-top: 2px solid var(--ink); }
+.bk-outros .bk-item .bk-preco b { font-size: clamp(26px, 2.4vw, 34px); }
+
+/* regras e FAQ */
+.bk-regras { margin: 0; padding: 0; list-style: none; border-top: 2px solid var(--ink); max-width: 880px; }
+.bk-regras li { padding: 16px 0; border-bottom: 2px solid var(--ink); font-size: 17px; line-height: 1.55; }
+.bk-faq { max-width: 880px; border-top: 2px solid var(--ink); }
+.bk-faq details { border-bottom: 2px solid var(--ink); }
+.bk-faq summary { cursor: pointer; padding: 18px 0; font: 500 clamp(19px, 1.6vw, 23px)/1.25 var(--display); list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+.bk-faq summary::-webkit-details-marker { display: none; }
+.bk-faq summary::after { content: '+'; font-family: var(--text); font-weight: 700; }
+.bk-faq details[open] summary::after { content: '−'; }
+.bk-faq details p { margin: 0 0 20px; font-size: 17px; line-height: 1.55; color: var(--muted); max-width: 64ch; }
+.bk-faq summary:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
+
+/* CTA final e estados */
+.bk-final { background: var(--navy); color: var(--paper); border-top: 0; }
+.bk-final h2 { font-size: clamp(30px, 4vw, 60px); line-height: 1.02; max-width: 20ch; color: var(--paper) !important; }
+.bk-final .btn-primary { background: var(--paper) !important; color: var(--navy) !important; border: 2px solid var(--paper) !important; margin-top: 28px; }
+.bk-final .btn-primary:hover { background: var(--navy) !important; color: var(--paper) !important; }
+.bk-fim { min-height: 70vh; display: grid; align-content: center; }
+
+@media (max-width: 860px) {
+  .bk-grid, .bk-outros { grid-template-columns: 1fr; }
+  .bk-item { border-left: 0; border-top: 2px solid var(--ink); }
+  .bk-item:first-child { border-top: 0; }
+  .bk-destaque { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .bk-contador ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bk-contador li:nth-child(3) { border-left: 0; }
+  .bk-contador li:nth-child(n+3) { border-top: 2px solid var(--paper); }
+  .bk-acoes .btn { width: 100%; }
+}
+
+/* =====================================================================
+   Simulador: linhas da Black no resumo
+   ===================================================================== */
+.cfg-black-tag { display: inline-block; font: 700 10px/1 var(--text); letter-spacing: .14em; text-transform: uppercase; background: var(--ink); color: var(--paper); padding: 5px 7px; margin-bottom: 6px; }
+.cfg-black-de { display: block; font-weight: 400; color: var(--muted); }
+.cfg-black-economia { display: block; margin-top: 4px; font: 700 12px/1.3 var(--text); letter-spacing: .08em; text-transform: uppercase; color: var(--navy); }

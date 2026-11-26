@@ -481,7 +481,7 @@ function renderHeroInteractive() {
     const totalLabel = ordered[0] === 'outro-svc' ? 'Gratuito' : total > 0 ? (from ? 'a partir de ' : '') + brl(total) : recurring.length ? recurring[0] : 'Sem custo';
     return `<p class="dx-kicker">Seu projeto</p>
       <ul class="dx-side-items">${rows.join('')}</ul>
-      ${bundle ? `<p class="dx-side-bundle">Combinação ${esc(bundle.bundle.name)}: −${brl(bundle.value)} (${bundle.bundle.discount}% de desconto)</p>` : ''}
+      ${bundle ? `<p class="dx-side-bundle">${bundle.bundle.black ? 'Black da Cogit · ' : 'Combinação '}${esc(bundle.bundle.name)}: −${brl(bundle.value)} (${bundle.bundle.discount}% de desconto)</p>` : ''}
       <div class="dx-side-total"><span>Investimento estimado</span><strong>${totalLabel}</strong>${recurring.length && total > 0 ? `<small>+ <span>${esc(recurring[0])}</span></small>` : ''}</div>
       <p class="dx-side-note">${ordered[0] === 'outro-svc' ? 'Você recebe orientação antes de qualquer investimento.' : 'Valor de referência. A equipe confirma depois de entender o escopo.'}</p>
       <ul class="dx-side-trust"><li>Sem compromisso</li><li>Você revisa tudo antes de pagar</li></ul>`;
@@ -624,13 +624,19 @@ function renderHeroInteractive() {
   const catalogSvc = (id) => (typeof configuratorData !== 'undefined' ? configuratorData.services : []).find(x => x.id === id) || null;
   const dxIdOfCatalog = (id) => ({ 'loja-virtual': 'loja-svc', 'identidade-essencial': 'identidade-svc', automacao: 'automacao-svc', integracao: 'integracao-svc', sistema: 'sistema-svc', mvp: 'mvp-svc', plataforma: 'plataforma-svc', manutencao: 'suporte-essencial-svc', suporte: 'suporte-continuo-svc' })[id] || id;
   const isRecurring = (svc) => svc && (svc.billing === 'monthly' || svc.billing === 'demand');
+  // Black da Cogit (black-config.js + js/black.js): só visual; a plataforma recalcula pelo servidor.
+  let semBlack = false;
+  const blackOn = () => !semBlack && typeof CogitBlack !== 'undefined' && CogitBlack.ativa();
+  const blackPronto = (id) => (blackOn() ? CogitBlack.precoModelo(id) : null);
   // Valor de um complemento: presença digital entra com o modelo pronto (o mais comum em combinação).
   function extraPrice(id) {
     const svc = catalogSvc(id);
     if (!svc) return { value: null, from: false, label: 'Sob consulta' };
     const from = svc.priceType === 'from';
     const suffix = svc.billing === 'monthly' ? '/mês após o 1º mês grátis' : svc.billing === 'demand' ? ' por solicitação' : '';
-    return { value: svc.price, from, label: (from ? 'a partir de ' : '') + brl(svc.price) + suffix };
+    const black = PRESENCA_DIGITAL_IDS.includes(id) ? blackPronto(id) : null; // complemento de presença = modelo pronto
+    const value = black ? black.por : svc.price;
+    return { value, from, label: (from ? 'a partir de ' : '') + brl(value) + suffix + (black ? ' (Black da Cogit, de ' + brl(black.de) + ')' : '') };
   }
   const CONSULTORIA_PRECO = 350;
 
@@ -677,15 +683,19 @@ function renderHeroInteractive() {
   const altGroupOfCatalog = (id) => { const dx = dxIdOfCatalog(id); const g = groupOf(dx); return g && g.alts.includes(dx) ? g : null; };
   const rivalOfMain = (id) => { const g = altGroupOfCatalog(id); return Boolean(g) && g === groupOf(state.selectedService) && g.alts.includes(state.selectedService); };
   // Combinação (js/data.js · serviceBundles) completa com o principal + complementos.
+  // Durante a Black: os combos da Black (preço fechado "por") no lugar dos de 10%, que não somam com ela.
   function activeBundleFor(ids) {
-    const bundles = typeof serviceBundles !== 'undefined' ? serviceBundles : [];
+    if (semBlack) return null;
+    const bundles = blackOn()
+      ? CogitBlack.combos().map(c => ({ id: c.id, name: c.nome, services: c.servicos, model: c.modelo, discount: c.percentual, de: c.de, por: c.por, aPartirDe: c.aPartirDe, black: true }))
+      : (typeof serviceBundles !== 'undefined' ? serviceBundles : []);
     const presenceModel = PRESENCA_DIGITAL_IDS.includes(state.selectedService) ? state.objective : null;
     let best = null;
     bundles.forEach(bundle => {
       if (!bundle.services.every(id => ids.includes(id))) return;
       if (bundle.model && bundle.services.includes(state.selectedService) && presenceModel !== bundle.model) return;
-      const base = bundle.services.reduce((sum, id) => sum + (id === state.selectedService && presenceModel ? presencePrice(id, presenceModel) : (catalogSvc(id) || {}).price || 0), 0);
-      const value = base - Math.floor(base * (100 - bundle.discount) / 100 / 10) * 10;
+      const base = bundle.services.reduce((sum, id) => sum + (id === state.selectedService && presenceModel ? presencePrice(id, presenceModel) : (bundle.black ? extraPrice(id).value : (catalogSvc(id) || {}).price) || 0), 0);
+      const value = bundle.black ? base - bundle.por : base - Math.floor(base * (100 - bundle.discount) / 100 / 10) * 10;
       if (!best || value > best.value) best = { bundle, value };
     });
     return best;
@@ -704,6 +714,7 @@ function renderHeroInteractive() {
     const services = typeof configuratorData !== 'undefined' ? configuratorData.services : [];
     const svc = services.find(s => s.id === serviceId);
     if (!svc) return null;
+    if (model !== 'sob-medida') { const black = blackPronto(serviceId); if (black) return black.por; }
     return model === 'sob-medida' ? (svc.customPrice || svc.price) : svc.price;
   }
 
@@ -1358,11 +1369,23 @@ function renderHeroInteractive() {
       if (pr.from) anyFrom = true;
     });
     const bundle = extras.length ? activeBundleFor([catalogService, ...extras]) : null;
-    if (bundle) { total -= bundle.value; lines.push({ name: `Combinação ${bundle.bundle.name} (${bundle.bundle.discount}% de desconto)`, label: '− ' + brl(bundle.value), discount: true }); }
+    if (bundle) { total -= bundle.value; lines.push({ name: bundle.bundle.black ? `Black da Cogit · ${bundle.bundle.name} (de ${brl(bundle.bundle.de)} por ${bundle.bundle.aPartirDe ? 'a partir de ' : ''}${brl(bundle.bundle.por)})` : `Combinação ${bundle.bundle.name} (${bundle.bundle.discount}% de desconto)`, label: '− ' + brl(bundle.value), discount: true }); }
     if (consultoria) lines.push({ name: 'Consultoria e planejamento digital', label: 'Sem custo fechando com a COGIT' });
     if (recurring && !lines.length) price = recurring;
     else if (total <= 0) price = state.selectedService === 'consultoria-svc' ? 'Sem custo' : 'Gratuito';
     else price = (anyFrom ? 'a partir de ' : '') + brl(total);
+    // Black: preço de antes (sem Black e sem combo) riscado e economia
+    let blackDe = null;
+    if (blackOn() && total > 0 && !(recurring && lines.length <= 1)) {
+      semBlack = true;
+      let de = model ? presencePrice(state.selectedService, model) : (mainValue || 0);
+      extras.forEach(id => { if (!isRecurring(catalogSvc(id))) de += Number(extraPrice(id).value) || 0; });
+      semBlack = false;
+      if (de > total) blackDe = de;
+    }
+    const priceHtml = blackDe
+      ? `<span class="sr-only">de ${brl(blackDe)}, por ${price}</span><span aria-hidden="true"><s class="cfg-black-de">${brl(blackDe)}</s> ${price}</span><span class="cfg-black-economia">Black da Cogit · economia de ${brl(blackDe - total)}</span>`
+      : price;
     const oneOffExtras = extras.filter(id => !isRecurring(catalogSvc(id)));
     let priceLead = '';
     if (extras.length) {
@@ -1424,7 +1447,7 @@ function renderHeroInteractive() {
 
           <section class="dx-aside" aria-labelledby="dx-invest-title">
             <h3 class="dx-kicker" id="dx-invest-title">Investimento</h3>
-            <p class="dx-price">${price}</p>
+            <p class="dx-price">${priceHtml}</p>
             ${lines.length > 1 || recurringLines.length && lines.length ? `<ul class="dx-breakdown">${lines.map(l => `<li${l.discount ? ' class="is-discount"' : ''}><span>${esc(l.name)}</span><b>${esc(l.label)}</b></li>`).join('')}</ul>` : ''}
             ${recurringLines.length && lines.length ? `<p class="dx-kicker dx-kicker--sub">Suporte</p><ul class="dx-breakdown">${recurringLines.map(l => `<li><span>${esc(l.name)}</span><b>${esc(l.label)}</b></li>`).join('')}</ul>` : ''}
             <p class="dx-price-note">${priceLead ? `<span>${priceLead}</span> ` : ''}<span>${priceNote}</span></p>
@@ -1479,7 +1502,9 @@ function renderHeroInteractive() {
         state.contextTags.length ? `Marcado no diagnóstico: ${state.contextTags.join('; ')}` : '',
         consultoria ? `Consultoria e planejamento digital solicitada para: ${svcName}. Sem custo se o projeto for fechado com a COGIT; ${brl(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.` : '',
         state.selectedService === 'consultoria-svc' ? `Consultoria e planejamento digital (${objData ? objData.label : 'objetivo não informado'}). Sem custo se o projeto for fechado com a COGIT; ${brl(CONSULTORIA_PRECO)} se for desenvolvido com outra empresa.` : '',
-        bundle ? `Combinação ${bundle.bundle.name}: ${bundle.bundle.discount}% de desconto (− ${brl(bundle.value)}).` : '',
+        blackDe ? `Black da Cogit: de ${brl(blackDe)} por ${price} (economia de ${brl(blackDe - total)}).` : '',
+        bundle && bundle.bundle.black ? `Black da Cogit · Combinação ${bundle.bundle.name}: de ${brl(bundle.bundle.de)} por ${bundle.bundle.aPartirDe ? 'a partir de ' : ''}${brl(bundle.bundle.por)} (${bundle.bundle.discount}%).`
+          : bundle ? `Combinação ${bundle.bundle.name}: ${bundle.bundle.discount}% de desconto (− ${brl(bundle.value)}).` : '',
         contextText
       ].filter(Boolean).join('\n');
       const cfg = {
@@ -1489,7 +1514,9 @@ function renderHeroInteractive() {
         complementos: [],
         notas: notes,
         diagnostico: { objetivo: project ? `Sob medida · ${project.objectiveTitle}` : variantData ? `${formatLabel} · ${variantTier.label}` : formatLabel, direcao: headline },
-        estimativa: price
+        estimativa: price,
+        // marca da Black: a plataforma confere a data no servidor e recalcula o preço
+        ...(blackDe ? { promo: CogitBlack.config().id } : {})
       };
       if (!pers) { CogitHandoff.irParaPlataforma(cfg); return; }
       CogitHandoff.enviarComPersonalizacao(cfg, pers.dados, (estado, msg) => {

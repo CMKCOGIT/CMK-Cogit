@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/blackcogit", "destination": "/blackcogit.html" },
+    { "source": "/blackcogit/", "destination": "/blackcogit.html" }
+  ]
+}

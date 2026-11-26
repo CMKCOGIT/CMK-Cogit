@@ -31,7 +31,7 @@ check('Mobile menus expose the solutions hub and main pages',()=>{
 });
 check('Sharing uses the square brand icon (small preview card) and stray pricing banners are gone',()=>{
  const png=fs.readFileSync(path.join(root,'assets/images/og-cmkcogit-icone.png'));assert.equal(png.readUInt32BE(16),600);assert.equal(png.readUInt32BE(20),600);
- for(const file of html){const source=fs.readFileSync(file,'utf8');if(source.includes('property="og:image"')){assert.match(source,/og-cmkcogit-icone\.png/);assert.match(source,/og:image:width" content="600"/);assert.match(source,/twitter:card" content="summary"/);}
+ for(const file of html){const source=fs.readFileSync(file,'utf8');if(path.basename(file)==='blackcogit.html'){assert.match(source,/og-black-2026\.png/);const og=fs.readFileSync(path.join(root,'assets/images/og-black-2026.png'));assert.equal(og.readUInt32BE(16),1200);assert.equal(og.readUInt32BE(20),630);continue;}if(source.includes('property="og:image"')){assert.match(source,/og-cmkcogit-icone\.png/);assert.match(source,/og:image:width" content="600"/);assert.match(source,/twitter:card" content="summary"/);}
   assert.doesNotMatch(source,/Consulte a <a href="index\.html#tabela-de-valores">tabela atual de serviços e valores/);
  }
 });
@@ -95,10 +95,12 @@ check('Contact authorization is unchecked and independent of optional cookies',(
 check('Free text is escaped and Brazilian phone formatting supports 10/11 digits',()=>{const e=environment();assert.equal(e.context.CogitUI.escapeHtml('<img src=x onerror="bad">'), '&lt;img src=x onerror=&quot;bad&quot;&gt;');assert.equal(e.context.CogitUI.formatPhone('1134567890'),'(11) 3456-7890');assert.equal(e.context.CogitUI.formatPhone('11987654321'),'(11) 98765-4321');});
 function contrast(a,b){const luminance=hex=>{const c=hex.match(/[0-9a-f]{2}/gi).map(v=>parseInt(v,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*c[0]+.7152*c[1]+.0722*c[2];};const x=luminance(a),y=luminance(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
 check('Identity 2026 text, links and primary CTA meet WCAG AA contrast',()=>{for(const [fg,bg]of[['121314','f3f3f1'],['55595e','f3f3f1'],['55595e','e6e6e2'],['f3f3f1','121314'],['a4a8ad','121314'],['8ea6d8','121314'],['ffffff','1a2c52'],['a9b6cf','1a2c52'],['1a2c52','f3f3f1']]){const ratio=contrast(fg,bg);assert.ok(ratio>=4.5,`${fg}/${bg}: ${ratio}`);console.log(`  #${fg} / #${bg}: ${ratio.toFixed(2)}:1`);}});
-function configuratorTest() {
+function configuratorTest(blackAgora=null) {
  const e=environment();
  Object.assign(e.context,{TextEncoder,TextDecoder,btoa,atob,crypto:globalThis.crypto,Uint8Array});
  vm.runInContext(read('js/data.js'),e.context);
+ // Black da Cogit: só carregada quando o teste fixa um horário (black-config.js > simularAgora)
+ if(blackAgora){e.context.self=e.context;vm.runInContext(read('black-config.js'),e.context);e.context.COGIT_BLACK.simularAgora=blackAgora;vm.runInContext(read('js/black.js'),e.context);}
  vm.runInContext(read('js/handoff.js'),e.context);
  const source=read('js/configurator.js').replace('return { init, reset, preselectAndScroll };','return { init, reset, preselectAndScroll, state, toggleService, toggleAddon, updateAddonQuantity, selectLevel, selectSolutionModel, calculateTotal, buildHandoff };');
  vm.runInContext(source,e.context);
@@ -149,4 +151,40 @@ check('Configurator selection is restored from this browser without free text',(
  const first=configuratorTest();first.app.toggleService('landing-page');first.app.selectSolutionModel('modelos-prontos','landing-page');
  const saved=JSON.parse(first.e.storage.get('cogit_cfg_sessao_v1'));assert.equal(saved.services[0].serviceId,'landing-page');assert.ok(!JSON.stringify(saved).includes('notes'));
 });
+
+// ── Black da Cogit (black-config.js): datas, preços do simulador e marca enviada à plataforma ──
+const ANTES='2026-11-25T23:59:59-03:00',INICIO='2026-11-26T00:00:00-03:00',DURANTE='2026-11-27T23:59:00-03:00',DEPOIS='2026-11-28T00:00:00-03:00';
+function blackFase(t){const x={};x.self=x;vm.createContext(x);vm.runInContext(read('black-config.js'),x);x.COGIT_BLACK.simularAgora=t;vm.runInContext(read('js/black.js'),x);return x.CogitBlack.fase();}
+check('Black: config pronta para publicar e fases nas datas certas (horário de Brasília)',()=>{
+ const c={};c.self=c;vm.createContext(c);vm.runInContext(read('black-config.js'),c);const b=c.COGIT_BLACK;
+ assert.equal(b.simularAgora,null,'black-config.js: simularAgora precisa ser null antes de publicar');assert.equal(b.id,'black-2026');
+ assert.equal(blackFase(ANTES),'antes');assert.equal(blackFase(INICIO),'durante');assert.equal(blackFase(DURANTE),'durante');assert.equal(blackFase('2026-11-27T23:59:59-03:00'),'durante');assert.equal(blackFase(DEPOIS),'depois');
+ for(const c2 of b.combos)assert.equal(c2.por,Math.floor(c2.de*(100-c2.percentual)/100/10)*10,c2.id);
+});
+check('Black: simulador usa os preços da Black, sem os 10%, e marca o pedido',()=>{
+ const t=(sel,agora)=>{const {app}=configuratorTest(agora);sel(app);return {total:app.calculateTotal(),h:app.buildHandoff()};};
+ const portf=a=>{a.toggleService('portfolio');a.selectSolutionModel('modelos-prontos','portfolio');};
+ let r=t(portf,DURANTE);assert.equal(r.total.value,400);assert.equal(r.total.type,'fixed');assert.equal(r.h.promo,'black-2026');assert.match(r.h.notas,/Black da Cogit: de R\$ 500 por R\$ 400/);
+ r=t(portf,ANTES);assert.equal(r.total.value,500);assert.ok(!('promo' in r.h));
+ r=t(portf,DEPOIS);assert.equal(r.total.value,500);assert.ok(!('promo' in r.h));
+ const lp=a=>{a.toggleService('landing-page');a.selectSolutionModel('modelos-prontos','landing-page');};assert.equal(t(lp,DURANTE).total.value,480);
+ const si=a=>{a.toggleService('site-institucional');a.selectSolutionModel('modelos-prontos','site-institucional');};assert.equal(t(si,DURANTE).total.value,560);
+ const sob=a=>{a.toggleService('portfolio');a.selectSolutionModel('sob-medida','portfolio');};assert.equal(t(sob,DURANTE).total.value,700,'sob medida fora da Black');
+ const auto=a=>{a.toggleService('identidade-essencial');portf(a);};assert.equal(t(auto,DURANTE).total.value,750);assert.equal(t(auto,ANTES).total.value,1000,'Autônomo Pronto só existe na Black');
+ const pres=a=>{a.toggleService('identidade-essencial');si(a);};assert.equal(t(pres,DURANTE).total.value,900);assert.equal(t(pres,ANTES).total.value,1080);assert.equal(t(pres,DEPOIS).total.value,1080);
+ const conv=a=>{a.toggleService('identidade-essencial');lp(a);a.toggleService('automacao');};r=t(conv,DURANTE);assert.equal(r.total.value,1490);assert.equal(r.total.type,'from');assert.equal(r.h.promo,'black-2026');assert.equal(t(conv,ANTES).total.value,1790);
+ const op=a=>{a.toggleService('sistema');a.toggleService('integracao');};assert.equal(t(op,DURANTE).total.value,3180);assert.equal(t(op,ANTES).total.value,3580);
+ const sem=a=>{a.toggleService('automacao');};r=t(sem,DURANTE);assert.equal(r.total.value,890);assert.ok(!('promo' in r.h),'sem item da Black, sem marca');
+ const {app,handoff}=configuratorTest(DURANTE);portf(app);const p=JSON.parse(Buffer.from(new URL(handoff.link(app.buildHandoff())).hash.replace('#cfg=',''),'base64url').toString('utf8'));assert.equal(p.promo,'black-2026');
+});
+check('Black: botão da home, página /blackcogit e rota limpa',()=>{
+ const home=read('index.html');assert.match(home,/href="https:\/\/www\.cmkcogit\.com\.br\/blackcogit" class="btn btn-lg btn-black hx-black bk-fase bk-em-antes bk-em-durante"/);
+ assert.ok(home.indexOf('id="cta-hero-start"')<home.indexOf('id="cta-hero-black"'),'Monte sua solução vem primeiro');
+ assert.match(home,/class="hc hc-black bk-fase bk-em-durante"/);
+ const pg=read('blackcogit.html');for(const t2 of ['Black Friday sem maquiagem.','Monte sua solução em 1 minuto, sem cadastro.','O desconto é real?','Pagamento pelo Mercado Pago, dentro da plataforma.','og:title" content="Black da Cogit · 26 e 27/11"','og:url" content="https://www.cmkcogit.com.br/blackcogit"'])assert.ok(pg.includes(t2),t2);
+ const v=JSON.parse(read('vercel.json'));assert.ok(v.rewrites.some(x=>x.source==='/blackcogit'&&x.destination==='/blackcogit.html'));
+ const css=read('css/black.css').replace(/\/\*[\s\S]*?\*\//g,'');assert.doesNotMatch(css,/gradient/);assert.doesNotMatch(css,/box-shadow:(?!\s*none)/);assert.doesNotMatch(css,/border-radius:(?!\s*0)/);
+ for(const [a,b] of [['#121314','#F3F3F1'],['#1A2C52','#F3F3F1'],['#8EA6D8','#121314'],['#55595E','#FFFFFF'],['#1A2C52','#FFFFFF']])assert.ok(contrast(a,b)>=4.5,a+' / '+b);
+});
+
 console.log(`\n${checks} checks passed. ${html.length} HTML files inspected. Browser layout and interaction review are separate.`);

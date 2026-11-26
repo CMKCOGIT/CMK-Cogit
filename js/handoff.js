@@ -65,7 +65,9 @@ window.CogitHandoff = (() => {
       complementos,
       notas: String(cfg.notas || '').slice(0, 2000),
       diagnostico: cfg.diagnostico || null,
-      estimativa: cfg.estimativa || ''
+      estimativa: cfg.estimativa || '',
+      // Black da Cogit: só a marca (o servidor confere a data e calcula o preço)
+      ...(cfg.promo === 'black-2026' ? { promo: 'black-2026' } : {})
     };
   }
 
